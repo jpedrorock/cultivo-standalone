@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind } from "lucide-react";
 import { Link } from "wouter";
+import { toast } from "sonner";
 
 export default function Home() {
   const [cycleModalOpen, setCycleModalOpen] = useState(false);
@@ -17,6 +18,31 @@ export default function Home() {
   const handleStartCycle = (tentId: number, tentName: string) => {
     setSelectedTent({ id: tentId, name: tentName });
     setCycleModalOpen(true);
+  };
+
+  const utils = trpc.useUtils();
+  const startFlora = trpc.cycles.startFlora.useMutation({
+    onSuccess: () => {
+      utils.cycles.listActive.invalidate();
+      utils.tents.list.invalidate();
+    },
+  });
+
+  const handleStartFlora = (cycleId: number, tentName: string) => {
+    startFlora.mutate(
+      {
+        cycleId,
+        floraStartDate: new Date(),
+      },
+      {
+        onSuccess: () => {
+          toast.success(`Fase de floração iniciada na ${tentName}!`);
+        },
+        onError: (error) => {
+          toast.error(`Erro ao iniciar floração: ${error.message}`);
+        },
+      }
+    );
   };
 
   if (isLoading) {
@@ -221,6 +247,14 @@ export default function Home() {
                           className="flex-1 border-green-500 text-green-600 hover:bg-green-50"
                         >
                           Iniciar Ciclo
+                        </Button>
+                      ) : cycle && !cycle.floraStartDate && (tent.tentType === "B" || tent.tentType === "C") ? (
+                        <Button 
+                          onClick={() => handleStartFlora(cycle.id, tent.name)}
+                          variant="outline" 
+                          className="flex-1 border-purple-500 text-purple-600 hover:bg-purple-50"
+                        >
+                          Iniciar Floração
                         </Button>
                       ) : (
                         <Button asChild variant="outline" className="flex-1">

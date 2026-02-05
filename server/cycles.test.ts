@@ -74,4 +74,26 @@ describe("cycles API", () => {
 
     expect(cycle).toBeNull();
   });
+
+  it("should start flora phase", async () => {
+    const ctx = createTestContext();
+    const caller = appRouter.createCaller(ctx);
+
+    // Get cycle from Estufa C (vegetative phase)
+    const cycle = await caller.cycles.getByTent({ tentId: 3 });
+    expect(cycle).toBeDefined();
+    expect(cycle?.floraStartDate).toBeNull();
+
+    // Start flora
+    const result = await caller.cycles.startFlora({
+      cycleId: cycle!.id,
+      floraStartDate: new Date(),
+    });
+
+    expect(result).toEqual({ success: true });
+
+    // Verify flora started
+    const updatedCycle = await caller.cycles.getByTent({ tentId: 3 });
+    expect(updatedCycle?.floraStartDate).toBeDefined();
+  });
 });

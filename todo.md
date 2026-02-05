@@ -58,3 +58,9 @@
 - [x] Adicionar campos de data de início e durações das fases
 - [x] Criar API para iniciar ciclo
 - [x] Validar dados do formulário
+
+## 🌸 Nova Funcionalidade - Iniciar Floração
+- [x] Adicionar botão "Iniciar Floração" nos cards de estufas em fase vegetativa
+- [x] Criar API para iniciar floração (atualizar floraStartDate no ciclo)
+- [x] Atualizar interface após transição (badge muda para roxo "Floração")
+- [x] Criar testes para a API de iniciar floração
