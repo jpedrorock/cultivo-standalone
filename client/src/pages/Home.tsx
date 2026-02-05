@@ -397,7 +397,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
 
           {/* Actions */}
           <div className="flex flex-col gap-2 pt-4">
-            <div className="flex gap-2">
+            <div key={`actions-primary-${tent.id}`} className="flex gap-2">
               <Button asChild className="flex-1">
                 <Link href={`/tent/${tent.id}`}>Ver Detalhes</Link>
               </Button>
@@ -416,7 +416,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
               )}
             </div>
             {cycle && (
-              <div className="flex gap-2">
+              <div key={`actions-secondary-${tent.id}`} className="flex gap-2">
                 <Button
                   onClick={() => onEditCycle(cycle, tent)}
                   variant="outline"

@@ -99,3 +99,8 @@
 - [x] Testar finalização de ciclo
 - [x] Testar início de novo ciclo com diferentes configurações
 - [x] Testar edição de ciclo existente
+
+## 🐛 Bug: Chaves Duplicadas no React
+- [x] Identificar origem das chaves duplicadas (key=0) - divs de botões de ação
+- [x] Corrigir usando IDs únicos ao invés de índices - adicionado tent.id nas keys
+- [x] Testar e validar correção - erro não aparece mais nos logs
