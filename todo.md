@@ -41,3 +41,9 @@
 - [x] Mostrar targets organizados por estufa e fase
 - [x] Adicionar navegação para a página
 - [x] Testar funcionalidade
+
+## 📝 Nova Tarefa: Melhorar Página de Registro
+- [x] Buscar valores de referência (targets) da estufa/fase/semana atual
+- [x] Exibir valores ideais ao lado de cada campo de entrada
+- [x] Facilitar comparação visual entre valor ideal e valor real
+- [x] Testar funcionalidade

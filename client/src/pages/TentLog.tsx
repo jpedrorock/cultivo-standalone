@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Sprout, ThermometerSun, Droplets, Sun, ArrowLeft, Save } from "lucide-react";
+import { Loader2, Sprout, ThermometerSun, Droplets, Sun, ArrowLeft, Save, Beaker, FlaskConical, Clock } from "lucide-react";
 import { Link, useParams } from "wouter";
 import { toast } from "sonner";
 
@@ -21,7 +21,52 @@ export default function TentLog() {
   const [tempC, setTempC] = useState("");
   const [rhPct, setRhPct] = useState("");
   const [ppfd, setPpfd] = useState("");
+  const [photoperiod, setPhotoperiod] = useState("");
+  const [ph, setPh] = useState("");
+  const [ec, setEc] = useState("");
   const [notes, setNotes] = useState("");
+
+  // Calcular fase e semana atual
+  const currentPhaseInfo = useMemo(() => {
+    if (!cycle || !tent) return null;
+
+    const now = new Date();
+    const startDate = new Date(cycle.startDate);
+    const floraStartDate = cycle.floraStartDate ? new Date(cycle.floraStartDate) : null;
+
+    let phase: "VEGA" | "FLORA" | "MAINTENANCE" | "CLONING" = "VEGA";
+    let weekNumber = 1;
+
+    if (tent.tentType === "A") {
+      // Estufa A: Manutenção ou Clonagem (simplificado para MAINTENANCE)
+      phase = "MAINTENANCE";
+      weekNumber = 1;
+    } else if (floraStartDate && now >= floraStartDate) {
+      phase = "FLORA";
+      const weeksSinceFlora = Math.floor((now.getTime() - floraStartDate.getTime()) / (7 * 24 * 60 * 60 * 1000));
+      weekNumber = Math.min(weeksSinceFlora + 1, 8);
+    } else {
+      phase = "VEGA";
+      const weeksSinceStart = Math.floor((now.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000));
+      weekNumber = Math.min(weeksSinceStart + 1, 6);
+    }
+
+    return { phase, weekNumber };
+  }, [cycle, tent]);
+
+  // Buscar targets da semana atual
+  const { data: weeklyTargets = [] } = trpc.weeklyTargets.getByTent.useQuery(
+    { tentId },
+    { enabled: !!tentId }
+  );
+
+  const currentTargets = useMemo(() => {
+    if (!currentPhaseInfo || weeklyTargets.length === 0) return null;
+
+    return weeklyTargets.find(
+      (t) => t.phase === currentPhaseInfo.phase && t.weekNumber === currentPhaseInfo.weekNumber
+    );
+  }, [weeklyTargets, currentPhaseInfo]);
 
   const utils = trpc.useUtils();
   const createLog = trpc.dailyLogs.create.useMutation({
@@ -31,6 +76,9 @@ export default function TentLog() {
       setTempC("");
       setRhPct("");
       setPpfd("");
+      setPhotoperiod("");
+      setPh("");
+      setEc("");
       setNotes("");
       // Invalidar cache
       utils.dailyLogs.list.invalidate();
@@ -126,20 +174,21 @@ export default function TentLog() {
       </header>
 
       {/* Main Content */}
-      <main className="container py-8 max-w-4xl">
+      <main className="container py-8 max-w-5xl">
         {/* Cycle Info */}
-        {cycle && (
+        {cycle && currentPhaseInfo && (
           <Card className="bg-white/90 backdrop-blur-sm border-green-100 mb-6">
             <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                   <p className="text-sm text-gray-600">Ciclo Ativo</p>
                   <p className="text-lg font-semibold text-gray-900">
-                    Semana{" "}
-                    {Math.floor(
-                      (Date.now() - new Date(cycle.startDate).getTime()) / (7 * 24 * 60 * 60 * 1000)
-                    ) + 1}
+                    Semana {currentPhaseInfo.weekNumber}
                   </p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Fase</p>
+                  <p className="text-lg font-semibold text-gray-900">{phaseInfo.phase}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Data de Início</p>
@@ -153,6 +202,85 @@ export default function TentLog() {
                     {Math.floor((Date.now() - new Date(cycle.startDate).getTime()) / (24 * 60 * 60 * 1000))}{" "}
                     dias
                   </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Valores de Referência */}
+        {currentTargets && (
+          <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200 mb-6">
+            <CardHeader>
+              <CardTitle className="text-blue-900">📊 Valores Ideais da Semana</CardTitle>
+              <CardDescription className="text-blue-700">
+                Targets de referência para comparação com suas medições
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div className="bg-white/80 p-3 rounded-lg border border-blue-200">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Sun className="w-4 h-4 text-orange-600" />
+                    <p className="text-xs font-medium text-gray-700">PPFD</p>
+                  </div>
+                  <p className="text-sm font-bold text-gray-900">
+                    {currentTargets.ppfdMin}-{currentTargets.ppfdMax}
+                  </p>
+                  <p className="text-xs text-gray-600">µmol/m²/s</p>
+                </div>
+
+                <div className="bg-white/80 p-3 rounded-lg border border-blue-200">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Clock className="w-4 h-4 text-cyan-600" />
+                    <p className="text-xs font-medium text-gray-700">Fotoperíodo</p>
+                  </div>
+                  <p className="text-sm font-bold text-gray-900">{currentTargets.photoperiod}</p>
+                  <p className="text-xs text-gray-600">Luz/Escuro</p>
+                </div>
+
+                <div className="bg-white/80 p-3 rounded-lg border border-blue-200">
+                  <div className="flex items-center gap-2 mb-1">
+                    <ThermometerSun className="w-4 h-4 text-red-600" />
+                    <p className="text-xs font-medium text-gray-700">Temperatura</p>
+                  </div>
+                  <p className="text-sm font-bold text-gray-900">
+                    {currentTargets.tempMin}-{currentTargets.tempMax}
+                  </p>
+                  <p className="text-xs text-gray-600">°C</p>
+                </div>
+
+                <div className="bg-white/80 p-3 rounded-lg border border-blue-200">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Droplets className="w-4 h-4 text-blue-600" />
+                    <p className="text-xs font-medium text-gray-700">Umidade</p>
+                  </div>
+                  <p className="text-sm font-bold text-gray-900">
+                    {currentTargets.rhMin}-{currentTargets.rhMax}
+                  </p>
+                  <p className="text-xs text-gray-600">%</p>
+                </div>
+
+                <div className="bg-white/80 p-3 rounded-lg border border-blue-200">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Beaker className="w-4 h-4 text-purple-600" />
+                    <p className="text-xs font-medium text-gray-700">pH</p>
+                  </div>
+                  <p className="text-sm font-bold text-gray-900">
+                    {currentTargets.phMin}-{currentTargets.phMax}
+                  </p>
+                  <p className="text-xs text-gray-600">Ideal</p>
+                </div>
+
+                <div className="bg-white/80 p-3 rounded-lg border border-blue-200">
+                  <div className="flex items-center gap-2 mb-1">
+                    <FlaskConical className="w-4 h-4 text-pink-600" />
+                    <p className="text-xs font-medium text-gray-700">EC</p>
+                  </div>
+                  <p className="text-sm font-bold text-gray-900">
+                    {currentTargets.ecMin}-{currentTargets.ecMax}
+                  </p>
+                  <p className="text-xs text-gray-600">mS/cm</p>
                 </div>
               </div>
             </CardContent>
@@ -199,11 +327,53 @@ export default function TentLog() {
               </div>
 
               {/* Measurements Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* PPFD */}
+                <div className="space-y-2">
+                  <Label htmlFor="ppfd" className="flex items-center gap-2">
+                    <Sun className="w-4 h-4 text-orange-600" />
+                    PPFD (µmol/m²/s)
+                  </Label>
+                  <Input
+                    id="ppfd"
+                    type="number"
+                    placeholder="Ex: 550"
+                    value={ppfd}
+                    onChange={(e) => setPpfd(e.target.value)}
+                    className="text-lg"
+                  />
+                  {currentTargets && (
+                    <p className="text-xs text-blue-600 font-medium">
+                      ✓ Ideal: {currentTargets.ppfdMin}-{currentTargets.ppfdMax}
+                    </p>
+                  )}
+                </div>
+
+                {/* Photoperiod */}
+                <div className="space-y-2">
+                  <Label htmlFor="photoperiod" className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-cyan-600" />
+                    Fotoperíodo
+                  </Label>
+                  <Input
+                    id="photoperiod"
+                    type="text"
+                    placeholder="Ex: 18/6"
+                    value={photoperiod}
+                    onChange={(e) => setPhotoperiod(e.target.value)}
+                    className="text-lg"
+                  />
+                  {currentTargets && (
+                    <p className="text-xs text-blue-600 font-medium">
+                      ✓ Ideal: {currentTargets.photoperiod}
+                    </p>
+                  )}
+                </div>
+
                 {/* Temperature */}
                 <div className="space-y-2">
                   <Label htmlFor="temp" className="flex items-center gap-2">
-                    <ThermometerSun className="w-4 h-4 text-orange-600" />
+                    <ThermometerSun className="w-4 h-4 text-red-600" />
                     Temperatura (°C)
                   </Label>
                   <Input
@@ -214,7 +384,11 @@ export default function TentLog() {
                     onChange={(e) => setTempC(e.target.value)}
                     className="text-lg"
                   />
-                  <p className="text-xs text-gray-500">Faixa ideal: 20-26°C</p>
+                  {currentTargets && (
+                    <p className="text-xs text-blue-600 font-medium">
+                      ✓ Ideal: {currentTargets.tempMin}-{currentTargets.tempMax}°C
+                    </p>
+                  )}
                 </div>
 
                 {/* Humidity */}
@@ -231,24 +405,53 @@ export default function TentLog() {
                     onChange={(e) => setRhPct(e.target.value)}
                     className="text-lg"
                   />
-                  <p className="text-xs text-gray-500">Faixa ideal: 50-70%</p>
+                  {currentTargets && (
+                    <p className="text-xs text-blue-600 font-medium">
+                      ✓ Ideal: {currentTargets.rhMin}-{currentTargets.rhMax}%
+                    </p>
+                  )}
                 </div>
 
-                {/* PPFD */}
+                {/* pH */}
                 <div className="space-y-2">
-                  <Label htmlFor="ppfd" className="flex items-center gap-2">
-                    <Sun className="w-4 h-4 text-yellow-600" />
-                    PPFD (µmol/m²/s)
+                  <Label htmlFor="ph" className="flex items-center gap-2">
+                    <Beaker className="w-4 h-4 text-purple-600" />
+                    pH
                   </Label>
                   <Input
-                    id="ppfd"
-                    type="number"
-                    placeholder="Ex: 450"
-                    value={ppfd}
-                    onChange={(e) => setPpfd(e.target.value)}
+                    id="ph"
+                    type="text"
+                    placeholder="Ex: 6.2"
+                    value={ph}
+                    onChange={(e) => setPh(e.target.value)}
                     className="text-lg"
                   />
-                  <p className="text-xs text-gray-500">Faixa ideal: 300-600</p>
+                  {currentTargets && (
+                    <p className="text-xs text-blue-600 font-medium">
+                      ✓ Ideal: {currentTargets.phMin}-{currentTargets.phMax}
+                    </p>
+                  )}
+                </div>
+
+                {/* EC */}
+                <div className="space-y-2">
+                  <Label htmlFor="ec" className="flex items-center gap-2">
+                    <FlaskConical className="w-4 h-4 text-pink-600" />
+                    EC (mS/cm)
+                  </Label>
+                  <Input
+                    id="ec"
+                    type="text"
+                    placeholder="Ex: 1.6"
+                    value={ec}
+                    onChange={(e) => setEc(e.target.value)}
+                    className="text-lg"
+                  />
+                  {currentTargets && (
+                    <p className="text-xs text-blue-600 font-medium">
+                      ✓ Ideal: {currentTargets.ecMin}-{currentTargets.ecMax}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -295,8 +498,8 @@ export default function TentLog() {
             <ul className="space-y-2 text-sm text-blue-800">
               <li>• Realize medições sempre nos mesmos horários para consistência</li>
               <li>• Aguarde alguns minutos após abrir a estufa para medições precisas</li>
+              <li>• Compare seus valores com os ideais exibidos acima</li>
               <li>• Registre observações sobre mudanças no crescimento ou problemas</li>
-              <li>• Valores fora da faixa ideal gerarão alertas automáticos</li>
             </ul>
           </CardContent>
         </Card>
