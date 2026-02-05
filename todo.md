@@ -73,3 +73,6 @@
 - [x] Criar APIs de update e delete para strains
 - [x] Adicionar validação de formulário
 - [x] Criar testes para as APIs de strains
+
+## 🔗 Nova Funcionalidade - Link para Gerenciar Strains
+- [x] Adicionar link "Gerenciar Strains" no card de Ações Rápidas da Home
