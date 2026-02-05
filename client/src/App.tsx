@@ -6,12 +6,14 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import TentLog from "./pages/TentLog";
+import TentDetails from "./pages/TentDetails";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/tent/:id"} component={TentDetails} />
       <Route path={"/tent/:id/log"} component={TentLog} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

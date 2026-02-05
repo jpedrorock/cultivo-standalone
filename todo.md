@@ -42,3 +42,8 @@
 - [ ] Configurar variáveis de ambiente
 - [ ] Criar checkpoint final
 - [ ] Deploy em produção
+
+## 🆕 Novas Funcionalidades Solicitadas
+- [x] Página de detalhes da estufa com histórico completo
+- [x] Gráficos de evolução (temperatura, umidade, PPFD)
+- [x] Filtros de período para visualização dos dados
