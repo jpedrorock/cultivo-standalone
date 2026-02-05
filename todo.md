@@ -73,3 +73,9 @@
 - [x] Atualizar página de Registro (TentLog) para incluir campos pH e EC (já estava presente)
 - [x] Atualizar página de Histórico para exibir gráficos de pH e EC
 - [x] Testar funcionalidade completa
+
+## ✅ Nova Tarefa: Validação Visual em Tempo Real
+- [x] Implementar lógica de validação para cada campo (PPFD, Temp, RH, pH, EC)
+- [x] Adicionar estados visuais: verde (dentro da faixa), amarelo (próximo), vermelho (fora)
+- [x] Aplicar validação em tempo real durante digitação
+- [x] Testar com diferentes valores

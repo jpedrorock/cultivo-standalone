@@ -26,6 +26,28 @@ export default function TentLog() {
   const [ec, setEc] = useState("");
   const [notes, setNotes] = useState("");
 
+  // Função de validação em tempo real
+  const getValidationState = (value: string, min?: number | string | null, max?: number | string | null): "valid" | "warning" | "invalid" | "neutral" => {
+    if (!value || !min || !max) return "neutral";
+    
+    const numValue = parseFloat(value);
+    const numMin = typeof min === "string" ? parseFloat(min) : min;
+    const numMax = typeof max === "string" ? parseFloat(max) : max;
+    
+    if (isNaN(numValue) || isNaN(numMin) || isNaN(numMax)) return "neutral";
+    
+    // Verde: dentro da faixa ideal
+    if (numValue >= numMin && numValue <= numMax) return "valid";
+    
+    // Amarelo: próximo da faixa (10% de tolerância)
+    const range = numMax - numMin;
+    const tolerance = range * 0.1;
+    if (numValue >= numMin - tolerance && numValue <= numMax + tolerance) return "warning";
+    
+    // Vermelho: fora da faixa
+    return "invalid";
+  };
+
   // Calcular fase e semana atual
   const currentPhaseInfo = useMemo(() => {
     if (!cycle || !tent) return null;
@@ -68,6 +90,13 @@ export default function TentLog() {
     );
   }, [weeklyTargets, currentPhaseInfo]);
 
+  // Estados de validação
+  const ppfdValidation = getValidationState(ppfd, currentTargets?.ppfdMin, currentTargets?.ppfdMax);
+  const tempValidation = getValidationState(tempC, currentTargets?.tempMin, currentTargets?.tempMax);
+  const rhValidation = getValidationState(rhPct, currentTargets?.rhMin, currentTargets?.rhMax);
+  const phValidation = getValidationState(ph, currentTargets?.phMin, currentTargets?.phMax);
+  const ecValidation = getValidationState(ec, currentTargets?.ecMin, currentTargets?.ecMax);
+
   const utils = trpc.useUtils();
   const createLog = trpc.dailyLogs.create.useMutation({
     onSuccess: () => {
@@ -87,6 +116,20 @@ export default function TentLog() {
       toast.error(`Erro ao salvar: ${error.message}`);
     },
   });
+
+  // Helper para classes de validação
+  const getValidationClasses = (state: "valid" | "warning" | "invalid" | "neutral") => {
+    switch (state) {
+      case "valid":
+        return "border-green-500 focus-visible:ring-green-500";
+      case "warning":
+        return "border-yellow-500 focus-visible:ring-yellow-500";
+      case "invalid":
+        return "border-red-500 focus-visible:ring-red-500";
+      default:
+        return "";
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -340,7 +383,7 @@ export default function TentLog() {
                     placeholder="Ex: 550"
                     value={ppfd}
                     onChange={(e) => setPpfd(e.target.value)}
-                    className="text-lg"
+                    className={`text-lg ${getValidationClasses(ppfdValidation)}`}
                   />
                   {currentTargets && (
                     <p className="text-xs text-blue-600 font-medium">
@@ -382,7 +425,7 @@ export default function TentLog() {
                     placeholder="Ex: 24.5"
                     value={tempC}
                     onChange={(e) => setTempC(e.target.value)}
-                    className="text-lg"
+                    className={`text-lg ${getValidationClasses(tempValidation)}`}
                   />
                   {currentTargets && (
                     <p className="text-xs text-blue-600 font-medium">
@@ -403,7 +446,7 @@ export default function TentLog() {
                     placeholder="Ex: 65.0"
                     value={rhPct}
                     onChange={(e) => setRhPct(e.target.value)}
-                    className="text-lg"
+                    className={`text-lg ${getValidationClasses(rhValidation)}`}
                   />
                   {currentTargets && (
                     <p className="text-xs text-blue-600 font-medium">
@@ -424,7 +467,7 @@ export default function TentLog() {
                     placeholder="Ex: 6.2"
                     value={ph}
                     onChange={(e) => setPh(e.target.value)}
-                    className="text-lg"
+                    className={`text-lg ${getValidationClasses(phValidation)}`}
                   />
                   {currentTargets && (
                     <p className="text-xs text-blue-600 font-medium">
@@ -445,7 +488,7 @@ export default function TentLog() {
                     placeholder="Ex: 1.6"
                     value={ec}
                     onChange={(e) => setEc(e.target.value)}
-                    className="text-lg"
+                    className={`text-lg ${getValidationClasses(ecValidation)}`}
                   />
                   {currentTargets && (
                     <p className="text-xs text-blue-600 font-medium">
