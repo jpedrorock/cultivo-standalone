@@ -1,24 +1,250 @@
+import { trpc } from "@/lib/trpc";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import { Streamdown } from 'streamdown';
+import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind } from "lucide-react";
+import { Link } from "wouter";
 
-/**
- * All content in this page are only for example, replace with your own feature implementation
- * When building pages, remember your instructions in Frontend Best Practices, Design Guide and Common Pitfalls
- */
 export default function Home() {
-  // If theme is switchable in App.tsx, we can implement theme toggling like this:
-  // const { theme, toggleTheme } = useTheme();
+  const { data: tents, isLoading } = trpc.tents.list.useQuery();
+  const { data: activeCycles } = trpc.cycles.listActive.useQuery();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-50">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  const getTentCycle = (tentId: number) => {
+    return activeCycles?.find((c) => c.tentId === tentId);
+  };
+
+  const getPhaseInfo = (tentType: string, cycle: any) => {
+    if (!cycle) {
+      return { phase: "Inativo", color: "bg-gray-500", icon: Wind };
+    }
+
+    if (tentType === "A") {
+      // Estufa A: Clonagem ou Manutenção
+      return {
+        phase: "Manutenção",
+        color: "bg-blue-500",
+        icon: Sprout,
+      };
+    }
+
+    // Estufas B/C: Vega ou Flora
+    if (cycle.floraStartDate) {
+      return {
+        phase: "Floração",
+        color: "bg-purple-500",
+        icon: Sprout,
+      };
+    }
+
+    return {
+      phase: "Vegetativa",
+      color: "bg-green-500",
+      icon: Sprout,
+    };
+  };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <main>
-        {/* Example: lucide-react for icons */}
-        <Loader2 className="animate-spin" />
-        Example Page
-        {/* Example: Streamdown for markdown rendering */}
-        <Streamdown>Any **markdown** content</Streamdown>
-        <Button variant="default">Example Button</Button>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+      {/* Header */}
+      <header className="bg-white/80 backdrop-blur-sm border-b border-green-100 sticky top-0 z-10">
+        <div className="container py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                <Sprout className="w-8 h-8 text-primary" />
+                App Cultivo
+              </h1>
+              <p className="text-gray-600 mt-1">Gerenciamento de Estufas</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <Badge variant="outline" className="px-3 py-1.5 text-sm">
+                <Droplets className="w-4 h-4 mr-2" />
+                Sistema Ativo
+              </Badge>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container py-8">
+        {/* Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <Card className="bg-white/80 backdrop-blur-sm border-green-100">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Estufas Ativas</p>
+                  <p className="text-3xl font-bold text-gray-900">
+                    {activeCycles?.length || 0}/{tents?.length || 0}
+                  </p>
+                </div>
+                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                  <Sprout className="w-6 h-6 text-primary" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white/80 backdrop-blur-sm border-green-100">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Temperatura Média</p>
+                  <p className="text-3xl font-bold text-gray-900">24°C</p>
+                </div>
+                <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
+                  <ThermometerSun className="w-6 h-6 text-orange-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white/80 backdrop-blur-sm border-green-100">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Umidade Média</p>
+                  <p className="text-3xl font-bold text-gray-900">65%</p>
+                </div>
+                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                  <Droplets className="w-6 h-6 text-blue-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Tents Grid */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Estufas</h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {tents?.map((tent) => {
+            const cycle = getTentCycle(tent.id);
+            const phaseInfo = getPhaseInfo(tent.tentType, cycle);
+            const PhaseIcon = phaseInfo.icon;
+
+            return (
+              <Card
+                key={tent.id}
+                className="bg-white/90 backdrop-blur-sm border-green-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+              >
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <CardTitle className="text-xl flex items-center gap-2">
+                        {tent.name}
+                        <Badge className={`${phaseInfo.color} text-white border-0`}>
+                          <PhaseIcon className="w-3 h-3 mr-1" />
+                          {phaseInfo.phase}
+                        </Badge>
+                      </CardTitle>
+                      <CardDescription className="mt-2">
+                        Tipo {tent.tentType} • {tent.width}×{tent.depth}×{tent.height}cm
+                      </CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+
+                <CardContent>
+                  <div className="space-y-4">
+                    {/* Cycle Info */}
+                    {cycle ? (
+                      <div className="bg-green-50 rounded-lg p-4 space-y-2">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-gray-600">Ciclo Ativo</span>
+                          <span className="font-medium text-gray-900">
+                            Semana {Math.floor((Date.now() - new Date(cycle.startDate).getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-gray-600">Início</span>
+                          <span className="font-medium text-gray-900">
+                            {new Date(cycle.startDate).toLocaleDateString("pt-BR")}
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="bg-gray-50 rounded-lg p-4 text-center">
+                        <p className="text-sm text-gray-600">Nenhum ciclo ativo</p>
+                      </div>
+                    )}
+
+                    {/* Environment Stats */}
+                    <div className="grid grid-cols-3 gap-2">
+                      <div className="bg-orange-50 rounded-lg p-3 text-center">
+                        <ThermometerSun className="w-5 h-5 text-orange-600 mx-auto mb-1" />
+                        <p className="text-xs text-gray-600">Temp</p>
+                        <p className="text-sm font-bold text-gray-900">--°C</p>
+                      </div>
+                      <div className="bg-blue-50 rounded-lg p-3 text-center">
+                        <Droplets className="w-5 h-5 text-blue-600 mx-auto mb-1" />
+                        <p className="text-xs text-gray-600">RH</p>
+                        <p className="text-sm font-bold text-gray-900">--%</p>
+                      </div>
+                      <div className="bg-yellow-50 rounded-lg p-3 text-center">
+                        <Sun className="w-5 h-5 text-yellow-600 mx-auto mb-1" />
+                        <p className="text-xs text-gray-600">PPFD</p>
+                        <p className="text-sm font-bold text-gray-900">--</p>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex gap-2 pt-2">
+                      <Button asChild variant="default" className="flex-1">
+                        <Link href={`/tent/${tent.id}`}>Ver Detalhes</Link>
+                      </Button>
+                      <Button asChild variant="outline" className="flex-1">
+                        <Link href={`/tent/${tent.id}/log`}>Registrar</Link>
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* Quick Actions */}
+        <div className="mt-8 bg-white/80 backdrop-blur-sm rounded-lg border border-green-100 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Ações Rápidas</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2">
+              <Link href="/strains">
+                <Sprout className="w-6 h-6" />
+                <span>Gerenciar Strains</span>
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2">
+              <Link href="/tasks">
+                <Wind className="w-6 h-6" />
+                <span>Tarefas</span>
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2">
+              <Link href="/alerts">
+                <ThermometerSun className="w-6 h-6" />
+                <span>Alertas</span>
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2">
+              <Link href="/analytics">
+                <Sun className="w-6 h-6" />
+                <span>Análise</span>
+              </Link>
+            </Button>
+          </div>
+        </div>
       </main>
     </div>
   );
