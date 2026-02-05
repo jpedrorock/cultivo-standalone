@@ -47,3 +47,6 @@
 - [x] Página de detalhes da estufa com histórico completo
 - [x] Gráficos de evolução (temperatura, umidade, PPFD)
 - [x] Filtros de período para visualização dos dados
+
+## 🐛 Bugs Reportados
+- [x] Corrigir erro "data is undefined" na API cycles.getByTent quando não há ciclo ativo

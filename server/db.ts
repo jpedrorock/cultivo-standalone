@@ -156,15 +156,15 @@ export async function getActiveCycles(): Promise<Cycle[]> {
   return db.select().from(cycles).where(eq(cycles.status, "ACTIVE"));
 }
 
-export async function getCycleByTentId(tentId: number): Promise<Cycle | undefined> {
+export async function getCycleByTentId(tentId: number): Promise<Cycle | null> {
   const db = await getDb();
-  if (!db) return undefined;
+  if (!db) return null;
   const result = await db
     .select()
     .from(cycles)
     .where(and(eq(cycles.tentId, tentId), eq(cycles.status, "ACTIVE")))
     .limit(1);
-  return result[0];
+  return result[0] ?? null;
 }
 
 // ============ TENT A STATE FUNCTIONS ============
