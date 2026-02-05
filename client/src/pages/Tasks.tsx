@@ -62,8 +62,8 @@ export default function Tasks() {
           <div className="flex items-center gap-3">
             <Sprout className="w-6 h-6 text-green-600" />
             <div>
-              <h1 className="text-xl font-bold text-gray-900">Tarefas da Semana</h1>
-              <p className="text-sm text-gray-600">Semana atual • {new Date().toLocaleDateString("pt-BR")}</p>
+              <h1 className="text-xl font-bold text-gray-900">Tarefas Semanais</h1>
+              <p className="text-sm text-gray-600">Tarefas organizadas por estufa e semana do ciclo</p>
             </div>
           </div>
           <Badge variant="outline" className="text-sm">
@@ -76,8 +76,8 @@ export default function Tasks() {
         {/* Progress Card */}
         <Card className="mb-6 bg-white/80 backdrop-blur-sm border-green-100">
           <CardHeader>
-            <CardTitle className="text-lg">Progresso Semanal</CardTitle>
-            <CardDescription>Acompanhe a conclusão das tarefas</CardDescription>
+            <CardTitle className="text-lg">Progresso Geral</CardTitle>
+            <CardDescription>Acompanhe a conclusão das tarefas da semana atual de cada ciclo</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -114,8 +114,7 @@ export default function Tasks() {
                       <div>
                         <CardTitle className="text-lg">{tentName}</CardTitle>
                         <CardDescription>
-                          {firstTask?.phase === "VEGA" ? "Fase Vegetativa" : "Fase de Floração"} • Semana{" "}
-                          {firstTask?.weekNumber}
+                          {firstTask?.phase === "VEGA" ? "Vegetativa" : "Floração"} • Semana {firstTask?.weekNumber} do ciclo
                         </CardDescription>
                       </div>
                       <Badge
@@ -185,9 +184,9 @@ export default function Tasks() {
           <Card className="bg-white/80 backdrop-blur-sm border-green-100">
             <CardContent className="py-12 text-center">
               <Circle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Nenhuma tarefa esta semana</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Nenhuma tarefa</h3>
               <p className="text-gray-600">
-                Não há ciclos ativos ou tarefas programadas para a semana atual.
+                Não há ciclos ativos no momento. Inicie um ciclo para ver as tarefas semanais.
               </p>
             </CardContent>
           </Card>

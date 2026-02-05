@@ -84,3 +84,8 @@
 - [x] Criar API para marcar tarefa como concluída
 - [x] Adicionar filtros por estufa
 - [x] Mostrar progresso de conclusão das tarefas
+
+## 🔄 Ajuste Solicitado - Reorganizar Tarefas
+- [x] Reorganizar página de tarefas para mostrar tarefas por estufa e por semana (não diárias)
+- [x] Remover lógica de tarefas diárias
+- [x] Agrupar tarefas por semana do ciclo
