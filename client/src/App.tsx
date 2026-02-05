@@ -9,6 +9,7 @@ import TentLog from "./pages/TentLog";
 import TentDetails from "./pages/TentDetails";
 import Strains from "./pages/Strains";
 import Tasks from "./pages/Tasks";
+import Reference from "./pages/Reference";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -17,6 +18,7 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/strains"} component={Strains} />
       <Route path={"/tasks"} component={Tasks} />
+      <Route path={"/reference"} component={Reference} />
       <Route path={"/tent/:id"} component={TentDetails} />
       <Route path={"/tent/:id/log"} component={TentLog} />
       <Route path={"/404"} component={NotFound} />

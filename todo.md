@@ -35,3 +35,9 @@
 - [ ] Testar fluxo completo
 - [ ] Criar testes unitários
 - [ ] Salvar checkpoint final
+
+## 📖 Nova Tarefa: Página de Referência
+- [x] Criar página de Referência (read-only) para consultar valores ideais
+- [x] Mostrar targets organizados por estufa e fase
+- [x] Adicionar navegação para a página
+- [x] Testar funcionalidade
