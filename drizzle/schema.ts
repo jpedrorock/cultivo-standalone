@@ -61,6 +61,8 @@ export const strains = mysqlTable("strains", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 100 }).notNull().unique(),
   description: text("description"),
+  vegaWeeks: int("vegaWeeks").default(4).notNull(),
+  floraWeeks: int("floraWeeks").default(8).notNull(),
   isActive: boolean("isActive").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

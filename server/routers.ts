@@ -56,6 +56,8 @@ export const appRouter = router({
         z.object({
           name: z.string().min(1).max(100),
           description: z.string().optional(),
+          vegaWeeks: z.number().min(1).max(12),
+          floraWeeks: z.number().min(1).max(16),
         })
       )
       .mutation(async ({ input }) => {
@@ -70,6 +72,8 @@ export const appRouter = router({
           id: z.number(),
           name: z.string().min(1).max(100).optional(),
           description: z.string().optional(),
+          vegaWeeks: z.number().min(1).max(12).optional(),
+          floraWeeks: z.number().min(1).max(16).optional(),
           isActive: z.boolean().optional(),
         })
       )
@@ -78,6 +82,14 @@ export const appRouter = router({
         if (!database) throw new Error("Database not available");
         const { id, ...updateData } = input;
         await database.update(strains).set(updateData).where(eq(strains.id, id));
+        return { success: true };
+      }),
+    delete: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        await database.delete(strains).where(eq(strains.id, input.id));
         return { success: true };
       }),
   }),

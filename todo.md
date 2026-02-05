@@ -64,3 +64,12 @@
 - [x] Criar API para iniciar floração (atualizar floraStartDate no ciclo)
 - [x] Atualizar interface após transição (badge muda para roxo "Floração")
 - [x] Criar testes para a API de iniciar floração
+
+## 🌿 Nova Funcionalidade - Gerenciamento de Strains
+- [x] Criar página de listagem de strains com tabela
+- [x] Adicionar formulário modal para criar strain
+- [x] Implementar edição de strain existente
+- [x] Adicionar confirmação para excluir strain
+- [x] Criar APIs de update e delete para strains
+- [x] Adicionar validação de formulário
+- [x] Criar testes para as APIs de strains
