@@ -1,6 +1,8 @@
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 import StartCycleModal from "@/components/StartCycleModal";
+import { InitiateCycleModal } from "@/components/InitiateCycleModal";
+import { EditCycleModal } from "@/components/EditCycleModal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,6 +14,9 @@ import { toast } from "sonner";
 export default function Home() {
   const [cycleModalOpen, setCycleModalOpen] = useState(false);
   const [selectedTent, setSelectedTent] = useState<{ id: number; name: string } | null>(null);
+  const [initiateModalOpen, setInitiateModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedCycle, setSelectedCycle] = useState<any>(null);
   
   const { data: tents, isLoading } = trpc.tents.list.useQuery();
   const { data: activeCycles } = trpc.cycles.listActive.useQuery();
@@ -44,6 +49,34 @@ export default function Home() {
         },
       }
     );
+  };
+
+  const finalizeCycle = trpc.cycles.finalize.useMutation({
+    onSuccess: () => {
+      toast.success("Ciclo finalizado com sucesso!");
+      utils.cycles.listActive.invalidate();
+      utils.cycles.getByTent.invalidate();
+    },
+    onError: (error) => {
+      toast.error(`Erro ao finalizar ciclo: ${error.message}`);
+    },
+  });
+
+  const handleFinalizeCycle = (cycleId: number, tentName: string) => {
+    if (confirm(`Tem certeza que deseja finalizar o ciclo da ${tentName}?`)) {
+      finalizeCycle.mutate({ cycleId });
+    }
+  };
+
+  const handleInitiateCycle = (tentId: number, tentName: string) => {
+    setSelectedTent({ id: tentId, name: tentName });
+    setInitiateModalOpen(true);
+  };
+
+  const handleEditCycle = (cycle: any, tent: any) => {
+    setSelectedCycle(cycle);
+    setSelectedTent({ id: tent.id, name: tent.name });
+    setEditModalOpen(true);
   };
 
   if (isLoading) {
@@ -133,6 +166,9 @@ export default function Home() {
                 PhaseIcon={PhaseIcon}
                 onStartCycle={handleStartCycle}
                 onStartFlora={handleStartFlora}
+                onInitiateCycle={handleInitiateCycle}
+                onEditCycle={handleEditCycle}
+                onFinalizeCycle={handleFinalizeCycle}
               />
             );
           })}
@@ -185,12 +221,35 @@ export default function Home() {
           onOpenChange={setCycleModalOpen}
         />
       )}
+
+      {/* Initiate Cycle Modal */}
+      {selectedTent && (
+        <InitiateCycleModal
+          open={initiateModalOpen}
+          onOpenChange={setInitiateModalOpen}
+          tentId={selectedTent.id}
+          tentName={selectedTent.name}
+        />
+      )}
+
+      {/* Edit Cycle Modal */}
+      {selectedTent && selectedCycle && (
+        <EditCycleModal
+          open={editModalOpen}
+          onOpenChange={setEditModalOpen}
+          cycleId={selectedCycle.id}
+          tentId={selectedTent.id}
+          tentName={selectedTent.name}
+          currentStartDate={selectedCycle.startDate}
+          currentFloraStartDate={selectedCycle.floraStartDate}
+        />
+      )}
     </div>
   );
 }
 
 // Separate component for Tent Card with Tasks
-function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlora }: any) {
+function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlora, onInitiateCycle, onEditCycle, onFinalizeCycle }: any) {
   const { data: tasks, isLoading: tasksLoading } = trpc.tasks.getTasksByTent.useQuery(
     { tentId: tent.id },
     { enabled: !!cycle } // Only fetch if there's an active cycle
@@ -337,30 +396,44 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
           </div>
 
           {/* Actions */}
-          <div className="flex gap-2 pt-4">
-            <Button asChild className="flex-1">
-              <Link href={`/tent/${tent.id}`}>Ver Detalhes</Link>
-            </Button>
-            {!cycle ? (
-              <Button
-                onClick={() => onStartCycle(tent.id, tent.name)}
-                variant="outline"
-                className="flex-1 border-green-500 text-green-600 hover:bg-green-50"
-              >
-                Iniciar Ciclo
+          <div className="flex flex-col gap-2 pt-4">
+            <div className="flex gap-2">
+              <Button asChild className="flex-1">
+                <Link href={`/tent/${tent.id}`}>Ver Detalhes</Link>
               </Button>
-            ) : cycle && !cycle.floraStartDate && tent.tentType === "C" ? (
-              <Button 
-                onClick={() => onStartFlora(cycle.id, tent.name)}
-                variant="outline" 
-                className="flex-1 border-purple-500 text-purple-600 hover:bg-purple-50"
-              >
-                Iniciar Floração
-              </Button>
-            ) : (
-              <Button asChild variant="outline" className="flex-1">
-                <Link href={`/tent/${tent.id}/log`}>Registrar</Link>
-              </Button>
+              {!cycle ? (
+                <Button
+                  onClick={() => onInitiateCycle(tent.id, tent.name)}
+                  variant="outline"
+                  className="flex-1 border-green-500 text-green-600 hover:bg-green-50"
+                >
+                  Novo Ciclo
+                </Button>
+              ) : (
+                <Button asChild variant="outline" className="flex-1">
+                  <Link href={`/tent/${tent.id}/log`}>Registrar</Link>
+                </Button>
+              )}
+            </div>
+            {cycle && (
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => onEditCycle(cycle, tent)}
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                >
+                  Editar Ciclo
+                </Button>
+                <Button
+                  onClick={() => onFinalizeCycle(cycle.id, tent.name)}
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 border-red-500 text-red-600 hover:bg-red-50"
+                >
+                  Finalizar Ciclo
+                </Button>
+              </div>
             )}
           </div>
         </div>

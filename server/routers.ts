@@ -133,6 +133,90 @@ export const appRouter = router({
           .where(eq(cycles.id, input.cycleId));
         return { success: true };
       }),
+    finalize: publicProcedure
+      .input(z.object({ cycleId: z.number() }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        await database
+          .update(cycles)
+          .set({ status: "FINISHED" })
+          .where(eq(cycles.id, input.cycleId));
+        return { success: true };
+      }),
+    initiate: publicProcedure
+      .input(
+        z.object({
+          tentId: z.number(),
+          strainId: z.number(),
+          startDate: z.date(),
+          phase: z.enum(["CLONING", "MAINTENANCE", "VEGA", "FLORA"]),
+          weekNumber: z.number().min(1),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Calcular startDate baseado na fase e semana
+        const startDate = new Date(input.startDate);
+        const weeksToSubtract = input.weekNumber - 1;
+        startDate.setDate(startDate.getDate() - (weeksToSubtract * 7));
+        
+        // Se fase for FLORA, definir floraStartDate
+        const floraStartDate = input.phase === "FLORA" ? new Date(input.startDate) : null;
+        
+        await database.insert(cycles).values({
+          tentId: input.tentId,
+          strainId: input.strainId,
+          startDate,
+          floraStartDate,
+        });
+        return { success: true };
+      }),
+    edit: publicProcedure
+      .input(
+        z.object({
+          cycleId: z.number(),
+          startDate: z.date().optional(),
+          floraStartDate: z.date().optional().nullable(),
+          phase: z.enum(["CLONING", "MAINTENANCE", "VEGA", "FLORA"]).optional(),
+          weekNumber: z.number().min(1).optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        const updates: any = {};
+        
+        if (input.startDate && input.phase && input.weekNumber) {
+          // Recalcular startDate baseado na fase e semana
+          const startDate = new Date(input.startDate);
+          const weeksToSubtract = input.weekNumber - 1;
+          startDate.setDate(startDate.getDate() - (weeksToSubtract * 7));
+          updates.startDate = startDate;
+          
+          // Se fase for FLORA, definir floraStartDate
+          if (input.phase === "FLORA") {
+            updates.floraStartDate = new Date(input.startDate);
+          } else {
+            updates.floraStartDate = null;
+          }
+        } else if (input.startDate) {
+          updates.startDate = input.startDate;
+        }
+        
+        if (input.floraStartDate !== undefined) {
+          updates.floraStartDate = input.floraStartDate;
+        }
+        
+        await database
+          .update(cycles)
+          .set(updates)
+          .where(eq(cycles.id, input.cycleId));
+        return { success: true };
+      }),
   }),
 
   // Daily Logs (Registros Diários)

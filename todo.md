@@ -88,3 +88,14 @@
 - [x] Executar script SQL para popular banco - 85 tarefas inseridas
 - [x] Validar dados no banco - 17 grupos de tarefas confirmados
 - [x] Testar tarefas na interface (Home) - Funcionando perfeitamente
+
+## 🔄 Nova Tarefa: Gerenciador de Ciclos
+- [x] Criar API para finalizar ciclo (marca status como FINISHED)
+- [x] Criar API para iniciar novo ciclo (data, fase, semana)
+- [x] Criar API para editar ciclo existente (ajustar data/fase/semana)
+- [x] Criar modal de Iniciar Novo Ciclo com formulário
+- [x] Criar modal de Editar Ciclo com formulário
+- [x] Adicionar botões de gerenciamento nos cards das estufas
+- [x] Testar finalização de ciclo
+- [x] Testar início de novo ciclo com diferentes configurações
+- [x] Testar edição de ciclo existente
