@@ -245,6 +245,25 @@ export async function getDailyLogs(
     .orderBy(desc(dailyLogs.logDate), desc(dailyLogs.turn));
 }
 
+export async function getHistoricalDataWithTargets(tentId: number, days: number = 30) {
+  const db = await getDb();
+  if (!db) return { logs: [], targets: [], cycle: null };
+
+  // Get current active cycle
+  const cycle = await getCycleByTentId(tentId);
+  if (!cycle) return { logs: [], targets: [], cycle: null };
+
+  // Get logs from last N days
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+  const logs = await getDailyLogs(tentId, startDate);
+
+  // Get all targets for this tent
+  const targets = await getWeeklyTargetsByTent(tentId);
+
+  return { logs, targets, cycle };
+}
+
 export async function getDailyLog(
   tentId: number,
   logDate: Date,

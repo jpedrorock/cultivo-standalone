@@ -148,6 +148,16 @@ export const appRouter = router({
       .query(async ({ input }) => {
         return db.getDailyLogs(input.tentId, input.startDate, input.endDate);
       }),
+    getHistoricalData: publicProcedure
+      .input(
+        z.object({
+          tentId: z.number(),
+          days: z.number().default(30),
+        })
+      )
+      .query(async ({ input }) => {
+        return db.getHistoricalDataWithTargets(input.tentId, input.days);
+      }),
     create: publicProcedure
       .input(
         z.object({
@@ -288,6 +298,116 @@ export const appRouter = router({
       .query(async ({ input }) => {
         return db.getTaskInstances(input.tentId, input.startDate, input.endDate);
       }),
+    getTasksByTent: publicProcedure
+      .input(z.object({ tentId: z.number() }))
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) return [];
+
+        // Get current active cycle for this tent
+        const cycle = await db.getCycleByTentId(input.tentId);
+        if (!cycle) return [];
+
+        // Get tent info
+        const tent = await db.getTentById(input.tentId);
+        if (!tent) return [];
+
+        // Calculate current phase and week
+        const now = new Date();
+        const startDate = new Date(cycle.startDate);
+        const floraStartDate = cycle.floraStartDate ? new Date(cycle.floraStartDate) : null;
+
+        let currentPhase: "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE";
+        let weekNumber: number;
+
+        // Determine phase based on tent type
+        if (tent.tentType === "A") {
+          // Estufa A: CLONING or MAINTENANCE
+          currentPhase = "MAINTENANCE"; // Default, could be CLONING based on state
+          weekNumber = 1;
+        } else if (tent.tentType === "B") {
+          // Estufa B: only VEGA
+          currentPhase = "VEGA";
+          const weeksSinceStart = Math.floor(
+            (now.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
+          );
+          weekNumber = weeksSinceStart + 1;
+        } else {
+          // Estufa C: FLORA
+          currentPhase = "FLORA";
+          const weeksSinceStart = floraStartDate
+            ? Math.floor((now.getTime() - floraStartDate.getTime()) / (7 * 24 * 60 * 60 * 1000))
+            : Math.floor((now.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000));
+          weekNumber = weeksSinceStart + 1;
+        }
+
+        // Get templates for this phase/week
+        const context = tent.tentType === "A" ? "TENT_A" : "TENT_BC";
+        const templates = await database
+          .select()
+          .from(taskTemplates)
+          .where(
+            and(
+              eq(taskTemplates.context, context),
+              eq(taskTemplates.phase, currentPhase),
+              eq(taskTemplates.weekNumber, weekNumber)
+            )
+          );
+
+        const tasks = [];
+        const startOfWeek = new Date(now);
+        startOfWeek.setDate(now.getDate() - now.getDay());
+        startOfWeek.setHours(0, 0, 0, 0);
+
+        for (const template of templates) {
+          // Check if instance already exists for this week
+          const existing = await database
+            .select()
+            .from(taskInstances)
+            .where(
+              and(
+                eq(taskInstances.tentId, input.tentId),
+                eq(taskInstances.taskTemplateId, template.id),
+                eq(taskInstances.occurrenceDate, startOfWeek)
+              )
+            )
+            .limit(1);
+
+          if (existing.length === 0) {
+            // Create instance
+            await database.insert(taskInstances).values({
+              tentId: input.tentId,
+              taskTemplateId: template.id,
+              occurrenceDate: startOfWeek,
+              isDone: false,
+            });
+
+            tasks.push({
+              id: 0, // Will be fetched
+              title: template.title,
+              description: template.description,
+              phase: currentPhase,
+              weekNumber,
+              isDone: false,
+              completedAt: null,
+              notes: null,
+            });
+          } else {
+            tasks.push({
+              id: existing[0].id,
+              title: template.title,
+              description: template.description,
+              phase: currentPhase,
+              weekNumber,
+              isDone: existing[0].isDone,
+              completedAt: existing[0].completedAt,
+              notes: existing[0].notes,
+            });
+          }
+        }
+
+        return tasks;
+      }),
     getCurrentWeekTasks: publicProcedure.query(async () => {
       const database = await getDb();
       if (!database) throw new Error("Database not available");
@@ -420,6 +540,32 @@ export const appRouter = router({
           .set({ isDone: true, completedAt: new Date(), notes: input.notes })
           .where(eq(taskInstances.id, input.taskId));
         return { success: true };
+      }),
+    toggleTask: publicProcedure
+      .input(z.object({ taskId: z.number() }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Get current state
+        const task = await database
+          .select()
+          .from(taskInstances)
+          .where(eq(taskInstances.id, input.taskId))
+          .limit(1);
+        
+        if (task.length === 0) throw new Error("Task not found");
+        
+        const newIsDone = !task[0].isDone;
+        await database
+          .update(taskInstances)
+          .set({ 
+            isDone: newIsDone, 
+            completedAt: newIsDone ? new Date() : null 
+          })
+          .where(eq(taskInstances.id, input.taskId));
+        
+        return { success: true, isDone: newIsDone };
       }),
   }),
 

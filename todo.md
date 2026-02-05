@@ -55,3 +55,14 @@
 - [x] Corrigir Estufa B: apenas VEGA (removido floraStartDate incorreto + botão Iniciar Floração)
 - [x] Corrigir Estufa C: apenas FLORA (já estava correto)
 - [x] Testar páginas após correções
+
+## 📊 Nova Tarefa: Tarefas na Home + Página de Histórico
+- [x] Adicionar lista de tarefas semanais em cada card de estufa na Home
+- [x] Permitir marcar tarefas como concluídas diretamente na Home
+- [x] Tarefas específicas por estufa e semana atual
+- [x] Criar API para buscar dados históricos de logs por estufa
+- [x] Criar página de Histórico separada com gráficos de linha
+- [x] Mostrar evolução de PPFD, Temperatura, Umidade (removido pH e EC pois não estão no schema)
+- [x] Comparar valores reais com targets ideais nos gráficos
+- [x] Adicionar navegação para a página de Histórico
+- [x] Testar funcionalidade

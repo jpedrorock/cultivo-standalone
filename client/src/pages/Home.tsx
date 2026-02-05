@@ -4,7 +4,8 @@ import StartCycleModal from "@/components/StartCycleModal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 
@@ -124,100 +125,15 @@ export default function Home() {
             const PhaseIcon = phaseInfo.icon;
 
             return (
-              <Card
+              <TentCard
                 key={tent.id}
-                className="bg-white/90 backdrop-blur-sm border-green-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-              >
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-xl flex items-center gap-2">
-                        {tent.name}
-                        <Badge className={`${phaseInfo.color} text-white border-0`}>
-                          <PhaseIcon className="w-3 h-3 mr-1" />
-                          {phaseInfo.phase}
-                        </Badge>
-                      </CardTitle>
-                      <CardDescription className="mt-2">
-                        Tipo {tent.tentType} • {tent.width}×{tent.depth}×{tent.height}cm
-                      </CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-
-                <CardContent>
-                  <div className="space-y-4">
-                    {/* Cycle Info */}
-                    {cycle ? (
-                      <div className="bg-green-50 rounded-lg p-4 space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-600">Ciclo Ativo</span>
-                          <span className="font-medium text-gray-900">
-                            Semana {Math.floor((Date.now() - new Date(cycle.startDate).getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-600">Início</span>
-                          <span className="font-medium text-gray-900">
-                            {new Date(cycle.startDate).toLocaleDateString("pt-BR")}
-                          </span>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="bg-gray-50 rounded-lg p-4 text-center">
-                        <p className="text-sm text-gray-600">Nenhum ciclo ativo</p>
-                      </div>
-                    )}
-
-                    {/* Environment Stats */}
-                    <div className="grid grid-cols-3 gap-2">
-                      <div className="bg-orange-50 rounded-lg p-3 text-center">
-                        <ThermometerSun className="w-5 h-5 text-orange-600 mx-auto mb-1" />
-                        <p className="text-xs text-gray-600">Temp</p>
-                        <p className="text-sm font-bold text-gray-900">--°C</p>
-                      </div>
-                      <div className="bg-blue-50 rounded-lg p-3 text-center">
-                        <Droplets className="w-5 h-5 text-blue-600 mx-auto mb-1" />
-                        <p className="text-xs text-gray-600">RH</p>
-                        <p className="text-sm font-bold text-gray-900">--%</p>
-                      </div>
-                      <div className="bg-yellow-50 rounded-lg p-3 text-center">
-                        <Sun className="w-5 h-5 text-yellow-600 mx-auto mb-1" />
-                        <p className="text-xs text-gray-600">PPFD</p>
-                        <p className="text-sm font-bold text-gray-900">--</p>
-                      </div>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex gap-2 pt-2">
-                      <Button asChild variant="default" className="flex-1">
-                        <Link href={`/tent/${tent.id}`}>Ver Detalhes</Link>
-                      </Button>
-                      {!cycle && (tent.tentType === "B" || tent.tentType === "C") ? (
-                        <Button 
-                          onClick={() => handleStartCycle(tent.id, tent.name)}
-                          variant="outline" 
-                          className="flex-1 border-green-500 text-green-600 hover:bg-green-50"
-                        >
-                          Iniciar Ciclo
-                        </Button>
-                      ) : cycle && !cycle.floraStartDate && tent.tentType === "C" ? (
-                        <Button 
-                          onClick={() => handleStartFlora(cycle.id, tent.name)}
-                          variant="outline" 
-                          className="flex-1 border-purple-500 text-purple-600 hover:bg-purple-50"
-                        >
-                          Iniciar Floração
-                        </Button>
-                      ) : (
-                        <Button asChild variant="outline" className="flex-1">
-                          <Link href={`/tent/${tent.id}/log`}>Registrar</Link>
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                tent={tent}
+                cycle={cycle}
+                phaseInfo={phaseInfo}
+                PhaseIcon={PhaseIcon}
+                onStartCycle={handleStartCycle}
+                onStartFlora={handleStartFlora}
+              />
             );
           })}
         </div>
@@ -239,9 +155,9 @@ export default function Home() {
               </Link>
             </Button>
             <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2">
-              <Link href="/tasks">
+              <Link href="/history">
                 <Wind className="w-6 h-6" />
-                <span>Tarefas</span>
+                <span>Histórico</span>
               </Link>
             </Button>
             <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2">
@@ -270,5 +186,185 @@ export default function Home() {
         />
       )}
     </div>
+  );
+}
+
+// Separate component for Tent Card with Tasks
+function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlora }: any) {
+  const { data: tasks, isLoading: tasksLoading } = trpc.tasks.getTasksByTent.useQuery(
+    { tentId: tent.id },
+    { enabled: !!cycle } // Only fetch if there's an active cycle
+  );
+
+  const utils = trpc.useUtils();
+  const toggleTask = trpc.tasks.toggleTask.useMutation({
+    onSuccess: () => {
+      utils.tasks.getTasksByTent.invalidate({ tentId: tent.id });
+      toast.success("Tarefa atualizada!");
+    },
+    onError: (error) => {
+      toast.error(`Erro ao atualizar tarefa: ${error.message}`);
+    },
+  });
+
+  const handleToggleTask = (taskId: number) => {
+    toggleTask.mutate({ taskId });
+  };
+
+  const completedTasks = tasks?.filter((t) => t.isDone).length || 0;
+  const totalTasks = tasks?.length || 0;
+
+  return (
+    <Card className="bg-white/90 backdrop-blur-sm border-green-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+      <CardHeader>
+        <div className="flex items-start justify-between">
+          <div>
+            <CardTitle className="text-xl flex items-center gap-2">
+              {tent.name}
+              <Badge className={`${phaseInfo.color} text-white border-0`}>
+                <PhaseIcon className="w-3 h-3 mr-1" />
+                {phaseInfo.phase}
+              </Badge>
+            </CardTitle>
+            <CardDescription className="mt-2">
+              Tipo {tent.tentType} • {tent.width}×{tent.depth}×{tent.height}cm
+            </CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+
+      <CardContent>
+        <div className="space-y-4">
+          {/* Cycle Info */}
+          {cycle ? (
+            <div className="bg-green-50 rounded-lg p-4 space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-gray-700">Ciclo Ativo</span>
+                <span className="text-sm font-semibold text-green-700">
+                  Semana {(() => {
+                    const now = new Date();
+                    const start = new Date(cycle.startDate);
+                    const floraStart = cycle.floraStartDate ? new Date(cycle.floraStartDate) : null;
+                    
+                    if (floraStart && now >= floraStart) {
+                      return Math.floor((now.getTime() - floraStart.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1;
+                    }
+                    return Math.floor((now.getTime() - start.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1;
+                  })()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-xs text-gray-600">Início</span>
+                <span className="text-xs font-medium text-gray-700">
+                  {new Date(cycle.startDate).toLocaleDateString("pt-BR")}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-gray-50 rounded-lg p-4 text-center">
+              <p className="text-sm text-gray-600">Nenhum ciclo ativo</p>
+            </div>
+          )}
+
+          {/* Weekly Tasks */}
+          {cycle && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4" />
+                  Tarefas da Semana
+                </h4>
+                {totalTasks > 0 && (
+                  <Badge variant="outline" className="text-xs">
+                    {completedTasks}/{totalTasks}
+                  </Badge>
+                )}
+              </div>
+
+              {tasksLoading ? (
+                <div className="flex items-center justify-center py-4">
+                  <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+                </div>
+              ) : tasks && tasks.length > 0 ? (
+                <div className="space-y-2 max-h-48 overflow-y-auto">
+                  {tasks.map((task) => (
+                    <div
+                      key={task.id}
+                      className="flex items-start gap-2 p-2 rounded hover:bg-gray-50 transition-colors"
+                    >
+                      <Checkbox
+                        id={`task-${task.id}`}
+                        checked={task.isDone}
+                        onCheckedChange={() => handleToggleTask(task.id)}
+                        className="mt-0.5"
+                      />
+                      <label
+                        htmlFor={`task-${task.id}`}
+                        className={`text-sm cursor-pointer flex-1 ${
+                          task.isDone ? "line-through text-gray-500" : "text-gray-700"
+                        }`}
+                      >
+                        {task.title}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-gray-500 text-center py-2">
+                  Nenhuma tarefa para esta semana
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Latest Readings */}
+          <div className="grid grid-cols-3 gap-2 pt-4 border-t">
+            <div className="text-center">
+              <ThermometerSun className="w-5 h-5 mx-auto text-orange-500 mb-1" />
+              <p className="text-xs text-gray-600">Temp</p>
+              <p className="text-sm font-semibold text-gray-900">--°C</p>
+            </div>
+            <div className="text-center">
+              <Droplets className="w-5 h-5 mx-auto text-blue-500 mb-1" />
+              <p className="text-xs text-gray-600">RH</p>
+              <p className="text-sm font-semibold text-gray-900">--%</p>
+            </div>
+            <div className="text-center">
+              <Sun className="w-5 h-5 mx-auto text-yellow-500 mb-1" />
+              <p className="text-xs text-gray-600">PPFD</p>
+              <p className="text-sm font-semibold text-gray-900">--</p>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-2 pt-4">
+            <Button asChild className="flex-1">
+              <Link href={`/tent/${tent.id}`}>Ver Detalhes</Link>
+            </Button>
+            {!cycle ? (
+              <Button
+                onClick={() => onStartCycle(tent.id, tent.name)}
+                variant="outline"
+                className="flex-1 border-green-500 text-green-600 hover:bg-green-50"
+              >
+                Iniciar Ciclo
+              </Button>
+            ) : cycle && !cycle.floraStartDate && tent.tentType === "C" ? (
+              <Button 
+                onClick={() => onStartFlora(cycle.id, tent.name)}
+                variant="outline" 
+                className="flex-1 border-purple-500 text-purple-600 hover:bg-purple-50"
+              >
+                Iniciar Floração
+              </Button>
+            ) : (
+              <Button asChild variant="outline" className="flex-1">
+                <Link href={`/tent/${tent.id}/log`}>Registrar</Link>
+              </Button>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
