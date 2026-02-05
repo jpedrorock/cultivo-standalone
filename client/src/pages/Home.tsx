@@ -1,4 +1,6 @@
 import { trpc } from "@/lib/trpc";
+import { useState } from "react";
+import StartCycleModal from "@/components/StartCycleModal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -6,8 +8,16 @@ import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind } from "lucide-rea
 import { Link } from "wouter";
 
 export default function Home() {
+  const [cycleModalOpen, setCycleModalOpen] = useState(false);
+  const [selectedTent, setSelectedTent] = useState<{ id: number; name: string } | null>(null);
+  
   const { data: tents, isLoading } = trpc.tents.list.useQuery();
   const { data: activeCycles } = trpc.cycles.listActive.useQuery();
+
+  const handleStartCycle = (tentId: number, tentName: string) => {
+    setSelectedTent({ id: tentId, name: tentName });
+    setCycleModalOpen(true);
+  };
 
   if (isLoading) {
     return (
@@ -204,9 +214,19 @@ export default function Home() {
                       <Button asChild variant="default" className="flex-1">
                         <Link href={`/tent/${tent.id}`}>Ver Detalhes</Link>
                       </Button>
-                      <Button asChild variant="outline" className="flex-1">
-                        <Link href={`/tent/${tent.id}/log`}>Registrar</Link>
-                      </Button>
+                      {!cycle && (tent.tentType === "B" || tent.tentType === "C") ? (
+                        <Button 
+                          onClick={() => handleStartCycle(tent.id, tent.name)}
+                          variant="outline" 
+                          className="flex-1 border-green-500 text-green-600 hover:bg-green-50"
+                        >
+                          Iniciar Ciclo
+                        </Button>
+                      ) : (
+                        <Button asChild variant="outline" className="flex-1">
+                          <Link href={`/tent/${tent.id}/log`}>Registrar</Link>
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </CardContent>
@@ -246,6 +266,16 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      {/* Start Cycle Modal */}
+      {selectedTent && (
+        <StartCycleModal
+          tentId={selectedTent.id}
+          tentName={selectedTent.name}
+          open={cycleModalOpen}
+          onOpenChange={setCycleModalOpen}
+        />
+      )}
     </div>
   );
 }

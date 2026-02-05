@@ -50,3 +50,11 @@
 
 ## 🐛 Bugs Reportados
 - [x] Corrigir erro "data is undefined" na API cycles.getByTent quando não há ciclo ativo
+
+## 🚀 Nova Funcionalidade - Iniciar Ciclo
+- [x] Adicionar botão "Iniciar Ciclo" nos cards das Estufas B e C (quando inativas)
+- [x] Criar modal de configuração de ciclo com formulário
+- [x] Implementar seleção de strain (dropdown)
+- [x] Adicionar campos de data de início e durações das fases
+- [x] Criar API para iniciar ciclo
+- [x] Validar dados do formulário
