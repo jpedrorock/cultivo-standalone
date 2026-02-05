@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1770305090985,
-      "tag": "0000_melted_mathemanic",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1770305210130,
-      "tag": "0001_elite_xorn",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1770318546446,
-      "tag": "0002_fresh_stryfe",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1770322470891,
-      "tag": "0003_previous_mauler",
+      "when": 1770323626184,
+      "tag": "0000_lucky_shen",
       "breakpoints": true
     }
   ]

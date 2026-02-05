@@ -1,99 +1,37 @@
-# TODO - App Cultivo
+# TODO - App Cultivo (RESET COMPLETO)
 
-## 🗄️ Banco de Dados
-- [x] Criar schema completo com 13 tabelas
-- [x] Configurar relacionamentos entre tabelas
-- [x] Criar índices otimizados
-- [x] Popular dados iniciais (estufas, limites de segurança)
+## 🗄️ Fase 1: Reset do Banco de Dados
+- [x] Dropar todas as tabelas
+- [x] Recriar schema simplificado (8 tabelas essenciais)
+- [x] Aplicar migrações
 
-## ⚙️ Backend - APIs
-- [x] API de Estufas (CRUD)
-- [x] API de Strains (CRUD)
-- [x] API de Ciclos (criar, listar, atualizar)
-- [x] API de Clonagem (Estufa A - iniciar/encerrar)
-- [x] API de Registros Diários (criar, listar)
-- [ ] API de Receitas (criar, listar, templates)
-- [x] API de Tarefas (listar, marcar como concluída)
-- [x] API de Alertas (listar, marcar como visto)
-- [x] API de Padrões Semanais (CRUD)
-- [ ] Lógica de cálculo de fase/semana atual
-- [ ] Lógica de geração de alertas automáticos
-- [ ] Job diário para encerrar clonagem
+## 🌱 Fase 2: Popular Dados Iniciais
+- [x] Criar 3 estufas (A, B, C) com dimensões corretas
+- [x] Criar targets semanais por estufa e fase (17 targets criados)
+- [x] Criar templates de tarefas por fase/semana (21 templates)
+- [x] Criar limites de segurança
+- [x] Corrigir schema weeklyTargets para usar tentId ao invés de strainId
+- [x] Popular targets corretamente por tentId
 
-## 🎨 Frontend - Telas
-- [x] Home (Painel com 3 cards de estufas)
-- [x] Registro Diário (formulário manhã/noite)
-- [ ] Página de detalhes da estufa
-- [ ] Tarefas da Semana (checklist)
-- [ ] Análise/Gráficos (temperatura, umidade, PPFD)
-- [ ] Alertas (lista com filtros)
-- [ ] Configurações Admin (protegido por PIN)
-- [ ] CRUD de Strains
-- [ ] Editor de Padrões Semanais
-- [ ] Biblioteca de Receitas
-- [ ] Gerenciamento de Ciclos
+## 📄 Fase 3: Página de Dados Ideais (Visualização)
+- [x] Criar página que mostra semana atual do ciclo (Home já mostra)
+- [x] Exibir descrição da fase (badges nas estufas)
+- [x] Listar tarefas da semana (página /tasks)
+- [x] Mostrar cards de Status Ideais (PPFD, Fotoperíodo, Temp, Umidade, pH, EC)
+- [x] Adicionar navegação para esta página (já existe na Home)
 
-## 🧪 Testes
-- [ ] Testes unitários do backend
-- [ ] Testes de integração das APIs
-- [ ] Testes de fluxos principais
+## 📊 Fase 4: Página de Histórico (Registro)
+- [ ] Ajustar página de registro para mostrar valores ideais lado a lado
+- [ ] Adicionar campos: PPFD, Fotoperíodo, Temp, Umidade, pH, EC
+- [ ] Campo de observações da semana
+- [ ] Salvar registros no banco
 
-## 📦 Deploy
-- [ ] Configurar variáveis de ambiente
-- [ ] Criar checkpoint final
-- [ ] Deploy em produção
+## 🔧 Fase 5: Ajustes Finais
+- [ ] Remover botão "Iniciar Floração" da Estufa B (só faz VEGA)
+- [ ] Criar página de Referência separada (read-only)
+- [ ] Atualizar página de Registro para comparação lado a lado
 
-## 🆕 Novas Funcionalidades Solicitadas
-- [x] Página de detalhes da estufa com histórico completo
-- [x] Gráficos de evolução (temperatura, umidade, PPFD)
-- [x] Filtros de período para visualização dos dados
-
-## 🐛 Bugs Reportados
-- [x] Corrigir erro "data is undefined" na API cycles.getByTent quando não há ciclo ativo
-
-## 🚀 Nova Funcionalidade - Iniciar Ciclo
-- [x] Adicionar botão "Iniciar Ciclo" nos cards das Estufas B e C (quando inativas)
-- [x] Criar modal de configuração de ciclo com formulário
-- [x] Implementar seleção de strain (dropdown)
-- [x] Adicionar campos de data de início e durações das fases
-- [x] Criar API para iniciar ciclo
-- [x] Validar dados do formulário
-
-## 🌸 Nova Funcionalidade - Iniciar Floração
-- [x] Adicionar botão "Iniciar Floração" nos cards de estufas em fase vegetativa
-- [x] Criar API para iniciar floração (atualizar floraStartDate no ciclo)
-- [x] Atualizar interface após transição (badge muda para roxo "Floração")
-- [x] Criar testes para a API de iniciar floração
-
-## 🌿 Nova Funcionalidade - Gerenciamento de Strains
-- [x] Criar página de listagem de strains com tabela
-- [x] Adicionar formulário modal para criar strain
-- [x] Implementar edição de strain existente
-- [x] Adicionar confirmação para excluir strain
-- [x] Criar APIs de update e delete para strains
-- [x] Adicionar validação de formulário
-- [x] Criar testes para as APIs de strains
-
-## 🔗 Nova Funcionalidade - Link para Gerenciar Strains
-- [x] Adicionar link "Gerenciar Strains" no card de Ações Rápidas da Home
-
-## ✅ Nova Funcionalidade - Página de Tarefas Semanais
-- [x] Criar página de tarefas com listagem por estufa
-- [x] Listar tarefas automaticamente baseadas na fase/semana do ciclo ativo
-- [x] Adicionar checkbox para marcar tarefas como concluídas
-- [x] Criar API para marcar tarefa como concluída
-- [x] Adicionar filtros por estufa
-- [x] Mostrar progresso de conclusão das tarefas
-
-## 🔄 Ajuste Solicitado - Reorganizar Tarefas
-- [x] Reorganizar página de tarefas para mostrar tarefas por estufa e por semana (não diárias)
-- [x] Remover lógica de tarefas diárias
-- [x] Agrupar tarefas por semana do ciclo
-
-## 🎯 Nova Funcionalidade - Sistema de Targets (Valores Ideais)
-- [x] Ajustar Home para mostrar valores ideais (targets) ao invés de médias
-- [x] Mostrar cards com PPFD, Fotoperíodo, Temp, Umidade, pH, EC ideais
-- [ ] Criar página de Configuração de Targets por fase/semana
-- [ ] Adicionar campos: PPFD, Fotoperíodo, Temp Min/Max, Umidade Min/Max, pH Min/Max, EC Min/Max
-- [ ] Na página de Registro, mostrar valores ideais ao lado dos campos de input
-- [x] Criar API para salvar e buscar targets por fase/semana
+## ✅ Fase 6: Testes e Entrega
+- [ ] Testar fluxo completo
+- [ ] Criar testes unitários
+- [ ] Salvar checkpoint final

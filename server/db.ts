@@ -192,7 +192,7 @@ export async function getActiveCloningEvent(tentId: number): Promise<CloningEven
 // ============ WEEKLY TARGET FUNCTIONS ============
 
 export async function getWeeklyTarget(
-  strainId: number,
+  tentId: number,
   phase: "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE",
   weekNumber: number
 ): Promise<WeeklyTarget | undefined> {
@@ -203,7 +203,7 @@ export async function getWeeklyTarget(
     .from(weeklyTargets)
     .where(
       and(
-        eq(weeklyTargets.strainId, strainId),
+        eq(weeklyTargets.tentId, tentId),
         eq(weeklyTargets.phase, phase),
         eq(weeklyTargets.weekNumber, weekNumber)
       )
@@ -212,10 +212,10 @@ export async function getWeeklyTarget(
   return result[0];
 }
 
-export async function getWeeklyTargetsByStrain(strainId: number): Promise<WeeklyTarget[]> {
+export async function getWeeklyTargetsByTent(tentId: number): Promise<WeeklyTarget[]> {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(weeklyTargets).where(eq(weeklyTargets.strainId, strainId));
+  return db.select().from(weeklyTargets).where(eq(weeklyTargets.tentId, tentId));
 }
 
 // ============ DAILY LOG FUNCTIONS ============

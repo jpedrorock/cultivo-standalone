@@ -229,13 +229,13 @@ export const appRouter = router({
         weekNumber = Math.min(weeksSinceStart + 1, 6);
       }
       
-      // Busca os targets da semana atual
+      // Busca os targets da semana atual por tentId
       const targets = await database
         .select()
         .from(weeklyTargets)
         .where(
           and(
-            eq(weeklyTargets.strainId, cycle.strainId),
+            eq(weeklyTargets.tentId, cycle.tentId),
             eq(weeklyTargets.phase, phase),
             eq(weeklyTargets.weekNumber, weekNumber)
           )
@@ -244,13 +244,13 @@ export const appRouter = router({
       
       return targets;
     }),
-    getByStrain: publicProcedure.input(z.object({ strainId: z.number() })).query(async ({ input }) => {
-      return db.getWeeklyTargetsByStrain(input.strainId);
+    getByTent: publicProcedure.input(z.object({ tentId: z.number() })).query(async ({ input }) => {
+      return db.getWeeklyTargetsByTent(input.tentId);
     }),
     create: publicProcedure
       .input(
         z.object({
-          strainId: z.number(),
+          tentId: z.number(),
           phase: z.enum(["CLONING", "VEGA", "FLORA", "MAINTENANCE"]),
           weekNumber: z.number(),
           tempMin: z.string().optional(),
@@ -259,6 +259,11 @@ export const appRouter = router({
           rhMax: z.string().optional(),
           ppfdMin: z.number().optional(),
           ppfdMax: z.number().optional(),
+          photoperiod: z.string().optional(),
+          phMin: z.string().optional(),
+          phMax: z.string().optional(),
+          ecMin: z.string().optional(),
+          ecMax: z.string().optional(),
           notes: z.string().optional(),
         })
       )
