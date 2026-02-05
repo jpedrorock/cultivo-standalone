@@ -79,3 +79,12 @@
 - [x] Adicionar estados visuais: verde (dentro da faixa), amarelo (próximo), vermelho (fora)
 - [x] Aplicar validação em tempo real durante digitação
 - [x] Testar com diferentes valores
+
+## 📋 Nova Tarefa: Popular TaskTemplates Completos
+- [x] Criar taskTemplates para CLONING (semanas 1-2) - 10 tarefas
+- [x] Criar taskTemplates para MAINTENANCE (semana 1) - 5 tarefas
+- [x] Criar taskTemplates para VEGA (semanas 1-6) - 30 tarefas
+- [x] Criar taskTemplates para FLORA (semanas 1-8) - 40 tarefas
+- [x] Executar script SQL para popular banco - 85 tarefas inseridas
+- [x] Validar dados no banco - 17 grupos de tarefas confirmados
+- [x] Testar tarefas na interface (Home) - Funcionando perfeitamente
