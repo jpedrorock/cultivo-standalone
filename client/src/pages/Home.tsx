@@ -14,6 +14,7 @@ export default function Home() {
   
   const { data: tents, isLoading } = trpc.tents.list.useQuery();
   const { data: activeCycles } = trpc.cycles.listActive.useQuery();
+  const { data: weeklyTargets } = trpc.weeklyTargets.getCurrentWeekTargets.useQuery();
 
   const handleStartCycle = (tentId: number, tentName: string) => {
     setSelectedTent({ id: tentId, name: tentName });
@@ -112,49 +113,104 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="container py-8">
-        {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <Card className="bg-white/80 backdrop-blur-sm border-green-100">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Estufas Ativas</p>
-                  <p className="text-3xl font-bold text-gray-900">
-                    {activeCycles?.length || 0}/{tents?.length || 0}
-                  </p>
-                </div>
-                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-                  <Sprout className="w-6 h-6 text-primary" />
-                </div>
-              </div>
+        {/* Valores Ideais (Targets) */}
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-gray-900">Valores Ideais da Semana</h2>
+          <p className="text-sm text-gray-600 mt-1">Targets baseados na fase e semana atual dos ciclos ativos</p>
+        </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+          {/* PPFD */}
+          <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
+            <CardContent className="p-4">
+              <p className="text-xs font-semibold text-orange-800 uppercase tracking-wide mb-1">PPFD</p>
+              <p className="text-2xl font-bold text-orange-900">
+                {weeklyTargets && weeklyTargets.length > 0
+                  ? `${weeklyTargets[0].ppfdMin}-${weeklyTargets[0].ppfdMax}`
+                  : "--"}
+              </p>
+              <p className="text-xs text-orange-700 mt-1">
+                {weeklyTargets && weeklyTargets.length > 0 ? "µmol" : "Sem ciclo ativo"}
+              </p>
+              <p className="text-xs text-orange-600 mt-2">Ideal</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/80 backdrop-blur-sm border-green-100">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Temperatura Média</p>
-                  <p className="text-3xl font-bold text-gray-900">24°C</p>
-                </div>
-                <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
-                  <ThermometerSun className="w-6 h-6 text-orange-600" />
-                </div>
-              </div>
+          {/* Fotoperíodo */}
+          <Card className="bg-gradient-to-br from-teal-50 to-teal-100 border-teal-200">
+            <CardContent className="p-4">
+              <p className="text-xs font-semibold text-teal-800 uppercase tracking-wide mb-1">FOTOPERÍODO</p>
+              <p className="text-2xl font-bold text-teal-900">
+                {weeklyTargets && weeklyTargets.length > 0 ? weeklyTargets[0].photoperiod : "--"}
+              </p>
+              <p className="text-xs text-teal-700 mt-1">
+                {weeklyTargets && weeklyTargets.length > 0 ? "H" : "Sem ciclo ativo"}
+              </p>
+              <p className="text-xs text-teal-600 mt-2">Ideal</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/80 backdrop-blur-sm border-green-100">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Umidade Média</p>
-                  <p className="text-3xl font-bold text-gray-900">65%</p>
-                </div>
-                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                  <Droplets className="w-6 h-6 text-blue-600" />
-                </div>
-              </div>
+          {/* Temperatura */}
+          <Card className="bg-gradient-to-br from-pink-50 to-pink-100 border-pink-200">
+            <CardContent className="p-4">
+              <p className="text-xs font-semibold text-pink-800 uppercase tracking-wide mb-1">TEMP</p>
+              <p className="text-2xl font-bold text-pink-900">
+                {weeklyTargets && weeklyTargets.length > 0
+                  ? `${weeklyTargets[0].tempMin}-${weeklyTargets[0].tempMax}`
+                  : "--"}
+              </p>
+              <p className="text-xs text-pink-700 mt-1">
+                {weeklyTargets && weeklyTargets.length > 0 ? "°C" : "Sem ciclo ativo"}
+              </p>
+              <p className="text-xs text-pink-600 mt-2">Ideal</p>
+            </CardContent>
+          </Card>
+
+          {/* Umidade */}
+          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+            <CardContent className="p-4">
+              <p className="text-xs font-semibold text-blue-800 uppercase tracking-wide mb-1">UMIDADE</p>
+              <p className="text-2xl font-bold text-blue-900">
+                {weeklyTargets && weeklyTargets.length > 0
+                  ? `${weeklyTargets[0].rhMin}-${weeklyTargets[0].rhMax}`
+                  : "--"}
+              </p>
+              <p className="text-xs text-blue-700 mt-1">
+                {weeklyTargets && weeklyTargets.length > 0 ? "%" : "Sem ciclo ativo"}
+              </p>
+              <p className="text-xs text-blue-600 mt-2">Ideal</p>
+            </CardContent>
+          </Card>
+
+          {/* pH */}
+          <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+            <CardContent className="p-4">
+              <p className="text-xs font-semibold text-purple-800 uppercase tracking-wide mb-1">pH</p>
+              <p className="text-2xl font-bold text-purple-900">
+                {weeklyTargets && weeklyTargets.length > 0
+                  ? `${weeklyTargets[0].phMin}-${weeklyTargets[0].phMax}`
+                  : "--"}
+              </p>
+              <p className="text-xs text-purple-700 mt-1">
+                {weeklyTargets && weeklyTargets.length > 0 ? "" : "Sem ciclo ativo"}
+              </p>
+              <p className="text-xs text-purple-600 mt-2">Ideal</p>
+            </CardContent>
+          </Card>
+
+          {/* EC */}
+          <Card className="bg-gradient-to-br from-rose-50 to-rose-100 border-rose-200">
+            <CardContent className="p-4">
+              <p className="text-xs font-semibold text-rose-800 uppercase tracking-wide mb-1">EC</p>
+              <p className="text-2xl font-bold text-rose-900">
+                {weeklyTargets && weeklyTargets.length > 0
+                  ? `${weeklyTargets[0].ecMin}-${weeklyTargets[0].ecMax}`
+                  : "--"}
+              </p>
+              <p className="text-xs text-rose-700 mt-1">
+                {weeklyTargets && weeklyTargets.length > 0 ? "mS/cm" : "Sem ciclo ativo"}
+              </p>
+              <p className="text-xs text-rose-600 mt-2">Ideal</p>
             </CardContent>
           </Card>
         </div>

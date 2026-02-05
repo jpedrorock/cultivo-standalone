@@ -197,6 +197,53 @@ export const appRouter = router({
 
   // Weekly Targets (Padrões Semanais)
   weeklyTargets: router({
+    getCurrentWeekTargets: publicProcedure.query(async () => {
+      // Busca os targets da semana atual de todos os ciclos ativos
+      const database = await getDb();
+      if (!database) return [];
+
+      const activeCycles = await database
+        .select()
+        .from(cycles)
+        .where(eq(cycles.status, "ACTIVE"));
+
+      if (activeCycles.length === 0) return [];
+
+      // Pega o primeiro ciclo ativo para mostrar os targets
+      const cycle = activeCycles[0];
+      
+      // Calcula a fase e semana atual
+      const now = new Date();
+      const startDate = new Date(cycle.startDate);
+      const floraStartDate = cycle.floraStartDate ? new Date(cycle.floraStartDate) : null;
+      
+      let phase: "VEGA" | "FLORA" = "VEGA";
+      let weekNumber = 1;
+      
+      if (floraStartDate && now >= floraStartDate) {
+        phase = "FLORA";
+        const weeksSinceFlora = Math.floor((now.getTime() - floraStartDate.getTime()) / (7 * 24 * 60 * 60 * 1000));
+        weekNumber = Math.min(weeksSinceFlora + 1, 8);
+      } else {
+        const weeksSinceStart = Math.floor((now.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000));
+        weekNumber = Math.min(weeksSinceStart + 1, 6);
+      }
+      
+      // Busca os targets da semana atual
+      const targets = await database
+        .select()
+        .from(weeklyTargets)
+        .where(
+          and(
+            eq(weeklyTargets.strainId, cycle.strainId),
+            eq(weeklyTargets.phase, phase),
+            eq(weeklyTargets.weekNumber, weekNumber)
+          )
+        )
+        .limit(1);
+      
+      return targets;
+    }),
     getByStrain: publicProcedure.input(z.object({ strainId: z.number() })).query(async ({ input }) => {
       return db.getWeeklyTargetsByStrain(input.strainId);
     }),

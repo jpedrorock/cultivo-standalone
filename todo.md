@@ -89,3 +89,11 @@
 - [x] Reorganizar página de tarefas para mostrar tarefas por estufa e por semana (não diárias)
 - [x] Remover lógica de tarefas diárias
 - [x] Agrupar tarefas por semana do ciclo
+
+## 🎯 Nova Funcionalidade - Sistema de Targets (Valores Ideais)
+- [x] Ajustar Home para mostrar valores ideais (targets) ao invés de médias
+- [x] Mostrar cards com PPFD, Fotoperíodo, Temp, Umidade, pH, EC ideais
+- [ ] Criar página de Configuração de Targets por fase/semana
+- [ ] Adicionar campos: PPFD, Fotoperíodo, Temp Min/Max, Umidade Min/Max, pH Min/Max, EC Min/Max
+- [ ] Na página de Registro, mostrar valores ideais ao lado dos campos de input
+- [x] Criar API para salvar e buscar targets por fase/semana

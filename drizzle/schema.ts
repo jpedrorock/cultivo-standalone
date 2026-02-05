@@ -158,6 +158,11 @@ export const weeklyTargets = mysqlTable(
     rhMax: decimal("rhMax", { precision: 4, scale: 1 }),
     ppfdMin: int("ppfdMin"),
     ppfdMax: int("ppfdMax"),
+    photoperiod: varchar("photoperiod", { length: 10 }), // Ex: "18/6", "12/12"
+    phMin: decimal("phMin", { precision: 3, scale: 1 }),
+    phMax: decimal("phMax", { precision: 3, scale: 1 }),
+    ecMin: decimal("ecMin", { precision: 3, scale: 1 }),
+    ecMax: decimal("ecMax", { precision: 3, scale: 1 }),
     notes: text("notes"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
