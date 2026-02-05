@@ -167,6 +167,8 @@ export const appRouter = router({
           tempC: z.string().optional(),
           rhPct: z.string().optional(),
           ppfd: z.number().optional(),
+          ph: z.string().optional(),
+          ec: z.string().optional(),
           notes: z.string().optional(),
         })
       )

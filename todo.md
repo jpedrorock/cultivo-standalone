@@ -66,3 +66,10 @@
 - [x] Comparar valores reais com targets ideais nos gráficos
 - [x] Adicionar navegação para a página de Histórico
 - [x] Testar funcionalidade
+
+## 🧪 Nova Tarefa: Adicionar pH e EC aos Registros Diários
+- [x] Adicionar campos ph e ec ao schema de dailyLogs
+- [x] Executar migração do banco de dados (pnpm db:push)
+- [x] Atualizar página de Registro (TentLog) para incluir campos pH e EC (já estava presente)
+- [x] Atualizar página de Histórico para exibir gráficos de pH e EC
+- [x] Testar funcionalidade completa

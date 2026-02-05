@@ -43,6 +43,8 @@ export default function History() {
       temp: log.tempC ? parseFloat(log.tempC) : null,
       rh: log.rhPct ? parseFloat(log.rhPct) : null,
       ppfd: log.ppfd || null,
+      ph: log.ph ? parseFloat(log.ph) : null,
+      ec: log.ec ? parseFloat(log.ec) : null,
     }))
     .reverse() || [];
 
@@ -113,6 +115,8 @@ export default function History() {
   const tempTarget = getTargetRange("temp");
   const rhTarget = getTargetRange("rh");
   const ppfdTarget = getTargetRange("ppfd");
+  const phTarget = getTargetRange("ph");
+  const ecTarget = getTargetRange("ec");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
@@ -306,7 +310,77 @@ export default function History() {
               </CardContent>
             </Card>
 
+            {/* pH Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle>pH</CardTitle>
+                <CardDescription>
+                  Evolução do pH ao longo do tempo
+                  {phTarget && ` • Ideal: ${phTarget.min}-${phTarget.max}`}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" />
+                    <YAxis domain={[0, 14]} />
+                    <Tooltip />
+                    <Legend />
+                    {phTarget?.min && (
+                      <ReferenceLine y={phTarget.min} stroke="#10b981" strokeDasharray="3 3" label="Min" />
+                    )}
+                    {phTarget?.max && (
+                      <ReferenceLine y={phTarget.max} stroke="#10b981" strokeDasharray="3 3" label="Max" />
+                    )}
+                    <Line
+                      type="monotone"
+                      dataKey="ph"
+                      stroke="#a855f7"
+                      strokeWidth={2}
+                      dot={{ r: 4 }}
+                      name="pH"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
 
+            {/* EC Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle>EC (mS/cm)</CardTitle>
+                <CardDescription>
+                  Evolução da condutividade elétrica ao longo do tempo
+                  {ecTarget && ` • Ideal: ${ecTarget.min}-${ecTarget.max} mS/cm`}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" />
+                    <YAxis domain={["dataMin - 0.2", "dataMax + 0.2"]} />
+                    <Tooltip />
+                    <Legend />
+                    {ecTarget?.min && (
+                      <ReferenceLine y={ecTarget.min} stroke="#10b981" strokeDasharray="3 3" label="Min" />
+                    )}
+                    {ecTarget?.max && (
+                      <ReferenceLine y={ecTarget.max} stroke="#10b981" strokeDasharray="3 3" label="Max" />
+                    )}
+                    <Line
+                      type="monotone"
+                      dataKey="ec"
+                      stroke="#ec4899"
+                      strokeWidth={2}
+                      dot={{ r: 4 }}
+                      name="EC"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
           </div>
         )}
       </main>

@@ -195,6 +195,8 @@ export const dailyLogs = mysqlTable(
     tempC: decimal("tempC", { precision: 4, scale: 1 }),
     rhPct: decimal("rhPct", { precision: 4, scale: 1 }),
     ppfd: int("ppfd"),
+    ph: decimal("ph", { precision: 3, scale: 1 }),
+    ec: decimal("ec", { precision: 4, scale: 2 }),
     notes: text("notes"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
