@@ -14,7 +14,6 @@ export default function Home() {
   
   const { data: tents, isLoading } = trpc.tents.list.useQuery();
   const { data: activeCycles } = trpc.cycles.listActive.useQuery();
-  const { data: weeklyTargets } = trpc.weeklyTargets.getCurrentWeekTargets.useQuery();
 
   const handleStartCycle = (tentId: number, tentName: string) => {
     setSelectedTent({ id: tentId, name: tentName });
@@ -113,108 +112,6 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="container py-8">
-        {/* Valores Ideais (Targets) */}
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-gray-900">Valores Ideais da Semana</h2>
-          <p className="text-sm text-gray-600 mt-1">Targets baseados na fase e semana atual dos ciclos ativos</p>
-        </div>
-        
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-          {/* PPFD */}
-          <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
-            <CardContent className="p-4">
-              <p className="text-xs font-semibold text-orange-800 uppercase tracking-wide mb-1">PPFD</p>
-              <p className="text-2xl font-bold text-orange-900">
-                {weeklyTargets && weeklyTargets.length > 0
-                  ? `${weeklyTargets[0].ppfdMin}-${weeklyTargets[0].ppfdMax}`
-                  : "--"}
-              </p>
-              <p className="text-xs text-orange-700 mt-1">
-                {weeklyTargets && weeklyTargets.length > 0 ? "µmol" : "Sem ciclo ativo"}
-              </p>
-              <p className="text-xs text-orange-600 mt-2">Ideal</p>
-            </CardContent>
-          </Card>
-
-          {/* Fotoperíodo */}
-          <Card className="bg-gradient-to-br from-teal-50 to-teal-100 border-teal-200">
-            <CardContent className="p-4">
-              <p className="text-xs font-semibold text-teal-800 uppercase tracking-wide mb-1">FOTOPERÍODO</p>
-              <p className="text-2xl font-bold text-teal-900">
-                {weeklyTargets && weeklyTargets.length > 0 ? weeklyTargets[0].photoperiod : "--"}
-              </p>
-              <p className="text-xs text-teal-700 mt-1">
-                {weeklyTargets && weeklyTargets.length > 0 ? "H" : "Sem ciclo ativo"}
-              </p>
-              <p className="text-xs text-teal-600 mt-2">Ideal</p>
-            </CardContent>
-          </Card>
-
-          {/* Temperatura */}
-          <Card className="bg-gradient-to-br from-pink-50 to-pink-100 border-pink-200">
-            <CardContent className="p-4">
-              <p className="text-xs font-semibold text-pink-800 uppercase tracking-wide mb-1">TEMP</p>
-              <p className="text-2xl font-bold text-pink-900">
-                {weeklyTargets && weeklyTargets.length > 0
-                  ? `${weeklyTargets[0].tempMin}-${weeklyTargets[0].tempMax}`
-                  : "--"}
-              </p>
-              <p className="text-xs text-pink-700 mt-1">
-                {weeklyTargets && weeklyTargets.length > 0 ? "°C" : "Sem ciclo ativo"}
-              </p>
-              <p className="text-xs text-pink-600 mt-2">Ideal</p>
-            </CardContent>
-          </Card>
-
-          {/* Umidade */}
-          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-            <CardContent className="p-4">
-              <p className="text-xs font-semibold text-blue-800 uppercase tracking-wide mb-1">UMIDADE</p>
-              <p className="text-2xl font-bold text-blue-900">
-                {weeklyTargets && weeklyTargets.length > 0
-                  ? `${weeklyTargets[0].rhMin}-${weeklyTargets[0].rhMax}`
-                  : "--"}
-              </p>
-              <p className="text-xs text-blue-700 mt-1">
-                {weeklyTargets && weeklyTargets.length > 0 ? "%" : "Sem ciclo ativo"}
-              </p>
-              <p className="text-xs text-blue-600 mt-2">Ideal</p>
-            </CardContent>
-          </Card>
-
-          {/* pH */}
-          <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
-            <CardContent className="p-4">
-              <p className="text-xs font-semibold text-purple-800 uppercase tracking-wide mb-1">pH</p>
-              <p className="text-2xl font-bold text-purple-900">
-                {weeklyTargets && weeklyTargets.length > 0
-                  ? `${weeklyTargets[0].phMin}-${weeklyTargets[0].phMax}`
-                  : "--"}
-              </p>
-              <p className="text-xs text-purple-700 mt-1">
-                {weeklyTargets && weeklyTargets.length > 0 ? "" : "Sem ciclo ativo"}
-              </p>
-              <p className="text-xs text-purple-600 mt-2">Ideal</p>
-            </CardContent>
-          </Card>
-
-          {/* EC */}
-          <Card className="bg-gradient-to-br from-rose-50 to-rose-100 border-rose-200">
-            <CardContent className="p-4">
-              <p className="text-xs font-semibold text-rose-800 uppercase tracking-wide mb-1">EC</p>
-              <p className="text-2xl font-bold text-rose-900">
-                {weeklyTargets && weeklyTargets.length > 0
-                  ? `${weeklyTargets[0].ecMin}-${weeklyTargets[0].ecMax}`
-                  : "--"}
-              </p>
-              <p className="text-xs text-rose-700 mt-1">
-                {weeklyTargets && weeklyTargets.length > 0 ? "mS/cm" : "Sem ciclo ativo"}
-              </p>
-              <p className="text-xs text-rose-600 mt-2">Ideal</p>
-            </CardContent>
-          </Card>
-        </div>
-
         {/* Tents Grid */}
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Estufas</h2>
@@ -304,7 +201,7 @@ export default function Home() {
                         >
                           Iniciar Ciclo
                         </Button>
-                      ) : cycle && !cycle.floraStartDate && (tent.tentType === "B" || tent.tentType === "C") ? (
+                      ) : cycle && !cycle.floraStartDate && tent.tentType === "C" ? (
                         <Button 
                           onClick={() => handleStartFlora(cycle.id, tent.name)}
                           variant="outline" 

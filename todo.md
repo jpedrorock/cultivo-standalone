@@ -47,3 +47,11 @@
 - [x] Exibir valores ideais ao lado de cada campo de entrada
 - [x] Facilitar comparação visual entre valor ideal e valor real
 - [x] Testar funcionalidade
+
+## 🔧 Novas Tarefas: Ajustes Finais
+- [x] Remover card "Valores Ideais da Semana" da Home
+- [x] Verificar targets no banco de dados
+- [x] Corrigir Estufa A: apenas MAINTENANCE e CLONING (já estava correto)
+- [x] Corrigir Estufa B: apenas VEGA (removido floraStartDate incorreto + botão Iniciar Floração)
+- [x] Corrigir Estufa C: apenas FLORA (já estava correto)
+- [x] Testar páginas após correções
