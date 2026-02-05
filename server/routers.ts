@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import * as db from "./db";
 import { getDb } from "./db";
 import {
@@ -15,6 +15,7 @@ import {
   alerts,
   weeklyTargets,
   taskInstances,
+  taskTemplates,
   tentAState,
   cloningEvents,
 } from "../drizzle/schema";
@@ -235,6 +236,123 @@ export const appRouter = router({
       .query(async ({ input }) => {
         return db.getTaskInstances(input.tentId, input.startDate, input.endDate);
       }),
+    getCurrentWeekTasks: publicProcedure.query(async () => {
+      const database = await getDb();
+      if (!database) throw new Error("Database not available");
+
+      // Get all active cycles
+      const activeCycles = await db.getActiveCycles();
+      const allTasks: any[] = [];
+
+      for (const cycle of activeCycles) {
+        // Calculate current phase and week
+        const now = new Date();
+        const startDate = new Date(cycle.startDate);
+        const floraStartDate = cycle.floraStartDate ? new Date(cycle.floraStartDate) : null;
+
+        let currentPhase: "VEGA" | "FLORA";
+        let weekNumber: number;
+
+        if (floraStartDate && now >= floraStartDate) {
+          currentPhase = "FLORA";
+          const weeksSinceFlora = Math.floor(
+            (now.getTime() - floraStartDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
+          );
+          weekNumber = weeksSinceFlora + 1;
+        } else {
+          currentPhase = "VEGA";
+          const weeksSinceStart = Math.floor(
+            (now.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
+          );
+          weekNumber = weeksSinceStart + 1;
+        }
+
+        // Get templates for this phase/week
+        const templates = await database
+          .select()
+          .from(taskTemplates)
+          .where(
+            and(
+              eq(taskTemplates.context, "TENT_BC"),
+              eq(taskTemplates.phase, currentPhase),
+              eq(taskTemplates.weekNumber, weekNumber)
+            )
+          );
+
+        // Get tent info
+        const tent = await database.select().from(tents).where(eq(tents.id, cycle.tentId)).limit(1);
+
+        for (const template of templates) {
+          // Check if instance already exists for this week
+          const startOfWeek = new Date(now);
+          startOfWeek.setDate(now.getDate() - now.getDay());
+          startOfWeek.setHours(0, 0, 0, 0);
+
+          const existing = await database
+            .select()
+            .from(taskInstances)
+            .where(
+              and(
+                eq(taskInstances.tentId, cycle.tentId),
+                eq(taskInstances.taskTemplateId, template.id),
+                eq(taskInstances.occurrenceDate, startOfWeek)
+              )
+            )
+            .limit(1);
+
+          if (existing.length === 0) {
+            // Create instance
+            await database.insert(taskInstances).values({
+              tentId: cycle.tentId,
+              taskTemplateId: template.id,
+              occurrenceDate: startOfWeek,
+              isDone: false,
+            });
+
+            // Fetch the created instance to get the ID
+            const created = await database
+              .select()
+              .from(taskInstances)
+              .where(
+                and(
+                  eq(taskInstances.tentId, cycle.tentId),
+                  eq(taskInstances.taskTemplateId, template.id),
+                  eq(taskInstances.occurrenceDate, startOfWeek)
+                )
+              )
+              .limit(1);
+
+            allTasks.push({
+              id: created[0]?.id || 0,
+              tentId: cycle.tentId,
+              tentName: tent[0]?.name || `Estufa ${cycle.tentId}`,
+              title: template.title,
+              description: template.description,
+              phase: currentPhase,
+              weekNumber,
+              isDone: false,
+              completedAt: null,
+              notes: null,
+            });
+          } else {
+            allTasks.push({
+              id: existing[0].id,
+              tentId: cycle.tentId,
+              tentName: tent[0]?.name || `Estufa ${cycle.tentId}`,
+              title: template.title,
+              description: template.description,
+              phase: currentPhase,
+              weekNumber,
+              isDone: existing[0].isDone,
+              completedAt: existing[0].completedAt,
+              notes: existing[0].notes,
+            });
+          }
+        }
+      }
+
+      return allTasks;
+    }),
     markAsDone: publicProcedure
       .input(
         z.object({

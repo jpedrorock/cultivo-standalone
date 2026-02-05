@@ -76,3 +76,11 @@
 
 ## 🔗 Nova Funcionalidade - Link para Gerenciar Strains
 - [x] Adicionar link "Gerenciar Strains" no card de Ações Rápidas da Home
+
+## ✅ Nova Funcionalidade - Página de Tarefas Semanais
+- [x] Criar página de tarefas com listagem por estufa
+- [x] Listar tarefas automaticamente baseadas na fase/semana do ciclo ativo
+- [x] Adicionar checkbox para marcar tarefas como concluídas
+- [x] Criar API para marcar tarefa como concluída
+- [x] Adicionar filtros por estufa
+- [x] Mostrar progresso de conclusão das tarefas
