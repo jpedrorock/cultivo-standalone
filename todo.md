@@ -355,3 +355,16 @@
 - [x] Adicionar switch para ativar/desativar lembretes
 - [x] Salvar preferências do usuário (horário, ativo/inativo) em localStorage
 - [x] Botão "Testar Notificação" para validar funcionamento
+
+## 📊 Página de Histórico em Tabela
+- [x] Criar API dailyLogs.listAll com filtros (tentId, dateRange, limit, offset)
+- [x] Criar componente HistoryTable.tsx completo
+- [x] Adicionar colunas: Data, Turno, Estufa, Temp, RH, PPFD, pH, EC, Observações
+- [x] Implementar filtros: por estufa, período (7/30/90 dias, todos, custom)
+- [x] Adicionar filtro por data específica (custom date range)
+- [x] Implementar paginação (10/25/50/100 registros por página)
+- [x] Criar função de exportação para CSV com BOM UTF-8
+- [x] Botão "Exportar CSV" com dados filtrados no header
+- [x] Substituir página History.tsx por HistoryTable.tsx
+- [x] Badges para turno (AM/PM) e contador de registros
+- [x] Tratamento de estado vazio e loading

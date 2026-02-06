@@ -15,7 +15,7 @@ import Tasks from "./pages/Tasks";
 import ManageStrains from "./pages/ManageStrains";
 import Calculators from "./pages/Calculators";
 import Alerts from "./pages/Alerts";
-import History from "./pages/History";
+import HistoryTable from "./pages/HistoryTable";
 import Settings from "./pages/Settings";
 
 
@@ -29,7 +29,7 @@ function Router() {
       <Route path={"/tasks"} component={Tasks} />
       <Route path={"/calculators"} component={Calculators} />
       <Route path={"/alerts"} component={Alerts} />
-      <Route path={"/history"} component={History} />
+      <Route path={"/history"} component={HistoryTable} />
       <Route path={"/settings"} component={Settings} />
 
       <Route path={"/tent/:id"} component={TentDetails} />

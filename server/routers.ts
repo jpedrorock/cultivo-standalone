@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, sql } from "drizzle-orm";
 import * as db from "./db";
 import { getDb } from "./db";
 import {
@@ -383,6 +383,77 @@ export const appRouter = router({
           .orderBy(desc(dailyLogs.logDate))
           .limit(1);
         return result[0] || null;
+      }),
+    
+    listAll: publicProcedure
+      .input(
+        z.object({
+          tentId: z.number().optional(),
+          startDate: z.date().optional(),
+          endDate: z.date().optional(),
+          limit: z.number().default(100),
+          offset: z.number().default(0),
+        })
+      )
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        let query = database
+          .select({
+            id: dailyLogs.id,
+            tentId: dailyLogs.tentId,
+            logDate: dailyLogs.logDate,
+            turn: dailyLogs.turn,
+            tempC: dailyLogs.tempC,
+            rhPct: dailyLogs.rhPct,
+            ppfd: dailyLogs.ppfd,
+            ph: dailyLogs.ph,
+            ec: dailyLogs.ec,
+            notes: dailyLogs.notes,
+            tentName: tents.name,
+          })
+          .from(dailyLogs)
+          .leftJoin(tents, eq(dailyLogs.tentId, tents.id))
+          .orderBy(desc(dailyLogs.logDate))
+          .limit(input.limit)
+          .offset(input.offset);
+        
+        // Apply filters
+        const conditions = [];
+        if (input.tentId) {
+          conditions.push(eq(dailyLogs.tentId, input.tentId));
+        }
+        if (input.startDate) {
+          conditions.push(sql`${dailyLogs.logDate} >= ${input.startDate}`);
+        }
+        if (input.endDate) {
+          conditions.push(sql`${dailyLogs.logDate} <= ${input.endDate}`);
+        }
+        
+        if (conditions.length > 0) {
+          query = query.where(and(...conditions)) as any;
+        }
+        
+        const logs = await query;
+        
+        // Get total count for pagination
+        const countQuery = database
+          .select({ count: sql<number>`count(*)` })
+          .from(dailyLogs);
+        
+        if (conditions.length > 0) {
+          countQuery.where(and(...conditions));
+        }
+        
+        const countResult = await countQuery;
+        const total = Number(countResult[0]?.count || 0);
+        
+        return {
+          logs,
+          total,
+          hasMore: input.offset + logs.length < total,
+        };
       }),
   }),
 
