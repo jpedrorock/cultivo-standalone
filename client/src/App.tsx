@@ -14,7 +14,7 @@ import ManageStrains from "./pages/ManageStrains";
 import Calculators from "./pages/Calculators";
 import Alerts from "./pages/Alerts";
 import History from "./pages/History";
-import Analytics from "./pages/Analytics";
+
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -27,7 +27,7 @@ function Router() {
       <Route path={"/calculators"} component={Calculators} />
       <Route path={"/alerts"} component={Alerts} />
       <Route path={"/history"} component={History} />
-      <Route path={"/analytics"} component={Analytics} />
+
       <Route path={"/tent/:id"} component={TentDetails} />
       <Route path={"/tent/:id/log"} component={TentLog} />
       <Route path={"/404"} component={NotFound} />

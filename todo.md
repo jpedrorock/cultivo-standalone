@@ -305,3 +305,20 @@
 - [x] Adicionar link para Analytics na Home (botão Análise)
 - [x] Ajustar grid da Home para 5 colunas no desktop
 - [ ] Testar dashboard com dados reais
+
+## 🗑️ Remover Dashboard de Análise
+- [x] Remover página Analytics.tsx
+- [x] Remover APIs analytics.getHistoricalData e analytics.getStats do router
+- [x] Remover botão "Análise" da Home
+- [x] Ajustar grid da Home de volta para 4 colunas
+- [x] Desinstalar biblioteca recharts (pnpm remove recharts)
+- [x] Remover rota /analytics do App.tsx
+- [x] Limpar imports não utilizados
+
+## 🔍 Revisão Completa do Projeto
+- [x] Revisar todas as funcionalidades implementadas
+- [x] Identificar bugs ou inconsistências
+- [x] Sugerir melhorias de UX/UI
+- [x] Sugerir novas funcionalidades úteis
+- [x] Verificar responsividade mobile em todas as páginas
+- [x] Verificar performance e otimizações possíveis
