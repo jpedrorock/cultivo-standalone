@@ -36,6 +36,29 @@ export const appRouter = router({
     }),
   }),
 
+  // Weather (Clima)
+  weather: router({
+    getCurrent: publicProcedure
+      .input(z.object({ lat: z.number(), lon: z.number() }))
+      .query(async ({ input }) => {
+        const { lat, lon } = input;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code&timezone=auto`;
+        
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('Failed to fetch weather data');
+        }
+        
+        const data = await response.json();
+        return {
+          temperature: data.current.temperature_2m,
+          humidity: data.current.relative_humidity_2m,
+          weatherCode: data.current.weather_code,
+          time: data.current.time,
+        };
+      }),
+  }),
+
   // Tents (Estufas)
   tents: router({
     list: publicProcedure.query(async () => {

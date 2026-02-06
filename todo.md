@@ -492,3 +492,11 @@
 - [x] Copiar novo SVG de alta resolução para client/public/
 - [x] Regenerar todos os ícones PNG (192x192, 512x512, 180x180, favicon)
 - [x] Verificar qualidade dos novos ícones
+
+## 🌤️ Widget de Clima na Home
+- [x] Pesquisar API de clima gratuita (OpenWeatherMap, WeatherAPI)
+- [x] Criar procedimento tRPC para buscar dados de clima
+- [x] Criar componente WeatherWidget com temperatura e umidade
+- [x] Adicionar geolocalização para detectar localização do usuário
+- [x] Integrar widget na página Home
+- [x] Testar widget com dados reais
