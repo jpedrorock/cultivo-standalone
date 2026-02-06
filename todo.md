@@ -333,3 +333,13 @@
 - [x] Adicionar padding-bottom (pb-16) no wrapper principal
 - [x] Testar navegação em todas as páginas
 - [x] Testar responsividade mobile e desktop
+
+## 🖥️ Melhorar Navegação Desktop (Sidebar)
+- [x] Criar componente Sidebar.tsx para desktop
+- [x] Sidebar com logo, links verticais e ícones maiores
+- [x] Mostrar sidebar apenas em telas >= 768px (md breakpoint)
+- [x] Ocultar BottomNav em desktop (md:hidden)
+- [x] Ajustar layout do App.tsx (sidebar fixa + conteúdo)
+- [x] Adicionar padding-left (md:pl-64) no conteúdo quando sidebar visível
+- [x] Testar transição entre mobile e desktop
+- [x] Verificar que menu inferior aparece só no mobile

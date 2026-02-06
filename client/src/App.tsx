@@ -5,6 +5,7 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { InstallPWA } from "./components/InstallPWA";
 import { BottomNav } from "./components/BottomNav";
+import { Sidebar } from "./components/Sidebar";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import TentLog from "./pages/TentLog";
@@ -52,7 +53,8 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
-          <div className="pb-16">
+          <Sidebar />
+          <div className="pb-16 md:pb-0 md:pl-64">
             <Router />
           </div>
           <BottomNav />
