@@ -135,3 +135,32 @@
 - [x] Atualizar Home para exibir Temp, RH, PPFD do último registro
 - [x] Adicionar fallback "--" quando não houver registros
 - [x] Testar funcionalidade (Estufa B mostrando 35.0°C, 65.0%, 500)
+
+## 🎨 Nova Tarefa: Indicadores Visuais de Status nos Cards da Home
+- [x] Buscar targets ideais da strain do ciclo ativo
+- [x] Comparar último registro (Temp, RH, PPFD) com targets
+- [x] Colorir valores: verde (dentro), amarelo (próximo ±10%), vermelho (fora)
+- [x] Testar com diferentes cenários (dentro/fora da faixa)
+
+## 🧮 Nova Tarefa: Página Calculadoras
+- [x] Criar página Calculadoras.tsx com 3 abas
+- [x] Implementar calculadora de rega (volume por planta)
+- [x] Implementar calculadora de fertilização (diluição NPK)
+- [x] Implementar calculadora Lux→PPFD
+- [x] Adicionar rota no App.tsx
+- [x] Testar todas as calculadoras
+
+## 🌿 Nova Tarefa: Popular Strains Padrão
+- [x] Adicionar Blue Dream com targets específicos (6 VEGA + 9 FLORA)
+- [x] Adicionar Northern Lights com targets específicos (5 VEGA + 7 FLORA)
+- [x] Adicionar White Widow com targets específicos (6 VEGA + 8 FLORA)
+- [x] Adicionar Girl Scout Cookies com targets específicos (5 VEGA + 9 FLORA)
+- [x] Adicionar Gorilla Glue com targets específicos (6 VEGA + 8 FLORA)
+- [x] Testar criação de ciclos com novas strains - 69 targets populados
+
+## 📋 Nova Tarefa: Sistema de Clonagem de Strains
+- [x] Adicionar botão "Duplicar" na página Gerenciar Strains
+- [x] Criar API strains.duplicate
+- [x] Implementar modal de confirmação com novo nome
+- [x] Copiar todos os targets da strain original (15 no caso da Blue Dream)
+- [x] Testar clonagem e edição de valores - Blue Dream → Blue Dream V2

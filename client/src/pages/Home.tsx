@@ -200,7 +200,7 @@ export default function Home() {
                 <span>Gerenciar Strains</span>
               </Link>
             </Button>
-            <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2" disabled>
+            <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2">
               <Link href="/calculators">
                 <Calculator className="w-6 h-6" />
                 <span>Calculadoras</span>
@@ -274,6 +274,53 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
   const { data: latestLog } = trpc.dailyLogs.getLatestByTent.useQuery(
     { tentId: tent.id }
   );
+  
+  // Buscar targets ideais da strain do ciclo ativo
+  const currentWeek = cycle ? (() => {
+    const now = new Date();
+    const start = new Date(cycle.startDate);
+    const floraStart = cycle.floraStartDate ? new Date(cycle.floraStartDate) : null;
+    
+    if (floraStart && now >= floraStart) {
+      return Math.floor((now.getTime() - floraStart.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1;
+    }
+    return Math.floor((now.getTime() - start.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1;
+  })() : null;
+  
+  const currentPhase = cycle ? (cycle.floraStartDate ? "FLORA" : "VEGA") : null;
+  
+  const { data: targets } = trpc.weeklyTargets.getTargetsByWeek.useQuery(
+    { strainId: cycle?.strainId!, phase: currentPhase!, weekNumber: currentWeek! },
+    { enabled: !!cycle && !!currentPhase && !!currentWeek }
+  );
+  
+  // Função para determinar cor baseada no valor e target
+  const getValueColor = (value: number | null | undefined, min: string | number | null | undefined, max: string | number | null | undefined) => {
+    if (!value || !min || !max) return "text-gray-900";
+    
+    // Converter strings para números
+    const minNum = typeof min === 'string' ? parseFloat(min) : min;
+    const maxNum = typeof max === 'string' ? parseFloat(max) : max;
+    
+    if (isNaN(minNum) || isNaN(maxNum)) return "text-gray-900";
+    
+    // Verde: dentro da faixa ideal
+    if (value >= minNum && value <= maxNum) {
+      return "text-green-600 font-bold";
+    }
+    
+    // Amarelo: próximo (±10% de tolerância)
+    const tolerance = 0.1;
+    const lowerBound = minNum * (1 - tolerance);
+    const upperBound = maxNum * (1 + tolerance);
+    
+    if (value >= lowerBound && value <= upperBound) {
+      return "text-yellow-600 font-bold";
+    }
+    
+    // Vermelho: fora da faixa
+    return "text-red-600 font-bold";
+  };
 
   const utils = trpc.useUtils();
   const toggleTask = trpc.tasks.toggleTask.useMutation({
@@ -401,21 +448,33 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
             <div className="text-center">
               <ThermometerSun className="w-5 h-5 mx-auto text-orange-500 mb-1" />
               <p className="text-xs text-gray-600">Temp</p>
-              <p className="text-sm font-semibold text-gray-900">
+              <p className={`text-sm font-semibold ${
+                latestLog?.tempC 
+                  ? getValueColor(parseFloat(latestLog.tempC), targets?.tempMin, targets?.tempMax)
+                  : "text-gray-900"
+              }`}>
                 {latestLog?.tempC ? `${latestLog.tempC}°C` : "--°C"}
               </p>
             </div>
             <div className="text-center">
               <Droplets className="w-5 h-5 mx-auto text-blue-500 mb-1" />
               <p className="text-xs text-gray-600">RH</p>
-              <p className="text-sm font-semibold text-gray-900">
+              <p className={`text-sm font-semibold ${
+                latestLog?.rhPct 
+                  ? getValueColor(parseFloat(latestLog.rhPct), targets?.rhMin, targets?.rhMax)
+                  : "text-gray-900"
+              }`}>
                 {latestLog?.rhPct ? `${latestLog.rhPct}%` : "--%"}
               </p>
             </div>
             <div className="text-center">
               <Sun className="w-5 h-5 mx-auto text-yellow-500 mb-1" />
               <p className="text-xs text-gray-600">PPFD</p>
-              <p className="text-sm font-semibold text-gray-900">
+              <p className={`text-sm font-semibold ${
+                latestLog?.ppfd 
+                  ? getValueColor(latestLog.ppfd, targets?.ppfdMin, targets?.ppfdMax)
+                  : "text-gray-900"
+              }`}>
                 {latestLog?.ppfd || "--"}
               </p>
             </div>

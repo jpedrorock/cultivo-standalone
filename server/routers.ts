@@ -93,6 +93,58 @@ export const appRouter = router({
         await database.delete(strains).where(eq(strains.id, input.id));
         return { success: true };
       }),
+    duplicate: publicProcedure
+      .input(
+        z.object({
+          sourceStrainId: z.number(),
+          name: z.string().min(1).max(100),
+          description: z.string().optional(),
+          vegaWeeks: z.number().min(1).max(12),
+          floraWeeks: z.number().min(1).max(16),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Criar nova strain
+        const [newStrain] = await database.insert(strains).values({
+          name: input.name,
+          description: input.description,
+          vegaWeeks: input.vegaWeeks,
+          floraWeeks: input.floraWeeks,
+          isActive: true,
+        }).$returningId();
+        
+        // Copiar todos os targets da strain original
+        const sourceTargets = await database
+          .select()
+          .from(weeklyTargets)
+          .where(eq(weeklyTargets.strainId, input.sourceStrainId));
+        
+        if (sourceTargets.length > 0) {
+          const newTargets = sourceTargets.map((target) => ({
+            strainId: newStrain.id,
+            phase: target.phase,
+            weekNumber: target.weekNumber,
+            tempMin: target.tempMin,
+            tempMax: target.tempMax,
+            rhMin: target.rhMin,
+            rhMax: target.rhMax,
+            ppfdMin: target.ppfdMin,
+            ppfdMax: target.ppfdMax,
+            photoperiod: target.photoperiod,
+            phMin: target.phMin,
+            phMax: target.phMax,
+            ecMin: target.ecMin,
+            ecMax: target.ecMax,
+          }));
+          
+          await database.insert(weeklyTargets).values(newTargets);
+        }
+        
+        return { success: true, newStrainId: newStrain.id };
+      }),
   }),
 
   // Cycles (Ciclos)
@@ -352,6 +404,32 @@ export const appRouter = router({
 
   // Weekly Targets (Padrões Semanais)
   weeklyTargets: router({
+    getTargetsByWeek: publicProcedure
+      .input(
+        z.object({
+          strainId: z.number(),
+          phase: z.enum(["CLONING", "VEGA", "FLORA", "MAINTENANCE"]),
+          weekNumber: z.number(),
+        })
+      )
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) return null;
+        
+        const targets = await database
+          .select()
+          .from(weeklyTargets)
+          .where(
+            and(
+              eq(weeklyTargets.strainId, input.strainId),
+              eq(weeklyTargets.phase, input.phase),
+              eq(weeklyTargets.weekNumber, input.weekNumber)
+            )
+          )
+          .limit(1);
+        
+        return targets[0] || null;
+      }),
     getCurrentWeekTargets: publicProcedure.query(async () => {
       // Busca os targets da semana atual de todos os ciclos ativos
       const database = await getDb();

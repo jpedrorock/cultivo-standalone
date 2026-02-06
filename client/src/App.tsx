@@ -10,7 +10,7 @@ import TentDetails from "./pages/TentDetails";
 import Strains from "./pages/Strains";
 import Tasks from "./pages/Tasks";
 import ManageStrains from "./pages/ManageStrains";
-
+import Calculators from "./pages/Calculators";
 import History from "./pages/History";
 
 function Router() {
@@ -21,7 +21,7 @@ function Router() {
       <Route path={"/strains"} component={Strains} />
       <Route path={"/manage-strains"} component={ManageStrains} />
       <Route path={"/tasks"} component={Tasks} />
-
+      <Route path={"/calculators"} component={Calculators} />
       <Route path={"/history"} component={History} />
       <Route path={"/tent/:id"} component={TentDetails} />
       <Route path={"/tent/:id/log"} component={TentLog} />

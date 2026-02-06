@@ -2,7 +2,7 @@ import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Edit, Trash2, ArrowLeft } from "lucide-react";
+import { Plus, Edit, Trash2, ArrowLeft, Copy } from "lucide-react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
 import {
@@ -22,6 +22,7 @@ export default function ManageStrains() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isDuplicateOpen, setIsDuplicateOpen] = useState(false);
   const [selectedStrain, setSelectedStrain] = useState<any>(null);
 
   // Form states
@@ -106,6 +107,45 @@ export default function ManageStrains() {
     setIsDeleteOpen(true);
   };
 
+  const openDuplicateDialog = (strain: any) => {
+    setSelectedStrain(strain);
+    setName(strain.name + " (Cópia)");
+    setDescription(strain.description || "");
+    setVegaWeeks(strain.vegaWeeks);
+    setFloraWeeks(strain.floraWeeks);
+    setIsDuplicateOpen(true);
+  };
+
+  const duplicateStrain = trpc.strains.duplicate.useMutation();
+
+  const handleDuplicate = async () => {
+    if (!selectedStrain || !name.trim()) {
+      toast.error("Nome da strain é obrigatório");
+      return;
+    }
+
+    try {
+      await duplicateStrain.mutateAsync({
+        sourceStrainId: selectedStrain.id,
+        name,
+        description,
+        vegaWeeks,
+        floraWeeks,
+      });
+      
+      toast.success("Strain duplicada com sucesso! Todos os parâmetros ideais foram copiados.");
+      setIsDuplicateOpen(false);
+      setSelectedStrain(null);
+      setName("");
+      setDescription("");
+      setVegaWeeks(4);
+      setFloraWeeks(8);
+      refetch();
+    } catch (error) {
+      toast.error("Erro ao duplicar strain");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
@@ -151,6 +191,15 @@ export default function ManageStrains() {
                     </CardDescription>
                   </div>
                   <div className="flex gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => openDuplicateDialog(strain)}
+                      className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                      title="Duplicar strain"
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
                     <Button
                       variant="ghost"
                       size="icon"
@@ -358,6 +407,75 @@ export default function ManageStrains() {
               disabled={deleteStrain.isPending}
             >
               {deleteStrain.isPending ? "Deletando..." : "Deletar"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Duplicate Dialog */}
+      <Dialog open={isDuplicateOpen} onOpenChange={setIsDuplicateOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Duplicar Strain</DialogTitle>
+            <DialogDescription>
+              Crie uma cópia de <strong>{selectedStrain?.name}</strong> com todos os parâmetros ideais.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="dup-name">Nome *</Label>
+              <Input
+                id="dup-name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Ex: Blue Dream V2"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="dup-vegaWeeks">Semanas VEGA</Label>
+                <Input
+                  id="dup-vegaWeeks"
+                  type="number"
+                  min={1}
+                  max={12}
+                  value={vegaWeeks}
+                  onChange={(e) => setVegaWeeks(parseInt(e.target.value))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="dup-floraWeeks">Semanas FLORA</Label>
+                <Input
+                  id="dup-floraWeeks"
+                  type="number"
+                  min={1}
+                  max={16}
+                  value={floraWeeks}
+                  onChange={(e) => setFloraWeeks(parseInt(e.target.value))}
+                />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="dup-description">Descrição</Label>
+              <Textarea
+                id="dup-description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Características, efeitos, notas..."
+                rows={3}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDuplicateOpen(false)}>
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleDuplicate}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+              disabled={duplicateStrain.isPending}
+            >
+              {duplicateStrain.isPending ? "Duplicando..." : "Duplicar Strain"}
             </Button>
           </DialogFooter>
         </DialogContent>
