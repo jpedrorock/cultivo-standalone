@@ -435,3 +435,12 @@
 - [x] Adicionar botão "Exportar PDF" na página HistoryTable (ao lado do CSV)
 - [x] PDF inclui: cabeçalho com título, subtítulo, gráficos/tabelas capturados, rodapé com data/hora
 - [x] Testar exportação em ambas as páginas
+
+## ✅ Validação de Formulários
+- [x] Criar utilitário de validação com ranges realistas (validation.ts)
+- [x] Definir ranges: pH (0-14), Temp (-10 a 50°C), RH (0-100%), PPFD (0-2000), EC (0-5)
+- [x] Adicionar validação no backend com Zod refine
+- [x] Mensagens de erro claras em português
+- [x] Validação no servidor previne dados inválidos
+- [x] Toast automático de erro quando validação falha
+- [x] Testar com valores válidos e inválidos

@@ -348,11 +348,26 @@ export const appRouter = router({
           tentId: z.number(),
           logDate: z.date(),
           turn: z.enum(["AM", "PM"]),
-          tempC: z.string().optional(),
-          rhPct: z.string().optional(),
-          ppfd: z.number().optional(),
-          ph: z.string().optional(),
-          ec: z.string().optional(),
+          tempC: z.string().optional().refine(
+            (val) => !val || (parseFloat(val) >= -10 && parseFloat(val) <= 50),
+            { message: "Temperatura deve estar entre -10°C e 50°C" }
+          ),
+          rhPct: z.string().optional().refine(
+            (val) => !val || (parseFloat(val) >= 0 && parseFloat(val) <= 100),
+            { message: "Umidade deve estar entre 0% e 100%" }
+          ),
+          ppfd: z.number().optional().refine(
+            (val) => !val || (val >= 0 && val <= 2000),
+            { message: "PPFD deve estar entre 0 e 2000 µmol/m²/s" }
+          ),
+          ph: z.string().optional().refine(
+            (val) => !val || (parseFloat(val) >= 0 && parseFloat(val) <= 14),
+            { message: "pH deve estar entre 0 e 14" }
+          ),
+          ec: z.string().optional().refine(
+            (val) => !val || (parseFloat(val) >= 0 && parseFloat(val) <= 5),
+            { message: "EC deve estar entre 0 e 5 mS/cm" }
+          ),
           notes: z.string().optional(),
         })
       )
