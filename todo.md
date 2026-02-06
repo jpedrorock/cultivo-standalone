@@ -444,3 +444,11 @@
 - [x] Validação no servidor previne dados inválidos
 - [x] Toast automático de erro quando validação falha
 - [x] Testar com valores válidos e inválidos
+
+## 🐛 Corrigir Erro na Geração de PDF
+- [x] Investigar erro ao clicar em "Exportar PDF"
+- [x] Verificar logs do navegador (console errors)
+- [x] Verificar código de chartPdfExport.ts
+- [x] Identificar causa do erro: ID dentro de TabsContent (só existe quando aba ativa)
+- [x] Corrigir erro: mover ID para Tabs (container pai)
+- [x] Testar exportação em TentDetails e HistoryTable

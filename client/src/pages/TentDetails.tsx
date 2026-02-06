@@ -270,13 +270,13 @@ export default function TentDetails() {
         </div>
 
         {/* Charts and History */}
-        <Tabs defaultValue="charts" className="space-y-6">
+        <Tabs defaultValue="charts" className="space-y-6" id="charts-container">
           <TabsList className="bg-white/90 backdrop-blur-sm">
             <TabsTrigger value="charts">Gráficos</TabsTrigger>
             <TabsTrigger value="history">Histórico</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="charts" className="space-y-6" id="charts-container">
+          <TabsContent value="charts" className="space-y-6">
             {logsLoading ? (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
