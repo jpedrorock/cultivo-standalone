@@ -192,7 +192,7 @@ export async function getActiveCloningEvent(tentId: number): Promise<CloningEven
 // ============ WEEKLY TARGET FUNCTIONS ============
 
 export async function getWeeklyTarget(
-  tentId: number,
+  strainId: number,
   phase: "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE",
   weekNumber: number
 ): Promise<WeeklyTarget | undefined> {
@@ -203,7 +203,7 @@ export async function getWeeklyTarget(
     .from(weeklyTargets)
     .where(
       and(
-        eq(weeklyTargets.tentId, tentId),
+        eq(weeklyTargets.strainId, strainId),
         eq(weeklyTargets.phase, phase),
         eq(weeklyTargets.weekNumber, weekNumber)
       )
@@ -212,10 +212,10 @@ export async function getWeeklyTarget(
   return result[0];
 }
 
-export async function getWeeklyTargetsByTent(tentId: number): Promise<WeeklyTarget[]> {
+export async function getWeeklyTargetsByStrain(strainId: number): Promise<WeeklyTarget[]> {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(weeklyTargets).where(eq(weeklyTargets.tentId, tentId));
+  return db.select().from(weeklyTargets).where(eq(weeklyTargets.strainId, strainId));
 }
 
 // ============ DAILY LOG FUNCTIONS ============
@@ -258,8 +258,8 @@ export async function getHistoricalDataWithTargets(tentId: number, days: number 
   startDate.setDate(startDate.getDate() - days);
   const logs = await getDailyLogs(tentId, startDate);
 
-  // Get all targets for this tent
-  const targets = await getWeeklyTargetsByTent(tentId);
+  // Get all targets for this strain (if cycle has strainId)
+  const targets = cycle?.strainId ? await getWeeklyTargetsByStrain(cycle.strainId) : [];
 
   return { logs, targets, cycle };
 }

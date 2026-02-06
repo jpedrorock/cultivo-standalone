@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2 } from "lucide-react";
+import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { generateCycleReport } from "@/lib/pdfExport";
@@ -195,15 +195,15 @@ export default function Home() {
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Ações Rápidas</h3>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2">
-              <Link href="/reference">
-                <BookOpen className="w-6 h-6" />
-                <span>Referência</span>
-              </Link>
-            </Button>
-            <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2">
-              <Link href="/strains">
+              <Link href="/manage-strains">
                 <Sprout className="w-6 h-6" />
                 <span>Gerenciar Strains</span>
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2" disabled>
+              <Link href="/calculators">
+                <Calculator className="w-6 h-6" />
+                <span>Calculadoras</span>
               </Link>
             </Button>
             <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2">

@@ -178,6 +178,7 @@ export const appRouter = router({
       .input(
         z.object({
           cycleId: z.number(),
+          strainId: z.number().optional(),
           startDate: z.date().optional(),
           floraStartDate: z.date().optional().nullable(),
           phase: z.enum(["CLONING", "MAINTENANCE", "VEGA", "FLORA"]).optional(),
@@ -209,6 +210,10 @@ export const appRouter = router({
         
         if (input.floraStartDate !== undefined) {
           updates.floraStartDate = input.floraStartDate;
+        }
+        
+        if (input.strainId) {
+          updates.strainId = input.strainId;
         }
         
         await database
@@ -366,13 +371,13 @@ export const appRouter = router({
         weekNumber = Math.min(weeksSinceStart + 1, 6);
       }
       
-      // Busca os targets da semana atual por tentId
+      // Busca os targets da semana atual por strainId do ciclo
       const targets = await database
         .select()
         .from(weeklyTargets)
         .where(
           and(
-            eq(weeklyTargets.tentId, cycle.tentId),
+            eq(weeklyTargets.strainId, cycle.strainId),
             eq(weeklyTargets.phase, phase),
             eq(weeklyTargets.weekNumber, weekNumber)
           )
@@ -381,13 +386,13 @@ export const appRouter = router({
       
       return targets;
     }),
-    getByTent: publicProcedure.input(z.object({ tentId: z.number() })).query(async ({ input }) => {
-      return db.getWeeklyTargetsByTent(input.tentId);
+    getByStrain: publicProcedure.input(z.object({ strainId: z.number() })).query(async ({ input }) => {
+      return db.getWeeklyTargetsByStrain(input.strainId);
     }),
     create: publicProcedure
       .input(
         z.object({
-          tentId: z.number(),
+          strainId: z.number(),
           phase: z.enum(["CLONING", "VEGA", "FLORA", "MAINTENANCE"]),
           weekNumber: z.number(),
           tempMin: z.string().optional(),

@@ -9,7 +9,8 @@ import TentLog from "./pages/TentLog";
 import TentDetails from "./pages/TentDetails";
 import Strains from "./pages/Strains";
 import Tasks from "./pages/Tasks";
-import Reference from "./pages/Reference";
+import ManageStrains from "./pages/ManageStrains";
+
 import History from "./pages/History";
 
 function Router() {
@@ -18,8 +19,9 @@ function Router() {
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/strains"} component={Strains} />
+      <Route path={"/manage-strains"} component={ManageStrains} />
       <Route path={"/tasks"} component={Tasks} />
-      <Route path={"/reference"} component={Reference} />
+
       <Route path={"/history"} component={History} />
       <Route path={"/tent/:id"} component={TentDetails} />
       <Route path={"/tent/:id/log"} component={TentLog} />

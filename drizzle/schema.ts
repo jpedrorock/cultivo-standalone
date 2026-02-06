@@ -147,9 +147,9 @@ export const weeklyTargets = mysqlTable(
   "weeklyTargets",
   {
     id: int("id").autoincrement().primaryKey(),
-    tentId: int("tentId")
+    strainId: int("strainId")
       .notNull()
-      .references(() => tents.id),
+      .references(() => strains.id),
     phase: mysqlEnum("phase", ["CLONING", "VEGA", "FLORA", "MAINTENANCE"]).notNull(),
     weekNumber: int("weekNumber").notNull(),
     tempMin: decimal("tempMin", { precision: 4, scale: 1 }),
@@ -168,12 +168,12 @@ export const weeklyTargets = mysqlTable(
     updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   },
   (table) => ({
-    tentPhaseWeekUnique: unique("tentPhaseWeekUnique").on(
-      table.tentId,
+    strainPhaseWeekUnique: unique("strainPhaseWeekUnique").on(
+      table.strainId,
       table.phase,
       table.weekNumber
     ),
-    tentIdx: index("tentIdx").on(table.tentId),
+    strainIdx: index("strainIdx").on(table.strainId),
   })
 );
 

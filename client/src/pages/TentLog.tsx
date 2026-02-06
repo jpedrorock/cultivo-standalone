@@ -76,17 +76,17 @@ export default function TentLog() {
     return { phase, weekNumber };
   }, [cycle, tent]);
 
-  // Buscar targets da semana atual
-  const { data: weeklyTargets = [] } = trpc.weeklyTargets.getByTent.useQuery(
-    { tentId },
-    { enabled: !!tentId }
+  // Buscar targets da semana atual por strainId do ciclo
+  const { data: weeklyTargets = [] } = trpc.weeklyTargets.getByStrain.useQuery(
+    { strainId: cycle?.strainId || 0 },
+    { enabled: !!cycle?.strainId }
   );
 
   const currentTargets = useMemo(() => {
     if (!currentPhaseInfo || weeklyTargets.length === 0) return null;
 
     return weeklyTargets.find(
-      (t) => t.phase === currentPhaseInfo.phase && t.weekNumber === currentPhaseInfo.weekNumber
+      (t: any) => t.phase === currentPhaseInfo.phase && t.weekNumber === currentPhaseInfo.weekNumber
     );
   }, [weeklyTargets, currentPhaseInfo]);
 

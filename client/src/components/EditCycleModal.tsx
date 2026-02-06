@@ -44,8 +44,10 @@ export function EditCycleModal({
   );
   const [phase, setPhase] = useState<"CLONING" | "MAINTENANCE" | "VEGA" | "FLORA">("VEGA");
   const [weekNumber, setWeekNumber] = useState(1);
+  const [strainId, setStrainId] = useState<number>(1);
 
   const utils = trpc.useUtils();
+  const { data: strains } = trpc.strains.list.useQuery();
   const edit = trpc.cycles.edit.useMutation({
     onSuccess: () => {
       toast.success("Ciclo atualizado com sucesso!");
@@ -79,6 +81,7 @@ export function EditCycleModal({
     e.preventDefault();
     edit.mutate({
       cycleId,
+      strainId,
       startDate: new Date(startDate),
       phase,
       weekNumber,
@@ -111,6 +114,25 @@ export function EditCycleModal({
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="strain">Strain (Variedade)</Label>
+              <Select
+                value={strainId.toString()}
+                onValueChange={(value) => setStrainId(parseInt(value))}
+              >
+                <SelectTrigger id="strain">
+                  <SelectValue placeholder="Selecione a strain" />
+                </SelectTrigger>
+                <SelectContent>
+                  {strains?.map((strain) => (
+                    <SelectItem key={strain.id} value={strain.id.toString()}>
+                      {strain.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="grid gap-2">
               <Label htmlFor="phase">Fase Atual</Label>
               <Select

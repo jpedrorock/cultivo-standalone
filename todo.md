@@ -115,3 +115,17 @@
   - [x] Rodapé com numeração de páginas e data de geração
 - [x] Adicionar botão "Exportar PDF" nos cards de estufas com ciclos ativos
 - [x] Testar geração e download de PDF
+
+## 🔄 Nova Tarefa: Reorganizar Menu e Migrar Targets para Strain
+- [x] Migrar schema weeklyTargets: trocar tentId por strainId
+- [x] Executar migração do banco (pnpm db:push)
+- [x] Repovoar targets associados a strains ao invés de estufas (14 targets para OG Kush)
+- [x] Criar página Gerenciar Strains (listar, criar, editar, deletar)
+- [x] Atualizar modais de ciclo para selecionar strain
+- [x] Atualizar APIs para buscar targets por strainId
+- [x] Remover página Referência
+- [x] Atualizar menu inferior:
+  - [x] Remover Referência, Alertas, Análise
+  - [x] Adicionar Gerenciar Strains
+  - [x] Adicionar Calculadoras (placeholder)
+- [x] Testar fluxo completo (criar ciclo → selecionar strain → ver targets corretos)
