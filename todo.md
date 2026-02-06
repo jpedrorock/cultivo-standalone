@@ -415,3 +415,10 @@
 - [x] Adaptar Calculators.tsx para receber parâmetro de rota
 - [x] Adicionar botão voltar no header das calculadoras
 - [x] Remover dropdown mobile quebrado
+
+## 🧹 Limpeza Pré-Publicação
+- [x] Remover client/src/components/ui/chart.tsx (10 erros TypeScript eliminados)
+- [x] Deletar client/src/pages/History.tsx (substituída por HistoryTable.tsx)
+- [x] Deletar client/src/pages/ComponentShowcase.tsx (página de demo)
+- [x] Adicionar favicon personalizado (favicon.svg com seedling verde)
+- [x] Verificar build limpo sem erros TypeScript (0 erros!)
