@@ -164,3 +164,11 @@
 - [x] Implementar modal de confirmação com novo nome
 - [x] Copiar todos os targets da strain original (15 no caso da Blue Dream)
 - [x] Testar clonagem e edição de valores - Blue Dream → Blue Dream V2
+
+## 🧮 Nova Tarefa: Melhorias nas Calculadoras
+- [x] Revisar fórmula da calculadora de rega (verificada e correta - 25% solo, 30% coco, 15% hidro)
+- [x] Revisar fórmula da calculadora de fertilização (corrigida com fator de conversão EC 1.2 mS/cm por g/L)
+- [x] Tornar cálculo Lux→PPFD automático (resultado instantâneo ao digitar - useEffect implementado)
+- [x] Adicionar botão "Exportar Receita" em cada calculadora (3 botões adicionados)
+- [x] Implementar geração de arquivo TXT com os valores calculados (testado e funcionando)
+- [x] Testar todas as melhorias (50000 lux → 750 PPFD instantâneo, arquivo baixado com sucesso)

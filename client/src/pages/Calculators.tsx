@@ -1,10 +1,121 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calculator, Droplets, Sprout, Sun } from "lucide-react";
+import { Calculator, Droplets, Sprout, Sun, Download } from "lucide-react";
+
+// Funções de exportação de receitas
+function exportIrrigationRecipe(potVolume: string, substrate: string, result: { volume: number; frequency: string }) {
+  const substrateNames: Record<string, string> = {
+    soil: "Solo/Terra",
+    coco: "Fibra de Coco",
+    hidro: "Hidroponia"
+  };
+
+  const content = `
+===========================================
+       RECEITA DE REGA - APP CULTIVO
+===========================================
+
+DATA: ${new Date().toLocaleDateString('pt-BR')}
+
+PARÂMETROS:
+- Volume do vaso: ${potVolume}L
+- Tipo de substrato: ${substrateNames[substrate] || substrate}
+
+RESULTADO:
+- Volume por rega: ${result.volume}L
+- Frequência: ${result.frequency}
+
+DICA:
+Regue até ver 10-20% de drenagem no fundo do vaso
+para evitar acúmulo de sais.
+
+===========================================
+  `;
+
+  downloadTextFile(content, `receita-rega-${Date.now()}.txt`);
+}
+
+function exportFertilizationRecipe(waterVolume: string, npkConcentration: string, targetEC: string, result: { fertilizer: number; water: number }) {
+  const content = `
+===========================================
+   RECEITA DE FERTILIZAÇÃO - APP CULTIVO
+===========================================
+
+DATA: ${new Date().toLocaleDateString('pt-BR')}
+
+PARÂMETROS:
+- Volume de água: ${waterVolume}L
+- Concentração NPK: ${npkConcentration} g/L
+- EC alvo: ${targetEC} mS/cm
+
+RECEITA:
+- Fertilizante: ${result.fertilizer} ml
+- Água: ${result.water} L
+
+DICA:
+Sempre adicione o fertilizante à água (nunca o contrário)
+e misture bem antes de aplicar.
+
+===========================================
+  `;
+
+  downloadTextFile(content, `receita-fertilizacao-${Date.now()}.txt`);
+}
+
+function exportLuxPPFDRecipe(lux: string, lightType: string, result: number) {
+  const lightTypeNames: Record<string, string> = {
+    "led-white": "LED Branco",
+    "led-full-spectrum": "LED Full Spectrum",
+    "hps": "HPS (Alta Pressão de Sódio)",
+    "mh": "MH (Metal Halide)",
+    "sunlight": "Luz Solar"
+  };
+
+  const content = `
+===========================================
+   CONVERSÃO LUX → PPFD - APP CULTIVO
+===========================================
+
+DATA: ${new Date().toLocaleDateString('pt-BR')}
+
+PARÂMETROS:
+- Leitura em Lux: ${lux}
+- Tipo de luz: ${lightTypeNames[lightType] || lightType}
+
+RESULTADO:
+- PPFD estimado: ${result} µmol/m²/s
+
+REFERÊNCIAS DE PPFD POR FASE:
+- Clonagem: 100-200 µmol/m²/s
+- Vegetativa: 400-600 µmol/m²/s
+- Floração: 600-900 µmol/m²/s
+- Máximo: 1000-1200 µmol/m²/s
+
+DICA:
+Esta é uma estimativa. Para medições precisas,
+use um medidor PPFD (quantum sensor).
+
+===========================================
+  `;
+
+  downloadTextFile(content, `conversao-lux-ppfd-${Date.now()}.txt`);
+}
+
+function downloadTextFile(content: string, filename: string) {
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
 
 export default function Calculators() {
   return (
@@ -147,6 +258,14 @@ function IrrigationCalculator() {
             <p className="text-xs text-gray-600 mt-4">
               💡 <strong>Dica:</strong> Regue até ver 10-20% de drenagem no fundo do vaso para evitar acúmulo de sais.
             </p>
+            <Button 
+              onClick={() => exportIrrigationRecipe(potVolume, substrate, result)} 
+              variant="outline" 
+              className="w-full mt-4"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Exportar Receita
+            </Button>
           </div>
         )}
       </CardContent>
@@ -168,12 +287,18 @@ function FertilizationCalculator() {
 
     if (isNaN(water) || isNaN(concentration) || isNaN(ec) || water <= 0 || concentration <= 0 || ec <= 0) return;
 
-    // Fórmula simplificada: EC alvo / concentração do fertilizante * volume de água
-    // (Esta é uma aproximação; ajustes podem ser necessários baseados no fertilizante específico)
-    const fertilizerAmount = (ec / concentration) * water * 1000; // em ml
+    // Fórmula corrigida: cada 1g/L de fertilizante aumenta EC em ~1.0-1.5 mS/cm (média 1.2)
+    // Quantidade de fertilizante (g) = (EC alvo × volume de água) / fator de conversão
+    // Fator de conversão = 1.2 mS/cm por g/L (média para fertilizantes completos)
+    const ecConversionFactor = 1.2; // mS/cm por g/L
+    const fertilizerGrams = (ec * water) / ecConversionFactor;
+    
+    // Converter gramas para ml baseado na concentração do produto
+    // Se o produto tem 2g/L, precisamos de X ml para atingir Y gramas
+    const fertilizerML = (fertilizerGrams / concentration) * 1000;
 
     setResult({
-      fertilizer: Math.round(fertilizerAmount * 10) / 10,
+      fertilizer: Math.round(fertilizerML * 10) / 10,
       water: water,
     });
   };
@@ -246,6 +371,14 @@ function FertilizationCalculator() {
             <p className="text-xs text-gray-600 mt-4">
               💡 <strong>Dica:</strong> Sempre adicione o fertilizante à água (nunca o contrário) e misture bem antes de aplicar.
             </p>
+            <Button 
+              onClick={() => exportFertilizationRecipe(waterVolume, npkConcentration, targetEC, result)} 
+              variant="outline" 
+              className="w-full mt-4"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Exportar Receita
+            </Button>
           </div>
         )}
       </CardContent>
@@ -259,9 +392,13 @@ function LuxPPFDCalculator() {
   const [lightType, setLightType] = useState<string>("led-white");
   const [result, setResult] = useState<number | null>(null);
 
+  // Cálculo automático em tempo real
   const calculatePPFD = () => {
     const luxValue = parseFloat(lux);
-    if (isNaN(luxValue) || luxValue <= 0) return;
+    if (isNaN(luxValue) || luxValue <= 0) {
+      setResult(null);
+      return;
+    }
 
     // Fatores de conversão baseados no tipo de luz
     // Fonte: estudos de horticultura e especificações de fabricantes
@@ -280,6 +417,11 @@ function LuxPPFDCalculator() {
     const ppfd = luxValue * conversionFactor;
     setResult(Math.round(ppfd));
   };
+
+  // Recalcular automaticamente quando lux ou lightType mudar
+  useEffect(() => {
+    calculatePPFD();
+  }, [lux, lightType]);
 
   return (
     <Card className="bg-white/90 backdrop-blur-sm border-green-100">
@@ -322,10 +464,7 @@ function LuxPPFDCalculator() {
           </div>
         </div>
 
-        <Button onClick={calculatePPFD} className="w-full">
-          <Calculator className="w-4 h-4 mr-2" />
-          Converter para PPFD
-        </Button>
+
 
         {result !== null && (
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 space-y-3">
@@ -355,6 +494,14 @@ function LuxPPFDCalculator() {
             <p className="text-xs text-gray-600 mt-4">
               💡 <strong>Dica:</strong> Esta é uma estimativa. Para medições precisas, use um medidor PPFD (quantum sensor).
             </p>
+            <Button 
+              onClick={() => exportLuxPPFDRecipe(lux, lightType, result)} 
+              variant="outline" 
+              className="w-full mt-4"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Exportar Receita
+            </Button>
           </div>
         )}
       </CardContent>
