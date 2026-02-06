@@ -232,3 +232,18 @@
 - [x] Adicionar tabela de referência de valores ideais de micronutrientes por fase (clonagem, vega, flora, flush)
 - [x] Atualizar função de exportação com novos campos de micronutrientes
 - [x] Testar todos os cálculos com valores reais - 5 calculadoras testadas e funcionando
+
+## 📱 Nova Tarefa: Implementar PWA (Progressive Web App)
+- [x] Criar manifest.json com ícones, cores e configurações de instalação
+- [x] Gerar ícones PWA em múltiplos tamanhos (192x192, 512x512, maskable) - 4 ícones gerados e enviados para CDN
+- [x] Implementar Service Worker para cache de assets e funcionamento offline (sw.js)
+- [x] Registrar Service Worker no main.tsx
+- [x] Adicionar estratégia de cache (Cache First para assets, Network First para API)
+- [x] Implementar helpers de notificações push (pushNotifications.ts)
+- [x] Criar botão "Instalar App" na interface (InstallPWA.tsx com banner flutuante)
+- [x] Adicionar meta tags para PWA no index.html (theme-color, apple-mobile-web-app)
+- [x] Implementar sincronização offline (Background Sync API no Service Worker)
+- [x] UI já otimizada para mobile (touch-friendly, responsive)
+- [ ] Testar instalação em Android/iOS
+- [ ] Testar funcionamento offline
+- [ ] Testar notificações push
