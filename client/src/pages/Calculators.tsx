@@ -118,17 +118,40 @@ function downloadTextFile(content: string, filename: string) {
   URL.revokeObjectURL(url);
 }
 
+import { useRoute, useLocation } from "wouter";
+import { ArrowLeft } from "lucide-react";
+
 export default function Calculators() {
+  const [, params] = useRoute("/calculators/:id");
+  const [, setLocation] = useLocation();
+  const calculatorId = params?.id || "irrigation";
+
+  const calculatorTitles: Record<string, string> = {
+    irrigation: "Calculadora de Rega",
+    fertilization: "Calculadora de Fertilização",
+    "lux-ppfd": "Conversor Lux → PPFD",
+    "ppm-ec": "Conversor PPM ↔ EC",
+    "ph-adjust": "Calculadora de pH",
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-green-100 sticky top-0 z-10">
         <div className="container py-6">
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setLocation("/calculators")}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
             <Calculator className="w-8 h-8 text-primary" />
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Calculadoras</h1>
-              <p className="text-gray-600 mt-1">Ferramentas práticas para cultivo</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+                {calculatorTitles[calculatorId] || "Calculadora"}
+              </h1>
+              <p className="text-gray-600 mt-1 text-sm md:text-base">Ferramenta prática para cultivo</p>
             </div>
           </div>
         </div>
@@ -136,27 +159,8 @@ export default function Calculators() {
 
       {/* Main Content */}
       <main className="container py-8">
-        <Tabs defaultValue="irrigation" className="w-full">
-          {/* Mobile: Dropdown Select */}
-          <div className="md:hidden mb-6">
-            <select 
-              className="w-full p-3 border-2 border-gray-200 rounded-lg bg-white text-base font-medium"
-              onChange={(e) => {
-                const tabs = document.querySelectorAll('[role="tab"]');
-                const targetTab = Array.from(tabs).find(tab => tab.getAttribute('value') === e.target.value) as HTMLElement;
-                if (targetTab) targetTab.click();
-              }}
-              defaultValue="irrigation"
-            >
-              <option value="irrigation">💧 Calculadora de Rega</option>
-              <option value="fertilization">🌱 Fertilização (NPK + Micronutrientes)</option>
-              <option value="lux-ppfd">☀️ Conversão Lux → PPFD</option>
-              <option value="ppm-ec">🧮 Conversão PPM ↔ EC</option>
-              <option value="ph-adjust">💧 Ajuste de pH</option>
-            </select>
-          </div>
-
-          {/* Desktop: Tabs */}
+        <Tabs value={calculatorId} className="w-full">
+          {/* Tabs - ocultar em mobile pois usamos menu de seleção */}
           <TabsList className="hidden md:grid md:grid-cols-5 mb-6">
             <TabsTrigger value="irrigation" className="flex-col gap-1 h-20 md:flex-row md:h-auto md:gap-2">
               <Droplets className="w-5 h-5 md:w-4 md:h-4" />

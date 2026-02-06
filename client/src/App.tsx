@@ -14,6 +14,7 @@ import Strains from "./pages/Strains";
 import Tasks from "./pages/Tasks";
 import ManageStrains from "./pages/ManageStrains";
 import Calculators from "./pages/Calculators";
+import CalculatorMenu from "./pages/CalculatorMenu";
 import Alerts from "./pages/Alerts";
 import HistoryTable from "./pages/HistoryTable";
 import Settings from "./pages/Settings";
@@ -28,7 +29,8 @@ function Router() {
       <Route path={"/strains"} component={Strains} />
       <Route path={"/manage-strains"} component={ManageStrains} />
       <Route path={"/tasks"} component={Tasks} />
-      <Route path={"/calculators"} component={Calculators} />
+      <Route path={"/calculators"} component={CalculatorMenu} />
+      <Route path={"/calculators/:id"} component={Calculators} />
       <Route path={"/alerts"} component={Alerts} />
       <Route path={"/history"} component={HistoryTable} />
       <Route path={"/settings"} component={Settings} />

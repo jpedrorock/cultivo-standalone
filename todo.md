@@ -406,3 +406,12 @@
 - [x] Remover função handleExportPDF e import generateCycleReport
 - [x] Manter apenas exportação CSV na página de Histórico
 - [x] Deixar interface da Home mais limpa e focada
+
+## 🐛 Corrigir Calculadoras no Mobile
+- [x] Investigar problema: select com click() em tabs não funcionava
+- [x] Verificar código da página Calculators.tsx
+- [x] Criar página CalculatorMenu.tsx com cards grandes e ícones
+- [x] Implementar navegação para cada calculadora individual (/calculators/:id)
+- [x] Adaptar Calculators.tsx para receber parâmetro de rota
+- [x] Adicionar botão voltar no header das calculadoras
+- [x] Remover dropdown mobile quebrado
