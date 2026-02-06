@@ -247,3 +247,11 @@
 - [ ] Testar instalação em Android/iOS
 - [ ] Testar funcionamento offline
 - [ ] Testar notificações push
+
+## 📱 Bug: Menu das Calculadoras Inacessível no Celular
+- [x] Inspecionar código das abas na página Calculadoras (TabsList com grid-cols-5)
+- [x] Adicionar scroll horizontal para abas no mobile (flex overflow-x-auto)
+- [x] Aumentar tamanho dos botões de aba para serem touch-friendly (min-w-[120-140px])
+- [x] Ajustar espaçamento e padding para mobile (flex-shrink-0)
+- [x] Testar no navegador mobile (responsive mode) - funcionando
+- [x] Verificar se todas as 5 abas são acessíveis - scroll horizontal permite acesso a todas

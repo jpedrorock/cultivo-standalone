@@ -137,24 +137,24 @@ export default function Calculators() {
       {/* Main Content */}
       <main className="container py-8">
         <Tabs defaultValue="irrigation" className="w-full">
-          <TabsList className="grid w-full grid-cols-5 mb-6">
-            <TabsTrigger value="irrigation">
+          <TabsList className="w-full mb-6 flex overflow-x-auto scrollbar-hide md:grid md:grid-cols-5">
+            <TabsTrigger value="irrigation" className="flex-shrink-0 min-w-[120px] md:min-w-0">
               <Droplets className="w-4 h-4 mr-2" />
               Rega
             </TabsTrigger>
-            <TabsTrigger value="fertilization">
+            <TabsTrigger value="fertilization" className="flex-shrink-0 min-w-[140px] md:min-w-0">
               <Sprout className="w-4 h-4 mr-2" />
               Fertilização
             </TabsTrigger>
-            <TabsTrigger value="lux-ppfd">
+            <TabsTrigger value="lux-ppfd" className="flex-shrink-0 min-w-[140px] md:min-w-0">
               <Sun className="w-4 h-4 mr-2" />
               Lux → PPFD
             </TabsTrigger>
-            <TabsTrigger value="ppm-ec">
+            <TabsTrigger value="ppm-ec" className="flex-shrink-0 min-w-[130px] md:min-w-0">
               <Calculator className="w-4 h-4 mr-2" />
               PPM ↔ EC
             </TabsTrigger>
-            <TabsTrigger value="ph-adjust">
+            <TabsTrigger value="ph-adjust" className="flex-shrink-0 min-w-[130px] md:min-w-0">
               <Droplets className="w-4 h-4 mr-2" />
               Ajuste pH
             </TabsTrigger>
