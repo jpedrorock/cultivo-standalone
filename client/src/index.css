@@ -175,3 +175,92 @@
     }
   }
 }
+/* Print Styles */
+@media print {
+  /* Hide navigation elements */
+  nav,
+  aside,
+  .sidebar,
+  [role="navigation"],
+  header button,
+  footer {
+    display: none !important;
+  }
+
+  /* Optimize page layout for printing */
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Ensure content fills the page */
+  .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  /* Optimize cards for printing */
+  .card,
+  [class*="card"] {
+    border: 1px solid #e5e7eb !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+
+  /* Ensure charts are visible */
+  svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Optimize tables for printing */
+  table {
+    page-break-inside: auto;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  /* Remove backgrounds and shadows */
+  * {
+    background: white !important;
+    box-shadow: none !important;
+  }
+
+  /* Keep text colors readable */
+  h1, h2, h3, h4, h5, h6, p, span, td, th, label {
+    color: black !important;
+  }
+
+  /* Preserve badge colors */
+  .badge,
+  [class*="badge"] {
+    border: 1px solid #000 !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Ensure buttons are hidden in print */
+  button {
+    display: none !important;
+  }
+
+  /* Keep header visible but simplified */
+  header {
+    border-bottom: 2px solid #000 !important;
+    padding: 1rem 0 !important;
+    margin-bottom: 1rem !important;
+  }
+
+  /* Optimize spacing */
+  .py-8, .py-6, .py-4 {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+}

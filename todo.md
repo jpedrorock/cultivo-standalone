@@ -459,3 +459,10 @@
 - [x] Fallback: branco para background, preto para texto, cinza para bordas
 - [x] Testar exportação em HistoryTable e TentDetails
 - [x] Verificar se PDF é gerado corretamente
+
+## 🖨️ Substituir PDF por Impressão Nativa
+- [x] Remover botões "Exportar PDF" problemáticos
+- [x] Adicionar botões "Imprimir" com window.print()
+- [x] Criar estilos @media print para formatação
+- [x] Ocultar menus/sidebars na impressão
+- [x] Testar impressão e "Salvar como PDF" do navegador

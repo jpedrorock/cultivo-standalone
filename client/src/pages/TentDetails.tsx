@@ -9,8 +9,7 @@ import { Link, useParams } from "wouter";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { format, subDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { exportChartToPDF } from "@/lib/chartPdfExport";
-import { toast } from "sonner";
+import { Printer } from "lucide-react";
 
 export default function TentDetails() {
   const { id } = useParams<{ id: string }>();
@@ -76,20 +75,8 @@ export default function TentDetails() {
 
   const phaseInfo = getPhaseInfo();
 
-  const handleExportPDF = async () => {
-    try {
-      toast.loading("Gerando PDF...");
-      await exportChartToPDF(
-        "charts-container",
-        `relatorio_${tent.name}_${format(new Date(), "yyyyMMdd_HHmmss")}`,
-        `Relatório - ${tent.name}`,
-        `Período: ${dateRange} dias • Gerado em ${format(new Date(), "dd/MM/yyyy HH:mm")}`
-      );
-      toast.success("PDF gerado com sucesso!");
-    } catch (error) {
-      console.error(error);
-      toast.error("Erro ao gerar PDF. Tente novamente.");
-    }
+  const handlePrint = () => {
+    window.print();
   };
 
   // Prepare chart data
@@ -134,9 +121,9 @@ export default function TentDetails() {
               </p>
             </div>
             <Badge className={`${phaseInfo.color} text-white border-0`}>{phaseInfo.phase}</Badge>
-            <Button variant="outline" onClick={handleExportPDF}>
-              <FileDown className="w-4 h-4 mr-2" />
-              Exportar PDF
+            <Button variant="outline" onClick={handlePrint}>
+              <Printer className="w-4 h-4 mr-2" />
+              Imprimir
             </Button>
             <Button asChild>
               <Link href={`/tent/${tentId}/log`}>Novo Registro</Link>

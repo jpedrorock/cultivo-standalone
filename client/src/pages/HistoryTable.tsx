@@ -28,7 +28,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { exportChartToPDF } from "@/lib/chartPdfExport";
+import { Printer } from "lucide-react";
 
 export default function HistoryTable() {
   const [selectedTentId, setSelectedTentId] = useState<number | undefined>(undefined);
@@ -93,25 +93,8 @@ export default function HistoryTable() {
     utils.dailyLogs.listAll.invalidate();
   };
 
-  const handleExportPDF = async () => {
-    try {
-      toast.loading("Gerando PDF...");
-      const tentName = selectedTentId 
-        ? tents?.find(t => t.id === selectedTentId)?.name || "Todas"
-        : "Todas";
-      const periodLabel = period === "all" ? "Todos" : period === "custom" ? "Personalizado" : `${period} dias`;
-      
-      await exportChartToPDF(
-        "history-table-container",
-        `historico_${tentName}_${new Date().toISOString().split('T')[0]}`,
-        `Histórico de Registros - ${tentName}`,
-        `Período: ${periodLabel} • Total: ${logsData?.logs.length || 0} registros`
-      );
-      toast.success("PDF gerado com sucesso!");
-    } catch (error) {
-      console.error(error);
-      toast.error("Erro ao gerar PDF. Tente novamente.");
-    }
+  const handlePrint = () => {
+    window.print();
   };
 
   const exportToCSV = () => {
@@ -193,9 +176,9 @@ export default function HistoryTable() {
               </div>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" onClick={handleExportPDF} disabled={!logsData?.logs || logsData.logs.length === 0}>
-                <FileDown className="w-4 h-4 mr-2" />
-                Exportar PDF
+              <Button variant="outline" onClick={handlePrint} disabled={!logsData?.logs || logsData.logs.length === 0}>
+                <Printer className="w-4 h-4 mr-2" />
+                Imprimir
               </Button>
               <Button onClick={exportToCSV} disabled={!logsData?.logs || logsData.logs.length === 0}>
                 <Download className="w-4 h-4 mr-2" />
