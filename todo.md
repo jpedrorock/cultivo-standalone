@@ -283,3 +283,10 @@
 - [x] Faltam 3 botões: Lux→PPFD, PPM↔EC, Ajuste pH
 - [x] Solução: mudar para flex-col (lista vertical completa) ao invés de grid
 - [x] Testar todos os 5 botões visíveis no mobile - FUNCIONANDO! Todos os 5 botões visíveis em linha horizontal
+
+## 🔄 Solução Definitiva: Dropdown Nativo no Mobile
+- [x] Substituir TabsList por <select> dropdown nativo no mobile (md:hidden)
+- [x] Manter abas horizontais no desktop (hidden md:grid)
+- [x] Adicionar emojis e labels descritivos no dropdown
+- [x] Implementar onChange que clica na aba correspondente
+- [x] Desktop continua com abas normais (testado em viewport > 768px)

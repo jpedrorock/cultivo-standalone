@@ -137,7 +137,27 @@ export default function Calculators() {
       {/* Main Content */}
       <main className="container py-8">
         <Tabs defaultValue="irrigation" className="w-full">
-            <TabsList className="flex flex-col gap-2 md:grid md:grid-cols-5 mb-6">
+          {/* Mobile: Dropdown Select */}
+          <div className="md:hidden mb-6">
+            <select 
+              className="w-full p-3 border-2 border-gray-200 rounded-lg bg-white text-base font-medium"
+              onChange={(e) => {
+                const tabs = document.querySelectorAll('[role="tab"]');
+                const targetTab = Array.from(tabs).find(tab => tab.getAttribute('value') === e.target.value) as HTMLElement;
+                if (targetTab) targetTab.click();
+              }}
+              defaultValue="irrigation"
+            >
+              <option value="irrigation">💧 Calculadora de Rega</option>
+              <option value="fertilization">🌱 Fertilização (NPK + Micronutrientes)</option>
+              <option value="lux-ppfd">☀️ Conversão Lux → PPFD</option>
+              <option value="ppm-ec">🧮 Conversão PPM ↔ EC</option>
+              <option value="ph-adjust">💧 Ajuste de pH</option>
+            </select>
+          </div>
+
+          {/* Desktop: Tabs */}
+          <TabsList className="hidden md:grid md:grid-cols-5 mb-6">
             <TabsTrigger value="irrigation" className="flex-col gap-1 h-20 md:flex-row md:h-auto md:gap-2">
               <Droplets className="w-5 h-5 md:w-4 md:h-4" />
               <span className="text-xs md:text-sm">Rega</span>
