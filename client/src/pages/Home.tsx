@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator } from "lucide-react";
+import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { generateCycleReport } from "@/lib/pdfExport";
@@ -214,7 +214,7 @@ export default function Home() {
             </Button>
             <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2">
               <Link href="/alerts">
-                <ThermometerSun className="w-6 h-6" />
+                <Bell className="w-6 h-6" />
                 <span>Alertas</span>
               </Link>
             </Button>

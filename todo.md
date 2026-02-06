@@ -197,3 +197,39 @@
 - [x] Remover link "Histórico Calc." da Home.tsx (ajustado grid para 4 colunas)
 - [x] Testar calculadoras (manter só botão Exportar) - funcionando
 - [x] Verificar se não há erros de TypeScript - 0 erros
+
+## 🚨 Nova Tarefa: Sistema de Alertas Automáticos
+- [x] Criar tabela `alertSettings` no schema (configurações por estufa)
+- [x] Criar tabela `alertHistory` no schema (histórico de alertas disparados)
+- [x] Executar SQL manual para criar tabelas (pnpm db:push teve conflito)
+- [x] Criar API `alerts.getSettings` para buscar configurações
+- [x] Criar API `alerts.updateSettings` para ativar/desativar alertas
+- [x] Criar API `alerts.getHistory` para listar histórico
+- [x] Implementar lógica de verificação em server/alertChecker.ts
+- [x] Implementar envio de email usando notifyOwner
+- [x] Criar página Alertas (/alerts) com configurações e histórico
+- [x] Adicionar verificação automática a cada novo registro (dailyLogs.create)
+- [x] Adicionar botão Alertas na Home
+- [ ] Testar fluxo completo: registro fora da faixa → alerta disparado → email enviado
+
+## 📊 Nova Tarefa: Dashboard de Análise
+- [ ] Criar página Analytics (/analytics) com gráficos
+- [ ] Adicionar biblioteca de gráficos (recharts ou chart.js)
+- [ ] Implementar gráfico de evolução de Temperatura (últimos 30 dias)
+- [ ] Implementar gráfico de evolução de Umidade (últimos 30 dias)
+- [ ] Implementar gráfico de evolução de PPFD (últimos 30 dias)
+- [ ] Criar API `analytics.getTimeSeriesData` para buscar dados históricos
+- [ ] Adicionar filtros por estufa e período (7/30/90 dias)
+- [ ] Implementar comparação de produtividade entre ciclos
+- [ ] Adicionar estatísticas resumidas (média, min, max, desvio padrão)
+- [ ] Testar visualização com dados reais das 3 estufas
+
+## 🧪 Nova Tarefa: Expandir Calculadora de Fertilização
+- [ ] Adicionar seção de Micronutrientes (Ca, Mg, Fe, Mn, Zn, B, Cu, Mo)
+- [ ] Implementar cálculo de CalMag (Ca + Mg)
+- [ ] Adicionar calculadora de ajuste de pH (quanto de ácido/base adicionar)
+- [ ] Implementar conversão PPM ↔ EC (500 scale e 700 scale)
+- [ ] Adicionar tabela de referência de valores ideais por fase
+- [ ] Criar campo para múltiplos fertilizantes (A+B, CalMag, etc.)
+- [ ] Atualizar função de exportação com novos campos
+- [ ] Testar todos os cálculos com valores reais

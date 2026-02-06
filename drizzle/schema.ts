@@ -367,3 +367,50 @@ export type InsertSafetyLimit = typeof safetyLimits.$inferInsert;
 /**
  * Histórico de Cálculos (calculadoras)
  */
+
+
+/**
+ * Configurações de Alertas por Estufa
+ */
+export const alertSettings = mysqlTable("alertSettings", {
+  id: int("id").autoincrement().primaryKey(),
+  tentId: int("tentId")
+    .notNull()
+    .references(() => tents.id),
+  alertsEnabled: boolean("alertsEnabled").default(true).notNull(),
+  tempEnabled: boolean("tempEnabled").default(true).notNull(),
+  rhEnabled: boolean("rhEnabled").default(true).notNull(),
+  ppfdEnabled: boolean("ppfdEnabled").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AlertSettings = typeof alertSettings.$inferSelect;
+export type InsertAlertSettings = typeof alertSettings.$inferInsert;
+
+/**
+ * Histórico de Alertas Disparados
+ */
+export const alertHistory = mysqlTable(
+  "alertHistory",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    tentId: int("tentId")
+      .notNull()
+      .references(() => tents.id),
+    metric: mysqlEnum("metric", ["TEMP", "RH", "PPFD"]).notNull(),
+    value: decimal("value", { precision: 10, scale: 2 }).notNull(),
+    targetMin: decimal("targetMin", { precision: 10, scale: 2 }),
+    targetMax: decimal("targetMax", { precision: 10, scale: 2 }),
+    message: text("message").notNull(),
+    notificationSent: boolean("notificationSent").default(false).notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    tentIdx: index("tentIdx").on(table.tentId),
+    dateIdx: index("dateIdx").on(table.createdAt),
+  })
+);
+
+export type AlertHistory = typeof alertHistory.$inferSelect;
+export type InsertAlertHistory = typeof alertHistory.$inferInsert;

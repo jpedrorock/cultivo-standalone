@@ -18,6 +18,8 @@ import {
   taskTemplates,
   tentAState,
   cloningEvents,
+  alertSettings,
+  alertHistory,
 } from "../drizzle/schema";
 
 export const appRouter = router({
@@ -358,6 +360,15 @@ export const appRouter = router({
         const database = await getDb();
         if (!database) throw new Error("Database not available");
         await database.insert(dailyLogs).values(input);
+        
+        // Verificar alertas automaticamente
+        const { checkAndNotifyAlerts } = await import("./alertChecker");
+        await checkAndNotifyAlerts(input.tentId, {
+          tempC: input.tempC,
+          rhPct: input.rhPct,
+          ppfd: input.ppfd,
+        });
+        
         return { success: true };
       }),
     getLatestByTent: publicProcedure
@@ -377,6 +388,94 @@ export const appRouter = router({
 
   // Alerts (Alertas)
   alerts: router({
+    // Configurações de alertas
+    getSettings: publicProcedure
+      .input(z.object({ tentId: z.number() }))
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        const settings = await database
+          .select()
+          .from(alertSettings)
+          .where(eq(alertSettings.tentId, input.tentId))
+          .limit(1);
+        return settings[0] || null;
+      }),
+    
+    updateSettings: publicProcedure
+      .input(
+        z.object({
+          tentId: z.number(),
+          alertsEnabled: z.boolean().optional(),
+          tempEnabled: z.boolean().optional(),
+          rhEnabled: z.boolean().optional(),
+          ppfdEnabled: z.boolean().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Verificar se já existe configuração
+        const existing = await database
+          .select()
+          .from(alertSettings)
+          .where(eq(alertSettings.tentId, input.tentId))
+          .limit(1);
+        
+        if (existing.length > 0) {
+          // Atualizar existente
+          await database
+            .update(alertSettings)
+            .set({
+              alertsEnabled: input.alertsEnabled,
+              tempEnabled: input.tempEnabled,
+              rhEnabled: input.rhEnabled,
+              ppfdEnabled: input.ppfdEnabled,
+            })
+            .where(eq(alertSettings.tentId, input.tentId));
+        } else {
+          // Criar nova
+          await database.insert(alertSettings).values({
+            tentId: input.tentId,
+            alertsEnabled: input.alertsEnabled ?? true,
+            tempEnabled: input.tempEnabled ?? true,
+            rhEnabled: input.rhEnabled ?? true,
+            ppfdEnabled: input.ppfdEnabled ?? true,
+          });
+        }
+        
+        return { success: true };
+      }),
+    
+    // Histórico de alertas
+    getHistory: publicProcedure
+      .input(
+        z.object({
+          tentId: z.number().optional(),
+          limit: z.number().default(50),
+        })
+      )
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) return [];
+        
+        if (input.tentId) {
+          return database
+            .select()
+            .from(alertHistory)
+            .where(eq(alertHistory.tentId, input.tentId))
+            .orderBy(desc(alertHistory.createdAt))
+            .limit(input.limit);
+        }
+        
+        return database
+          .select()
+          .from(alertHistory)
+          .orderBy(desc(alertHistory.createdAt))
+          .limit(input.limit);
+      }),
+    
     list: publicProcedure
       .input(
         z.object({
