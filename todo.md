@@ -487,3 +487,8 @@
 - [x] Atualizar manifest.json com novos ícones
 - [x] Atualizar index.html com favicon e apple-touch-icon
 - [x] Testar ícones no navegador e PWA
+
+## 🔄 Atualizar Ícone para Melhor Resolução
+- [x] Copiar novo SVG de alta resolução para client/public/
+- [x] Regenerar todos os ícones PNG (192x192, 512x512, 180x180, favicon)
+- [x] Verificar qualidade dos novos ícones
