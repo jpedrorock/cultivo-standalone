@@ -1,4 +1,5 @@
 import { NotificationSettings } from "@/components/NotificationSettings";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ export default function Settings() {
       {/* Content */}
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto space-y-6">
+          <ThemeToggle />
           <NotificationSettings />
         </div>
       </main>

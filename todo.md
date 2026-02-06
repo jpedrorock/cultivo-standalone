@@ -466,3 +466,10 @@
 - [x] Criar estilos @media print para formatação
 - [x] Ocultar menus/sidebars na impressão
 - [x] Testar impressão e "Salvar como PDF" do navegador
+
+## 🌙 Nova Tarefa: Modo Escuro
+- [x] Criar contexto ThemeContext com estado e persistência
+- [x] Criar hook useTheme para acessar tema
+- [x] Adicionar toggle de tema na página Configurações
+- [x] Aplicar classe "dark" no elemento raiz
+- [x] Testar transição entre temas claro e escuro
