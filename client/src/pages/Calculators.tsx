@@ -160,29 +160,6 @@ export default function Calculators() {
       {/* Main Content */}
       <main className="container py-8">
         <Tabs value={calculatorId} className="w-full">
-          {/* Tabs - ocultar em mobile pois usamos menu de seleção */}
-          <TabsList className="hidden md:grid md:grid-cols-5 mb-6">
-            <TabsTrigger value="irrigation" className="flex-col gap-1 h-20 md:flex-row md:h-auto md:gap-2">
-              <Droplets className="w-5 h-5 md:w-4 md:h-4" />
-              <span className="text-xs md:text-sm">Rega</span>
-            </TabsTrigger>
-            <TabsTrigger value="fertilization" className="flex-col gap-1 h-20 md:flex-row md:h-auto md:gap-2">
-              <Sprout className="w-5 h-5 md:w-4 md:h-4" />
-              <span className="text-xs md:text-sm">Fertilização</span>
-            </TabsTrigger>
-            <TabsTrigger value="lux-ppfd" className="flex-col gap-1 h-20 md:flex-row md:h-auto md:gap-2">
-              <Sun className="w-5 h-5 md:w-4 md:h-4" />
-              <span className="text-xs md:text-sm">Lux → PPFD</span>
-            </TabsTrigger>
-            <TabsTrigger value="ppm-ec" className="flex-col gap-1 h-20 md:flex-row md:h-auto md:gap-2">
-              <Calculator className="w-5 h-5 md:w-4 md:h-4" />
-              <span className="text-xs md:text-sm">PPM ↔ EC</span>
-            </TabsTrigger>
-            <TabsTrigger value="ph-adjust" className="flex-col gap-1 h-20 md:flex-row md:h-auto md:gap-2">
-              <Droplets className="w-5 h-5 md:w-4 md:h-4" />
-              <span className="text-xs md:text-sm">Ajuste pH</span>
-            </TabsTrigger>
-          </TabsList>
 
           {/* Calculadora de Rega */}
           <TabsContent value="irrigation">

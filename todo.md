@@ -422,3 +422,8 @@
 - [x] Deletar client/src/pages/ComponentShowcase.tsx (página de demo)
 - [x] Adicionar favicon personalizado (favicon.svg com seedling verde)
 - [x] Verificar build limpo sem erros TypeScript (0 erros!)
+
+## 🧹 Remover Tabs das Calculadoras
+- [x] Remover menu de tabs horizontal da página Calculators.tsx
+- [x] Manter apenas header com botão voltar e título da calculadora
+- [x] Simplificar interface das calculadoras individuais
