@@ -473,3 +473,9 @@
 - [x] Adicionar toggle de tema na página Configurações
 - [x] Aplicar classe "dark" no elemento raiz
 - [x] Testar transição entre temas claro e escuro
+
+## 🐛 Bug: Erro JSON na página /tent/1/log
+- [x] Investigar logs do servidor e navegador
+- [x] Identificar qual query tRPC está falhando
+- [x] Verificar código da página TentLog.tsx
+- [x] Corrigir erro e testar solução
