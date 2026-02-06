@@ -137,7 +137,7 @@ export default function Calculators() {
       {/* Main Content */}
       <main className="container py-8">
         <Tabs defaultValue="irrigation" className="w-full">
-          <TabsList className="w-full mb-6 grid grid-cols-2 gap-2 md:grid-cols-5 md:gap-0">
+            <TabsList className="flex flex-col gap-2 md:grid md:grid-cols-5 mb-6">
             <TabsTrigger value="irrigation" className="flex-col gap-1 h-20 md:flex-row md:h-auto md:gap-2">
               <Droplets className="w-5 h-5 md:w-4 md:h-4" />
               <span className="text-xs md:text-sm">Rega</span>

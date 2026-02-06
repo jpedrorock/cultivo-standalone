@@ -277,3 +277,9 @@
 - [ ] Solução pendente: testar em dispositivo real ou usar max-width ao invés de breakpoint
 - [x] Botões de abas já touch-friendly (grid 2 colunas mobile)
 - [x] Desktop continua funcionando
+
+## 🐛 Bug Crítico: Grid 2 Colunas Cortando 3 Botões no Mobile
+- [x] Problema identificado: grid-cols-2 mostra só 2 botões (Rega, Fertilização)
+- [x] Faltam 3 botões: Lux→PPFD, PPM↔EC, Ajuste pH
+- [x] Solução: mudar para flex-col (lista vertical completa) ao invés de grid
+- [x] Testar todos os 5 botões visíveis no mobile - FUNCIONANDO! Todos os 5 botões visíveis em linha horizontal
