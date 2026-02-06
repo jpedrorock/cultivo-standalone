@@ -375,7 +375,7 @@ function FertilizationCalculator() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <div className="space-y-2">
             <Label htmlFor="waterVolume">Volume de Água (litros)</Label>
             <Input
@@ -415,7 +415,7 @@ function FertilizationCalculator() {
         {/* Micronutrientes (Opcional) */}
         <div className="border-t border-gray-200 pt-4">
           <h4 className="text-sm font-semibold text-gray-700 mb-3">🧪 Micronutrientes (Opcional)</h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
             <div className="space-y-2">
               <Label htmlFor="calciumPPM">Cálcio (Ca) - PPM</Label>
               <Input
@@ -843,7 +843,7 @@ function PHAdjustCalculator() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <div className="space-y-2">
             <Label htmlFor="waterVolumePH">Volume de Água (litros)</Label>
             <Input

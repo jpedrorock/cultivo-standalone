@@ -268,3 +268,12 @@
 - [x] Ajustar botões para serem compactos mas touch-friendly (h-20, ícones 5x5)
 - [x] Centralizar ícones e texto nos botões (flex-col gap-1)
 - [x] Testar usabilidade no mobile - layout compacto e prático
+
+## 📱 Revisão Completa: Calculadoras Mobile
+- [x] Inspecionar todas as 5 calculadoras no modo mobile
+- [x] Identificar problema: inputs em 3 colunas ficam muito estreitos
+- [x] Mudar breakpoint de md: (768px) para lg: (1024px) nos grids de fertilização e pH
+- [ ] PROBLEMA: Viewport de teste ainda mostra 3 colunas (parece estar > 1024px)
+- [ ] Solução pendente: testar em dispositivo real ou usar max-width ao invés de breakpoint
+- [x] Botões de abas já touch-friendly (grid 2 colunas mobile)
+- [x] Desktop continua funcionando
