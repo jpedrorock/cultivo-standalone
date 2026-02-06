@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calculator, Droplets, Sprout, Sun, Download, Save } from "lucide-react";
+import { Calculator, Droplets, Sprout, Sun, Download } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 
 // Funções de exportação de receitas
@@ -177,7 +177,6 @@ function IrrigationCalculator() {
   const [potVolume, setPotVolume] = useState<string>("");
   const [substrate, setSubstrate] = useState<string>("coco");
   const [result, setResult] = useState<{ volume: number; frequency: string } | null>(null);
-  const saveCalculation = trpc.calculations.save.useMutation();
 
   const calculateIrrigation = () => {
     const volume = parseFloat(potVolume);
@@ -260,31 +259,14 @@ function IrrigationCalculator() {
             <p className="text-xs text-gray-600 mt-4">
               💡 <strong>Dica:</strong> Regue até ver 10-20% de drenagem no fundo do vaso para evitar acúmulo de sais.
             </p>
-            <div className="grid grid-cols-2 gap-3 mt-4">
-              <Button 
-                onClick={async () => {
-                  await saveCalculation.mutateAsync({
-                    calculatorType: "IRRIGATION",
-                    parametersJson: JSON.stringify({ potVolume, substrate }),
-                    resultJson: JSON.stringify(result),
-                    title: `Rega - Vaso ${potVolume}L`,
-                  });
-                  alert("✅ Receita salva no histórico!");
-                }}
-                variant="default"
-                disabled={saveCalculation.isPending}
-              >
-                <Save className="w-4 h-4 mr-2" />
-                Salvar Receita
-              </Button>
-              <Button 
-                onClick={() => exportIrrigationRecipe(potVolume, substrate, result)} 
-                variant="outline"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Exportar
-              </Button>
-            </div>
+            <Button 
+              onClick={() => exportIrrigationRecipe(potVolume, substrate, result)} 
+              variant="outline" 
+              className="w-full mt-4"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Exportar Receita
+            </Button>
           </div>
         )}
       </CardContent>
@@ -298,7 +280,6 @@ function FertilizationCalculator() {
   const [npkConcentration, setNpkConcentration] = useState<string>("");
   const [targetEC, setTargetEC] = useState<string>("");
   const [result, setResult] = useState<{ fertilizer: number; water: number } | null>(null);
-  const saveCalculation = trpc.calculations.save.useMutation();
 
   const calculateFertilization = () => {
     const water = parseFloat(waterVolume);
@@ -391,31 +372,14 @@ function FertilizationCalculator() {
             <p className="text-xs text-gray-600 mt-4">
               💡 <strong>Dica:</strong> Sempre adicione o fertilizante à água (nunca o contrário) e misture bem antes de aplicar.
             </p>
-            <div className="grid grid-cols-2 gap-3 mt-4">
-              <Button 
-                onClick={async () => {
-                  await saveCalculation.mutateAsync({
-                    calculatorType: "FERTILIZATION",
-                    parametersJson: JSON.stringify({ waterVolume, npkConcentration, targetEC }),
-                    resultJson: JSON.stringify(result),
-                    title: `Fertilização - EC ${targetEC}`,
-                  });
-                  alert("✅ Receita salva no histórico!");
-                }}
-                variant="default"
-                disabled={saveCalculation.isPending}
-              >
-                <Save className="w-4 h-4 mr-2" />
-                Salvar Receita
-              </Button>
-              <Button 
-                onClick={() => exportFertilizationRecipe(waterVolume, npkConcentration, targetEC, result)} 
-                variant="outline"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Exportar
-              </Button>
-            </div>
+            <Button 
+              onClick={() => exportFertilizationRecipe(waterVolume, npkConcentration, targetEC, result)} 
+              variant="outline" 
+              className="w-full mt-4"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Exportar Receita
+            </Button>
           </div>
         )}
       </CardContent>
@@ -428,7 +392,6 @@ function LuxPPFDCalculator() {
   const [lux, setLux] = useState<string>("");
   const [lightType, setLightType] = useState<string>("led-white");
   const [result, setResult] = useState<number | null>(null);
-  const saveCalculation = trpc.calculations.save.useMutation();
 
   // Cálculo automático em tempo real
   const calculatePPFD = () => {
@@ -532,31 +495,14 @@ function LuxPPFDCalculator() {
             <p className="text-xs text-gray-600 mt-4">
               💡 <strong>Dica:</strong> Esta é uma estimativa. Para medições precisas, use um medidor PPFD (quantum sensor).
             </p>
-            <div className="grid grid-cols-2 gap-3 mt-4">
-              <Button 
-                onClick={async () => {
-                  await saveCalculation.mutateAsync({
-                    calculatorType: "LUX_PPFD",
-                    parametersJson: JSON.stringify({ lux, lightType }),
-                    resultJson: JSON.stringify({ ppfd: result }),
-                    title: `Lux→PPFD - ${lux} lux`,
-                  });
-                  alert("✅ Receita salva no histórico!");
-                }}
-                variant="default"
-                disabled={saveCalculation.isPending}
-              >
-                <Save className="w-4 h-4 mr-2" />
-                Salvar Receita
-              </Button>
-              <Button 
-                onClick={() => exportLuxPPFDRecipe(lux, lightType, result)} 
-                variant="outline"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Exportar
-              </Button>
-            </div>
+            <Button 
+              onClick={() => exportLuxPPFDRecipe(lux, lightType, result)} 
+              variant="outline" 
+              className="w-full mt-4"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Exportar Receita
+            </Button>
           </div>
         )}
       </CardContent>

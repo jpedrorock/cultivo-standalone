@@ -18,7 +18,6 @@ import {
   taskTemplates,
   tentAState,
   cloningEvents,
-  calculationHistory,
 } from "../drizzle/schema";
 
 export const appRouter = router({
@@ -835,95 +834,7 @@ export const appRouter = router({
   }),
 
   // Calculations (Histórico de Cálculos)
-  calculations: router({
-    save: publicProcedure
-      .input(
-        z.object({
-          calculatorType: z.enum(["IRRIGATION", "FERTILIZATION", "LUX_PPFD"]),
-          parametersJson: z.string(),
-          resultJson: z.string(),
-          title: z.string().optional(),
-          notes: z.string().optional(),
-        })
-      )
-      .mutation(async ({ input, ctx }) => {
-        if (!ctx.user) {
-          throw new Error("Usuário não autenticado");
-        }
 
-        const database = await getDb();
-        if (!database) throw new Error("Database not available");
-        const [result] = await database.insert(calculationHistory).values({
-          userId: ctx.user.id,
-          calculatorType: input.calculatorType,
-          parametersJson: input.parametersJson,
-          resultJson: input.resultJson,
-          title: input.title,
-          notes: input.notes,
-        });
-
-        return { success: true, id: result.insertId };
-      }),
-
-    list: publicProcedure
-      .input(
-        z.object({
-          calculatorType: z.enum(["IRRIGATION", "FERTILIZATION", "LUX_PPFD"]).optional(),
-          limit: z.number().default(50),
-        })
-      )
-      .query(async ({ input, ctx }) => {
-        if (!ctx.user) {
-          throw new Error("Usuário não autenticado");
-        }
-
-        const database = await getDb();
-        if (!database) throw new Error("Database not available");
-        let query = database
-          .select()
-          .from(calculationHistory)
-          .where(eq(calculationHistory.userId, ctx.user.id))
-          .orderBy(desc(calculationHistory.createdAt))
-          .limit(input.limit);
-
-        if (input.calculatorType) {
-          query = database
-            .select()
-            .from(calculationHistory)
-            .where(
-              and(
-                eq(calculationHistory.userId, ctx.user.id),
-                eq(calculationHistory.calculatorType, input.calculatorType)
-              )
-            )
-            .orderBy(desc(calculationHistory.createdAt))
-            .limit(input.limit);
-        }
-
-        return query;
-      }),
-
-    delete: publicProcedure
-      .input(z.object({ id: z.number() }))
-      .mutation(async ({ input, ctx }) => {
-        if (!ctx.user) {
-          throw new Error("Usuário não autenticado");
-        }
-
-        const database = await getDb();
-        if (!database) throw new Error("Database not available");
-        await database
-          .delete(calculationHistory)
-          .where(
-            and(
-              eq(calculationHistory.id, input.id),
-              eq(calculationHistory.userId, ctx.user.id)
-            )
-          );
-
-        return { success: true };
-      }),
-  }),
 });
 
 export type AppRouter = typeof appRouter;

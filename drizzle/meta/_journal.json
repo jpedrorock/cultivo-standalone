@@ -29,6 +29,13 @@
       "when": 1770389533786,
       "tag": "0003_keen_night_thrasher",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1770390576633,
+      "tag": "0004_far_northstar",
+      "breakpoints": true
     }
   ]
 }

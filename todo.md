@@ -185,3 +185,15 @@
 - [x] Adicionar filtros por tipo de calculadora (Todos, Rega, Fertilização, Lux→PPFD)
 - [x] Implementar ações: visualizar detalhes (card), exportar (TXT), deletar (com confirmação)
 - [x] Testar fluxo completo: salvar Rega 11L → listar no histórico → exibido corretamente
+
+## 🧹 Nova Tarefa: Remover Sistema de Histórico de Calculadoras
+- [x] Remover tabela `calculationHistory` do schema (drizzle/schema.ts)
+- [x] Tabela no banco não removida (DROP TABLE bloqueado, mas não é problema)
+- [x] Remover router `calculations` do server/routers.ts
+- [x] Remover botões "Salvar Receita" das 3 calculadoras
+- [x] Remover imports de Save icon e mutation saveCalculation
+- [x] Deletar arquivo client/src/pages/CalculationHistory.tsx
+- [x] Remover rota /calculation-history do App.tsx
+- [x] Remover link "Histórico Calc." da Home.tsx (ajustado grid para 4 colunas)
+- [x] Testar calculadoras (manter só botão Exportar) - funcionando
+- [x] Verificar se não há erros de TypeScript - 0 erros
