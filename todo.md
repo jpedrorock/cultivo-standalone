@@ -255,3 +255,10 @@
 - [x] Ajustar espaçamento e padding para mobile (flex-shrink-0)
 - [x] Testar no navegador mobile (responsive mode) - funcionando
 - [x] Verificar se todas as 5 abas são acessíveis - scroll horizontal permite acesso a todas
+
+## 🔄 Melhoria: Transformar Abas em Botões Verticais no Mobile
+- [x] Modificar TabsList para exibir botões empilhados verticalmente no mobile (flex flex-col gap-2)
+- [x] Remover scroll horizontal e usar flex-col no mobile
+- [x] Manter grid horizontal no desktop (md:grid md:grid-cols-5)
+- [x] Aumentar padding e altura dos botões para serem mais touch-friendly (py-3 no mobile, py-2 no desktop)
+- [x] Testar layout mobile com botões verticais - funcionando perfeitamente

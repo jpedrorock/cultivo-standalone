@@ -137,24 +137,24 @@ export default function Calculators() {
       {/* Main Content */}
       <main className="container py-8">
         <Tabs defaultValue="irrigation" className="w-full">
-          <TabsList className="w-full mb-6 flex overflow-x-auto scrollbar-hide md:grid md:grid-cols-5">
-            <TabsTrigger value="irrigation" className="flex-shrink-0 min-w-[120px] md:min-w-0">
+          <TabsList className="w-full mb-6 flex flex-col gap-2 md:grid md:grid-cols-5 md:gap-0">
+            <TabsTrigger value="irrigation" className="w-full justify-start py-3 md:py-2">
               <Droplets className="w-4 h-4 mr-2" />
               Rega
             </TabsTrigger>
-            <TabsTrigger value="fertilization" className="flex-shrink-0 min-w-[140px] md:min-w-0">
+            <TabsTrigger value="fertilization" className="w-full justify-start py-3 md:py-2">
               <Sprout className="w-4 h-4 mr-2" />
               Fertilização
             </TabsTrigger>
-            <TabsTrigger value="lux-ppfd" className="flex-shrink-0 min-w-[140px] md:min-w-0">
+            <TabsTrigger value="lux-ppfd" className="w-full justify-start py-3 md:py-2">
               <Sun className="w-4 h-4 mr-2" />
               Lux → PPFD
             </TabsTrigger>
-            <TabsTrigger value="ppm-ec" className="flex-shrink-0 min-w-[130px] md:min-w-0">
+            <TabsTrigger value="ppm-ec" className="w-full justify-start py-3 md:py-2">
               <Calculator className="w-4 h-4 mr-2" />
               PPM ↔ EC
             </TabsTrigger>
-            <TabsTrigger value="ph-adjust" className="flex-shrink-0 min-w-[130px] md:min-w-0">
+            <TabsTrigger value="ph-adjust" className="w-full justify-start py-3 md:py-2">
               <Droplets className="w-4 h-4 mr-2" />
               Ajuste pH
             </TabsTrigger>
