@@ -104,3 +104,14 @@
 - [x] Identificar origem das chaves duplicadas (key=0) - divs de botões de ação
 - [x] Corrigir usando IDs únicos ao invés de índices - adicionado tent.id nas keys
 - [x] Testar e validar correção - erro não aparece mais nos logs
+
+## 📄 Nova Tarefa: Exportação de Relatórios em PDF
+- [x] Instalar dependências (jsPDF, jspdf-autotable, html2canvas)
+- [x] Criar API para buscar dados completos do ciclo (info, logs, tarefas)
+- [x] Implementar função de geração de PDF com:
+  - [x] Cabeçalho com informações do ciclo (estufa, strain, datas, fase)
+  - [x] Tabela de estatísticas (média, min, max de cada parâmetro)
+  - [x] Resumo de tarefas (total, concluídas, taxa de conclusão)
+  - [x] Rodapé com numeração de páginas e data de geração
+- [x] Adicionar botão "Exportar PDF" nos cards de estufas com ciclos ativos
+- [x] Testar geração e download de PDF

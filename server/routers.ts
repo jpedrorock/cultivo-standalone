@@ -217,6 +217,47 @@ export const appRouter = router({
           .where(eq(cycles.id, input.cycleId));
         return { success: true };
       }),
+    getReportData: publicProcedure
+      .input(z.object({ cycleId: z.number() }))
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Buscar informações do ciclo
+        const cycleData = await database
+          .select()
+          .from(cycles)
+          .where(eq(cycles.id, input.cycleId))
+          .limit(1);
+        
+        if (!cycleData || cycleData.length === 0) throw new Error("Cycle not found");
+        const cycle = cycleData[0];
+        
+        // Buscar tent e strain
+        const tent = await database.select().from(tents).where(eq(tents.id, cycle.tentId)).limit(1);
+        const strain = await database.select().from(strains).where(eq(strains.id, cycle.strainId)).limit(1);
+        
+        // Buscar logs diários do tent durante o período do ciclo
+        const logs = await database
+          .select()
+          .from(dailyLogs)
+          .where(eq(dailyLogs.tentId, cycle.tentId))
+          .orderBy(dailyLogs.logDate);
+        
+        // Buscar tarefas do tent durante o período do ciclo
+        const tasks = await database
+          .select()
+          .from(taskInstances)
+          .where(eq(taskInstances.tentId, cycle.tentId));
+        
+        return {
+          cycle,
+          tent: tent[0],
+          strain: strain[0],
+          logs,
+          tasks,
+        };
+      }),
   }),
 
   // Daily Logs (Registros Diários)
