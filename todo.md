@@ -172,3 +172,16 @@
 - [x] Adicionar botão "Exportar Receita" em cada calculadora (3 botões adicionados)
 - [x] Implementar geração de arquivo TXT com os valores calculados (testado e funcionando)
 - [x] Testar todas as melhorias (50000 lux → 750 PPFD instantâneo, arquivo baixado com sucesso)
+
+## 📚 Nova Tarefa: Histórico de Cálculos
+- [x] Criar tabela `calculationHistory` no schema do banco de dados
+- [x] Adicionar campos: tipo, parâmetros (JSON), resultado (JSON), data, userId
+- [x] Executar SQL manual para criar tabela (migration teve conflito)
+- [x] Criar API `calculations.save` para salvar cálculo
+- [x] Criar API `calculations.list` para listar histórico (com filtro opcional)
+- [x] Criar API `calculations.delete` para deletar cálculo
+- [x] Adicionar botão "Salvar Receita" nas 3 calculadoras (verde, ao lado do Exportar)
+- [x] Criar página Histórico com listagem de receitas salvas (/calculation-history)
+- [x] Adicionar filtros por tipo de calculadora (Todos, Rega, Fertilização, Lux→PPFD)
+- [x] Implementar ações: visualizar detalhes (card), exportar (TXT), deletar (com confirmação)
+- [x] Testar fluxo completo: salvar Rega 11L → listar no histórico → exibido corretamente

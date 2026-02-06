@@ -363,3 +363,30 @@ export const safetyLimits = mysqlTable(
 
 export type SafetyLimit = typeof safetyLimits.$inferSelect;
 export type InsertSafetyLimit = typeof safetyLimits.$inferInsert;
+
+/**
+ * Histórico de Cálculos (calculadoras)
+ */
+export const calculationHistory = mysqlTable(
+  "calculationHistory",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    userId: int("userId")
+      .notNull()
+      .references(() => users.id),
+    calculatorType: mysqlEnum("calculatorType", ["IRRIGATION", "FERTILIZATION", "LUX_PPFD"]).notNull(),
+    parametersJson: text("parametersJson").notNull(), // Parâmetros de entrada (JSON)
+    resultJson: text("resultJson").notNull(), // Resultado do cálculo (JSON)
+    title: varchar("title", { length: 200 }), // Título opcional
+    notes: text("notes"), // Notas opcionais
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    userIdx: index("userIdx").on(table.userId),
+    typeIdx: index("typeIdx").on(table.calculatorType),
+    dateIdx: index("dateIdx").on(table.createdAt),
+  })
+);
+
+export type CalculationHistory = typeof calculationHistory.$inferSelect;
+export type InsertCalculationHistory = typeof calculationHistory.$inferInsert;
