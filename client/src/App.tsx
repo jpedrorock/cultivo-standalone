@@ -16,6 +16,7 @@ import ManageStrains from "./pages/ManageStrains";
 import Calculators from "./pages/Calculators";
 import Alerts from "./pages/Alerts";
 import History from "./pages/History";
+import Settings from "./pages/Settings";
 
 
 function Router() {
@@ -29,6 +30,7 @@ function Router() {
       <Route path={"/calculators"} component={Calculators} />
       <Route path={"/alerts"} component={Alerts} />
       <Route path={"/history"} component={History} />
+      <Route path={"/settings"} component={Settings} />
 
       <Route path={"/tent/:id"} component={TentDetails} />
       <Route path={"/tent/:id/log"} component={TentLog} />

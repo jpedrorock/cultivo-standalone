@@ -343,3 +343,15 @@
 - [x] Adicionar padding-left (md:pl-64) no conteúdo quando sidebar visível
 - [x] Testar transição entre mobile e desktop
 - [x] Verificar que menu inferior aparece só no mobile
+
+## 🔔 Sistema de Notificações Push
+- [x] Criar componente NotificationSettings.tsx
+- [x] Solicitar permissão de notificações do navegador
+- [x] Criar interface para configurar horário do lembrete (input time)
+- [x] Implementar lógica de agendamento diário (localStorage + setTimeout)
+- [x] Criar função para disparar notificação push
+- [x] Adicionar link "Configurações" na Sidebar
+- [x] Criar página Settings.tsx dedicada
+- [x] Adicionar switch para ativar/desativar lembretes
+- [x] Salvar preferências do usuário (horário, ativo/inativo) em localStorage
+- [x] Botão "Testar Notificação" para validar funcionamento

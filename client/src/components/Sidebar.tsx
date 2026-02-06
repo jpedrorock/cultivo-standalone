@@ -1,4 +1,4 @@
-import { Home, Calculator, BarChart3, Bell, Sprout, Leaf } from "lucide-react";
+import { Home, Calculator, BarChart3, Bell, Sprout, Leaf, Settings } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 
@@ -54,7 +54,20 @@ export function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-4 border-t border-gray-200 space-y-3">
+        <Link
+          href="/settings"
+          className={cn(
+            "flex items-center gap-3 px-4 py-3 rounded-lg transition-all",
+            "hover:bg-gray-50",
+            location === "/settings"
+              ? "bg-gray-100 text-gray-900 font-semibold"
+              : "text-gray-600 hover:text-gray-900"
+          )}
+        >
+          <Settings className={cn("w-5 h-5", location === "/settings" && "stroke-[2.5]")} />
+          <span>Configurações</span>
+        </Link>
         <div className="px-4 py-2 bg-green-50 rounded-lg">
           <p className="text-xs text-green-700 font-medium">Sistema Ativo</p>
           <p className="text-xs text-gray-600 mt-1">3 estufas monitoradas</p>
