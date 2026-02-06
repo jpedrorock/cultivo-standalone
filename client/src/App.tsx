@@ -17,6 +17,7 @@ import Calculators from "./pages/Calculators";
 import Alerts from "./pages/Alerts";
 import HistoryTable from "./pages/HistoryTable";
 import Settings from "./pages/Settings";
+import StrainTargets from "./pages/StrainTargets";
 
 
 function Router() {
@@ -31,6 +32,7 @@ function Router() {
       <Route path={"/alerts"} component={Alerts} />
       <Route path={"/history"} component={HistoryTable} />
       <Route path={"/settings"} component={Settings} />
+      <Route path={"/strains/:id/targets"} component={StrainTargets} />
 
       <Route path={"/tent/:id"} component={TentDetails} />
       <Route path={"/tent/:id/log"} component={TentLog} />

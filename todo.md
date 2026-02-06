@@ -380,3 +380,23 @@
 - [x] Dialog de confirmação antes de excluir
 - [x] Invalidar cache e atualizar tabela após edição/exclusão
 - [x] Feedback visual (toast) de sucesso/erro
+
+## 🔔 Integração de Alertas com Notificações Push
+- [ ] Criar função checkValuesOutOfRange() no servidor
+- [ ] Comparar valores registrados com targets da strain/fase atual
+- [ ] Identificar quais parâmetros estão fora da faixa (temp, RH, PPFD, pH, EC)
+- [ ] Criar alerta automático quando valores fora da faixa
+- [ ] Integrar verificação na API dailyLogs.create
+- [ ] Enviar notificação push imediata ao detectar valores fora da faixa
+- [ ] Incluir detalhes do alerta na notificação (parâmetro, valor, faixa ideal)
+- [ ] Testar com valores dentro e fora da faixa
+- [ ] Verificar que notificação aparece no navegador
+- [ ] Verificar que alerta é criado na página de Alertas
+
+## 🐛 Corrigir Erro 404 ao Editar Strain
+- [x] Investigar erro 404 ao clicar em editar parâmetros da strain
+- [x] Verificar rotas no App.tsx
+- [x] Verificar navegação na página ManageStrains
+- [x] Corrigir rota ou link quebrado (criada rota /strains/:id/targets)
+- [x] Criar página StrainTargets.tsx completa
+- [x] Testar edição de parâmetros completa
