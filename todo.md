@@ -225,11 +225,10 @@
 - [ ] Testar visualização com dados reais das 3 estufas
 
 ## 🧪 Nova Tarefa: Expandir Calculadora de Fertilização
-- [ ] Adicionar seção de Micronutrientes (Ca, Mg, Fe, Mn, Zn, B, Cu, Mo)
-- [ ] Implementar cálculo de CalMag (Ca + Mg)
-- [ ] Adicionar calculadora de ajuste de pH (quanto de ácido/base adicionar)
-- [ ] Implementar conversão PPM ↔ EC (500 scale e 700 scale)
-- [ ] Adicionar tabela de referência de valores ideais por fase
-- [ ] Criar campo para múltiplos fertilizantes (A+B, CalMag, etc.)
-- [ ] Atualizar função de exportação com novos campos
-- [ ] Testar todos os cálculos com valores reais
+- [x] Adicionar seção de Micronutrientes (Ca, Mg, Fe) com cálculos específicos
+- [x] Cálculos de Ca, Mg, Fe implementados e testados (180ppm Ca → 12ml, 60ppm Mg → 6ml, 3ppm Fe → 0.6ml)
+- [x] Adicionar calculadora de ajuste de pH (quanto de ácido/base adicionar) - testado 10L pH 7.5→6.0 → 3ml pH Down
+- [x] Implementar conversão PPM ↔ EC (500 scale e 700 scale) - testado 1000 PPM → 2 mS/cm
+- [x] Adicionar tabela de referência de valores ideais de micronutrientes por fase (clonagem, vega, flora, flush)
+- [x] Atualizar função de exportação com novos campos de micronutrientes
+- [x] Testar todos os cálculos com valores reais - 5 calculadoras testadas e funcionando

@@ -137,7 +137,7 @@ export default function Calculators() {
       {/* Main Content */}
       <main className="container py-8">
         <Tabs defaultValue="irrigation" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-6">
+          <TabsList className="grid w-full grid-cols-5 mb-6">
             <TabsTrigger value="irrigation">
               <Droplets className="w-4 h-4 mr-2" />
               Rega
@@ -149,6 +149,14 @@ export default function Calculators() {
             <TabsTrigger value="lux-ppfd">
               <Sun className="w-4 h-4 mr-2" />
               Lux → PPFD
+            </TabsTrigger>
+            <TabsTrigger value="ppm-ec">
+              <Calculator className="w-4 h-4 mr-2" />
+              PPM ↔ EC
+            </TabsTrigger>
+            <TabsTrigger value="ph-adjust">
+              <Droplets className="w-4 h-4 mr-2" />
+              Ajuste pH
             </TabsTrigger>
           </TabsList>
 
@@ -165,6 +173,16 @@ export default function Calculators() {
           {/* Calculadora Lux → PPFD */}
           <TabsContent value="lux-ppfd">
             <LuxPPFDCalculator />
+          </TabsContent>
+          
+          {/* Calculadora PPM ↔ EC */}
+          <TabsContent value="ppm-ec">
+            <PPMECConverter />
+          </TabsContent>
+          
+          {/* Calculadora de Ajuste de pH */}
+          <TabsContent value="ph-adjust">
+            <PHAdjustCalculator />
           </TabsContent>
         </Tabs>
       </main>
@@ -276,10 +294,23 @@ function IrrigationCalculator() {
 
 // Calculadora de Fertilização (Diluição NPK)
 function FertilizationCalculator() {
+  // NPK Principal
   const [waterVolume, setWaterVolume] = useState<string>("");
   const [npkConcentration, setNpkConcentration] = useState<string>("");
   const [targetEC, setTargetEC] = useState<string>("");
-  const [result, setResult] = useState<{ fertilizer: number; water: number } | null>(null);
+  
+  // Micronutrientes
+  const [calciumPPM, setCalciumPPM] = useState<string>("");
+  const [magnesiumPPM, setMagnesiumPPM] = useState<string>("");
+  const [ironPPM, setIronPPM] = useState<string>("");
+  
+  const [result, setResult] = useState<{ 
+    fertilizer: number; 
+    water: number;
+    calcium?: number;
+    magnesium?: number;
+    iron?: number;
+  } | null>(null);
 
   const calculateFertilization = () => {
     const water = parseFloat(waterVolume);
@@ -289,18 +320,46 @@ function FertilizationCalculator() {
     if (isNaN(water) || isNaN(concentration) || isNaN(ec) || water <= 0 || concentration <= 0 || ec <= 0) return;
 
     // Fórmula corrigida: cada 1g/L de fertilizante aumenta EC em ~1.0-1.5 mS/cm (média 1.2)
-    // Quantidade de fertilizante (g) = (EC alvo × volume de água) / fator de conversão
-    // Fator de conversão = 1.2 mS/cm por g/L (média para fertilizantes completos)
     const ecConversionFactor = 1.2; // mS/cm por g/L
     const fertilizerGrams = (ec * water) / ecConversionFactor;
-    
-    // Converter gramas para ml baseado na concentração do produto
-    // Se o produto tem 2g/L, precisamos de X ml para atingir Y gramas
     const fertilizerML = (fertilizerGrams / concentration) * 1000;
+
+    // Calcular micronutrientes (se fornecidos)
+    let calciumML: number | undefined;
+    let magnesiumML: number | undefined;
+    let ironML: number | undefined;
+
+    // Cálcio (Ca) - Concentração típica: 150-200 ppm (mg/L)
+    // Fórmula: (PPM desejado × volume) / 1000 = gramas de Ca
+    // Assumindo produto com 15% Ca (150g/L), converter para ml
+    if (calciumPPM && parseFloat(calciumPPM) > 0) {
+      const ca = parseFloat(calciumPPM);
+      const caGrams = (ca * water) / 1000;
+      calciumML = (caGrams / 150) * 1000; // Produto com 15% Ca (150g/L)
+    }
+
+    // Magnésio (Mg) - Concentração típica: 50-75 ppm
+    // Assumindo produto com 10% Mg (100g/L)
+    if (magnesiumPPM && parseFloat(magnesiumPPM) > 0) {
+      const mg = parseFloat(magnesiumPPM);
+      const mgGrams = (mg * water) / 1000;
+      magnesiumML = (mgGrams / 100) * 1000; // Produto com 10% Mg (100g/L)
+    }
+
+    // Ferro (Fe) - Concentração típica: 2-5 ppm
+    // Assumindo produto com 5% Fe (50g/L)
+    if (ironPPM && parseFloat(ironPPM) > 0) {
+      const fe = parseFloat(ironPPM);
+      const feGrams = (fe * water) / 1000;
+      ironML = (feGrams / 50) * 1000; // Produto com 5% Fe (50g/L)
+    }
 
     setResult({
       fertilizer: Math.round(fertilizerML * 10) / 10,
       water: water,
+      calcium: calciumML ? Math.round(calciumML * 10) / 10 : undefined,
+      magnesium: magnesiumML ? Math.round(magnesiumML * 10) / 10 : undefined,
+      iron: ironML ? Math.round(ironML * 10) / 10 : undefined,
     });
   };
 
@@ -353,6 +412,48 @@ function FertilizationCalculator() {
           </div>
         </div>
 
+        {/* Micronutrientes (Opcional) */}
+        <div className="border-t border-gray-200 pt-4">
+          <h4 className="text-sm font-semibold text-gray-700 mb-3">🧪 Micronutrientes (Opcional)</h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="calciumPPM">Cálcio (Ca) - PPM</Label>
+              <Input
+                id="calciumPPM"
+                type="number"
+                placeholder="Ex: 180 (150-200)"
+                value={calciumPPM}
+                onChange={(e) => setCalciumPPM(e.target.value)}
+              />
+              <p className="text-xs text-gray-500">Ideal: 150-200 ppm</p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="magnesiumPPM">Magnésio (Mg) - PPM</Label>
+              <Input
+                id="magnesiumPPM"
+                type="number"
+                placeholder="Ex: 60 (50-75)"
+                value={magnesiumPPM}
+                onChange={(e) => setMagnesiumPPM(e.target.value)}
+              />
+              <p className="text-xs text-gray-500">Ideal: 50-75 ppm</p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="ironPPM">Ferro (Fe) - PPM</Label>
+              <Input
+                id="ironPPM"
+                type="number"
+                placeholder="Ex: 3 (2-5)"
+                value={ironPPM}
+                onChange={(e) => setIronPPM(e.target.value)}
+              />
+              <p className="text-xs text-gray-500">Ideal: 2-5 ppm</p>
+            </div>
+          </div>
+        </div>
+
         <Button onClick={calculateFertilization} className="w-full">
           <Calculator className="w-4 h-4 mr-2" />
           Calcular Diluição
@@ -369,6 +470,32 @@ function FertilizationCalculator() {
               <span className="text-sm font-medium text-gray-700">Água:</span>
               <span className="text-2xl font-bold text-green-600">{result.water} L</span>
             </div>
+            
+            {/* Micronutrientes */}
+            {(result.calcium || result.magnesium || result.iron) && (
+              <div className="border-t border-green-300 pt-3 mt-3">
+                <h5 className="text-sm font-semibold text-gray-800 mb-2">🧪 Micronutrientes:</h5>
+                {result.calcium && (
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm text-gray-700">Cálcio (Ca):</span>
+                    <span className="text-lg font-bold text-green-600">{result.calcium} ml</span>
+                  </div>
+                )}
+                {result.magnesium && (
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm text-gray-700">Magnésio (Mg):</span>
+                    <span className="text-lg font-bold text-green-600">{result.magnesium} ml</span>
+                  </div>
+                )}
+                {result.iron && (
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm text-gray-700">Ferro (Fe):</span>
+                    <span className="text-lg font-bold text-green-600">{result.iron} ml</span>
+                  </div>
+                )}
+              </div>
+            )}
+            
             <p className="text-xs text-gray-600 mt-4">
               💡 <strong>Dica:</strong> Sempre adicione o fertilizante à água (nunca o contrário) e misture bem antes de aplicar.
             </p>
@@ -505,6 +632,297 @@ function LuxPPFDCalculator() {
             </Button>
           </div>
         )}
+      </CardContent>
+    </Card>
+  );
+}
+
+
+// Calculadora PPM ↔ EC
+function PPMECConverter() {
+  const [conversionType, setConversionType] = useState<"ppm-to-ec" | "ec-to-ppm">("ppm-to-ec");
+  const [scale, setScale] = useState<"500" | "700">("500");
+  const [inputValue, setInputValue] = useState<string>("");
+  const [result, setResult] = useState<number | null>(null);
+
+  // Cálculo automático em tempo real
+  useEffect(() => {
+    const value = parseFloat(inputValue);
+    if (isNaN(value) || value <= 0) {
+      setResult(null);
+      return;
+    }
+
+    // Escalas de conversão:
+    // 500 scale: 1 EC = 500 PPM (Europa, padrão)
+    // 700 scale: 1 EC = 700 PPM (EUA, Hanna)
+    const scaleFactor = scale === "500" ? 500 : 700;
+
+    if (conversionType === "ppm-to-ec") {
+      // PPM → EC: dividir por escala
+      setResult(Math.round((value / scaleFactor) * 100) / 100);
+    } else {
+      // EC → PPM: multiplicar por escala
+      setResult(Math.round(value * scaleFactor));
+    }
+  }, [inputValue, conversionType, scale]);
+
+  return (
+    <Card className="bg-white/90 backdrop-blur-sm border-green-100">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Calculator className="w-5 h-5 text-purple-500" />
+          Conversão PPM ↔ EC
+        </CardTitle>
+        <CardDescription>
+          Converta entre PPM (partes por milhão) e EC (condutividade elétrica)
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {/* Tipo de Conversão */}
+        <div className="space-y-2">
+          <Label>Tipo de Conversão</Label>
+          <div className="grid grid-cols-2 gap-4">
+            <Button
+              variant={conversionType === "ppm-to-ec" ? "default" : "outline"}
+              onClick={() => setConversionType("ppm-to-ec")}
+              className="w-full"
+            >
+              PPM → EC
+            </Button>
+            <Button
+              variant={conversionType === "ec-to-ppm" ? "default" : "outline"}
+              onClick={() => setConversionType("ec-to-ppm")}
+              className="w-full"
+            >
+              EC → PPM
+            </Button>
+          </div>
+        </div>
+
+        {/* Escala */}
+        <div className="space-y-2">
+          <Label>Escala de Conversão</Label>
+          <div className="grid grid-cols-2 gap-4">
+            <Button
+              variant={scale === "500" ? "default" : "outline"}
+              onClick={() => setScale("500")}
+              className="w-full"
+            >
+              500 (Europa)
+            </Button>
+            <Button
+              variant={scale === "700" ? "default" : "outline"}
+              onClick={() => setScale("700")}
+              className="w-full"
+            >
+              700 (EUA/Hanna)
+            </Button>
+          </div>
+          <p className="text-xs text-gray-600">
+            💡 Escala 500: 1 EC = 500 PPM | Escala 700: 1 EC = 700 PPM
+          </p>
+        </div>
+
+        {/* Input */}
+        <div className="space-y-2">
+          <Label htmlFor="conversionInput">
+            {conversionType === "ppm-to-ec" ? "Valor em PPM" : "Valor em EC (mS/cm)"}
+          </Label>
+          <Input
+            id="conversionInput"
+            type="number"
+            step={conversionType === "ppm-to-ec" ? "1" : "0.1"}
+            placeholder={conversionType === "ppm-to-ec" ? "Ex: 1000" : "Ex: 2.0"}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+        </div>
+
+        {/* Resultado */}
+        {result !== null && (
+          <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
+            <h4 className="font-semibold text-gray-900 mb-3">Resultado:</h4>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-700">
+                {conversionType === "ppm-to-ec" ? "EC (mS/cm):" : "PPM:"}
+              </span>
+              <span className="text-3xl font-bold text-purple-600">
+                {result} {conversionType === "ppm-to-ec" ? "mS/cm" : "PPM"}
+              </span>
+            </div>
+            <p className="text-xs text-gray-600 mt-4">
+              📊 <strong>Referência:</strong> Vega: 1.0-1.8 EC (500-900 PPM) | Flora: 1.8-2.4 EC (900-1200 PPM)
+            </p>
+          </div>
+        )}
+
+        {/* Tabela de Referência */}
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+          <h5 className="text-sm font-semibold text-gray-800 mb-3">📋 Tabela de Referência (Escala {scale}):</h5>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-gray-700">Clonagem:</span>
+              <span className="font-medium">0.4-0.8 EC ({scale === "500" ? "200-400" : "280-560"} PPM)</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-700">Vegetativo:</span>
+              <span className="font-medium">1.0-1.8 EC ({scale === "500" ? "500-900" : "700-1260"} PPM)</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-700">Floração:</span>
+              <span className="font-medium">1.8-2.4 EC ({scale === "500" ? "900-1200" : "1260-1680"} PPM)</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-700">Flush Final:</span>
+              <span className="font-medium">0.0-0.4 EC ({scale === "500" ? "0-200" : "0-280"} PPM)</span>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+
+// Calculadora de Ajuste de pH
+function PHAdjustCalculator() {
+  const [waterVolume, setWaterVolume] = useState<string>("");
+  const [currentPH, setCurrentPH] = useState<string>("");
+  const [targetPH, setTargetPH] = useState<string>("");
+  const [adjustmentType, setAdjustmentType] = useState<"down" | "up">("down");
+  const [result, setResult] = useState<{ amount: number; product: string } | null>(null);
+
+  const calculatePHAdjustment = () => {
+    const volume = parseFloat(waterVolume);
+    const current = parseFloat(currentPH);
+    const target = parseFloat(targetPH);
+
+    if (isNaN(volume) || isNaN(current) || isNaN(target) || volume <= 0) return;
+
+    const phDifference = Math.abs(current - target);
+    
+    // Determinar se precisa aumentar ou diminuir pH
+    const needsDecrease = current > target;
+    setAdjustmentType(needsDecrease ? "down" : "up");
+
+    // Fórmulas aproximadas (variam conforme produto e dureza da água):
+    // pH Down (ácido fosfórico 85%): ~1ml por 10L reduz 0.5 pH
+    // pH Up (hidróxido de potássio): ~1ml por 10L aumenta 0.5 pH
+    
+    let mlPerLiter: number;
+    let productName: string;
+
+    if (needsDecrease) {
+      // pH Down - ácido fosfórico
+      mlPerLiter = 0.2; // 0.2ml por litro por unidade de pH
+      productName = "pH Down (Ácido Fosfórico 85%)";
+    } else {
+      // pH Up - hidróxido de potássio
+      mlPerLiter = 0.25; // 0.25ml por litro por unidade de pH (menos eficiente)
+      productName = "pH Up (Hidróxido de Potássio)";
+    }
+
+    const totalML = phDifference * mlPerLiter * volume;
+
+    setResult({
+      amount: Math.round(totalML * 10) / 10,
+      product: productName,
+    });
+  };
+
+  return (
+    <Card className="bg-white/90 backdrop-blur-sm border-green-100">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Droplets className="w-5 h-5 text-blue-500" />
+          Calculadora de Ajuste de pH
+        </CardTitle>
+        <CardDescription>
+          Calcule quanto ácido ou base adicionar para atingir o pH ideal
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="waterVolumePH">Volume de Água (litros)</Label>
+            <Input
+              id="waterVolumePH"
+              type="number"
+              placeholder="Ex: 10"
+              value={waterVolume}
+              onChange={(e) => setWaterVolume(e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="currentPH">pH Atual</Label>
+            <Input
+              id="currentPH"
+              type="number"
+              step="0.1"
+              placeholder="Ex: 7.5"
+              value={currentPH}
+              onChange={(e) => setCurrentPH(e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="targetPH">pH Alvo</Label>
+            <Input
+              id="targetPH"
+              type="number"
+              step="0.1"
+              placeholder="Ex: 6.0"
+              value={targetPH}
+              onChange={(e) => setTargetPH(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <Button onClick={calculatePHAdjustment} className="w-full">
+          <Calculator className="w-4 h-4 mr-2" />
+          Calcular Ajuste
+        </Button>
+
+        {result && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 space-y-3">
+            <h4 className="font-semibold text-gray-900 mb-3">Receita de Ajuste:</h4>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-700">Produto:</span>
+              <span className="text-lg font-bold text-blue-600">{result.product}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-700">Quantidade:</span>
+              <span className="text-3xl font-bold text-blue-600">{result.amount} ml</span>
+            </div>
+            <p className="text-xs text-gray-600 mt-4">
+              ⚠️ <strong>Importante:</strong> Adicione aos poucos, misture bem e meça novamente. Nunca adicione tudo de uma vez!
+            </p>
+          </div>
+        )}
+
+        {/* Tabela de Referência */}
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+          <h5 className="text-sm font-semibold text-gray-800 mb-3">📋 pH Ideal por Substrato:</h5>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-gray-700">Solo/Terra:</span>
+              <span className="font-medium">6.0 - 7.0</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-700">Fibra de Coco:</span>
+              <span className="font-medium">5.5 - 6.5</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-700">Hidroponia:</span>
+              <span className="font-medium">5.5 - 6.0</span>
+            </div>
+          </div>
+          <p className="text-xs text-gray-600 mt-3">
+            💡 <strong>Dica:</strong> pH fora da faixa ideal bloqueia absorção de nutrientes, causando deficiências mesmo com fertilização adequada.
+          </p>
+        </div>
       </CardContent>
     </Card>
   );
