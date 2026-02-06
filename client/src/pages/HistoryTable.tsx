@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Download, Calendar, Filter, Table as TableIcon, Pencil, Trash2 } from "lucide-react";
+import { Loader2, Download, Calendar, Filter, Table as TableIcon, Pencil, Trash2, FileDown } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -28,6 +28,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { exportChartToPDF } from "@/lib/chartPdfExport";
 
 export default function HistoryTable() {
   const [selectedTentId, setSelectedTentId] = useState<number | undefined>(undefined);
@@ -90,6 +91,27 @@ export default function HistoryTable() {
 
   const handleEditSuccess = () => {
     utils.dailyLogs.listAll.invalidate();
+  };
+
+  const handleExportPDF = async () => {
+    try {
+      toast.loading("Gerando PDF...");
+      const tentName = selectedTentId 
+        ? tents?.find(t => t.id === selectedTentId)?.name || "Todas"
+        : "Todas";
+      const periodLabel = period === "all" ? "Todos" : period === "custom" ? "Personalizado" : `${period} dias`;
+      
+      await exportChartToPDF(
+        "history-table-container",
+        `historico_${tentName}_${new Date().toISOString().split('T')[0]}`,
+        `Histórico de Registros - ${tentName}`,
+        `Período: ${periodLabel} • Total: ${logsData?.logs.length || 0} registros`
+      );
+      toast.success("PDF gerado com sucesso!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao gerar PDF. Tente novamente.");
+    }
   };
 
   const exportToCSV = () => {
@@ -170,16 +192,22 @@ export default function HistoryTable() {
                 <p className="text-sm text-gray-600">Visualize e exporte todos os registros diários</p>
               </div>
             </div>
-            <Button onClick={exportToCSV} disabled={!logsData?.logs || logsData.logs.length === 0}>
-              <Download className="w-4 h-4 mr-2" />
-              Exportar CSV
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={handleExportPDF} disabled={!logsData?.logs || logsData.logs.length === 0}>
+                <FileDown className="w-4 h-4 mr-2" />
+                Exportar PDF
+              </Button>
+              <Button onClick={exportToCSV} disabled={!logsData?.logs || logsData.logs.length === 0}>
+                <Download className="w-4 h-4 mr-2" />
+                Exportar CSV
+              </Button>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8" id="history-table-container">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">

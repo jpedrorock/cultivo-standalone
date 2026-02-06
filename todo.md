@@ -427,3 +427,11 @@
 - [x] Remover menu de tabs horizontal da página Calculators.tsx
 - [x] Manter apenas header com botão voltar e título da calculadora
 - [x] Simplificar interface das calculadoras individuais
+
+## 📄 Exportação PDF com Gráficos
+- [x] Instalar dependências: html2canvas e jsPDF
+- [x] Criar função de exportação PDF que captura gráficos (chartPdfExport.ts)
+- [x] Adicionar botão "Exportar PDF" na página TentDetails (header)
+- [x] Adicionar botão "Exportar PDF" na página HistoryTable (ao lado do CSV)
+- [x] PDF inclui: cabeçalho com título, subtítulo, gráficos/tabelas capturados, rodapé com data/hora
+- [x] Testar exportação em ambas as páginas

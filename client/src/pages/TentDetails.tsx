@@ -4,11 +4,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Sprout, ThermometerSun, Droplets, Sun, ArrowLeft, Calendar } from "lucide-react";
+import { Loader2, Sprout, ThermometerSun, Droplets, Sun, ArrowLeft, Calendar, FileDown } from "lucide-react";
 import { Link, useParams } from "wouter";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { format, subDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { exportChartToPDF } from "@/lib/chartPdfExport";
+import { toast } from "sonner";
 
 export default function TentDetails() {
   const { id } = useParams<{ id: string }>();
@@ -74,6 +76,22 @@ export default function TentDetails() {
 
   const phaseInfo = getPhaseInfo();
 
+  const handleExportPDF = async () => {
+    try {
+      toast.loading("Gerando PDF...");
+      await exportChartToPDF(
+        "charts-container",
+        `relatorio_${tent.name}_${format(new Date(), "yyyyMMdd_HHmmss")}`,
+        `Relatório - ${tent.name}`,
+        `Período: ${dateRange} dias • Gerado em ${format(new Date(), "dd/MM/yyyy HH:mm")}`
+      );
+      toast.success("PDF gerado com sucesso!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao gerar PDF. Tente novamente.");
+    }
+  };
+
   // Prepare chart data
   const chartData = logs?.map((log) => ({
     date: format(new Date(log.logDate), "dd/MM", { locale: ptBR }),
@@ -116,6 +134,10 @@ export default function TentDetails() {
               </p>
             </div>
             <Badge className={`${phaseInfo.color} text-white border-0`}>{phaseInfo.phase}</Badge>
+            <Button variant="outline" onClick={handleExportPDF}>
+              <FileDown className="w-4 h-4 mr-2" />
+              Exportar PDF
+            </Button>
             <Button asChild>
               <Link href={`/tent/${tentId}/log`}>Novo Registro</Link>
             </Button>
@@ -254,7 +276,7 @@ export default function TentDetails() {
             <TabsTrigger value="history">Histórico</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="charts" className="space-y-6">
+          <TabsContent value="charts" className="space-y-6" id="charts-container">
             {logsLoading ? (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
