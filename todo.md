@@ -129,3 +129,9 @@
   - [x] Adicionar Gerenciar Strains
   - [x] Adicionar Calculadoras (placeholder)
 - [x] Testar fluxo completo (criar ciclo → selecionar strain → ver targets corretos)
+
+## 📊 Nova Tarefa: Exibir Último Registro nos Cards da Home
+- [x] Criar API para buscar último dailyLog por estufa (dailyLogs.getLatestByTent)
+- [x] Atualizar Home para exibir Temp, RH, PPFD do último registro
+- [x] Adicionar fallback "--" quando não houver registros
+- [x] Testar funcionalidade (Estufa B mostrando 35.0°C, 65.0%, 500)

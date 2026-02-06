@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { eq, and } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import * as db from "./db";
 import { getDb } from "./db";
 import {
@@ -307,6 +307,19 @@ export const appRouter = router({
         if (!database) throw new Error("Database not available");
         await database.insert(dailyLogs).values(input);
         return { success: true };
+      }),
+    getLatestByTent: publicProcedure
+      .input(z.object({ tentId: z.number() }))
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        const result = await database
+          .select()
+          .from(dailyLogs)
+          .where(eq(dailyLogs.tentId, input.tentId))
+          .orderBy(desc(dailyLogs.logDate))
+          .limit(1);
+        return result[0] || null;
       }),
   }),
 

@@ -270,6 +270,10 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
     { tentId: tent.id },
     { enabled: !!cycle } // Only fetch if there's an active cycle
   );
+  
+  const { data: latestLog } = trpc.dailyLogs.getLatestByTent.useQuery(
+    { tentId: tent.id }
+  );
 
   const utils = trpc.useUtils();
   const toggleTask = trpc.tasks.toggleTask.useMutation({
@@ -397,17 +401,23 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
             <div className="text-center">
               <ThermometerSun className="w-5 h-5 mx-auto text-orange-500 mb-1" />
               <p className="text-xs text-gray-600">Temp</p>
-              <p className="text-sm font-semibold text-gray-900">--°C</p>
+              <p className="text-sm font-semibold text-gray-900">
+                {latestLog?.tempC ? `${latestLog.tempC}°C` : "--°C"}
+              </p>
             </div>
             <div className="text-center">
               <Droplets className="w-5 h-5 mx-auto text-blue-500 mb-1" />
               <p className="text-xs text-gray-600">RH</p>
-              <p className="text-sm font-semibold text-gray-900">--%</p>
+              <p className="text-sm font-semibold text-gray-900">
+                {latestLog?.rhPct ? `${latestLog.rhPct}%` : "--%"}
+              </p>
             </div>
             <div className="text-center">
               <Sun className="w-5 h-5 mx-auto text-yellow-500 mb-1" />
               <p className="text-xs text-gray-600">PPFD</p>
-              <p className="text-sm font-semibold text-gray-900">--</p>
+              <p className="text-sm font-semibold text-gray-900">
+                {latestLog?.ppfd || "--"}
+              </p>
             </div>
           </div>
 
