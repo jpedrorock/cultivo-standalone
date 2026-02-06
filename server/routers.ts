@@ -934,6 +934,80 @@ export const appRouter = router({
 
   // Calculations (Histórico de Cálculos)
 
+  // Analytics (Dashboard de Análise)
+  analytics: router({
+    getHistoricalData: publicProcedure
+      .input(
+        z.object({
+          tentId: z.number().optional(),
+          days: z.number().default(30),
+        })
+      )
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+
+        const daysAgo = new Date();
+        daysAgo.setDate(daysAgo.getDate() - input.days);
+
+        let query = database
+          .select()
+          .from(dailyLogs)
+          .where(and(
+            input.tentId ? eq(dailyLogs.tentId, input.tentId) : undefined,
+            // Filter by date if needed
+          ))
+          .orderBy(desc(dailyLogs.logDate))
+          .limit(input.days);
+
+        const logs = await query;
+
+        return logs;
+      }),
+
+    getStats: publicProcedure
+      .input(
+        z.object({
+          tentId: z.number().optional(),
+          days: z.number().default(30),
+        })
+      )
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+
+        const logs = await database
+          .select()
+          .from(dailyLogs)
+          .where(input.tentId ? eq(dailyLogs.tentId, input.tentId) : undefined)
+          .orderBy(desc(dailyLogs.logDate))
+          .limit(input.days);
+
+        // Calculate statistics
+        const temps = logs.map(l => parseFloat(l.tempC || "0")).filter(t => t > 0);
+        const rhs = logs.map(l => parseFloat(l.rhPct || "0")).filter(r => r > 0);
+        const ppfds = logs.map(l => parseInt(String(l.ppfd || "0"))).filter(p => p > 0);
+
+        return {
+          temperature: {
+            avg: temps.length > 0 ? temps.reduce((a, b) => a + b, 0) / temps.length : 0,
+            min: temps.length > 0 ? Math.min(...temps) : 0,
+            max: temps.length > 0 ? Math.max(...temps) : 0,
+          },
+          humidity: {
+            avg: rhs.length > 0 ? rhs.reduce((a, b) => a + b, 0) / rhs.length : 0,
+            min: rhs.length > 0 ? Math.min(...rhs) : 0,
+            max: rhs.length > 0 ? Math.max(...rhs) : 0,
+          },
+          ppfd: {
+            avg: ppfds.length > 0 ? ppfds.reduce((a, b) => a + b, 0) / ppfds.length : 0,
+            min: ppfds.length > 0 ? Math.min(...ppfds) : 0,
+            max: ppfds.length > 0 ? Math.max(...ppfds) : 0,
+          },
+        };
+      }),
+  }),
+
 });
 
 export type AppRouter = typeof appRouter;

@@ -290,3 +290,18 @@
 - [x] Adicionar emojis e labels descritivos no dropdown
 - [x] Implementar onChange que clica na aba correspondente
 - [x] Desktop continua com abas normais (testado em viewport > 768px)
+
+## 📊 Nova Tarefa: Dashboard de Análise com Gráficos
+- [x] Instalar biblioteca recharts para gráficos interativos
+- [x] Criar API analytics.getHistoricalData para buscar dados agregados
+- [x] Criar API analytics.getStats para calcular estatísticas (média, mín, máx)
+- [x] Criar página Analytics (/analytics) com layout de dashboard
+- [x] Implementar gráfico de linha para evolução de Temperatura
+- [x] Implementar gráfico de linha para evolução de Umidade (RH)
+- [x] Implementar gráfico de linha para evolução de PPFD
+- [x] Adicionar cards de estatísticas (média, mín, máx) para cada métrica
+- [x] Implementar filtros: por estufa, período (7/30/90 dias)
+- [x] Tornar gráficos responsivos para mobile (ResponsiveContainer)
+- [x] Adicionar link para Analytics na Home (botão Análise)
+- [x] Ajustar grid da Home para 5 colunas no desktop
+- [ ] Testar dashboard com dados reais

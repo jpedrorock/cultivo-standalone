@@ -193,7 +193,7 @@ export default function Home() {
         {/* Quick Actions */}
         <div className="mt-8 bg-white/80 backdrop-blur-sm rounded-lg border border-green-100 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Ações Rápidas</h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2">
               <Link href="/manage-strains">
                 <Sprout className="w-6 h-6" />
