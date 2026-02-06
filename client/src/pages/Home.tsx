@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
-import { generateCycleReport } from "@/lib/pdfExport";
+
 
 export default function Home() {
   const [cycleModalOpen, setCycleModalOpen] = useState(false);
@@ -80,19 +80,7 @@ export default function Home() {
     setEditModalOpen(true);
   };
 
-  const handleExportPDF = async (cycleId: number) => {
-    try {
-      toast.info("Gerando relatório PDF...");
-      // Usar fetch direto para buscar dados
-      const response = await fetch(`/api/trpc/cycles.getReportData?input=${encodeURIComponent(JSON.stringify({ cycleId }))}`);
-      const result = await response.json();
-      const data = result.result.data;
-      await generateCycleReport(data);
-      toast.success("Relatório exportado com sucesso!");
-    } catch (error: any) {
-      toast.error(`Erro ao exportar relatório: ${error.message}`);
-    }
-  };
+
 
   if (isLoading) {
     return (
@@ -184,7 +172,6 @@ export default function Home() {
                 onInitiateCycle={handleInitiateCycle}
                 onEditCycle={handleEditCycle}
                 onFinalizeCycle={handleFinalizeCycle}
-                onExportPDF={handleExportPDF}
               />
             );
           })}
@@ -260,7 +247,7 @@ export default function Home() {
 }
 
 // Separate component for Tent Card with Tasks
-function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlora, onInitiateCycle, onEditCycle, onFinalizeCycle, onExportPDF }: any) {
+function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlora, onInitiateCycle, onEditCycle, onFinalizeCycle }: any) {
   const { data: tasks, isLoading: tasksLoading } = trpc.tasks.getTasksByTent.useQuery(
     { tentId: tent.id },
     { enabled: !!cycle } // Only fetch if there's an active cycle
@@ -502,17 +489,9 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                     onClick={() => onEditCycle(cycle, tent)}
                     variant="outline"
                     size="sm"
-                    className="flex-1"
+                    className="w-full"
                   >
                     Editar Ciclo
-                  </Button>
-                  <Button
-                    onClick={() => onExportPDF(cycle.id)}
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 border-blue-500 text-blue-600 hover:bg-blue-50"
-                  >
-                    Exportar PDF
                   </Button>
                 </div>
                 <Button

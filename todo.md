@@ -400,3 +400,9 @@
 - [x] Corrigir rota ou link quebrado (criada rota /strains/:id/targets)
 - [x] Criar página StrainTargets.tsx completa
 - [x] Testar edição de parâmetros completa
+
+## 🧹 Remover Botão Exportar da Home
+- [x] Remover botão "Exportar PDF" da página Home
+- [x] Remover função handleExportPDF e import generateCycleReport
+- [x] Manter apenas exportação CSV na página de Histórico
+- [x] Deixar interface da Home mais limpa e focada
