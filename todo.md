@@ -322,3 +322,14 @@
 - [x] Sugerir novas funcionalidades úteis
 - [x] Verificar responsividade mobile em todas as páginas
 - [x] Verificar performance e otimizações possíveis
+
+## 🧭 Menu de Navegação Fixo
+- [x] Criar componente BottomNav.tsx
+- [x] Adicionar 5 links principais: Home, Calculadoras, Histórico, Alertas, Strains
+- [x] Usar ícones do lucide-react (Home, Calculator, BarChart3, Bell, Sprout)
+- [x] Estilizar com Tailwind (fixed bottom-0, bg-white, border-top, shadow)
+- [x] Destacar página ativa com cor diferente (verde)
+- [x] Integrar no App.tsx (renderizar em todas as páginas)
+- [x] Adicionar padding-bottom (pb-16) no wrapper principal
+- [x] Testar navegação em todas as páginas
+- [x] Testar responsividade mobile e desktop

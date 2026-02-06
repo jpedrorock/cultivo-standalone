@@ -4,6 +4,7 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { InstallPWA } from "./components/InstallPWA";
+import { BottomNav } from "./components/BottomNav";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import TentLog from "./pages/TentLog";
@@ -51,7 +52,10 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <div className="pb-16">
+            <Router />
+          </div>
+          <BottomNav />
           <InstallPWA />
         </TooltipProvider>
       </ThemeProvider>
