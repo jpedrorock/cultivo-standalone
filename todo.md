@@ -452,3 +452,10 @@
 - [x] Identificar causa do erro: ID dentro de TabsContent (só existe quando aba ativa)
 - [x] Corrigir erro: mover ID para Tabs (container pai)
 - [x] Testar exportação em TentDetails e HistoryTable
+
+## 🐛 Corrigir Erro OKLCH na Exportação PDF
+- [x] html2canvas não suporta cores OKLCH (Tailwind 4)
+- [x] Adicionar callback onclone para converter cores OKLCH para RGB
+- [x] Fallback: branco para background, preto para texto, cinza para bordas
+- [x] Testar exportação em HistoryTable e TentDetails
+- [x] Verificar se PDF é gerado corretamente

@@ -26,6 +26,29 @@ export async function exportChartToPDF(
       useCORS: true,
       logging: false,
       backgroundColor: '#ffffff',
+      onclone: (clonedDoc) => {
+        // Converter cores OKLCH para RGB (html2canvas não suporta OKLCH)
+        const allElements = clonedDoc.querySelectorAll('*');
+        allElements.forEach((el: Element) => {
+          const htmlEl = el as HTMLElement;
+          const computedStyle = window.getComputedStyle(htmlEl);
+          
+          // Converter background-color
+          if (computedStyle.backgroundColor && computedStyle.backgroundColor.includes('oklch')) {
+            htmlEl.style.backgroundColor = 'rgb(255, 255, 255)'; // Fallback para branco
+          }
+          
+          // Converter color (texto)
+          if (computedStyle.color && computedStyle.color.includes('oklch')) {
+            htmlEl.style.color = 'rgb(0, 0, 0)'; // Fallback para preto
+          }
+          
+          // Converter border-color
+          if (computedStyle.borderColor && computedStyle.borderColor.includes('oklch')) {
+            htmlEl.style.borderColor = 'rgb(200, 200, 200)'; // Fallback para cinza
+          }
+        });
+      },
     });
 
     // Criar PDF
