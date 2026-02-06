@@ -455,6 +455,45 @@ export const appRouter = router({
           hasMore: input.offset + logs.length < total,
         };
       }),
+    
+    update: publicProcedure
+      .input(
+        z.object({
+          id: z.number(),
+          tempC: z.string().optional(),
+          rhPct: z.string().optional(),
+          ppfd: z.number().optional(),
+          ph: z.string().optional(),
+          ec: z.string().optional(),
+          notes: z.string().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        const { id, ...updateData } = input;
+        
+        await database
+          .update(dailyLogs)
+          .set(updateData)
+          .where(eq(dailyLogs.id, id));
+        
+        return { success: true };
+      }),
+    
+    delete: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        await database
+          .delete(dailyLogs)
+          .where(eq(dailyLogs.id, input.id));
+        
+        return { success: true };
+      }),
   }),
 
   // Alerts (Alertas)

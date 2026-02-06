@@ -368,3 +368,15 @@
 - [x] Substituir página History.tsx por HistoryTable.tsx
 - [x] Badges para turno (AM/PM) e contador de registros
 - [x] Tratamento de estado vazio e loading
+
+## ✏️ Ações na Tabela de Histórico (Editar/Excluir)
+- [x] Criar API dailyLogs.update para editar registro
+- [x] Criar API dailyLogs.delete para excluir registro
+- [x] Criar componente EditLogDialog.tsx com formulário
+- [x] Pré-preencher formulário com valores do registro selecionado
+- [x] Adicionar coluna "Ações" na tabela de histórico
+- [x] Botão "Editar" (ícone Pencil) em cada linha
+- [x] Botão "Excluir" (ícone Trash2) em cada linha
+- [x] Dialog de confirmação antes de excluir
+- [x] Invalidar cache e atualizar tabela após edição/exclusão
+- [x] Feedback visual (toast) de sucesso/erro

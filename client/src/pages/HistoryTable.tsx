@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Download, Calendar, Filter, Table as TableIcon } from "lucide-react";
+import { Loader2, Download, Calendar, Filter, Table as TableIcon, Pencil, Trash2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -16,6 +16,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { EditLogDialog } from "@/components/EditLogDialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 export default function HistoryTable() {
   const [selectedTentId, setSelectedTentId] = useState<number | undefined>(undefined);
@@ -24,6 +36,8 @@ export default function HistoryTable() {
   const [endDate, setEndDate] = useState<string>("");
   const [limit, setLimit] = useState<number>(50);
   const [offset, setOffset] = useState<number>(0);
+  const [editingLog, setEditingLog] = useState<any | null>(null);
+  const [deletingLogId, setDeletingLogId] = useState<number | null>(null);
 
   const { data: tents, isLoading: tentsLoading } = trpc.tents.list.useQuery();
 
@@ -54,6 +68,29 @@ export default function HistoryTable() {
     limit,
     offset,
   });
+
+  const utils = trpc.useUtils();
+
+  const deleteMutation = trpc.dailyLogs.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Registro excluído com sucesso!");
+      utils.dailyLogs.listAll.invalidate();
+      setDeletingLogId(null);
+    },
+    onError: (error) => {
+      toast.error(`Erro ao excluir: ${error.message}`);
+    },
+  });
+
+  const handleDelete = () => {
+    if (deletingLogId) {
+      deleteMutation.mutate({ id: deletingLogId });
+    }
+  };
+
+  const handleEditSuccess = () => {
+    utils.dailyLogs.listAll.invalidate();
+  };
 
   const exportToCSV = () => {
     if (!logsData?.logs || logsData.logs.length === 0) {
@@ -296,6 +333,7 @@ export default function HistoryTable() {
                         <TableHead className="text-right">pH</TableHead>
                         <TableHead className="text-right">EC</TableHead>
                         <TableHead>Observações</TableHead>
+                        <TableHead className="text-right">Ações</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -317,6 +355,27 @@ export default function HistoryTable() {
                           <TableCell className="text-right">{log.ec || "-"}</TableCell>
                           <TableCell className="max-w-xs truncate" title={log.notes || ""}>
                             {log.notes || "-"}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex items-center justify-end gap-2">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setEditingLog(log)}
+                                title="Editar registro"
+                              >
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setDeletingLogId(log.id)}
+                                title="Excluir registro"
+                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -349,6 +408,37 @@ export default function HistoryTable() {
           </CardContent>
         </Card>
       </main>
+
+      {/* Edit Dialog */}
+      <EditLogDialog
+        log={editingLog}
+        open={!!editingLog}
+        onOpenChange={(open) => !open && setEditingLog(null)}
+        onSuccess={handleEditSuccess}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deletingLogId} onOpenChange={(open) => !open && setDeletingLogId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleteMutation.isPending}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={deleteMutation.isPending}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {deleteMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
