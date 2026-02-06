@@ -479,3 +479,11 @@
 - [x] Identificar qual query tRPC está falhando
 - [x] Verificar código da página TentLog.tsx
 - [x] Corrigir erro e testar solução
+
+## 🎨 Nova Tarefa: Configurar Ícone do App
+- [x] Gerar ícones PNG em tamanhos: 192x192, 512x512, 180x180 (Apple)
+- [x] Gerar favicon.ico a partir do SVG
+- [x] Copiar ícones para client/public/
+- [x] Atualizar manifest.json com novos ícones
+- [x] Atualizar index.html com favicon e apple-touch-icon
+- [x] Testar ícones no navegador e PWA
