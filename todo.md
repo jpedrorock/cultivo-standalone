@@ -262,3 +262,9 @@
 - [x] Manter grid horizontal no desktop (md:grid md:grid-cols-5)
 - [x] Aumentar padding e altura dos botões para serem mais touch-friendly (py-3 no mobile, py-2 no desktop)
 - [x] Testar layout mobile com botões verticais - funcionando perfeitamente
+
+## 📱 Melhoria: Layout Compacto 2 Colunas para Calculadoras Mobile
+- [x] Mudar de flex-col para grid 2 colunas no mobile (grid-cols-2 gap-2)
+- [x] Ajustar botões para serem compactos mas touch-friendly (h-20, ícones 5x5)
+- [x] Centralizar ícones e texto nos botões (flex-col gap-1)
+- [x] Testar usabilidade no mobile - layout compacto e prático

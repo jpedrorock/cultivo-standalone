@@ -137,26 +137,26 @@ export default function Calculators() {
       {/* Main Content */}
       <main className="container py-8">
         <Tabs defaultValue="irrigation" className="w-full">
-          <TabsList className="w-full mb-6 flex flex-col gap-2 md:grid md:grid-cols-5 md:gap-0">
-            <TabsTrigger value="irrigation" className="w-full justify-start py-3 md:py-2">
-              <Droplets className="w-4 h-4 mr-2" />
-              Rega
+          <TabsList className="w-full mb-6 grid grid-cols-2 gap-2 md:grid-cols-5 md:gap-0">
+            <TabsTrigger value="irrigation" className="flex-col gap-1 h-20 md:flex-row md:h-auto md:gap-2">
+              <Droplets className="w-5 h-5 md:w-4 md:h-4" />
+              <span className="text-xs md:text-sm">Rega</span>
             </TabsTrigger>
-            <TabsTrigger value="fertilization" className="w-full justify-start py-3 md:py-2">
-              <Sprout className="w-4 h-4 mr-2" />
-              Fertilização
+            <TabsTrigger value="fertilization" className="flex-col gap-1 h-20 md:flex-row md:h-auto md:gap-2">
+              <Sprout className="w-5 h-5 md:w-4 md:h-4" />
+              <span className="text-xs md:text-sm">Fertilização</span>
             </TabsTrigger>
-            <TabsTrigger value="lux-ppfd" className="w-full justify-start py-3 md:py-2">
-              <Sun className="w-4 h-4 mr-2" />
-              Lux → PPFD
+            <TabsTrigger value="lux-ppfd" className="flex-col gap-1 h-20 md:flex-row md:h-auto md:gap-2">
+              <Sun className="w-5 h-5 md:w-4 md:h-4" />
+              <span className="text-xs md:text-sm">Lux → PPFD</span>
             </TabsTrigger>
-            <TabsTrigger value="ppm-ec" className="w-full justify-start py-3 md:py-2">
-              <Calculator className="w-4 h-4 mr-2" />
-              PPM ↔ EC
+            <TabsTrigger value="ppm-ec" className="flex-col gap-1 h-20 md:flex-row md:h-auto md:gap-2">
+              <Calculator className="w-5 h-5 md:w-4 md:h-4" />
+              <span className="text-xs md:text-sm">PPM ↔ EC</span>
             </TabsTrigger>
-            <TabsTrigger value="ph-adjust" className="w-full justify-start py-3 md:py-2">
-              <Droplets className="w-4 h-4 mr-2" />
-              Ajuste pH
+            <TabsTrigger value="ph-adjust" className="flex-col gap-1 h-20 md:flex-row md:h-auto md:gap-2">
+              <Droplets className="w-5 h-5 md:w-4 md:h-4" />
+              <span className="text-xs md:text-sm">Ajuste pH</span>
             </TabsTrigger>
           </TabsList>
 
