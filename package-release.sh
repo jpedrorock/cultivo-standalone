@@ -27,7 +27,8 @@ cp -r client "${TEMP_DIR}/"
 cp -r server "${TEMP_DIR}/"
 cp -r drizzle "${TEMP_DIR}/"
 cp -r shared "${TEMP_DIR}/"
-cp -r storage "${TEMP_DIR}/"
+[ -d storage ] && cp -r storage "${TEMP_DIR}/" || echo "⚠️  storage directory not found, skipping..."
+[ -d patches ] && cp -r patches "${TEMP_DIR}/" || echo "⚠️  patches directory not found, skipping..."
 
 # Copiar arquivos de configuração
 cp package.json "${TEMP_DIR}/"
@@ -44,7 +45,7 @@ cp README-LOCAL.md "${TEMP_DIR}/README.md"
 cp GUIA-COMPLETO.md "${TEMP_DIR}/"
 cp QUICK-START.md "${TEMP_DIR}/"
 cp CHANGELOG.md "${TEMP_DIR}/"
-cp .env.example "${TEMP_DIR}/"
+[ -f .env.example ] && cp .env.example "${TEMP_DIR}/" || echo "⚠️  .env.example not found, skipping..."
 
 # Copiar banco de dados inicial
 cp banco-inicial.sql "${TEMP_DIR}/"

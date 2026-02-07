@@ -21,7 +21,13 @@ fi
 
 # Instalar dependências
 echo "📦 Instalando dependências..."
-pnpm install
+if ! pnpm install; then
+    echo "❌ Erro ao instalar dependências!"
+    echo "Verifique se o pnpm está instalado: npm install -g pnpm"
+    exit 1
+fi
+
+echo "✅ Dependências instaladas com sucesso"
 
 # Criar arquivo .env se não existir
 if [ ! -f .env ]; then
@@ -66,7 +72,10 @@ fi
 
 # Rodar migrações
 echo "🔄 Aplicando migrações do banco de dados..."
-pnpm db:push
+if ! pnpm db:push; then
+    echo "⚠️  Erro ao aplicar migrações, mas continuando..."
+    echo "Você pode rodar 'pnpm db:push' manualmente depois."
+fi
 
 echo ""
 echo "✅ Setup concluído com sucesso!"

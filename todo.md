@@ -737,3 +737,9 @@
 - [x] Slider de Lux com range 0-100.000
 - [x] Indicadores de fase em Lux (7k-14k, 28k-42k, 42k-63k, 70k-84k)
 - [ ] Testar precisão e usabilidade
+
+## 🐛 Bug: Pacote de Distribuição Incompleto
+- [x] Adicionar pasta `patches/` ao package-release.sh
+- [x] Melhorar tratamento de erros no setup-local.sh
+- [x] Validar instalação de dependências antes de continuar
+- [x] Pacote regenerado com patches inclusos
