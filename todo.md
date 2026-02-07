@@ -638,3 +638,29 @@
 ## 🎨 Ocultar Barras de Rolagem
 - [x] Adicionar CSS para ocultar scrollbars em todo o app
 - [x] Manter funcionalidade de scroll, apenas ocultar visualmente
+
+## 🌱 Seletor de Fase Inicial ao Criar Estufa
+- [ ] Adicionar campo de seleção de fase (Vegetativa/Floração) no CreateTentModal
+- [ ] Salvar fase inicial no banco de dados ao criar estufa
+- [ ] Definir parâmetros apropriados baseados na fase escolhida
+- [ ] Testar criação de estufa com diferentes fases
+
+## 🧪 Calculadora de Fertilização Inteligente
+- [ ] Criar nova página/modal para calculadora de fertilização
+- [ ] Adicionar campo de volume de rega (litros)
+- [ ] Implementar cálculo de micronutrientes (Ca, Mg, Fe) por fase
+- [ ] Ajustar valores automaticamente baseado em volume e fase do ciclo
+- [ ] Adicionar à lista de calculadoras disponíveis
+- [ ] Testar cálculos com diferentes volumes e fases
+
+## 🐛 Bug: Widget de Clima com Fundo Claro e Tamanho Grande
+- [x] Mudar fundo do widget de clima para bg-card (escuro)
+- [x] Reduzir padding e tamanho dos cards de temperatura/umidade
+- [x] Testar no modo escuro
+
+## 🐛 Bug: Botões com Baixo Contraste no Modo Escuro
+- [x] Botão "Registrar" (outline) - melhorar contraste
+- [x] Botão "Editar Ciclo" (outline) - melhorar contraste
+- [x] Botões de "Ações Rápidas" - melhorar contraste
+- [x] Adicionar fundo sutil para botões outline no dark mode (bg-muted/20)
+- [x] Testar todos os botões no modo escuro

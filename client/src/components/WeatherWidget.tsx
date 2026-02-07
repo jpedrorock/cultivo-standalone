@@ -48,16 +48,16 @@ export function WeatherWidget() {
 
   if (isLoading || !location) {
     return (
-      <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-100">
+      <Card className="bg-card border-border">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <ThermometerSun className="w-5 h-5 text-blue-600" />
+          <CardTitle className="text-base flex items-center gap-2">
+            <ThermometerSun className="w-4 h-4 text-blue-500" />
             Clima Externo
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
+            <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
           </div>
         </CardContent>
       </Card>
@@ -66,10 +66,10 @@ export function WeatherWidget() {
 
   if (error || locationError) {
     return (
-      <Card className="bg-gradient-to-br from-gray-50 to-slate-50 border-gray-200">
+      <Card className="bg-card border-border">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <CloudOff className="w-5 h-5 text-muted-foreground" />
+          <CardTitle className="text-base flex items-center gap-2">
+            <CloudOff className="w-4 h-4 text-muted-foreground" />
             Clima Externo
           </CardTitle>
         </CardHeader>
@@ -83,39 +83,39 @@ export function WeatherWidget() {
   }
 
   return (
-    <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-100">
+    <Card className="bg-card border-border">
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg flex items-center gap-2">
-          <ThermometerSun className="w-5 h-5 text-blue-600" />
+        <CardTitle className="text-base flex items-center gap-2">
+          <ThermometerSun className="w-4 h-4 text-blue-500" />
           Clima Externo
         </CardTitle>
-        <div className="flex items-center gap-1 text-sm text-blue-700 mt-1">
+        <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
           <MapPin className="w-3 h-3" />
           <span>{cityName}</span>
         </div>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           {/* Temperatura */}
-          <div className="flex flex-col items-center p-4 bg-card/60 rounded-lg">
-            <ThermometerSun className="w-8 h-8 text-orange-500 mb-2" />
-            <div className="text-3xl font-bold text-foreground">
+          <div className="flex flex-col items-center p-3 bg-muted/50 rounded-lg">
+            <ThermometerSun className="w-6 h-6 text-orange-500 mb-1" />
+            <div className="text-2xl font-bold text-foreground">
               {weather?.temperature?.toFixed(1)}°C
             </div>
             <div className="text-xs text-muted-foreground mt-1">Temperatura</div>
           </div>
 
           {/* Umidade */}
-          <div className="flex flex-col items-center p-4 bg-card/60 rounded-lg">
-            <Droplets className="w-8 h-8 text-blue-500 mb-2" />
-            <div className="text-3xl font-bold text-foreground">
+          <div className="flex flex-col items-center p-3 bg-muted/50 rounded-lg">
+            <Droplets className="w-6 h-6 text-blue-500 mb-1" />
+            <div className="text-2xl font-bold text-foreground">
               {weather?.humidity}%
             </div>
             <div className="text-xs text-muted-foreground mt-1">Umidade</div>
           </div>
         </div>
 
-        <div className="mt-3 text-xs text-blue-700 text-center">
+        <div className="mt-2 text-xs text-muted-foreground text-center">
           Atualizado às {new Date(weather?.time || "").toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
         </div>
       </CardContent>

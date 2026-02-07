@@ -36,6 +36,7 @@ export function CreateTentModal({ open, onOpenChange }: CreateTentModalProps) {
     depth: "",
     height: "",
     powerW: "",
+    initialPhase: "Vegetativa" as "Manutenção" | "Vegetativa" | "Floração",
   });
 
   const createTent = trpc.tents.create.useMutation({
@@ -51,6 +52,7 @@ export function CreateTentModal({ open, onOpenChange }: CreateTentModalProps) {
         depth: "",
         height: "",
         powerW: "",
+        initialPhase: "Vegetativa",
       });
     },
     onError: (error) => {
@@ -74,6 +76,7 @@ export function CreateTentModal({ open, onOpenChange }: CreateTentModalProps) {
       depth: parseInt(formData.depth),
       height: parseInt(formData.height),
       powerW: formData.powerW ? parseInt(formData.powerW) : undefined,
+      initialPhase: formData.initialPhase,
     });
   };
 
@@ -156,6 +159,29 @@ export function CreateTentModal({ open, onOpenChange }: CreateTentModalProps) {
                   required
                 />
               </div>
+            </div>
+
+            {/* Fase Inicial */}
+            <div className="grid gap-2">
+              <Label htmlFor="initialPhase">Fase Inicial do Ciclo *</Label>
+              <Select
+                value={formData.initialPhase}
+                onValueChange={(value: "Manutenção" | "Vegetativa" | "Floração") =>
+                  setFormData({ ...formData, initialPhase: value })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Manutenção">🌱 Manutenção (Plantas-mãe/Clonagem)</SelectItem>
+                  <SelectItem value="Vegetativa">🌿 Vegetativa (Crescimento)</SelectItem>
+                  <SelectItem value="Floração">🌸 Floração (Produção)</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Define os parâmetros iniciais e tarefas apropriadas para o ciclo
+              </p>
             </div>
 
             {/* Potência (opcional) */}

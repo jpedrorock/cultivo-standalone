@@ -76,6 +76,7 @@ export const appRouter = router({
           depth: z.number().int().positive(),
           height: z.number().int().positive(),
           powerW: z.number().int().positive().optional(),
+          initialPhase: z.enum(["Manutenção", "Vegetativa", "Floração"]).optional(),
         })
       )
       .mutation(async ({ input }) => {
