@@ -589,3 +589,21 @@
 - [x] Substituir confirm() por AlertDialog do shadcn/ui
 - [x] Implementar exclusão em cascata de todos os dados relacionados
 - [x] Testar exclusão completa (estufa "Teste Delete" removida com sucesso)
+
+## 🌙 Modo Escuro Completo
+- [ ] Atualizar variáveis CSS para cores de fundo escuras
+- [ ] Ajustar contraste de textos e títulos
+- [ ] Melhorar visibilidade de cards e containers
+- [ ] Ajustar cores de botões para modo escuro
+- [ ] Garantir legibilidade de badges e indicadores
+- [ ] Testar em todas as páginas do aplicativo
+
+## 🌙 Modo Escuro Completo - Design Sugerido pelo Usuário
+- [x] Implementar design mais escuro sugerido pelo usuário
+- [x] Sidebar quase preta (oklch 0.10) para máximo contraste
+- [x] Background principal mais escuro (oklch 0.12)
+- [x] Cards com tons de cinza profundos (oklch 0.16-0.18)
+- [x] Badges com cores mais vibrantes e saturadas
+- [x] Botões verde e vermelho com melhor destaque
+- [x] Widget de clima com melhor contraste
+- [x] Testar em todas as páginas
