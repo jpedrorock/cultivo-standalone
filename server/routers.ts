@@ -67,6 +67,31 @@ export const appRouter = router({
     getById: publicProcedure.input(z.object({ id: z.number() })).query(async ({ input }) => {
       return db.getTentById(input.id);
     }),
+    create: publicProcedure
+      .input(
+        z.object({
+          name: z.string().min(1).max(50),
+          tentType: z.enum(["A", "B", "C"]),
+          width: z.number().int().positive(),
+          depth: z.number().int().positive(),
+          height: z.number().int().positive(),
+          powerW: z.number().int().positive().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Calcular volume (em litros)
+        const volume = (input.width * input.depth * input.height) / 1000;
+        
+        const [result] = await database.insert(tents).values({
+          ...input,
+          volume: volume.toFixed(3),
+        });
+        
+        return { success: true, id: result.insertId };
+      }),
   }),
 
   // Strains (Variedades)

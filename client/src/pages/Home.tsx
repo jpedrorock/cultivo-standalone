@@ -4,6 +4,7 @@ import { WeatherWidget } from "@/components/WeatherWidget";
 import StartCycleModal from "@/components/StartCycleModal";
 import { InitiateCycleModal } from "@/components/InitiateCycleModal";
 import { EditCycleModal } from "@/components/EditCycleModal";
+import { CreateTentModal } from "@/components/CreateTentModal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ export default function Home() {
   const [initiateModalOpen, setInitiateModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedCycle, setSelectedCycle] = useState<any>(null);
+  const [createTentModalOpen, setCreateTentModalOpen] = useState(false);
   
   const { data: tents, isLoading } = trpc.tents.list.useQuery();
   const { data: activeCycles } = trpc.cycles.listActive.useQuery();
@@ -151,8 +153,12 @@ export default function Home() {
       {/* Main Content */}
       <main className="container py-8">
         {/* Tents Grid */}
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Estufas</h2>
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-gray-900">Estufas</h2>
+          <Button onClick={() => setCreateTentModalOpen(true)} className="gap-2">
+            <Sprout className="w-4 h-4" />
+            Criar Nova Estufa
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -227,16 +233,6 @@ export default function Home() {
       )}
 
       {/* Initiate Cycle Modal */}
-      {selectedTent && (
-        <InitiateCycleModal
-          open={initiateModalOpen}
-          onOpenChange={setInitiateModalOpen}
-          tentId={selectedTent.id}
-          tentName={selectedTent.name}
-        />
-      )}
-
-      {/* Edit Cycle Modal */}
       {selectedTent && selectedCycle && (
         <EditCycleModal
           open={editModalOpen}
@@ -248,6 +244,12 @@ export default function Home() {
           currentFloraStartDate={selectedCycle.floraStartDate}
         />
       )}
+
+      {/* Create Tent Modal */}
+      <CreateTentModal
+        open={createTentModalOpen}
+        onOpenChange={setCreateTentModalOpen}
+      />
     </div>
   );
 }

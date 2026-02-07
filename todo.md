@@ -500,3 +500,11 @@
 - [x] Adicionar geolocalização para detectar localização do usuário
 - [x] Integrar widget na página Home
 - [x] Testar widget com dados reais
+
+## 🏗️ Nova Tarefa: Criar Estufas e Seed Data para Instalação Local
+- [x] Adicionar botão "Criar Nova Estufa" na Home
+- [x] Criar modal de criação de estufa (nome, tipo, dimensões)
+- [x] Criar API tents.create para inserir nova estufa
+- [x] Criar script seed-data.mjs para popular banco com dados de exemplo
+- [x] Atualizar documentação de instalação com instruções de seed
+- [x] Testar criação manual e via script
