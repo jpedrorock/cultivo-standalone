@@ -698,3 +698,35 @@
   - [x] Dicas de aplicação e timing (tooltips)
 - [x] Adicionar tooltips informativos com função e dicas
 - [x] Testar usabilidade com as melhorias visuais
+
+## 🎨 Ajuste de Cor do Card de Ferro
+- [x] Mudar cor do card de Ferro de vermelho para azul
+- [x] Ajustar gradiente de fundo (bg-blue-500/10)
+- [x] Ajustar cor do ícone e borda (blue-500)
+- [x] Testar visualmente
+
+## 🔧 Preparar Projeto para Uso Independente (Fora do Manus)
+- [ ] Adicionar suporte a SQLite como alternativa ao MySQL
+- [ ] Criar arquivo .env.example com todas as variáveis necessárias
+- [ ] Documentar como rodar o projeto localmente
+- [ ] Configurar detecção automática de banco de dados (MySQL vs SQLite)
+- [ ] Criar script de setup para ambiente local
+- [ ] Documentar dependências e requisitos
+- [ ] Testar projeto rodando localmente sem Manus
+
+## 🐛 Bug: Elementos Brancos nas Calculadoras (Dark Mode)
+- [x] Calculadora de pH - Cards de referência com fundo branco
+- [x] Calculadora Lux ↔ PPFD - Toggle e cards de referência com fundo branco
+- [x] Calculadora PPM ↔ EC - Card de resultado e referência com fundo branco
+- [x] Substituir todos bg-white/bg-gray-50 por bg-card/bg-muted
+- [ ] Testar todas as 3 calculadoras no dark mode
+
+## 🎚️ Slider Visual de Intensidade de Luz (Calculadora Lux ↔ PPFD)
+- [x] Adicionar slider interativo para ajustar PPFD visualmente
+- [x] Gradiente de cores por intensidade (azul→verde→amarelo→vermelho)
+- [x] Indicadores visuais das fases (Clonagem, Vegetativa, Floração, Máximo)
+- [x] Otimizar para mobile (fácil de arrastar com o dedo)
+- [x] Step de 50 para ajuste fino
+- [x] Atualizar valor do input ao mover o slider
+- [x] CSS customizado para thumb do slider
+- [ ] Testar usabilidade no mobile

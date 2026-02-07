@@ -585,7 +585,7 @@ function LuxPPFDCalculator() {
             }}
             className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
               conversionMode === "lux-to-ppfd"
-                ? "bg-white text-foreground shadow-sm"
+                ? "bg-card text-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -599,7 +599,7 @@ function LuxPPFDCalculator() {
             }}
             className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
               conversionMode === "ppfd-to-lux"
-                ? "bg-white text-foreground shadow-sm"
+                ? "bg-card text-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -620,16 +620,65 @@ function LuxPPFDCalculator() {
               />
             </div>
           ) : (
-            <div className="space-y-2">
-              <Label htmlFor="ppfd">Leitura em PPFD (µmol/m²/s)</Label>
-              <Input
-                id="ppfd"
-                type="number"
-                placeholder="Ex: 750"
-                value={ppfd}
-                onChange={(e) => setPpfd(e.target.value)}
-              />
-            </div>
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="ppfd">Leitura em PPFD (µmol/m²/s)</Label>
+                <Input
+                  id="ppfd"
+                  type="number"
+                  placeholder="Ex: 750"
+                  value={ppfd}
+                  onChange={(e) => setPpfd(e.target.value)}
+                />
+              </div>
+              
+              {/* Visual Slider */}
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="ppfd-slider">Intensidade de Luz (Visual)</Label>
+                <div className="space-y-3">
+                  <input
+                    id="ppfd-slider"
+                    type="range"
+                    min="0"
+                    max="1200"
+                    step="50"
+                    value={ppfd || 0}
+                    onChange={(e) => setPpfd(e.target.value)}
+                    className="w-full h-3 rounded-lg appearance-none cursor-pointer"
+                    style={{
+                      background: `linear-gradient(to right, 
+                        #3b82f6 0%, #3b82f6 16.67%,
+                        #10b981 16.67%, #10b981 50%,
+                        #eab308 50%, #eab308 75%,
+                        #ef4444 75%, #ef4444 100%
+                      )`
+                    }}
+                  />
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span className="flex flex-col items-center">
+                      <span className="font-medium text-blue-500">🌱</span>
+                      <span>100-200</span>
+                      <span>Clonagem</span>
+                    </span>
+                    <span className="flex flex-col items-center">
+                      <span className="font-medium text-green-500">🌿</span>
+                      <span>400-600</span>
+                      <span>Vegetativa</span>
+                    </span>
+                    <span className="flex flex-col items-center">
+                      <span className="font-medium text-yellow-500">🌸</span>
+                      <span>600-900</span>
+                      <span>Floração</span>
+                    </span>
+                    <span className="flex flex-col items-center">
+                      <span className="font-medium text-red-500">⚡</span>
+                      <span>1000-1200</span>
+                      <span>Máximo</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </>
           )}
 
           <div className="space-y-2">
@@ -665,16 +714,16 @@ function LuxPPFDCalculator() {
             <div className="mt-4 space-y-2 text-xs text-muted-foreground">
               <p className="font-semibold text-foreground">Referências de PPFD por fase:</p>
               <div className="grid grid-cols-2 gap-2">
-                <div className="bg-white p-2 rounded">
+                <div className="bg-muted p-2 rounded">
                   <span className="font-medium">Clonagem:</span> 100-200
                 </div>
-                <div className="bg-white p-2 rounded">
+                <div className="bg-muted p-2 rounded">
                   <span className="font-medium">Vegetativa:</span> 400-600
                 </div>
-                <div className="bg-white p-2 rounded">
+                <div className="bg-muted p-2 rounded">
                   <span className="font-medium">Floração:</span> 600-900
                 </div>
-                <div className="bg-white p-2 rounded">
+                <div className="bg-muted p-2 rounded">
                   <span className="font-medium">Máximo:</span> 1000-1200
                 </div>
               </div>
@@ -802,7 +851,7 @@ function PPMECConverter() {
 
         {/* Resultado */}
         {result !== null && (
-          <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
+          <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-6">
             <h4 className="font-semibold text-foreground mb-3">Resultado:</h4>
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-foreground">

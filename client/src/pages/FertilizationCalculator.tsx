@@ -104,9 +104,9 @@ export default function FertilizationCalculator() {
     fe: {
       name: "Ferro (Fe)",
       icon: <Zap className="w-6 h-6" />,
-      color: "text-red-500",
-      bgColor: "bg-red-500/10",
-      borderColor: "border-red-500/20",
+      color: "text-blue-500",
+      bgColor: "bg-blue-500/10",
+      borderColor: "border-blue-500/20",
       function: "Produção de clorofila, respiração celular e transporte de oxigênio",
       deficiencySymptoms: [
         "Clorose severa em folhas novas (amarelo brilhante)",
