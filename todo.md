@@ -607,3 +607,34 @@
 - [x] Botões verde e vermelho com melhor destaque
 - [x] Widget de clima com melhor contraste
 - [x] Testar em todas as páginas
+
+## 🐛 Bug: Toggle de Modo Escuro Não Funciona
+- [x] Investigar por que o toggle está verde mas o tema não muda
+- [x] Verificar ThemeProvider e lógica de tema
+- [x] Verificar se classe 'dark' está sendo aplicada no HTML
+- [x] Testar toggle funcionando corretamente
+
+## 🐛 Bug: Sidebar Não Respeita Modo Escuro
+- [x] Sidebar continua branca mesmo com tema escuro ativo
+- [x] Corrigir componente Sidebar para usar bg-sidebar ao invés de bg-white
+- [x] Testar sidebar em modo escuro
+
+## 🐛 Bug Crítico: Elementos Brancos Não Respeitam Dark Mode
+- [x] Identificar TODOS os bg-white, bg-gray-X, bg-green-X hardcoded
+- [x] Card de ciclo (branco com "Ciclo Ativo") → bg-card
+- [x] Checkboxes das tarefas → bg-card
+- [x] Widget de clima → bg-card
+- [x] Todos os elementos internos de cards
+- [x] Pesquisar melhores práticas de dark mode na web
+- [x] Testar resultado final comparando com referência do usuário
+
+## 🐛 Elementos Específicos com Fundo Claro (Baseado em Screenshots)
+- [x] Botões AM/PM no registro - fundos amarelo/branco → escuros
+- [x] Cards de calculadoras - fundos rosa/vermelho claro → escuros
+- [x] Widget de clima - fundo cinza claro → escuro
+- [x] Card "Ações Rápidas" - fundo claro → escuro
+- [x] Card "Dicas de Medição" - fundo claro → escuro
+
+## 🎨 Ocultar Barras de Rolagem
+- [x] Adicionar CSS para ocultar scrollbars em todo o app
+- [x] Manter funcionalidade de scroll, apenas ocultar visualmente

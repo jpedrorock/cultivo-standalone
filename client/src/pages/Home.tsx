@@ -156,7 +156,7 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-50">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
@@ -168,14 +168,14 @@ export default function Home() {
 
   const getPhaseInfo = (tentType: string, cycle: any) => {
     if (!cycle) {
-      return { phase: "Inativo", color: "bg-gray-500", icon: Wind };
+      return { phase: "Inativo", color: "bg-muted0", icon: Wind };
     }
 
     if (tentType === "A") {
       // Estufa A: Clonagem ou Manutenção
       return {
         phase: "Manutenção",
-        color: "bg-blue-500",
+        color: "bg-blue-500/100",
         icon: Sprout,
       };
     }
@@ -191,23 +191,23 @@ export default function Home() {
 
     return {
       phase: "Vegetativa",
-      color: "bg-green-500",
+      color: "bg-primary/100",
       icon: Sprout,
     };
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-green-100 sticky top-0 z-10">
+      <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
         <div className="container py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+              <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
                 <Sprout className="w-8 h-8 text-primary" />
                 App Cultivo
               </h1>
-              <p className="text-gray-600 mt-1">Gerenciamento de Estufas</p>
+              <p className="text-muted-foreground mt-1">Gerenciamento de Estufas</p>
             </div>
             <div className="flex items-center gap-3">
               <Badge variant="outline" className="px-3 py-1.5 text-sm">
@@ -223,7 +223,7 @@ export default function Home() {
       <main className="container py-8">
         {/* Tents Grid */}
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-900">Estufas</h2>
+          <h2 className="text-2xl font-bold text-foreground">Estufas</h2>
           <Button onClick={() => setCreateTentModalOpen(true)} className="gap-2">
             <Sprout className="w-4 h-4" />
             Criar Nova Estufa
@@ -260,8 +260,8 @@ export default function Home() {
         </div>
 
         {/* Quick Actions */}
-        <div className="mt-8 bg-white/80 backdrop-blur-sm rounded-lg border border-green-100 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Ações Rápidas</h3>
+        <div className="mt-8 bg-card/80 backdrop-blur-sm rounded-lg border border-border p-6">
+          <h3 className="text-lg font-semibold text-foreground mb-4">Ações Rápidas</h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2">
               <Link href="/manage-strains">
@@ -388,13 +388,13 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
   
   // Função para determinar cor baseada no valor e target
   const getValueColor = (value: number | null | undefined, min: string | number | null | undefined, max: string | number | null | undefined) => {
-    if (!value || !min || !max) return "text-gray-900";
+    if (!value || !min || !max) return "text-foreground";
     
     // Converter strings para números
     const minNum = typeof min === 'string' ? parseFloat(min) : min;
     const maxNum = typeof max === 'string' ? parseFloat(max) : max;
     
-    if (isNaN(minNum) || isNaN(maxNum)) return "text-gray-900";
+    if (isNaN(minNum) || isNaN(maxNum)) return "text-foreground";
     
     // Verde: dentro da faixa ideal
     if (value >= minNum && value <= maxNum) {
@@ -433,7 +433,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
   const totalTasks = tasks?.length || 0;
 
   return (
-    <Card className="bg-white/90 backdrop-blur-sm border-green-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+    <Card className="bg-card/90 backdrop-blur-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
       <CardHeader>
         <div className="flex items-start justify-between">
           <div>
@@ -455,10 +455,10 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
         <div className="space-y-4">
           {/* Cycle Info */}
           {cycle ? (
-            <div className="bg-green-50 rounded-lg p-4 space-y-2">
+            <div className="bg-primary/10 rounded-lg p-4 space-y-2">
               <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-gray-700">Ciclo Ativo</span>
-                <span className="text-sm font-semibold text-green-700">
+                <span className="text-sm font-medium text-foreground">Ciclo Ativo</span>
+                <span className="text-sm font-semibold text-primary">
                   Semana {(() => {
                     const now = new Date();
                     const start = new Date(cycle.startDate);
@@ -472,15 +472,15 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-xs text-gray-600">Início</span>
-                <span className="text-xs font-medium text-gray-700">
+                <span className="text-xs text-muted-foreground">Início</span>
+                <span className="text-xs font-medium text-foreground">
                   {new Date(cycle.startDate).toLocaleDateString("pt-BR")}
                 </span>
               </div>
             </div>
           ) : (
-            <div className="bg-gray-50 rounded-lg p-4 text-center">
-              <p className="text-sm text-gray-600">Nenhum ciclo ativo</p>
+            <div className="bg-muted rounded-lg p-4 text-center">
+              <p className="text-sm text-muted-foreground">Nenhum ciclo ativo</p>
             </div>
           )}
 
@@ -488,7 +488,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
           {cycle && (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <h4 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4" />
                   Tarefas da Semana
                 </h4>
@@ -508,7 +508,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                   {tasks.map((task) => (
                     <div
                       key={task.id}
-                      className="flex items-start gap-2 p-2 rounded hover:bg-gray-50 transition-colors"
+                      className="flex items-start gap-2 p-2 rounded hover:bg-muted transition-colors"
                     >
                       <Checkbox
                         id={`task-${task.id}`}
@@ -519,7 +519,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                       <label
                         htmlFor={`task-${task.id}`}
                         className={`text-sm cursor-pointer flex-1 ${
-                          task.isDone ? "line-through text-gray-500" : "text-gray-700"
+                          task.isDone ? "line-through text-muted-foreground" : "text-foreground"
                         }`}
                       >
                         {task.title}
@@ -528,7 +528,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                   ))}
                 </div>
               ) : (
-                <p className="text-xs text-gray-500 text-center py-2">
+                <p className="text-xs text-muted-foreground text-center py-2">
                   Nenhuma tarefa para esta semana
                 </p>
               )}
@@ -539,33 +539,33 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
           <div className="grid grid-cols-3 gap-2 pt-4 border-t">
             <div className="text-center">
               <ThermometerSun className="w-5 h-5 mx-auto text-orange-500 mb-1" />
-              <p className="text-xs text-gray-600">Temp</p>
+              <p className="text-xs text-muted-foreground">Temp</p>
               <p className={`text-sm font-semibold ${
                 latestLog?.tempC 
                   ? getValueColor(parseFloat(latestLog.tempC), targets?.tempMin, targets?.tempMax)
-                  : "text-gray-900"
+                  : "text-foreground"
               }`}>
                 {latestLog?.tempC ? `${latestLog.tempC}°C` : "--°C"}
               </p>
             </div>
             <div className="text-center">
               <Droplets className="w-5 h-5 mx-auto text-blue-500 mb-1" />
-              <p className="text-xs text-gray-600">RH</p>
+              <p className="text-xs text-muted-foreground">RH</p>
               <p className={`text-sm font-semibold ${
                 latestLog?.rhPct 
                   ? getValueColor(parseFloat(latestLog.rhPct), targets?.rhMin, targets?.rhMax)
-                  : "text-gray-900"
+                  : "text-foreground"
               }`}>
                 {latestLog?.rhPct ? `${latestLog.rhPct}%` : "--%"}
               </p>
             </div>
             <div className="text-center">
               <Sun className="w-5 h-5 mx-auto text-yellow-500 mb-1" />
-              <p className="text-xs text-gray-600">PPFD</p>
+              <p className="text-xs text-muted-foreground">PPFD</p>
               <p className={`text-sm font-semibold ${
                 latestLog?.ppfd 
                   ? getValueColor(latestLog.ppfd, targets?.ppfdMin, targets?.ppfdMax)
-                  : "text-gray-900"
+                  : "text-foreground"
               }`}>
                 {latestLog?.ppfd || "--"}
               </p>
@@ -582,7 +582,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                 <Button
                   onClick={() => onInitiateCycle(tent.id, tent.name)}
                   variant="outline"
-                  className="flex-1 border-green-500 text-green-600 hover:bg-green-50"
+                  className="flex-1 border-green-500 text-green-600 hover:bg-primary/10"
                 >
                   Novo Ciclo
                 </Button>

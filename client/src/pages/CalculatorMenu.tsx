@@ -10,7 +10,7 @@ export default function CalculatorMenu() {
       description: "Calcule o volume e frequência ideal de rega",
       icon: Droplets,
       color: "from-blue-500 to-cyan-500",
-      bgColor: "bg-blue-50",
+      bgColor: "bg-blue-500/10",
       iconColor: "text-blue-600",
     },
     {
@@ -19,7 +19,7 @@ export default function CalculatorMenu() {
       description: "Determine a dosagem correta de fertilizantes",
       icon: Sprout,
       color: "from-green-500 to-emerald-500",
-      bgColor: "bg-green-50",
+      bgColor: "bg-primary/10",
       iconColor: "text-green-600",
     },
     {
@@ -28,7 +28,7 @@ export default function CalculatorMenu() {
       description: "Converta leitura de lux para PPFD",
       icon: Sun,
       color: "from-yellow-500 to-orange-500",
-      bgColor: "bg-yellow-50",
+      bgColor: "bg-yellow-500/10",
       iconColor: "text-yellow-600",
     },
     {
@@ -37,7 +37,7 @@ export default function CalculatorMenu() {
       description: "Converta entre PPM e EC bidirecionalmente",
       icon: Calculator,
       color: "from-purple-500 to-pink-500",
-      bgColor: "bg-purple-50",
+      bgColor: "bg-purple-500/10",
       iconColor: "text-purple-600",
     },
     {
@@ -46,23 +46,23 @@ export default function CalculatorMenu() {
       description: "Calcule ajustes necessários de pH",
       icon: TestTube,
       color: "from-red-500 to-rose-500",
-      bgColor: "bg-red-50",
+      bgColor: "bg-red-500/10",
       iconColor: "text-red-600",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-green-100 sticky top-0 z-10">
+      <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
               <Calculator className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Calculadoras</h1>
-              <p className="text-sm text-gray-600">Ferramentas para cultivo</p>
+              <h1 className="text-2xl font-bold text-foreground">Calculadoras</h1>
+              <p className="text-sm text-muted-foreground">Ferramentas para cultivo</p>
             </div>
           </div>
         </div>
@@ -75,7 +75,7 @@ export default function CalculatorMenu() {
             const Icon = calc.icon;
             return (
               <Link key={calc.id} href={`/calculators/${calc.id}`}>
-                <Card className={`cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 ${calc.bgColor} hover:border-green-300`}>
+                <Card className={`cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 ${calc.bgColor} hover:border-primary/50`}>
                   <CardHeader className="pb-4">
                     <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${calc.color} flex items-center justify-center mb-4 shadow-lg`}>
                       <Icon className="w-8 h-8 text-white" />
@@ -86,7 +86,7 @@ export default function CalculatorMenu() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex items-center justify-between text-sm text-gray-600">
+                    <div className="flex items-center justify-between text-sm text-muted-foreground">
                       <span>Abrir calculadora</span>
                       <span className="text-2xl">→</span>
                     </div>
@@ -98,14 +98,14 @@ export default function CalculatorMenu() {
         </div>
 
         {/* Info Card */}
-        <Card className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+        <Card className="mt-8 bg-primary/10 border-primary/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Beaker className="w-5 h-5 text-green-600" />
               Sobre as Calculadoras
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2 text-sm text-gray-700">
+          <CardContent className="space-y-2 text-sm text-foreground">
             <p>
               <strong>💧 Rega:</strong> Calcule o volume ideal baseado no tamanho do vaso e tipo de substrato
             </p>

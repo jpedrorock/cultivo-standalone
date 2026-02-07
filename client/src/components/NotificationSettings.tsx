@@ -144,7 +144,7 @@ export function NotificationSettings() {
       <CardContent className="space-y-6">
         {/* Permission Status */}
         {permission === "default" && (
-          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="p-4 bg-blue-500/100/10 border border-blue-500/20 rounded-lg">
             <p className="text-sm text-blue-900 mb-3">
               Para receber lembretes, precisamos de permissão para enviar notificações.
             </p>
@@ -171,7 +171,7 @@ export function NotificationSettings() {
                 <Label htmlFor="enable-notifications" className="text-base">
                   Ativar Lembretes
                 </Label>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted-foreground">
                   Receba um lembrete diário no horário configurado
                 </p>
               </div>
@@ -196,7 +196,7 @@ export function NotificationSettings() {
                   onChange={(e) => handleTimeChange(e.target.value)}
                   className="max-w-xs"
                 />
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   Você receberá um lembrete todos os dias às {config.time}
                 </p>
               </div>
@@ -218,7 +218,7 @@ export function NotificationSettings() {
             {config.enabled && permission === "granted" ? (
               <>
                 <Bell className="w-4 h-4 text-green-600" />
-                <span className="text-green-700 font-medium">Lembretes ativos</span>
+                <span className="text-primary font-medium">Lembretes ativos</span>
               </>
             ) : (
               <>

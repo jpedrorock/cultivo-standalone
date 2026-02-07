@@ -135,23 +135,23 @@ export default function Calculators() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-green-100 sticky top-0 z-10">
+      <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
         <div className="container py-6">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setLocation("/calculators")}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-muted rounded-lg transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
             <Calculator className="w-8 h-8 text-primary" />
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground">
                 {calculatorTitles[calculatorId] || "Calculadora"}
               </h1>
-              <p className="text-gray-600 mt-1 text-sm md:text-base">Ferramenta prática para cultivo</p>
+              <p className="text-muted-foreground mt-1 text-sm md:text-base">Ferramenta prática para cultivo</p>
             </div>
           </div>
         </div>
@@ -222,7 +222,7 @@ function IrrigationCalculator() {
   };
 
   return (
-    <Card className="bg-white/90 backdrop-blur-sm border-green-100">
+    <Card className="bg-card/90 backdrop-blur-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Droplets className="w-5 h-5 text-blue-500" />
@@ -266,16 +266,16 @@ function IrrigationCalculator() {
         </Button>
 
         {result && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 space-y-3">
+          <div className="bg-blue-500/100/10 border border-blue-500/20 rounded-lg p-6 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">Volume por rega:</span>
+              <span className="text-sm font-medium text-foreground">Volume por rega:</span>
               <span className="text-2xl font-bold text-blue-600">{result.volume}L</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">Frequência recomendada:</span>
+              <span className="text-sm font-medium text-foreground">Frequência recomendada:</span>
               <span className="text-lg font-semibold text-blue-600">{result.frequency}</span>
             </div>
-            <p className="text-xs text-gray-600 mt-4">
+            <p className="text-xs text-muted-foreground mt-4">
               💡 <strong>Dica:</strong> Regue até ver 10-20% de drenagem no fundo do vaso para evitar acúmulo de sais.
             </p>
             <Button 
@@ -365,7 +365,7 @@ function FertilizationCalculator() {
   };
 
   return (
-    <Card className="bg-white/90 backdrop-blur-sm border-green-100">
+    <Card className="bg-card/90 backdrop-blur-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Sprout className="w-5 h-5 text-green-500" />
@@ -415,7 +415,7 @@ function FertilizationCalculator() {
 
         {/* Micronutrientes (Opcional) */}
         <div className="border-t border-gray-200 pt-4">
-          <h4 className="text-sm font-semibold text-gray-700 mb-3">🧪 Micronutrientes (Opcional)</h4>
+          <h4 className="text-sm font-semibold text-foreground mb-3">🧪 Micronutrientes (Opcional)</h4>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
             <div className="space-y-2">
               <Label htmlFor="calciumPPM">Cálcio (Ca) - PPM</Label>
@@ -426,7 +426,7 @@ function FertilizationCalculator() {
                 value={calciumPPM}
                 onChange={(e) => setCalciumPPM(e.target.value)}
               />
-              <p className="text-xs text-gray-500">Ideal: 150-200 ppm</p>
+              <p className="text-xs text-muted-foreground">Ideal: 150-200 ppm</p>
             </div>
 
             <div className="space-y-2">
@@ -438,7 +438,7 @@ function FertilizationCalculator() {
                 value={magnesiumPPM}
                 onChange={(e) => setMagnesiumPPM(e.target.value)}
               />
-              <p className="text-xs text-gray-500">Ideal: 50-75 ppm</p>
+              <p className="text-xs text-muted-foreground">Ideal: 50-75 ppm</p>
             </div>
 
             <div className="space-y-2">
@@ -450,7 +450,7 @@ function FertilizationCalculator() {
                 value={ironPPM}
                 onChange={(e) => setIronPPM(e.target.value)}
               />
-              <p className="text-xs text-gray-500">Ideal: 2-5 ppm</p>
+              <p className="text-xs text-muted-foreground">Ideal: 2-5 ppm</p>
             </div>
           </div>
         </div>
@@ -461,43 +461,43 @@ function FertilizationCalculator() {
         </Button>
 
         {result && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-6 space-y-3">
-            <h4 className="font-semibold text-gray-900 mb-3">Receita de Fertilização:</h4>
+          <div className="bg-primary/10 border border-primary/20 rounded-lg p-6 space-y-3">
+            <h4 className="font-semibold text-foreground mb-3">Receita de Fertilização:</h4>
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">Fertilizante:</span>
+              <span className="text-sm font-medium text-foreground">Fertilizante:</span>
               <span className="text-2xl font-bold text-green-600">{result.fertilizer} ml</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">Água:</span>
+              <span className="text-sm font-medium text-foreground">Água:</span>
               <span className="text-2xl font-bold text-green-600">{result.water} L</span>
             </div>
             
             {/* Micronutrientes */}
             {(result.calcium || result.magnesium || result.iron) && (
               <div className="border-t border-green-300 pt-3 mt-3">
-                <h5 className="text-sm font-semibold text-gray-800 mb-2">🧪 Micronutrientes:</h5>
+                <h5 className="text-sm font-semibold text-foreground mb-2">🧪 Micronutrientes:</h5>
                 {result.calcium && (
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-gray-700">Cálcio (Ca):</span>
+                    <span className="text-sm text-foreground">Cálcio (Ca):</span>
                     <span className="text-lg font-bold text-green-600">{result.calcium} ml</span>
                   </div>
                 )}
                 {result.magnesium && (
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-gray-700">Magnésio (Mg):</span>
+                    <span className="text-sm text-foreground">Magnésio (Mg):</span>
                     <span className="text-lg font-bold text-green-600">{result.magnesium} ml</span>
                   </div>
                 )}
                 {result.iron && (
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-gray-700">Ferro (Fe):</span>
+                    <span className="text-sm text-foreground">Ferro (Fe):</span>
                     <span className="text-lg font-bold text-green-600">{result.iron} ml</span>
                   </div>
                 )}
               </div>
             )}
             
-            <p className="text-xs text-gray-600 mt-4">
+            <p className="text-xs text-muted-foreground mt-4">
               💡 <strong>Dica:</strong> Sempre adicione o fertilizante à água (nunca o contrário) e misture bem antes de aplicar.
             </p>
             <Button 
@@ -564,7 +564,7 @@ function LuxPPFDCalculator() {
   }, [lux, ppfd, lightType, conversionMode]);
 
   return (
-    <Card className="bg-white/90 backdrop-blur-sm border-green-100">
+    <Card className="bg-card/90 backdrop-blur-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Sun className="w-5 h-5 text-yellow-500" />
@@ -576,7 +576,7 @@ function LuxPPFDCalculator() {
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Seletor de modo de conversão */}
-        <div className="flex gap-2 p-1 bg-gray-100 rounded-lg">
+        <div className="flex gap-2 p-1 bg-muted rounded-lg">
           <button
             onClick={() => {
               setConversionMode("lux-to-ppfd");
@@ -585,8 +585,8 @@ function LuxPPFDCalculator() {
             }}
             className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
               conversionMode === "lux-to-ppfd"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-white text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             Lux → PPFD
@@ -599,8 +599,8 @@ function LuxPPFDCalculator() {
             }}
             className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
               conversionMode === "ppfd-to-lux"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-white text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             PPFD → Lux
@@ -652,9 +652,9 @@ function LuxPPFDCalculator() {
 
 
         {result !== null && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 space-y-3">
+          <div className="bg-yellow-500/100/10 border border-yellow-500/20 rounded-lg p-6 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-foreground">
                 {conversionMode === "lux-to-ppfd" ? "PPFD estimado:" : "Lux estimado:"}
               </span>
               <span className="text-3xl font-bold text-yellow-600">
@@ -662,8 +662,8 @@ function LuxPPFDCalculator() {
               </span>
             </div>
 
-            <div className="mt-4 space-y-2 text-xs text-gray-600">
-              <p className="font-semibold text-gray-900">Referências de PPFD por fase:</p>
+            <div className="mt-4 space-y-2 text-xs text-muted-foreground">
+              <p className="font-semibold text-foreground">Referências de PPFD por fase:</p>
               <div className="grid grid-cols-2 gap-2">
                 <div className="bg-white p-2 rounded">
                   <span className="font-medium">Clonagem:</span> 100-200
@@ -680,7 +680,7 @@ function LuxPPFDCalculator() {
               </div>
             </div>
 
-            <p className="text-xs text-gray-600 mt-4">
+            <p className="text-xs text-muted-foreground mt-4">
               💡 <strong>Dica:</strong> Esta é uma estimativa. Para medições precisas, use um medidor PPFD (quantum sensor).
             </p>
             <Button 
@@ -729,7 +729,7 @@ function PPMECConverter() {
   }, [inputValue, conversionType, scale]);
 
   return (
-    <Card className="bg-white/90 backdrop-blur-sm border-green-100">
+    <Card className="bg-card/90 backdrop-blur-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Calculator className="w-5 h-5 text-purple-500" />
@@ -780,7 +780,7 @@ function PPMECConverter() {
               700 (EUA/Hanna)
             </Button>
           </div>
-          <p className="text-xs text-gray-600">
+          <p className="text-xs text-muted-foreground">
             💡 Escala 500: 1 EC = 500 PPM | Escala 700: 1 EC = 700 PPM
           </p>
         </div>
@@ -803,39 +803,39 @@ function PPMECConverter() {
         {/* Resultado */}
         {result !== null && (
           <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
-            <h4 className="font-semibold text-gray-900 mb-3">Resultado:</h4>
+            <h4 className="font-semibold text-foreground mb-3">Resultado:</h4>
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-foreground">
                 {conversionType === "ppm-to-ec" ? "EC (mS/cm):" : "PPM:"}
               </span>
               <span className="text-3xl font-bold text-purple-600">
                 {result} {conversionType === "ppm-to-ec" ? "mS/cm" : "PPM"}
               </span>
             </div>
-            <p className="text-xs text-gray-600 mt-4">
+            <p className="text-xs text-muted-foreground mt-4">
               📊 <strong>Referência:</strong> Vega: 1.0-1.8 EC (500-900 PPM) | Flora: 1.8-2.4 EC (900-1200 PPM)
             </p>
           </div>
         )}
 
         {/* Tabela de Referência */}
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-          <h5 className="text-sm font-semibold text-gray-800 mb-3">📋 Tabela de Referência (Escala {scale}):</h5>
+        <div className="bg-muted border border-gray-200 rounded-lg p-4">
+          <h5 className="text-sm font-semibold text-foreground mb-3">📋 Tabela de Referência (Escala {scale}):</h5>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-700">Clonagem:</span>
+              <span className="text-foreground">Clonagem:</span>
               <span className="font-medium">0.4-0.8 EC ({scale === "500" ? "200-400" : "280-560"} PPM)</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-700">Vegetativo:</span>
+              <span className="text-foreground">Vegetativo:</span>
               <span className="font-medium">1.0-1.8 EC ({scale === "500" ? "500-900" : "700-1260"} PPM)</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-700">Floração:</span>
+              <span className="text-foreground">Floração:</span>
               <span className="font-medium">1.8-2.4 EC ({scale === "500" ? "900-1200" : "1260-1680"} PPM)</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-700">Flush Final:</span>
+              <span className="text-foreground">Flush Final:</span>
               <span className="font-medium">0.0-0.4 EC ({scale === "500" ? "0-200" : "0-280"} PPM)</span>
             </div>
           </div>
@@ -893,7 +893,7 @@ function PHAdjustCalculator() {
   };
 
   return (
-    <Card className="bg-white/90 backdrop-blur-sm border-green-100">
+    <Card className="bg-card/90 backdrop-blur-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Droplets className="w-5 h-5 text-blue-500" />
@@ -947,40 +947,40 @@ function PHAdjustCalculator() {
         </Button>
 
         {result && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 space-y-3">
-            <h4 className="font-semibold text-gray-900 mb-3">Receita de Ajuste:</h4>
+          <div className="bg-blue-500/100/10 border border-blue-500/20 rounded-lg p-6 space-y-3">
+            <h4 className="font-semibold text-foreground mb-3">Receita de Ajuste:</h4>
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">Produto:</span>
+              <span className="text-sm font-medium text-foreground">Produto:</span>
               <span className="text-lg font-bold text-blue-600">{result.product}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">Quantidade:</span>
+              <span className="text-sm font-medium text-foreground">Quantidade:</span>
               <span className="text-3xl font-bold text-blue-600">{result.amount} ml</span>
             </div>
-            <p className="text-xs text-gray-600 mt-4">
+            <p className="text-xs text-muted-foreground mt-4">
               ⚠️ <strong>Importante:</strong> Adicione aos poucos, misture bem e meça novamente. Nunca adicione tudo de uma vez!
             </p>
           </div>
         )}
 
         {/* Tabela de Referência */}
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-          <h5 className="text-sm font-semibold text-gray-800 mb-3">📋 pH Ideal por Substrato:</h5>
+        <div className="bg-muted border border-gray-200 rounded-lg p-4">
+          <h5 className="text-sm font-semibold text-foreground mb-3">📋 pH Ideal por Substrato:</h5>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-700">Solo/Terra:</span>
+              <span className="text-foreground">Solo/Terra:</span>
               <span className="font-medium">6.0 - 7.0</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-700">Fibra de Coco:</span>
+              <span className="text-foreground">Fibra de Coco:</span>
               <span className="font-medium">5.5 - 6.5</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-700">Hidroponia:</span>
+              <span className="text-foreground">Hidroponia:</span>
               <span className="font-medium">5.5 - 6.0</span>
             </div>
           </div>
-          <p className="text-xs text-gray-600 mt-3">
+          <p className="text-xs text-muted-foreground mt-3">
             💡 <strong>Dica:</strong> pH fora da faixa ideal bloqueia absorção de nutrientes, causando deficiências mesmo com fertilização adequada.
           </p>
         </div>

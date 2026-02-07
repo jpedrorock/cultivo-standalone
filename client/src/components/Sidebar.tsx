@@ -14,16 +14,16 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="hidden md:flex md:flex-col md:fixed md:left-0 md:top-0 md:h-screen md:w-64 bg-white border-r border-gray-200 shadow-sm z-40">
+    <aside className="hidden md:flex md:flex-col md:fixed md:left-0 md:top-0 md:h-screen md:w-64 bg-sidebar border-r border-sidebar-border shadow-sm z-40">
       {/* Logo/Header */}
-      <div className="p-6 border-b border-gray-200">
+      <div className="p-6 border-b border-sidebar-border">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-            <Leaf className="w-6 h-6 text-green-600" />
+          <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+            <Leaf className="w-6 h-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-gray-900">App Cultivo</h1>
-            <p className="text-xs text-gray-500">Gerenciamento</p>
+            <h1 className="text-lg font-bold text-sidebar-foreground">App Cultivo</h1>
+            <p className="text-xs text-muted-foreground">Gerenciamento</p>
           </div>
         </div>
       </div>
@@ -40,10 +40,10 @@ export function Sidebar() {
               href={item.href}
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-lg transition-all",
-                "hover:bg-green-50",
+                "hover:bg-sidebar-accent",
                 isActive
-                  ? "bg-green-100 text-green-700 font-semibold"
-                  : "text-gray-700 hover:text-green-600"
+                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
+                  : "text-sidebar-foreground hover:text-primary"
               )}
             >
               <Icon className={cn("w-5 h-5", isActive && "stroke-[2.5]")} />
@@ -54,23 +54,23 @@ export function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-gray-200 space-y-3">
+      <div className="p-4 border-t border-sidebar-border space-y-3">
         <Link
           href="/settings"
           className={cn(
             "flex items-center gap-3 px-4 py-3 rounded-lg transition-all",
-            "hover:bg-gray-50",
+            "hover:bg-sidebar-accent",
             location === "/settings"
-              ? "bg-gray-100 text-gray-900 font-semibold"
-              : "text-gray-600 hover:text-gray-900"
+              ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
+              : "text-sidebar-foreground hover:text-primary"
           )}
         >
           <Settings className={cn("w-5 h-5", location === "/settings" && "stroke-[2.5]")} />
           <span>Configurações</span>
         </Link>
-        <div className="px-4 py-2 bg-green-50 rounded-lg">
-          <p className="text-xs text-green-700 font-medium">Sistema Ativo</p>
-          <p className="text-xs text-gray-600 mt-1">3 estufas monitoradas</p>
+        <div className="px-4 py-2 bg-sidebar-accent rounded-lg">
+          <p className="text-xs text-primary font-medium">Sistema Ativo</p>
+          <p className="text-xs text-muted-foreground mt-1">3 estufas monitoradas</p>
         </div>
       </div>
     </aside>

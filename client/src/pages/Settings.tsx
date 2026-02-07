@@ -10,9 +10,9 @@ import { useState } from "react";
 
 export default function Settings() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-green-100 sticky top-0 z-10">
+      <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
             <Button asChild variant="ghost" size="icon">
@@ -21,8 +21,8 @@ export default function Settings() {
               </Link>
             </Button>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Configurações</h1>
-              <p className="text-sm text-gray-600">Personalize seu app</p>
+              <h1 className="text-2xl font-bold text-foreground">Configurações</h1>
+              <p className="text-sm text-muted-foreground">Personalize seu app</p>
             </div>
           </div>
         </div>
@@ -65,19 +65,19 @@ function KeyboardShortcuts() {
       <CardContent>
         <div className="space-y-2">
           {shortcuts.map((item, index) => (
-            <div key={index} className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-md">
+            <div key={index} className="flex items-center justify-between py-2 px-3 bg-muted rounded-md">
               <div className="flex flex-col">
-                <span className="text-sm font-medium text-gray-700">{item.description}</span>
-                <span className="text-xs text-gray-500">{item.context}</span>
+                <span className="text-sm font-medium text-foreground">{item.description}</span>
+                <span className="text-xs text-muted-foreground">{item.context}</span>
               </div>
-              <kbd className="px-2 py-1 text-xs font-semibold text-gray-800 bg-white border border-gray-300 rounded shadow-sm">
+              <kbd className="px-2 py-1 text-xs font-semibold text-foreground bg-white border border-border rounded shadow-sm">
                 {item.shortcut}
               </kbd>
             </div>
           ))}
         </div>
-        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-          <p className="text-xs text-blue-800">
+        <div className="mt-4 p-3 bg-blue-500/100/10 border border-blue-500/20 rounded-md">
+          <p className="text-xs text-blue-400">
             <strong>Dica:</strong> Os atalhos não funcionam quando você está digitando em campos de texto.
           </p>
         </div>
@@ -139,7 +139,7 @@ function DatabaseExport() {
           <Download className="w-4 h-4 mr-2" />
           {isExporting ? "Exportando..." : "Exportar Banco de Dados"}
         </Button>
-        <p className="text-xs text-gray-500 mt-3">
+        <p className="text-xs text-muted-foreground mt-3">
           O arquivo SQL conterá todas as estufas, ciclos, registros, strains e configurações.
         </p>
       </CardContent>
@@ -218,13 +218,13 @@ function DatabaseImport() {
               type="file"
               accept=".sql"
               onChange={handleFileSelect}
-              className="flex-1 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+              className="flex-1 text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-green-100"
               disabled={isImporting}
             />
           </div>
           
           {selectedFile && (
-            <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-md">
+            <div className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
               <strong>Arquivo selecionado:</strong> {selectedFile.name} ({(selectedFile.size / 1024).toFixed(2)} KB)
             </div>
           )}
@@ -240,7 +240,7 @@ function DatabaseImport() {
           </Button>
         </div>
 
-        <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
+        <div className="bg-yellow-500/100/10 border border-yellow-500/20 rounded-md p-3">
           <p className="text-xs text-yellow-800">
             <strong>⚠️ Aviso:</strong> A importação irá sobrescrever todos os dados existentes. Certifique-se de exportar um backup atual antes de importar.
           </p>

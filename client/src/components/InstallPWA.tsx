@@ -106,7 +106,7 @@ export function InstallPWA() {
             </p>
             <Button
               onClick={handleInstallClick}
-              className="w-full bg-white text-emerald-600 hover:bg-white/90"
+              className="w-full bg-white text-emerald-600 hover:bg-card/90"
               size="sm"
             >
               <Download className="w-4 h-4 mr-2" />

@@ -166,7 +166,7 @@ export default function TentLog() {
 
   if (tentLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-50">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
@@ -174,10 +174,10 @@ export default function TentLog() {
 
   if (!tent) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-50">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <Card className="max-w-md">
           <CardContent className="p-6 text-center">
-            <p className="text-gray-600">Estufa não encontrada</p>
+            <p className="text-muted-foreground">Estufa não encontrada</p>
             <Button asChild className="mt-4">
               <Link href="/">Voltar</Link>
             </Button>
@@ -189,26 +189,26 @@ export default function TentLog() {
 
   const getPhaseInfo = () => {
     if (!cycle) {
-      return { phase: "Inativo", color: "bg-gray-500" };
+      return { phase: "Inativo", color: "bg-muted0" };
     }
 
     if (tent.tentType === "A") {
-      return { phase: "Manutenção", color: "bg-blue-500" };
+      return { phase: "Manutenção", color: "bg-blue-500/100" };
     }
 
     if (cycle.floraStartDate) {
       return { phase: "Floração", color: "bg-purple-500" };
     }
 
-    return { phase: "Vegetativa", color: "bg-green-500" };
+    return { phase: "Vegetativa", color: "bg-primary/100" };
   };
 
   const phaseInfo = getPhaseInfo();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-green-100 sticky top-0 z-10">
+      <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
         <div className="container py-6">
           <div className="flex items-center gap-4">
             <Button asChild variant="ghost" size="icon">
@@ -217,11 +217,11 @@ export default function TentLog() {
               </Link>
             </Button>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+              <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
                 <Sprout className="w-7 h-7 text-primary" />
                 Registro - {tent.name}
               </h1>
-              <p className="text-gray-600 mt-1">
+              <p className="text-muted-foreground mt-1">
                 Tipo {tent.tentType} • {tent.width}×{tent.depth}×{tent.height}cm
               </p>
             </div>
@@ -234,28 +234,28 @@ export default function TentLog() {
       <main className="container py-8 max-w-5xl">
         {/* Cycle Info */}
         {cycle && currentPhaseInfo && (
-          <Card className="bg-white/90 backdrop-blur-sm border-green-100 mb-6">
+          <Card className="bg-card/90 backdrop-blur-sm mb-6">
             <CardContent className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
-                  <p className="text-sm text-gray-600">Ciclo Ativo</p>
-                  <p className="text-lg font-semibold text-gray-900">
+                  <p className="text-sm text-muted-foreground">Ciclo Ativo</p>
+                  <p className="text-lg font-semibold text-foreground">
                     Semana {currentPhaseInfo.weekNumber}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Fase</p>
-                  <p className="text-lg font-semibold text-gray-900">{phaseInfo.phase}</p>
+                  <p className="text-sm text-muted-foreground">Fase</p>
+                  <p className="text-lg font-semibold text-foreground">{phaseInfo.phase}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Data de Início</p>
-                  <p className="text-lg font-semibold text-gray-900">
+                  <p className="text-sm text-muted-foreground">Data de Início</p>
+                  <p className="text-lg font-semibold text-foreground">
                     {new Date(cycle.startDate).toLocaleDateString("pt-BR")}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Dias Decorridos</p>
-                  <p className="text-lg font-semibold text-gray-900">
+                  <p className="text-sm text-muted-foreground">Dias Decorridos</p>
+                  <p className="text-lg font-semibold text-foreground">
                     {Math.floor((Date.now() - new Date(cycle.startDate).getTime()) / (24 * 60 * 60 * 1000))}{" "}
                     dias
                   </p>
@@ -267,7 +267,7 @@ export default function TentLog() {
 
         {/* Valores de Referência */}
         {currentTargets && (
-          <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200 mb-6">
+          <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-500/20 mb-6">
             <CardHeader>
               <CardTitle className="text-blue-900">📊 Valores Ideais da Semana</CardTitle>
               <CardDescription className="text-blue-700">
@@ -276,68 +276,68 @@ export default function TentLog() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                <div className="bg-white/80 p-3 rounded-lg border border-blue-200">
+                <div className="bg-card/80 p-3 rounded-lg border border-blue-500/20">
                   <div className="flex items-center gap-2 mb-1">
                     <Sun className="w-4 h-4 text-orange-600" />
-                    <p className="text-xs font-medium text-gray-700">PPFD</p>
+                    <p className="text-xs font-medium text-foreground">PPFD</p>
                   </div>
-                  <p className="text-sm font-bold text-gray-900">
+                  <p className="text-sm font-bold text-foreground">
                     {currentTargets.ppfdMin}-{currentTargets.ppfdMax}
                   </p>
-                  <p className="text-xs text-gray-600">µmol/m²/s</p>
+                  <p className="text-xs text-muted-foreground">µmol/m²/s</p>
                 </div>
 
-                <div className="bg-white/80 p-3 rounded-lg border border-blue-200">
+                <div className="bg-card/80 p-3 rounded-lg border border-blue-500/20">
                   <div className="flex items-center gap-2 mb-1">
                     <Clock className="w-4 h-4 text-cyan-600" />
-                    <p className="text-xs font-medium text-gray-700">Fotoperíodo</p>
+                    <p className="text-xs font-medium text-foreground">Fotoperíodo</p>
                   </div>
-                  <p className="text-sm font-bold text-gray-900">{currentTargets.photoperiod}</p>
-                  <p className="text-xs text-gray-600">Luz/Escuro</p>
+                  <p className="text-sm font-bold text-foreground">{currentTargets.photoperiod}</p>
+                  <p className="text-xs text-muted-foreground">Luz/Escuro</p>
                 </div>
 
-                <div className="bg-white/80 p-3 rounded-lg border border-blue-200">
+                <div className="bg-card/80 p-3 rounded-lg border border-blue-500/20">
                   <div className="flex items-center gap-2 mb-1">
                     <ThermometerSun className="w-4 h-4 text-red-600" />
-                    <p className="text-xs font-medium text-gray-700">Temperatura</p>
+                    <p className="text-xs font-medium text-foreground">Temperatura</p>
                   </div>
-                  <p className="text-sm font-bold text-gray-900">
+                  <p className="text-sm font-bold text-foreground">
                     {currentTargets.tempMin}-{currentTargets.tempMax}
                   </p>
-                  <p className="text-xs text-gray-600">°C</p>
+                  <p className="text-xs text-muted-foreground">°C</p>
                 </div>
 
-                <div className="bg-white/80 p-3 rounded-lg border border-blue-200">
+                <div className="bg-card/80 p-3 rounded-lg border border-blue-500/20">
                   <div className="flex items-center gap-2 mb-1">
                     <Droplets className="w-4 h-4 text-blue-600" />
-                    <p className="text-xs font-medium text-gray-700">Umidade</p>
+                    <p className="text-xs font-medium text-foreground">Umidade</p>
                   </div>
-                  <p className="text-sm font-bold text-gray-900">
+                  <p className="text-sm font-bold text-foreground">
                     {currentTargets.rhMin}-{currentTargets.rhMax}
                   </p>
-                  <p className="text-xs text-gray-600">%</p>
+                  <p className="text-xs text-muted-foreground">%</p>
                 </div>
 
-                <div className="bg-white/80 p-3 rounded-lg border border-blue-200">
+                <div className="bg-card/80 p-3 rounded-lg border border-blue-500/20">
                   <div className="flex items-center gap-2 mb-1">
                     <Beaker className="w-4 h-4 text-purple-600" />
-                    <p className="text-xs font-medium text-gray-700">pH</p>
+                    <p className="text-xs font-medium text-foreground">pH</p>
                   </div>
-                  <p className="text-sm font-bold text-gray-900">
+                  <p className="text-sm font-bold text-foreground">
                     {currentTargets.phMin}-{currentTargets.phMax}
                   </p>
-                  <p className="text-xs text-gray-600">Ideal</p>
+                  <p className="text-xs text-muted-foreground">Ideal</p>
                 </div>
 
-                <div className="bg-white/80 p-3 rounded-lg border border-blue-200">
+                <div className="bg-card/80 p-3 rounded-lg border border-blue-500/20">
                   <div className="flex items-center gap-2 mb-1">
                     <FlaskConical className="w-4 h-4 text-pink-600" />
-                    <p className="text-xs font-medium text-gray-700">EC</p>
+                    <p className="text-xs font-medium text-foreground">EC</p>
                   </div>
-                  <p className="text-sm font-bold text-gray-900">
+                  <p className="text-sm font-bold text-foreground">
                     {currentTargets.ecMin}-{currentTargets.ecMax}
                   </p>
-                  <p className="text-xs text-gray-600">mS/cm</p>
+                  <p className="text-xs text-muted-foreground">mS/cm</p>
                 </div>
               </div>
             </CardContent>
@@ -345,7 +345,7 @@ export default function TentLog() {
         )}
 
         {/* Log Form */}
-        <Card className="bg-white/90 backdrop-blur-sm border-green-100">
+        <Card className="bg-card/90 backdrop-blur-sm">
           <CardHeader>
             <CardTitle>Novo Registro</CardTitle>
             <CardDescription>
@@ -370,8 +370,8 @@ export default function TentLog() {
                     onClick={() => setTurn("AM")}
                     className={`relative overflow-hidden rounded-lg border-2 transition-all duration-300 ${
                       turn === "AM"
-                        ? "border-yellow-400 bg-gradient-to-br from-yellow-50 to-orange-50 shadow-lg scale-105"
-                        : "border-gray-200 bg-white hover:border-yellow-300 hover:shadow-md"
+                        ? "border-yellow-400 bg-yellow-500/20 shadow-lg scale-105"
+                        : "border-border bg-card hover:border-yellow-400/50 hover:shadow-md"
                     }`}
                   >
                     <div className="p-4 flex flex-col items-center gap-2">
@@ -380,10 +380,10 @@ export default function TentLog() {
                       }`} />
                       <div className="text-center">
                         <div className={`text-lg font-bold ${
-                          turn === "AM" ? "text-yellow-700" : "text-gray-600"
+                          turn === "AM" ? "text-yellow-700" : "text-muted-foreground"
                         }`}>AM</div>
                         <div className={`text-sm ${
-                          turn === "AM" ? "text-yellow-600" : "text-gray-500"
+                          turn === "AM" ? "text-yellow-600" : "text-muted-foreground"
                         }`}>Manhã</div>
                         <div className={`text-xs mt-1 ${
                           turn === "AM" ? "text-yellow-500" : "text-gray-400"
@@ -391,7 +391,7 @@ export default function TentLog() {
                       </div>
                     </div>
                     {turn === "AM" && (
-                      <div className="absolute top-2 right-2 w-3 h-3 bg-yellow-500 rounded-full animate-pulse" />
+                      <div className="absolute top-2 right-2 w-3 h-3 bg-yellow-500/100 rounded-full animate-pulse" />
                     )}
                   </button>
 
@@ -401,8 +401,8 @@ export default function TentLog() {
                     onClick={() => setTurn("PM")}
                     className={`relative overflow-hidden rounded-lg border-2 transition-all duration-300 ${
                       turn === "PM"
-                        ? "border-indigo-400 bg-gradient-to-br from-indigo-900 to-purple-900 shadow-lg scale-105"
-                        : "border-gray-200 bg-white hover:border-indigo-300 hover:shadow-md"
+                        ? "border-indigo-400 bg-indigo-500/20 shadow-lg scale-105"
+                        : "border-border bg-card hover:border-indigo-400/50 hover:shadow-md"
                     }`}
                   >
                     <div className="p-4 flex flex-col items-center gap-2">
@@ -411,10 +411,10 @@ export default function TentLog() {
                       }`} />
                       <div className="text-center">
                         <div className={`text-lg font-bold ${
-                          turn === "PM" ? "text-white" : "text-gray-600"
+                          turn === "PM" ? "text-white" : "text-muted-foreground"
                         }`}>PM</div>
                         <div className={`text-sm ${
-                          turn === "PM" ? "text-indigo-200" : "text-gray-500"
+                          turn === "PM" ? "text-indigo-200" : "text-muted-foreground"
                         }`}>Noite</div>
                         <div className={`text-xs mt-1 ${
                           turn === "PM" ? "text-indigo-300" : "text-gray-400"
@@ -594,10 +594,10 @@ export default function TentLog() {
         </Card>
 
         {/* Quick Tips */}
-        <Card className="mt-6 bg-blue-50/80 backdrop-blur-sm border-blue-100">
+        <Card className="mt-6 bg-blue-500/10/80 backdrop-blur-sm border-blue-100">
           <CardContent className="p-6">
             <h3 className="font-semibold text-blue-900 mb-3">💡 Dicas de Medição</h3>
-            <ul className="space-y-2 text-sm text-blue-800">
+            <ul className="space-y-2 text-sm text-blue-400">
               <li>• Realize medições sempre nos mesmos horários para consistência</li>
               <li>• Aguarde alguns minutos após abrir a estufa para medições precisas</li>
               <li>• Compare seus valores com os ideais exibidos acima</li>

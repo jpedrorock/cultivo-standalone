@@ -38,7 +38,7 @@ export default function Alerts() {
 
   if (loadingTents) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 p-6 flex items-center justify-center">
+      <div className="min-h-screen bg-background p-6 flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-green-600" />
       </div>
     );
@@ -47,13 +47,13 @@ export default function Alerts() {
   const currentTent = tents?.find(t => t.id === selectedTentId);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Alertas Automáticos</h1>
-            <p className="text-gray-600">Configure notificações quando valores saem da faixa ideal</p>
+            <h1 className="text-4xl font-bold text-foreground mb-2">Alertas Automáticos</h1>
+            <p className="text-muted-foreground">Configure notificações quando valores saem da faixa ideal</p>
           </div>
           <Link href="/">
             <Button variant="outline">← Voltar</Button>
@@ -82,7 +82,7 @@ export default function Alerts() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Configurações de Alertas */}
-          <Card className="bg-white/90 backdrop-blur-sm border-green-100">
+          <Card className="bg-card/90 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 {settings?.alertsEnabled ? (
@@ -104,14 +104,14 @@ export default function Alerts() {
               ) : (
                 <>
                   {/* Alertas Gerais */}
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
                     <div className="flex items-center gap-3">
-                      <Bell className="w-5 h-5 text-gray-700" />
+                      <Bell className="w-5 h-5 text-foreground" />
                       <div>
                         <Label htmlFor="alertsEnabled" className="text-base font-semibold">
                           Alertas Automáticos
                         </Label>
-                        <p className="text-sm text-gray-600">Ativar/desativar todos os alertas</p>
+                        <p className="text-sm text-muted-foreground">Ativar/desativar todos os alertas</p>
                       </div>
                     </div>
                     <Switch
@@ -123,14 +123,14 @@ export default function Alerts() {
                   </div>
 
                   {/* Temperatura */}
-                  <div className="flex items-center justify-between p-4 bg-orange-50 rounded-lg">
+                  <div className="flex items-center justify-between p-4 bg-orange-500/10 rounded-lg">
                     <div className="flex items-center gap-3">
                       <ThermometerSun className="w-5 h-5 text-orange-600" />
                       <div>
                         <Label htmlFor="tempEnabled" className="text-base font-semibold">
                           Temperatura
                         </Label>
-                        <p className="text-sm text-gray-600">Alerta quando temp. sai da faixa</p>
+                        <p className="text-sm text-muted-foreground">Alerta quando temp. sai da faixa</p>
                       </div>
                     </div>
                     <Switch
@@ -142,14 +142,14 @@ export default function Alerts() {
                   </div>
 
                   {/* Umidade */}
-                  <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+                  <div className="flex items-center justify-between p-4 bg-blue-500/10 rounded-lg">
                     <div className="flex items-center gap-3">
                       <Droplets className="w-5 h-5 text-blue-600" />
                       <div>
                         <Label htmlFor="rhEnabled" className="text-base font-semibold">
                           Umidade (RH)
                         </Label>
-                        <p className="text-sm text-gray-600">Alerta quando RH sai da faixa</p>
+                        <p className="text-sm text-muted-foreground">Alerta quando RH sai da faixa</p>
                       </div>
                     </div>
                     <Switch
@@ -161,14 +161,14 @@ export default function Alerts() {
                   </div>
 
                   {/* PPFD */}
-                  <div className="flex items-center justify-between p-4 bg-yellow-50 rounded-lg">
+                  <div className="flex items-center justify-between p-4 bg-yellow-500/10 rounded-lg">
                     <div className="flex items-center gap-3">
                       <Sun className="w-5 h-5 text-yellow-600" />
                       <div>
                         <Label htmlFor="ppfdEnabled" className="text-base font-semibold">
                           Luz (PPFD)
                         </Label>
-                        <p className="text-sm text-gray-600">Alerta quando PPFD sai da faixa</p>
+                        <p className="text-sm text-muted-foreground">Alerta quando PPFD sai da faixa</p>
                       </div>
                     </div>
                     <Switch
@@ -184,7 +184,7 @@ export default function Alerts() {
           </Card>
 
           {/* Histórico de Alertas */}
-          <Card className="bg-white/90 backdrop-blur-sm border-green-100">
+          <Card className="bg-card/90 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <History className="w-5 h-5 text-purple-500" />
@@ -204,7 +204,7 @@ export default function Alerts() {
                   {history.map((alert) => (
                     <div
                       key={alert.id}
-                      className="p-4 bg-gray-50 rounded-lg border border-gray-200"
+                      className="p-4 bg-muted rounded-lg border border-gray-200"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-start gap-3 flex-1">
@@ -212,8 +212,8 @@ export default function Alerts() {
                           {alert.metric === "RH" && <Droplets className="w-5 h-5 text-blue-600 mt-0.5" />}
                           {alert.metric === "PPFD" && <Sun className="w-5 h-5 text-yellow-600 mt-0.5" />}
                           <div className="flex-1">
-                            <p className="text-sm font-medium text-gray-900">{alert.message}</p>
-                            <p className="text-xs text-gray-600 mt-1">
+                            <p className="text-sm font-medium text-foreground">{alert.message}</p>
+                            <p className="text-xs text-muted-foreground mt-1">
                               {new Date(alert.createdAt).toLocaleString("pt-BR")}
                             </p>
                           </div>
@@ -228,7 +228,7 @@ export default function Alerts() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12 text-gray-500">
+                <div className="text-center py-12 text-muted-foreground">
                   <Bell className="w-12 h-12 mx-auto mb-3 opacity-30" />
                   <p>Nenhum alerta disparado ainda</p>
                   <p className="text-sm mt-1">Os alertas aparecerão aqui quando valores saírem da faixa ideal</p>

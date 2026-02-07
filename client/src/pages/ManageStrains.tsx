@@ -147,7 +147,7 @@ export default function ManageStrains() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 p-4 md:p-8">
+    <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -156,13 +156,13 @@ export default function ManageStrains() {
               variant="ghost"
               size="icon"
               onClick={() => setLocation("/")}
-              className="hover:bg-white/50"
+              className="hover:bg-card/50"
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Gerenciar Strains</h1>
-              <p className="text-gray-600 mt-1">
+              <h1 className="text-3xl font-bold text-foreground">Gerenciar Strains</h1>
+              <p className="text-muted-foreground mt-1">
                 Crie e edite variedades de plantas com seus parâmetros ideais
               </p>
             </div>
@@ -185,7 +185,7 @@ export default function ManageStrains() {
                   <div className="flex-1">
                     <CardTitle className="text-xl">{strain.name}</CardTitle>
                     <CardDescription className="mt-1">
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-muted-foreground">
                         Vega: {strain.vegaWeeks} semanas | Flora: {strain.floraWeeks} semanas
                       </span>
                     </CardDescription>
@@ -195,7 +195,7 @@ export default function ManageStrains() {
                       variant="ghost"
                       size="icon"
                       onClick={() => openDuplicateDialog(strain)}
-                      className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                      className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-500/10"
                       title="Duplicar strain"
                     >
                       <Copy className="h-4 w-4" />
@@ -220,7 +220,7 @@ export default function ManageStrains() {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-600 line-clamp-3">
+                <p className="text-sm text-muted-foreground line-clamp-3">
                   {strain.description || "Sem descrição"}
                 </p>
                 <Button
@@ -237,7 +237,7 @@ export default function ManageStrains() {
           {strains.length === 0 && (
             <Card className="col-span-full">
               <CardContent className="flex flex-col items-center justify-center py-12">
-                <p className="text-gray-500 text-center mb-4">
+                <p className="text-muted-foreground text-center mb-4">
                   Nenhuma strain cadastrada ainda
                 </p>
                 <Button

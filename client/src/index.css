@@ -135,6 +135,15 @@
 }
 
 @layer base {
+  /* Hide scrollbars globally but keep functionality */
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+  *::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
@@ -175,6 +184,7 @@
     padding-left: 1rem; /* 16px - mobile padding */
     padding-right: 1rem;
   }
+
 
   .flex {
     min-height: 0;

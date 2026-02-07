@@ -229,7 +229,7 @@ export default function StrainTargets() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-lg text-gray-600">Strain não encontrada</p>
+          <p className="text-lg text-muted-foreground">Strain não encontrada</p>
           <Button onClick={() => setLocation("/manage-strains")} className="mt-4">
             Voltar
           </Button>
@@ -239,9 +239,9 @@ export default function StrainTargets() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-green-100 sticky top-0 z-10">
+      <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -249,8 +249,8 @@ export default function StrainTargets() {
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">{strain.name}</h1>
-                <p className="text-sm text-gray-600">Parâmetros Ideais por Semana</p>
+                <h1 className="text-2xl font-bold text-foreground">{strain.name}</h1>
+                <p className="text-sm text-muted-foreground">Parâmetros Ideais por Semana</p>
               </div>
             </div>
           </div>

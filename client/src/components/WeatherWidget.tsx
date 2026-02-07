@@ -69,12 +69,12 @@ export function WeatherWidget() {
       <Card className="bg-gradient-to-br from-gray-50 to-slate-50 border-gray-200">
         <CardHeader className="pb-3">
           <CardTitle className="text-lg flex items-center gap-2">
-            <CloudOff className="w-5 h-5 text-gray-500" />
+            <CloudOff className="w-5 h-5 text-muted-foreground" />
             Clima Externo
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-500 text-center py-4">
+          <p className="text-sm text-muted-foreground text-center py-4">
             {locationError || "Erro ao carregar dados do clima"}
           </p>
         </CardContent>
@@ -97,21 +97,21 @@ export function WeatherWidget() {
       <CardContent>
         <div className="grid grid-cols-2 gap-4">
           {/* Temperatura */}
-          <div className="flex flex-col items-center p-4 bg-white/60 rounded-lg">
+          <div className="flex flex-col items-center p-4 bg-card/60 rounded-lg">
             <ThermometerSun className="w-8 h-8 text-orange-500 mb-2" />
-            <div className="text-3xl font-bold text-gray-900">
+            <div className="text-3xl font-bold text-foreground">
               {weather?.temperature?.toFixed(1)}°C
             </div>
-            <div className="text-xs text-gray-600 mt-1">Temperatura</div>
+            <div className="text-xs text-muted-foreground mt-1">Temperatura</div>
           </div>
 
           {/* Umidade */}
-          <div className="flex flex-col items-center p-4 bg-white/60 rounded-lg">
+          <div className="flex flex-col items-center p-4 bg-card/60 rounded-lg">
             <Droplets className="w-8 h-8 text-blue-500 mb-2" />
-            <div className="text-3xl font-bold text-gray-900">
+            <div className="text-3xl font-bold text-foreground">
               {weather?.humidity}%
             </div>
-            <div className="text-xs text-gray-600 mt-1">Umidade</div>
+            <div className="text-xs text-muted-foreground mt-1">Umidade</div>
           </div>
         </div>
 

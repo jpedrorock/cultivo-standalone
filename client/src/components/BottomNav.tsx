@@ -14,7 +14,7 @@ export function BottomNav() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50 md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border shadow-lg z-50 md:hidden">
       <div className="max-w-screen-xl mx-auto px-4 py-3">
         <div className="flex justify-around items-center">
           {navItems.map((item) => {
@@ -27,10 +27,10 @@ export function BottomNav() {
                 href={item.href}
                 className={cn(
                   "flex flex-col items-center justify-center gap-1 py-3 px-3 rounded-lg transition-colors",
-                  "hover:bg-green-50",
+                  "hover:bg-primary/10",
                   isActive
-                    ? "text-green-600"
-                    : "text-gray-600 hover:text-green-600"
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-primary"
                 )}
               >
                 <Icon className={cn("w-6 h-6", isActive && "stroke-[2.5]")} />

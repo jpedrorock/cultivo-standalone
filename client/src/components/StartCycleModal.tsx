@@ -138,7 +138,7 @@ export default function StartCycleModal({ tentId, tentName, open, onOpenChange }
             </div>
           </div>
 
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+          <div className="bg-blue-500/100/10 border border-blue-500/20 rounded-lg p-3 text-sm text-blue-400">
             <p className="font-medium mb-1">📅 Resumo do Ciclo</p>
             <p>
               • Início: {new Date(startDate).toLocaleDateString("pt-BR")}<br />

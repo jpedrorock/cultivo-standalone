@@ -151,7 +151,7 @@ export default function HistoryTable() {
 
   if (tentsLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-50">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
@@ -161,9 +161,9 @@ export default function HistoryTable() {
   const totalPages = logsData?.total ? Math.ceil(logsData.total / limit) : 1;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-green-100 sticky top-0 z-10">
+      <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -171,8 +171,8 @@ export default function HistoryTable() {
                 <TableIcon className="w-6 h-6 text-green-600" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Histórico de Registros</h1>
-                <p className="text-sm text-gray-600">Visualize e exporte todos os registros diários</p>
+                <h1 className="text-2xl font-bold text-foreground">Histórico de Registros</h1>
+                <p className="text-sm text-muted-foreground">Visualize e exporte todos os registros diários</p>
               </div>
             </div>
             <div className="flex gap-2">
@@ -324,7 +324,7 @@ export default function HistoryTable() {
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
               </div>
             ) : !logsData?.logs || logsData.logs.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-muted-foreground">
                 <Calendar className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p>Nenhum registro encontrado</p>
                 <p className="text-sm mt-2">Ajuste os filtros ou registre novos dados</p>
@@ -403,7 +403,7 @@ export default function HistoryTable() {
                   >
                     Anterior
                   </Button>
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-muted-foreground">
                     Mostrando {offset + 1} - {Math.min(offset + limit, logsData.total || 0)} de {logsData.total || 0}
                   </span>
                   <Button

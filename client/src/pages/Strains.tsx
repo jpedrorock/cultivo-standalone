@@ -108,23 +108,23 @@ export default function Strains() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-50">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="w-8 h-8 animate-spin text-green-600" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-green-100 sticky top-0 z-10">
+      <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/">
-            <button className="flex items-center gap-2 text-green-700 hover:text-green-800 transition-colors">
+            <button className="flex items-center gap-2 text-primary hover:text-green-800 transition-colors">
               <Sprout className="w-6 h-6" />
               <div>
                 <h1 className="text-xl font-bold">App Cultivo</h1>
-                <p className="text-xs text-gray-600">Gerenciamento de Strains</p>
+                <p className="text-xs text-muted-foreground">Gerenciamento de Strains</p>
               </div>
             </button>
           </Link>
@@ -164,7 +164,7 @@ export default function Strains() {
                   {strains.map((strain) => (
                     <TableRow key={strain.id}>
                       <TableCell className="font-medium">{strain.name}</TableCell>
-                      <TableCell className="text-gray-600">
+                      <TableCell className="text-muted-foreground">
                         {strain.description || "-"}
                       </TableCell>
                       <TableCell className="text-center">{strain.vegaWeeks}</TableCell>
@@ -198,7 +198,7 @@ export default function Strains() {
             ) : (
               <div className="text-center py-12">
                 <Sprout className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-                <p className="text-gray-600 mb-4">Nenhuma strain cadastrada</p>
+                <p className="text-muted-foreground mb-4">Nenhuma strain cadastrada</p>
                 <Button onClick={() => handleOpenDialog()} className="bg-green-600 hover:bg-green-700">
                   <Plus className="w-4 h-4 mr-2" />
                   Cadastrar Primeira Strain
@@ -273,7 +273,7 @@ export default function Strains() {
                   />
                 </div>
               </div>
-              <div className="bg-green-50 rounded-lg p-3 text-sm text-gray-700">
+              <div className="bg-primary/10 rounded-lg p-3 text-sm text-foreground">
                 <strong>Duração total:</strong> {formData.vegaWeeks + formData.floraWeeks} semanas
               </div>
             </div>
