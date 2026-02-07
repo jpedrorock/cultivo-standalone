@@ -791,3 +791,10 @@
 - [x] Adicionar conversão automática na interface de importação
 - [x] Manter schema MySQL no Manus (não quebrar nada)
 - [x] Gerar pacote v1.0.6 com conversor MySQL→SQLite
+
+## 🔧 Fix: Criar Schema SQLite Completo
+- [x] Gerar CREATE TABLE statements para todas as tabelas
+- [x] Combinar schema + dados em banco-inicial.sql (78KB)
+- [x] Atualizar instalador para usar sqlite3 diretamente
+- [x] Remover dependência de pnpm db:push
+- [x] Gerar pacote v1.0.7 (656KB, com schema SQLite completo)

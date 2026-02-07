@@ -192,73 +192,66 @@ if [ -f local.db ]; then
     fi
 fi
 
-# Criar banco vazio
-if [ ! -f local.db ]; then
-    touch local.db
-    print_success "Arquivo local.db criado"
-fi
-
-# 7. Aplicar migrações
+# 7. Criar banco de dados e importar dados
 echo ""
-echo "🔄 Aplicando migrações do banco de dados..."
-echo "   (Criando tabelas...)"
+echo "📊 Criando banco de dados SQLite..."
+echo "   (Criando tabelas e importando dados...)"
 echo ""
 
-if ! pnpm db:push; then
-    print_error "ERRO CRÍTICO: Falha ao aplicar migrações!"
+# Verificar se sqlite3 está disponível
+if ! command -v sqlite3 &> /dev/null; then
+    print_error "❌ ERRO CRÍTICO: sqlite3 não encontrado!"
     echo ""
-    echo "Diagnóstico:"
-    echo "  1. Verificando drizzle-kit:"
-    pnpm exec drizzle-kit --version || echo "     drizzle-kit não encontrado"
+    echo "O instalador precisa do sqlite3 para criar o banco de dados."
     echo ""
-    echo "  2. Verificando schema:"
-    if [ -f drizzle/schema.ts ]; then
-        echo "     ✅ drizzle/schema.ts existe"
-    else
-        echo "     ❌ drizzle/schema.ts não encontrado"
-    fi
-    echo ""
-    echo "  3. Verificando permissões:"
-    if [ -w local.db ]; then
-        echo "     ✅ local.db tem permissão de escrita"
-    else
-        echo "     ❌ local.db sem permissão de escrita"
-    fi
-    echo ""
-    echo "Tente rodar manualmente:"
-    echo "  pnpm db:push"
+    echo "Instale sqlite3:"
+    echo "  macOS:   brew install sqlite3"
+    echo "  Ubuntu:  sudo apt-get install sqlite3"
+    echo "  Windows: https://www.sqlite.org/download.html"
     echo ""
     exit 1
 fi
 
-print_success "Migrações aplicadas com sucesso"
-
-# 8. Importar dados iniciais
-echo ""
-echo "📊 Importando dados iniciais..."
-
-if [ -f banco-inicial.sql ]; then
-    if command -v sqlite3 &> /dev/null; then
-        if sqlite3 local.db < banco-inicial.sql 2>/dev/null; then
-            print_success "Dados iniciais importados (3 estufas, ciclos, tarefas)"
-        else
-            print_warning "Erro ao importar dados iniciais"
-            print_info "Você pode importar manualmente pela interface depois"
-        fi
+# Remover banco antigo se existir e criar novo
+if [ -f local.db ]; then
+    print_warning "Banco de dados existente encontrado"
+    read -p "Deseja recriá-lo? (s/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Ss]$ ]]; then
+        rm -f local.db
+        print_info "Banco de dados removido"
     else
-        print_warning "sqlite3 não encontrado"
-        print_info "Instale sqlite3 para importar dados automaticamente:"
-        echo "  • macOS: brew install sqlite3"
-        echo "  • Ubuntu/Debian: sudo apt install sqlite3"
-        echo ""
-        print_info "Ou importe manualmente pela interface do app"
+        print_info "Mantendo banco existente (pulando importação)"
+        SKIP_IMPORT=true
     fi
-else
-    print_warning "Arquivo banco-inicial.sql não encontrado"
-    print_info "O banco será criado vazio"
 fi
 
-# 9. Testar conexão do banco
+# Importar schema + dados
+if [ "$SKIP_IMPORT" != "true" ] && [ -f banco-inicial.sql ]; then
+    if sqlite3 local.db < banco-inicial.sql 2>&1; then
+        print_success "Banco de dados criado com sucesso!"
+        print_info "   • 3 estufas (A, B, C)"
+        print_info "   • 6 strains cadastradas"
+        print_info "   • 6 ciclos (ativos e finalizados)"
+        print_info "   • Registros diários e tarefas"
+    else
+        print_error "Erro ao criar banco de dados"
+        echo ""
+        echo "Tente manualmente:"
+        echo "  sqlite3 local.db < banco-inicial.sql"
+        echo ""
+        exit 1
+    fi
+else
+    if [ ! -f banco-inicial.sql ]; then
+        print_warning "banco-inicial.sql não encontrado"
+        print_info "Banco será criado vazio"
+    fi
+fi
+
+print_success "Banco de dados configurado"
+
+# 8. Testar conexão do banco
 echo ""
 echo "🔍 Testando conexão do banco de dados..."
 
