@@ -828,3 +828,8 @@
 - [x] Combinar CREATE TABLE + INSERT em banco-inicial.sql (80KB)
 - [x] Atualizar package-release.sh para v2.0.1
 - [x] Gerar v2.0.1 (652KB, com CREATE TABLE + dados)
+
+## 🐛 Bug: Senha MySQL com caracteres especiais quebra conexão
+- [x] Adicionar URL encoding automático da senha no install-mysql.sh
+- [x] Função url_encode() para escapar caracteres especiais
+- [x] Gerar v2.0.2 (652KB, com URL encoding de senha)

@@ -40,6 +40,24 @@ print_header() {
     echo ""
 }
 
+# URL encode password for MySQL connection string
+url_encode() {
+    local string="$1"
+    local strlen=${#string}
+    local encoded=""
+    local pos c o
+
+    for (( pos=0 ; pos<strlen ; pos++ )); do
+        c=${string:$pos:1}
+        case "$c" in
+            [-_.~a-zA-Z0-9] ) o="${c}" ;;
+            * ) printf -v o '%%%02x' "'$c" ;;
+        esac
+        encoded+="${o}"
+    done
+    echo "${encoded}"
+}
+
 # Detectar sistema operacional
 OS="$(uname -s)"
 case "${OS}" in
@@ -181,7 +199,9 @@ echo "⚙️  Configurando ambiente..."
 if [ -z "$MYSQL_PASSWORD" ]; then
     DATABASE_URL="mysql://root@localhost:3306/$DB_NAME"
 else
-    DATABASE_URL="mysql://root:$MYSQL_PASSWORD@localhost:3306/$DB_NAME"
+    # URL encode password to handle special characters
+    ENCODED_PASSWORD=$(url_encode "$MYSQL_PASSWORD")
+    DATABASE_URL="mysql://root:$ENCODED_PASSWORD@localhost:3306/$DB_NAME"
 fi
 
 cat > .env << EOF
