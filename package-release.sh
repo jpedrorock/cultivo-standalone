@@ -10,7 +10,7 @@ set -e  # Exit on error
 echo "📦 Iniciando empacotamento do App Cultivo..."
 
 # Variáveis
-VERSION="1.0.4"
+VERSION="1.0.5"
 RELEASE_NAME="app-cultivo-v${VERSION}"
 RELEASE_DIR="./releases"
 TEMP_DIR="${RELEASE_DIR}/${RELEASE_NAME}"
@@ -94,11 +94,14 @@ EOF
 
 echo "🗑️  Removendo arquivos desnecessários..."
 
-# Remover arquivos de desenvolvimento
+# Remover arquivos de desenvolvimento e node_modules (forçar instalação limpa)
+rm -rf "${TEMP_DIR}/node_modules" 2>/dev/null || true
 rm -rf "${TEMP_DIR}/client/node_modules" 2>/dev/null || true
 rm -rf "${TEMP_DIR}/server/node_modules" 2>/dev/null || true
 rm -rf "${TEMP_DIR}/.git" 2>/dev/null || true
 rm -rf "${TEMP_DIR}/dist" 2>/dev/null || true
+rm -rf "${TEMP_DIR}/local.db" 2>/dev/null || true
+rm -rf "${TEMP_DIR}/.manus-logs" 2>/dev/null || true
 
 echo "📝 Criando arquivo de versão..."
 

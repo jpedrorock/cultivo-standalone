@@ -775,3 +775,10 @@
 - [x] Substituir banco-inicial.sql com dados reais
 - [x] Incluir 3 estufas, 6 strains, 6 ciclos, registros e tarefas
 - [x] Regenerar pacote v1.0.4 com dados do usuário
+
+## 🔧 Fix: Excluir node_modules do Pacote
+- [x] Atualizar package-release.sh para não incluir node_modules
+- [x] Forçar instalação limpa sempre (pnpm install do zero)
+- [x] Remover local.db e logs do pacote
+- [x] Garantir compilação nativa em qualquer plataforma
+- [x] Pacote v1.0.5 gerado (648KB, sem node_modules)
