@@ -9,6 +9,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell, Trash2 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
@@ -23,6 +33,8 @@ export default function Home() {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedCycle, setSelectedCycle] = useState<any>(null);
   const [createTentModalOpen, setCreateTentModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [tentToDelete, setTentToDelete] = useState<{ id: number; name: string } | null>(null);
 
   
   const { data: tents, isLoading } = trpc.tents.list.useQuery();
@@ -44,8 +56,15 @@ export default function Home() {
   });
 
   const handleDeleteTent = (tentId: number, tentName: string) => {
-    if (confirm(`Tem certeza que deseja excluir a estufa "${tentName}"? Esta ação não pode ser desfeita.`)) {
-      deleteTent.mutate({ id: tentId });
+    setTentToDelete({ id: tentId, name: tentName });
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteTent = () => {
+    if (tentToDelete) {
+      deleteTent.mutate({ id: tentToDelete.id });
+      setDeleteDialogOpen(false);
+      setTentToDelete(null);
     }
   };
 
@@ -312,7 +331,27 @@ export default function Home() {
         onOpenChange={setCreateTentModalOpen}
       />
 
-
+      {/* Delete Tent Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir a estufa "{tentToDelete?.name}"? 
+              Esta ação não pode ser desfeita e todos os dados relacionados (ciclos finalizados, registros, tarefas) serão permanentemente excluídos.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeleteTent}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Excluir Estufa
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

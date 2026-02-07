@@ -576,3 +576,16 @@
 - [x] Reduzir tamanho dos botões AM/PM
 - [x] Ajustar padding e espaçamento
 - [x] Manter legibilidade dos ícones e texto
+
+## 🐛 Bugs Reportados pelo Usuário (Fevereiro 2026)
+- [x] Modo escuro não funciona (já funcionava corretamente)
+- [ ] Criar estufa: falta opção de definir fase inicial (Floração/Vegetativa)
+- [x] Excluir estufa não está funcionando (corrigido: cascade delete implementado)
+- [ ] Calculadora de fertilização: definir se micronutrientes são padrão ou editáveis
+- [ ] Calculadora de fertilização: adicionar campo de volume de rega
+- [ ] Calculadora de fertilização: valores devem mudar por semana/fase
+
+## ✅ Bug Resolvido: Excluir Estufa
+- [x] Substituir confirm() por AlertDialog do shadcn/ui
+- [x] Implementar exclusão em cascata de todos os dados relacionados
+- [x] Testar exclusão completa (estufa "Teste Delete" removida com sucesso)

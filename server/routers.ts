@@ -111,7 +111,40 @@ export const appRouter = router({
           throw new Error("Não é possível excluir uma estufa com ciclos ativos. Finalize o ciclo primeiro.");
         }
         
-        // Deletar estufa
+        // Buscar todos os ciclos da estufa (ativos e finalizados)
+        const allCycles = await database
+          .select({ id: cycles.id })
+          .from(cycles)
+          .where(eq(cycles.tentId, input.id));
+        
+        const cycleIds = allCycles.map(c => c.id);
+        
+        // Deletar registros relacionados em cascata
+        // Deletar daily logs (usa tentId diretamente)
+        await database.delete(dailyLogs).where(eq(dailyLogs.tentId, input.id));
+        
+        // Deletar task instances (usa tentId diretamente)
+        await database.delete(taskInstances).where(eq(taskInstances.tentId, input.id));
+        
+        // Deletar ciclos (weeklyTargets não precisa ser deletado pois é relacionado a strain, não a ciclo)
+        await database.delete(cycles).where(eq(cycles.tentId, input.id));
+        
+        // Deletar alert settings
+        await database.delete(alertSettings).where(eq(alertSettings.tentId, input.id));
+        
+        // Deletar alert history
+        await database.delete(alertHistory).where(eq(alertHistory.tentId, input.id));
+        
+        // Deletar alerts
+        await database.delete(alerts).where(eq(alerts.tentId, input.id));
+        
+        // Deletar tent A state (se existir)
+        await database.delete(tentAState).where(eq(tentAState.tentId, input.id));
+        
+        // Deletar cloning events
+        await database.delete(cloningEvents).where(eq(cloningEvents.tentId, input.id));
+        
+        // Finalmente, deletar estufa
         await database.delete(tents).where(eq(tents.id, input.id));
         
         return { success: true };
