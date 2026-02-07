@@ -515,66 +515,122 @@ function FertilizationCalculator() {
   );
 }
 
-// Calculadora Lux → PPFD
+// Calculadora Lux ↔ PPFD (Bidirecional)
 function LuxPPFDCalculator() {
+  const [conversionMode, setConversionMode] = useState<"lux-to-ppfd" | "ppfd-to-lux">("lux-to-ppfd");
   const [lux, setLux] = useState<string>("");
+  const [ppfd, setPpfd] = useState<string>("");
   const [lightType, setLightType] = useState<string>("led-white");
   const [result, setResult] = useState<number | null>(null);
 
   // Cálculo automático em tempo real
-  const calculatePPFD = () => {
-    const luxValue = parseFloat(lux);
-    if (isNaN(luxValue) || luxValue <= 0) {
-      setResult(null);
-      return;
-    }
-
+  const calculate = () => {
     // Fatores de conversão baseados no tipo de luz
-    // Fonte: estudos de horticultura e especificações de fabricantes
     let conversionFactor = 0.015; // LED branco (padrão)
 
     if (lightType === "led-full-spectrum") {
-      conversionFactor = 0.017; // LED full spectrum
+      conversionFactor = 0.017;
     } else if (lightType === "hps") {
-      conversionFactor = 0.012; // HPS (alta pressão de sódio)
+      conversionFactor = 0.012;
     } else if (lightType === "mh") {
-      conversionFactor = 0.014; // MH (metal halide)
+      conversionFactor = 0.014;
     } else if (lightType === "sunlight") {
-      conversionFactor = 0.0185; // Luz solar
+      conversionFactor = 0.0185;
     }
 
-    const ppfd = luxValue * conversionFactor;
-    setResult(Math.round(ppfd));
+    if (conversionMode === "lux-to-ppfd") {
+      const luxValue = parseFloat(lux);
+      if (isNaN(luxValue) || luxValue <= 0) {
+        setResult(null);
+        return;
+      }
+      const ppfdResult = luxValue * conversionFactor;
+      setResult(Math.round(ppfdResult));
+    } else {
+      const ppfdValue = parseFloat(ppfd);
+      if (isNaN(ppfdValue) || ppfdValue <= 0) {
+        setResult(null);
+        return;
+      }
+      const luxResult = ppfdValue / conversionFactor;
+      setResult(Math.round(luxResult));
+    }
   };
 
-  // Recalcular automaticamente quando lux ou lightType mudar
+  // Recalcular automaticamente
   useEffect(() => {
-    calculatePPFD();
-  }, [lux, lightType]);
+    calculate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lux, ppfd, lightType, conversionMode]);
 
   return (
     <Card className="bg-white/90 backdrop-blur-sm border-green-100">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Sun className="w-5 h-5 text-yellow-500" />
-          Calculadora Lux → PPFD
+          Calculadora Lux ↔ PPFD
         </CardTitle>
         <CardDescription>
-          Converta medições de Lux (luxímetro) para PPFD (µmol/m²/s) baseado no tipo de luz
+          Converta entre Lux (luxímetro) e PPFD (µmol/m²/s) baseado no tipo de luz
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        {/* Seletor de modo de conversão */}
+        <div className="flex gap-2 p-1 bg-gray-100 rounded-lg">
+          <button
+            onClick={() => {
+              setConversionMode("lux-to-ppfd");
+              setPpfd("");
+              setResult(null);
+            }}
+            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+              conversionMode === "lux-to-ppfd"
+                ? "bg-white text-gray-900 shadow-sm"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            Lux → PPFD
+          </button>
+          <button
+            onClick={() => {
+              setConversionMode("ppfd-to-lux");
+              setLux("");
+              setResult(null);
+            }}
+            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+              conversionMode === "ppfd-to-lux"
+                ? "bg-white text-gray-900 shadow-sm"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            PPFD → Lux
+          </button>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="lux">Leitura em Lux</Label>
-            <Input
-              id="lux"
-              type="number"
-              placeholder="Ex: 50000"
-              value={lux}
-              onChange={(e) => setLux(e.target.value)}
-            />
-          </div>
+          {conversionMode === "lux-to-ppfd" ? (
+            <div className="space-y-2">
+              <Label htmlFor="lux">Leitura em Lux</Label>
+              <Input
+                id="lux"
+                type="number"
+                placeholder="Ex: 50000"
+                value={lux}
+                onChange={(e) => setLux(e.target.value)}
+              />
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <Label htmlFor="ppfd">Leitura em PPFD (µmol/m²/s)</Label>
+              <Input
+                id="ppfd"
+                type="number"
+                placeholder="Ex: 750"
+                value={ppfd}
+                onChange={(e) => setPpfd(e.target.value)}
+              />
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="lightType">Tipo de Luz</Label>
@@ -598,8 +654,12 @@ function LuxPPFDCalculator() {
         {result !== null && (
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">PPFD estimado:</span>
-              <span className="text-3xl font-bold text-yellow-600">{result} µmol/m²/s</span>
+              <span className="text-sm font-medium text-gray-700">
+                {conversionMode === "lux-to-ppfd" ? "PPFD estimado:" : "Lux estimado:"}
+              </span>
+              <span className="text-3xl font-bold text-yellow-600">
+                {result} {conversionMode === "lux-to-ppfd" ? "µmol/m²/s" : "lux"}
+              </span>
             </div>
 
             <div className="mt-4 space-y-2 text-xs text-gray-600">

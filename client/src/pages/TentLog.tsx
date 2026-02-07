@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2, Sprout, ThermometerSun, Droplets, Sun, ArrowLeft, Save, Beaker, FlaskConical, Clock, Sunrise, Moon } from "lucide-react";
 import { Link, useParams } from "wouter";
 import { toast } from "sonner";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 export default function TentLog() {
   const { id } = useParams<{ id: string }>();
@@ -131,8 +132,8 @@ export default function TentLog() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (e?: React.FormEvent) => {
+    e?.preventDefault();
 
     if (!tempC && !rhPct && !ppfd) {
       toast.error("Preencha pelo menos um campo de medição");
@@ -149,6 +150,19 @@ export default function TentLog() {
       notes: notes || undefined,
     });
   };
+
+  // Keyboard shortcuts
+  useKeyboardShortcuts([
+    {
+      key: 's',
+      ctrl: true,
+      description: 'Salvar Registro',
+      action: () => {
+        handleSubmit();
+        toast.success('Atalho acionado: Salvar Registro');
+      },
+    },
+  ]);
 
   if (tentLoading) {
     return (

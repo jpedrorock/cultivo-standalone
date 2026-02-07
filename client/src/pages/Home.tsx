@@ -10,12 +10,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell, Trash2 } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 
 export default function Home() {
+  const [, setLocation] = useLocation();
   const [cycleModalOpen, setCycleModalOpen] = useState(false);
   const [selectedTent, setSelectedTent] = useState<{ id: number; name: string } | null>(null);
   const [initiateModalOpen, setInitiateModalOpen] = useState(false);
@@ -114,7 +115,24 @@ export default function Home() {
         toast.success('Atalho acionado: Criar Nova Estufa');
       },
     },
-
+    {
+      key: 'h',
+      ctrl: true,
+      description: 'Ir para Histórico',
+      action: () => {
+        setLocation('/history');
+        toast.success('Atalho acionado: Histórico');
+      },
+    },
+    {
+      key: 'c',
+      ctrl: true,
+      description: 'Ir para Calculadoras',
+      action: () => {
+        setLocation('/calculators');
+        toast.success('Atalho acionado: Calculadoras');
+      },
+    },
   ]);
 
   if (isLoading) {

@@ -557,3 +557,17 @@
 ## 📱 Ajuste Mobile: Padding do Menu
 - [x] Aumentar padding top e bottom do BottomNav
 - [x] Testar no celular
+
+## ⌨️ Novos Atalhos de Teclado
+- [x] Adicionar Ctrl+S para salvar registro (TentLog)
+- [x] Adicionar Ctrl+H para ir para Histórico
+- [x] Adicionar Ctrl+C para ir para Calculadoras
+- [x] Adicionar Esc para fechar modais
+- [x] Atualizar lista de atalhos em Configurações
+- [x] Testar todos os atalhos
+
+## 🔄 Calculadora Reversa: PPFD → Lux
+- [x] Adicionar campo de entrada PPFD na página de Calculadoras
+- [x] Implementar cálculo PPFD → Lux (PPFD × 54)
+- [x] Adicionar interface similar à calculadora Lux → PPFD
+- [x] Testar conversão

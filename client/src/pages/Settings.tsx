@@ -43,6 +43,14 @@ export default function Settings() {
 }
 
 function KeyboardShortcuts() {
+  const shortcuts = [
+    { description: 'Criar Nova Estufa', shortcut: 'Ctrl+N', context: 'Página inicial' },
+    { description: 'Salvar Registro', shortcut: 'Ctrl+S', context: 'Página de registro' },
+    { description: 'Ir para Histórico', shortcut: 'Ctrl+H', context: 'Qualquer página' },
+    { description: 'Ir para Calculadoras', shortcut: 'Ctrl+C', context: 'Qualquer página' },
+    { description: 'Mostrar Atalhos', shortcut: 'Ctrl+/', context: 'Qualquer página' },
+  ];
+
   return (
     <Card>
       <CardHeader>
@@ -55,13 +63,18 @@ function KeyboardShortcuts() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-md">
-            <span className="text-sm text-gray-700">Criar Nova Estufa</span>
-            <kbd className="px-2 py-1 text-xs font-semibold text-gray-800 bg-white border border-gray-300 rounded shadow-sm">
-              Ctrl+N
-            </kbd>
-          </div>
+        <div className="space-y-2">
+          {shortcuts.map((item, index) => (
+            <div key={index} className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-md">
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-gray-700">{item.description}</span>
+                <span className="text-xs text-gray-500">{item.context}</span>
+              </div>
+              <kbd className="px-2 py-1 text-xs font-semibold text-gray-800 bg-white border border-gray-300 rounded shadow-sm">
+                {item.shortcut}
+              </kbd>
+            </div>
+          ))}
         </div>
         <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
           <p className="text-xs text-blue-800">
