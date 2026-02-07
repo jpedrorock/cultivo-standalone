@@ -762,3 +762,10 @@
 - [x] Cores e formatação visual no terminal
 - [x] Perguntas interativas para sobrescrever arquivos
 - [x] Pacote v1.0.2 gerado com install.sh
+
+## 🐛 Bug: Erro de Compilação better_sqlite3
+- [x] Atualizar instalador para recompilar módulos nativos automaticamente
+- [x] Adicionar detecção de plataforma (macOS/Linux/Windows)
+- [x] Forçar rebuild do better_sqlite3 durante instalação
+- [x] Fallback para reinstalação completa se rebuild falhar
+- [x] Pacote v1.0.3 gerado com correções

@@ -36,6 +36,12 @@ print_info() {
     echo -e "${BLUE}ℹ️  $1${NC}"
 }
 
+# Detectar plataforma
+OS_TYPE=$(uname -s)
+ARCH_TYPE=$(uname -m)
+print_info "Plataforma: $OS_TYPE $ARCH_TYPE"
+echo ""
+
 # 1. Verificar Node.js
 echo "📋 Verificando requisitos do sistema..."
 echo ""
@@ -90,6 +96,23 @@ if ! pnpm install; then
 fi
 
 print_success "Dependências instaladas"
+
+# 3.5. Recompilar módulos nativos (better_sqlite3)
+echo ""
+print_info "Recompilando módulos nativos para seu sistema..."
+if pnpm rebuild better-sqlite3 2>/dev/null; then
+    print_success "Módulos nativos recompilados"
+else
+    print_warning "Não foi possível recompilar better-sqlite3"
+    print_info "Tentando reinstalação completa..."
+    rm -rf node_modules
+    if pnpm install; then
+        print_success "Reinstalação concluída"
+    else
+        print_error "Falha na reinstalação"
+        exit 1
+    fi
+fi
 
 # 4. Verificar se drizzle-kit está disponível
 echo ""
