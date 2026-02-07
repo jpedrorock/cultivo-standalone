@@ -40,7 +40,7 @@ para evitar acúmulo de sais.
   downloadTextFile(content, `receita-rega-${Date.now()}.txt`);
 }
 
-function exportFertilizationRecipe(waterVolume: string, npkConcentration: string, targetEC: string, result: { fertilizer: number; water: number }) {
+function exportFertilizationRecipe(waterVolume: string, targetEC: string, _unused: string, result: { calciumNitrate: number; potassiumNitrate: number; mkp: number; magnesiumSulfate: number; micronutrients: number; totalPPM: number }) {
   const content = `
 ===========================================
    RECEITA DE FERTILIZAÇÃO - APP CULTIVO
@@ -49,17 +49,27 @@ function exportFertilizationRecipe(waterVolume: string, npkConcentration: string
 DATA: ${new Date().toLocaleDateString('pt-BR')}
 
 PARÂMETROS:
-- Volume de água: ${waterVolume}L
-- Concentração NPK: ${npkConcentration} g/L
-- EC alvo: ${targetEC} mS/cm
+- Volume de preparo: ${waterVolume}L
+- EC desejado: ${targetEC} mS/cm
+- PPM aproximado: ${result.totalPPM} ppm
 
-RECEITA:
-- Fertilizante: ${result.fertilizer} ml
-- Água: ${result.water} L
+RECEITA (g/L):
+- Nitrato de Cálcio: ${result.calciumNitrate} g/L
+- Nitrato de Potássio: ${result.potassiumNitrate} g/L
+- MKP (Fosfato Monopotássico): ${result.mkp} g/L
+- Sulfato de Magnésio: ${result.magnesiumSulfate} g/L
+- Micronutrientes: ${result.micronutrients} g/L
+
+QUANTIDADES TOTAIS:
+- Nitrato de Cálcio: ${(result.calciumNitrate * parseFloat(waterVolume)).toFixed(2)} g
+- Nitrato de Potássio: ${(result.potassiumNitrate * parseFloat(waterVolume)).toFixed(2)} g
+- MKP: ${(result.mkp * parseFloat(waterVolume)).toFixed(2)} g
+- Sulfato de Magnésio: ${(result.magnesiumSulfate * parseFloat(waterVolume)).toFixed(2)} g
+- Micronutrientes: ${(result.micronutrients * parseFloat(waterVolume)).toFixed(2)} g
 
 DICA:
-Sempre adicione o fertilizante à água (nunca o contrário)
-e misture bem antes de aplicar.
+Dissolva cada reagente separadamente e misture na ordem:
+Cálcio → Potássio → MKP → Magnésio → Micronutrientes
 
 ===========================================
   `;
@@ -293,74 +303,47 @@ function IrrigationCalculator() {
   );
 }
 
-// Calculadora de Fertilização (Diluição NPK)
+// Calculadora de Fertilização (Receita por Reagente)
 function FertilizationCalculator() {
-  // NPK Principal
   const [waterVolume, setWaterVolume] = useState<string>("");
-  const [npkConcentration, setNpkConcentration] = useState<string>("");
   const [targetEC, setTargetEC] = useState<string>("");
   
-  // Micronutrientes
-  const [calciumPPM, setCalciumPPM] = useState<string>("");
-  const [magnesiumPPM, setMagnesiumPPM] = useState<string>("");
-  const [ironPPM, setIronPPM] = useState<string>("");
-  
   const [result, setResult] = useState<{ 
-    fertilizer: number; 
-    water: number;
-    calcium?: number;
-    magnesium?: number;
-    iron?: number;
+    calciumNitrate: number;
+    potassiumNitrate: number;
+    mkp: number;
+    magnesiumSulfate: number;
+    micronutrients: number;
+    totalPPM: number;
   } | null>(null);
 
   const calculateFertilization = () => {
     const water = parseFloat(waterVolume);
-    const concentration = parseFloat(npkConcentration);
     const ec = parseFloat(targetEC);
 
-    if (isNaN(water) || isNaN(concentration) || isNaN(ec) || water <= 0 || concentration <= 0 || ec <= 0) return;
+    if (isNaN(water) || isNaN(ec) || water <= 0 || ec <= 0) return;
 
-    // Fórmula corrigida: cada 1g/L de fertilizante aumenta EC em ~1.0-1.5 mS/cm (média 1.2)
-    const ecConversionFactor = 1.2; // mS/cm por g/L
-    const fertilizerGrams = (ec * water) / ecConversionFactor;
-    const fertilizerML = (fertilizerGrams / concentration) * 1000;
+    // Proporções base da receita (g/L para EC = 2.0)
+    // Baseado na planilha fornecida
+    const baseEC = 2.0;
+    const baseRecipe = {
+      calciumNitrate: 0.90,      // Nitrato de Cálcio
+      potassiumNitrate: 0.40,    // Nitrato de Potássio
+      mkp: 0.19,                 // MKP (Fosfato Monopotássico)
+      magnesiumSulfate: 0.64,    // Sulfato de Magnésio
+      micronutrients: 0.05       // Micronutrientes
+    };
 
-    // Calcular micronutrientes (se fornecidos)
-    let calciumML: number | undefined;
-    let magnesiumML: number | undefined;
-    let ironML: number | undefined;
-
-    // Cálcio (Ca) - Concentração típica: 150-200 ppm (mg/L)
-    // Fórmula: (PPM desejado × volume) / 1000 = gramas de Ca
-    // Assumindo produto com 15% Ca (150g/L), converter para ml
-    if (calciumPPM && parseFloat(calciumPPM) > 0) {
-      const ca = parseFloat(calciumPPM);
-      const caGrams = (ca * water) / 1000;
-      calciumML = (caGrams / 150) * 1000; // Produto com 15% Ca (150g/L)
-    }
-
-    // Magnésio (Mg) - Concentração típica: 50-75 ppm
-    // Assumindo produto com 10% Mg (100g/L)
-    if (magnesiumPPM && parseFloat(magnesiumPPM) > 0) {
-      const mg = parseFloat(magnesiumPPM);
-      const mgGrams = (mg * water) / 1000;
-      magnesiumML = (mgGrams / 100) * 1000; // Produto com 10% Mg (100g/L)
-    }
-
-    // Ferro (Fe) - Concentração típica: 2-5 ppm
-    // Assumindo produto com 5% Fe (50g/L)
-    if (ironPPM && parseFloat(ironPPM) > 0) {
-      const fe = parseFloat(ironPPM);
-      const feGrams = (fe * water) / 1000;
-      ironML = (feGrams / 50) * 1000; // Produto com 5% Fe (50g/L)
-    }
-
+    // Ajustar proporções para o EC desejado
+    const ratio = ec / baseEC;
+    
     setResult({
-      fertilizer: Math.round(fertilizerML * 10) / 10,
-      water: water,
-      calcium: calciumML ? Math.round(calciumML * 10) / 10 : undefined,
-      magnesium: magnesiumML ? Math.round(magnesiumML * 10) / 10 : undefined,
-      iron: ironML ? Math.round(ironML * 10) / 10 : undefined,
+      calciumNitrate: Math.round(baseRecipe.calciumNitrate * ratio * 100) / 100,
+      potassiumNitrate: Math.round(baseRecipe.potassiumNitrate * ratio * 100) / 100,
+      mkp: Math.round(baseRecipe.mkp * ratio * 100) / 100,
+      magnesiumSulfate: Math.round(baseRecipe.magnesiumSulfate * ratio * 100) / 100,
+      micronutrients: Math.round(baseRecipe.micronutrients * ratio * 100) / 100,
+      totalPPM: Math.round(ec * 500) // Conversão aproximada EC → PPM (escala 500)
     });
   };
 
@@ -376,9 +359,9 @@ function FertilizationCalculator() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="waterVolume">Volume de Água (litros)</Label>
+            <Label htmlFor="waterVolume">Volume de Preparo (litros)</Label>
             <Input
               id="waterVolume"
               type="number"
@@ -386,122 +369,75 @@ function FertilizationCalculator() {
               value={waterVolume}
               onChange={(e) => setWaterVolume(e.target.value)}
             />
+            <p className="text-xs text-muted-foreground">Quantidade total de solução a preparar</p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="npkConcentration">Concentração NPK (g/L)</Label>
-            <Input
-              id="npkConcentration"
-              type="number"
-              step="0.1"
-              placeholder="Ex: 2.0"
-              value={npkConcentration}
-              onChange={(e) => setNpkConcentration(e.target.value)}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="targetEC">EC Alvo (mS/cm)</Label>
+            <Label htmlFor="targetEC">EC Desejado (mS/cm)</Label>
             <Input
               id="targetEC"
               type="number"
               step="0.1"
-              placeholder="Ex: 1.8"
+              placeholder="Ex: 2.0"
               value={targetEC}
               onChange={(e) => setTargetEC(e.target.value)}
             />
-          </div>
-        </div>
-
-        {/* Micronutrientes (Opcional) */}
-        <div className="border-t border-gray-200 pt-4">
-          <h4 className="text-sm font-semibold text-foreground mb-3">🧪 Micronutrientes (Opcional)</h4>
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <div className="space-y-2">
-              <Label htmlFor="calciumPPM">Cálcio (Ca) - PPM</Label>
-              <Input
-                id="calciumPPM"
-                type="number"
-                placeholder="Ex: 180 (150-200)"
-                value={calciumPPM}
-                onChange={(e) => setCalciumPPM(e.target.value)}
-              />
-              <p className="text-xs text-muted-foreground">Ideal: 150-200 ppm</p>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="magnesiumPPM">Magnésio (Mg) - PPM</Label>
-              <Input
-                id="magnesiumPPM"
-                type="number"
-                placeholder="Ex: 60 (50-75)"
-                value={magnesiumPPM}
-                onChange={(e) => setMagnesiumPPM(e.target.value)}
-              />
-              <p className="text-xs text-muted-foreground">Ideal: 50-75 ppm</p>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="ironPPM">Ferro (Fe) - PPM</Label>
-              <Input
-                id="ironPPM"
-                type="number"
-                placeholder="Ex: 3 (2-5)"
-                value={ironPPM}
-                onChange={(e) => setIronPPM(e.target.value)}
-              />
-              <p className="text-xs text-muted-foreground">Ideal: 2-5 ppm</p>
-            </div>
+            <p className="text-xs text-muted-foreground">Condutividade elétrica alvo da solução</p>
           </div>
         </div>
 
         <Button onClick={calculateFertilization} className="w-full">
           <Calculator className="w-4 h-4 mr-2" />
-          Calcular Diluição
+          Calcular Receita
         </Button>
 
         {result && (
-          <div className="bg-primary/10 border border-primary/20 rounded-lg p-6 space-y-3">
-            <h4 className="font-semibold text-foreground mb-3">Receita de Fertilização:</h4>
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-foreground">Fertilizante:</span>
-              <span className="text-2xl font-bold text-green-600">{result.fertilizer} ml</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-foreground">Água:</span>
-              <span className="text-2xl font-bold text-green-600">{result.water} L</span>
+          <div className="bg-primary/10 border border-primary/20 rounded-lg p-6 space-y-4">
+            <h4 className="font-semibold text-foreground mb-3">🧪 Receita de Fertilização (g/L):</h4>
+            
+            <div className="space-y-2">
+              <div className="flex items-center justify-between border-b border-green-200 pb-2">
+                <span className="text-sm font-medium text-foreground">Nitrato de Cálcio:</span>
+                <span className="text-xl font-bold text-green-600">{result.calciumNitrate} g/L</span>
+              </div>
+              
+              <div className="flex items-center justify-between border-b border-green-200 pb-2">
+                <span className="text-sm font-medium text-foreground">Nitrato de Potássio:</span>
+                <span className="text-xl font-bold text-green-600">{result.potassiumNitrate} g/L</span>
+              </div>
+              
+              <div className="flex items-center justify-between border-b border-green-200 pb-2">
+                <span className="text-sm font-medium text-foreground">MKP (Fosfato Monopotássico):</span>
+                <span className="text-xl font-bold text-green-600">{result.mkp} g/L</span>
+              </div>
+              
+              <div className="flex items-center justify-between border-b border-green-200 pb-2">
+                <span className="text-sm font-medium text-foreground">Sulfato de Magnésio:</span>
+                <span className="text-xl font-bold text-green-600">{result.magnesiumSulfate} g/L</span>
+              </div>
+              
+              <div className="flex items-center justify-between border-b border-green-200 pb-2">
+                <span className="text-sm font-medium text-foreground">Micronutrientes:</span>
+                <span className="text-xl font-bold text-green-600">{result.micronutrients} g/L</span>
+              </div>
             </div>
             
-            {/* Micronutrientes */}
-            {(result.calcium || result.magnesium || result.iron) && (
-              <div className="border-t border-green-300 pt-3 mt-3">
-                <h5 className="text-sm font-semibold text-foreground mb-2">🧪 Micronutrientes:</h5>
-                {result.calcium && (
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-foreground">Cálcio (Ca):</span>
-                    <span className="text-lg font-bold text-green-600">{result.calcium} ml</span>
-                  </div>
-                )}
-                {result.magnesium && (
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-foreground">Magnésio (Mg):</span>
-                    <span className="text-lg font-bold text-green-600">{result.magnesium} ml</span>
-                  </div>
-                )}
-                {result.iron && (
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-foreground">Ferro (Fe):</span>
-                    <span className="text-lg font-bold text-green-600">{result.iron} ml</span>
-                  </div>
-                )}
+            <div className="bg-green-50 border border-green-300 rounded-lg p-3 mt-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold text-foreground">EC Resultante:</span>
+                <span className="text-2xl font-bold text-green-700">{targetEC} mS/cm</span>
               </div>
-            )}
+              <div className="flex items-center justify-between mt-1">
+                <span className="text-xs text-muted-foreground">PPM Aproximado:</span>
+                <span className="text-sm font-semibold text-green-700">{result.totalPPM} ppm</span>
+              </div>
+            </div>
             
             <p className="text-xs text-muted-foreground mt-4">
-              💡 <strong>Dica:</strong> Sempre adicione o fertilizante à água (nunca o contrário) e misture bem antes de aplicar.
+              💡 <strong>Dica:</strong> Dissolva cada reagente separadamente e misture na ordem: Cálcio → Potássio → MKP → Magnésio → Micronutrientes
             </p>
             <Button 
-              onClick={() => exportFertilizationRecipe(waterVolume, npkConcentration, targetEC, result)} 
+              onClick={() => exportFertilizationRecipe(waterVolume, targetEC, targetEC, result)} 
               variant="outline" 
               className="w-full mt-4"
             >
@@ -567,7 +503,7 @@ function LuxPPFDCalculator() {
     <Card className="bg-card/90 backdrop-blur-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Sun className="w-5 h-5 text-yellow-500" />
+          <Sun className="w-8 h-8 text-yellow-500" />
           Calculadora Lux ↔ PPFD
         </CardTitle>
         <CardDescription>

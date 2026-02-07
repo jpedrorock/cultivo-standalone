@@ -1,445 +1,253 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, Beaker, Droplets, FlaskConical, Leaf, Box, Zap, AlertCircle, Info } from "lucide-react";
+import { ArrowLeft, Sprout, Calculator, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
-type Phase = "vegetativa" | "floracao";
-
-interface NutrientResult {
-  ca: number; // Cálcio (ppm)
-  mg: number; // Magnésio (ppm)
-  fe: number; // Ferro (ppm)
-  caMl: number; // Cálcio em ml/L
-  mgMl: number; // Magnésio em ml/L
-  feMl: number; // Ferro em ml/L
-}
-
-interface NutrientInfo {
-  name: string;
-  icon: React.ReactNode;
-  color: string;
-  bgColor: string;
-  borderColor: string;
-  function: string;
-  deficiencySymptoms: string[];
-  applicationTips: string;
+interface FertilizationResult {
+  calciumNitrate: number;
+  potassiumNitrate: number;
+  mkp: number;
+  magnesiumSulfate: number;
+  micronutrients: number;
+  totalPPM: number;
 }
 
 export default function FertilizationCalculator() {
-  const [volume, setVolume] = useState<string>("");
-  const [phase, setPhase] = useState<Phase>("vegetativa");
-  const [result, setResult] = useState<NutrientResult | null>(null);
+  const [waterVolume, setWaterVolume] = useState<string>("");
+  const [targetEC, setTargetEC] = useState<string>("");
+  const [result, setResult] = useState<FertilizationResult | null>(null);
 
-  // Concentrações ideais por fase (ppm)
-  const targetConcentrations = {
-    vegetativa: {
-      ca: 200, // Cálcio: 180-220 ppm
-      mg: 50,  // Magnésio: 40-60 ppm
-      fe: 3,   // Ferro: 2-5 ppm
-    },
-    floracao: {
-      ca: 180, // Cálcio: 160-200 ppm
-      mg: 60,  // Magnésio: 50-70 ppm
-      fe: 4,   // Ferro: 3-6 ppm
-    },
-  };
+  const calculateFertilization = () => {
+    const water = parseFloat(waterVolume);
+    const ec = parseFloat(targetEC);
 
-  // Concentração dos produtos comerciais (exemplo: ml para atingir X ppm em 1L)
-  // Estes valores são aproximados e devem ser ajustados conforme o produto usado
-  const productConcentration = {
-    ca: 10, // 1ml de Ca em 1L = 10 ppm
-    mg: 5,  // 1ml de Mg em 1L = 5 ppm
-    fe: 2,  // 1ml de Fe em 1L = 2 ppm
-  };
+    if (isNaN(water) || isNaN(ec) || water <= 0 || ec <= 0) return;
 
-  // Informações detalhadas sobre cada nutriente
-  const nutrientInfo: Record<'ca' | 'mg' | 'fe', NutrientInfo> = {
-    ca: {
-      name: "Cálcio (Ca)",
-      icon: <Box className="w-6 h-6" />,
-      color: "text-orange-500",
-      bgColor: "bg-orange-500/10",
-      borderColor: "border-orange-500/20",
-      function: "Estrutura celular, transporte de nutrientes e fortalecimento das paredes celulares",
-      deficiencySymptoms: [
-        "Pontas das folhas novas queimadas ou necróticas",
-        "Folhas jovens deformadas ou enroladas",
-        "Podridão apical em frutos",
-        "Crescimento atrofiado"
-      ],
-      applicationTips: "Adicione primeiro, antes dos outros nutrientes. Não misture diretamente com sulfatos."
-    },
-    mg: {
-      name: "Magnésio (Mg)",
-      icon: <Leaf className="w-6 h-6" />,
-      color: "text-green-500",
-      bgColor: "bg-green-500/10",
-      borderColor: "border-green-500/20",
-      function: "Centro da molécula de clorofila, essencial para fotossíntese e produção de energia",
-      deficiencySymptoms: [
-        "Clorose internerval (amarelamento entre nervuras)",
-        "Folhas mais velhas afetadas primeiro",
-        "Bordas das folhas podem ficar roxas/avermelhadas",
-        "Redução na produção de flores"
-      ],
-      applicationTips: "Adicione após o cálcio. Especialmente importante durante a floração."
-    },
-    fe: {
-      name: "Ferro (Fe)",
-      icon: <Zap className="w-6 h-6" />,
-      color: "text-blue-500",
-      bgColor: "bg-blue-500/10",
-      borderColor: "border-blue-500/20",
-      function: "Produção de clorofila, respiração celular e transporte de oxigênio",
-      deficiencySymptoms: [
-        "Clorose severa em folhas novas (amarelo brilhante)",
-        "Nervuras permanecem verdes",
-        "Folhas pequenas e pálidas",
-        "Crescimento lento e fraco"
-      ],
-      applicationTips: "Adicione por último. Use quelatos de ferro para melhor absorção. Sensível ao pH alto."
-    }
-  };
+    // Proporções base da receita (g/L para EC = 2.0)
+    // Baseado na planilha fornecida
+    const baseEC = 2.0;
+    const baseRecipe = {
+      calciumNitrate: 0.90,      // Nitrato de Cálcio
+      potassiumNitrate: 0.40,    // Nitrato de Potássio
+      mkp: 0.19,                 // MKP (Fosfato Monopotássico)
+      magnesiumSulfate: 0.64,    // Sulfato de Magnésio
+      micronutrients: 0.05       // Micronutrientes
+    };
 
-  const calculateNutrients = () => {
-    const vol = parseFloat(volume);
-    if (isNaN(vol) || vol <= 0) {
-      alert("Por favor, insira um volume válido");
-      return;
-    }
-
-    const targets = targetConcentrations[phase];
-
-    // Calcular ml necessário para atingir concentração alvo
-    const caMl = (targets.ca / productConcentration.ca) * vol;
-    const mgMl = (targets.mg / productConcentration.mg) * vol;
-    const feMl = (targets.fe / productConcentration.fe) * vol;
-
+    // Ajustar proporções para o EC desejado
+    const ratio = ec / baseEC;
+    
     setResult({
-      ca: targets.ca,
-      mg: targets.mg,
-      fe: targets.fe,
-      caMl: parseFloat(caMl.toFixed(2)),
-      mgMl: parseFloat(mgMl.toFixed(2)),
-      feMl: parseFloat(feMl.toFixed(2)),
+      calciumNitrate: Math.round(baseRecipe.calciumNitrate * ratio * 100) / 100,
+      potassiumNitrate: Math.round(baseRecipe.potassiumNitrate * ratio * 100) / 100,
+      mkp: Math.round(baseRecipe.mkp * ratio * 100) / 100,
+      magnesiumSulfate: Math.round(baseRecipe.magnesiumSulfate * ratio * 100) / 100,
+      micronutrients: Math.round(baseRecipe.micronutrients * ratio * 100) / 100,
+      totalPPM: Math.round(ec * 500) // Conversão aproximada EC → PPM (escala 500)
     });
   };
 
-  // Calcular porcentagem para barra de progresso (baseado em valores típicos)
-  const getProgressPercentage = (nutrient: 'ca' | 'mg' | 'fe', value: number) => {
-    const maxValues = { ca: 250, mg: 80, fe: 6 };
-    return Math.min((value / maxValues[nutrient]) * 100, 100);
+  const exportRecipe = () => {
+    if (!result) return;
+
+    const content = `
+===========================================
+   RECEITA DE FERTILIZAÇÃO - APP CULTIVO
+===========================================
+
+DATA: ${new Date().toLocaleDateString('pt-BR')}
+
+PARÂMETROS:
+- Volume de preparo: ${waterVolume}L
+- EC desejado: ${targetEC} mS/cm
+- PPM aproximado: ${result.totalPPM} ppm
+
+RECEITA (g/L):
+- Nitrato de Cálcio: ${result.calciumNitrate} g/L
+- Nitrato de Potássio: ${result.potassiumNitrate} g/L
+- MKP (Fosfato Monopotássico): ${result.mkp} g/L
+- Sulfato de Magnésio: ${result.magnesiumSulfate} g/L
+- Micronutrientes: ${result.micronutrients} g/L
+
+QUANTIDADES TOTAIS:
+- Nitrato de Cálcio: ${(result.calciumNitrate * parseFloat(waterVolume)).toFixed(2)} g
+- Nitrato de Potássio: ${(result.potassiumNitrate * parseFloat(waterVolume)).toFixed(2)} g
+- MKP: ${(result.mkp * parseFloat(waterVolume)).toFixed(2)} g
+- Sulfato de Magnésio: ${(result.magnesiumSulfate * parseFloat(waterVolume)).toFixed(2)} g
+- Micronutrientes: ${(result.micronutrients * parseFloat(waterVolume)).toFixed(2)} g
+
+DICA:
+Dissolva cada reagente separadamente e misture na ordem:
+Cálcio → Potássio → MKP → Magnésio → Micronutrientes
+
+===========================================
+    `;
+
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `receita-fertilizacao-${Date.now()}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-4">
+        <div className="container py-6">
+          <div className="flex items-center gap-3">
             <Link href="/calculators">
-              <Button variant="ghost" size="icon">
+              <button className="p-2 hover:bg-muted rounded-lg transition-colors">
                 <ArrowLeft className="w-5 h-5" />
-              </Button>
+              </button>
             </Link>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
-                <Beaker className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-foreground">Calculadora de Fertilização</h1>
-                <p className="text-sm text-muted-foreground">Micronutrientes por fase</p>
-              </div>
+            <Sprout className="w-8 h-8 text-green-500" />
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+                Calculadora de Fertilização
+              </h1>
+              <p className="text-muted-foreground mt-1 text-sm md:text-base">
+                Calcule a dosagem de reagentes NPK por EC
+              </p>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Content */}
-      <main className="container mx-auto px-4 py-6 max-w-2xl">
-        <Card>
+      {/* Main Content */}
+      <main className="container py-8">
+        <Card className="bg-card/90 backdrop-blur-sm">
           <CardHeader>
-            <CardTitle>Calcular Dosagem de Micronutrientes</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Sprout className="w-5 h-5 text-green-500" />
+              Calculadora de Fertilização
+            </CardTitle>
             <CardDescription>
-              Insira o volume de rega e a fase do ciclo para calcular as dosagens ideais de Ca, Mg e Fe
+              Calcule a quantidade de cada reagente sólido necessária para atingir o EC desejado
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Volume Input */}
-            <div className="grid gap-2">
-              <Label htmlFor="volume">Volume de Rega (Litros)</Label>
-              <div className="relative">
-                <Droplets className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="waterVolume">Volume de Preparo (litros)</Label>
                 <Input
-                  id="volume"
+                  id="waterVolume"
                   type="number"
                   placeholder="Ex: 10"
-                  value={volume}
-                  onChange={(e) => setVolume(e.target.value)}
-                  className="pl-10"
-                  min="0"
-                  step="0.1"
+                  value={waterVolume}
+                  onChange={(e) => setWaterVolume(e.target.value)}
                 />
+                <p className="text-xs text-muted-foreground">Quantidade total de solução a preparar</p>
               </div>
-              <p className="text-xs text-muted-foreground">
-                Volume total de água para preparar a solução nutritiva
-              </p>
+
+              <div className="space-y-2">
+                <Label htmlFor="targetEC">EC Desejado (mS/cm)</Label>
+                <Input
+                  id="targetEC"
+                  type="number"
+                  step="0.1"
+                  placeholder="Ex: 2.0"
+                  value={targetEC}
+                  onChange={(e) => setTargetEC(e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">Condutividade elétrica alvo da solução</p>
+              </div>
             </div>
 
-            {/* Phase Selector */}
-            <div className="grid gap-2">
-              <Label htmlFor="phase">Fase do Ciclo</Label>
-              <Select value={phase} onValueChange={(value: Phase) => setPhase(value)}>
-                <SelectTrigger id="phase">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="vegetativa">🌿 Vegetativa (Crescimento)</SelectItem>
-                  <SelectItem value="floracao">🌸 Floração (Produção)</SelectItem>
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground">
-                Cada fase tem necessidades nutricionais diferentes
-              </p>
-            </div>
-
-            {/* Calculate Button */}
-            <Button onClick={calculateNutrients} className="w-full" size="lg">
-              <FlaskConical className="w-4 h-4 mr-2" />
-              Calcular Dosagens
+            <Button onClick={calculateFertilization} className="w-full">
+              <Calculator className="w-4 h-4 mr-2" />
+              Calcular Receita
             </Button>
 
-            {/* Results */}
             {result && (
-              <div className="mt-6 space-y-4">
-                <div className="flex items-center gap-2 pb-2 border-b border-border">
-                  <Beaker className="w-5 h-5 text-primary" />
-                  <h3 className="font-semibold text-lg">Resultados</h3>
-                </div>
-
-                <TooltipProvider>
-                  {/* Nutrient Cards */}
-                  <div className="grid gap-4">
-                    {/* Cálcio */}
-                    <Card className={`${nutrientInfo.ca.bgColor} ${nutrientInfo.ca.borderColor}`}>
-                      <CardContent className="pt-4 space-y-3">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <p className="text-sm font-semibold text-foreground">{nutrientInfo.ca.name}</p>
-                              <Tooltip>
-                                <TooltipTrigger>
-                                  <Info className="w-4 h-4 text-muted-foreground" />
-                                </TooltipTrigger>
-                                <TooltipContent className="max-w-xs">
-                                  <p className="font-semibold mb-1">Função:</p>
-                                  <p className="text-xs mb-2">{nutrientInfo.ca.function}</p>
-                                  <p className="font-semibold mb-1">Dica:</p>
-                                  <p className="text-xs">{nutrientInfo.ca.applicationTips}</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </div>
-                            <p className="text-3xl font-bold text-foreground">{result.caMl} ml</p>
-                            <p className="text-xs text-muted-foreground mt-1">
-                              Concentração alvo: {result.ca} ppm
-                            </p>
-                          </div>
-                          <div className={`w-14 h-14 rounded-full ${nutrientInfo.ca.bgColor} flex items-center justify-center ${nutrientInfo.ca.color}`}>
-                            {nutrientInfo.ca.icon}
-                          </div>
-                        </div>
-                        
-                        {/* Progress Bar */}
-                        <div className="space-y-1">
-                          <div className="flex justify-between text-xs text-muted-foreground">
-                            <span>Concentração</span>
-                            <span>{result.ca} / 250 ppm</span>
-                          </div>
-                          <Progress value={getProgressPercentage('ca', result.ca)} className="h-2" />
-                        </div>
-
-                        {/* Deficiency Symptoms */}
-                        <details className="text-xs">
-                          <summary className="cursor-pointer font-medium text-foreground flex items-center gap-1">
-                            <AlertCircle className="w-3 h-3" />
-                            Sintomas de Deficiência
-                          </summary>
-                          <ul className="mt-2 space-y-1 text-muted-foreground pl-4">
-                            {nutrientInfo.ca.deficiencySymptoms.map((symptom, idx) => (
-                              <li key={idx}>• {symptom}</li>
-                            ))}
-                          </ul>
-                        </details>
-                      </CardContent>
-                    </Card>
-
-                    {/* Magnésio */}
-                    <Card className={`${nutrientInfo.mg.bgColor} ${nutrientInfo.mg.borderColor}`}>
-                      <CardContent className="pt-4 space-y-3">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <p className="text-sm font-semibold text-foreground">{nutrientInfo.mg.name}</p>
-                              <Tooltip>
-                                <TooltipTrigger>
-                                  <Info className="w-4 h-4 text-muted-foreground" />
-                                </TooltipTrigger>
-                                <TooltipContent className="max-w-xs">
-                                  <p className="font-semibold mb-1">Função:</p>
-                                  <p className="text-xs mb-2">{nutrientInfo.mg.function}</p>
-                                  <p className="font-semibold mb-1">Dica:</p>
-                                  <p className="text-xs">{nutrientInfo.mg.applicationTips}</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </div>
-                            <p className="text-3xl font-bold text-foreground">{result.mgMl} ml</p>
-                            <p className="text-xs text-muted-foreground mt-1">
-                              Concentração alvo: {result.mg} ppm
-                            </p>
-                          </div>
-                          <div className={`w-14 h-14 rounded-full ${nutrientInfo.mg.bgColor} flex items-center justify-center ${nutrientInfo.mg.color}`}>
-                            {nutrientInfo.mg.icon}
-                          </div>
-                        </div>
-                        
-                        {/* Progress Bar */}
-                        <div className="space-y-1">
-                          <div className="flex justify-between text-xs text-muted-foreground">
-                            <span>Concentração</span>
-                            <span>{result.mg} / 80 ppm</span>
-                          </div>
-                          <Progress value={getProgressPercentage('mg', result.mg)} className="h-2" />
-                        </div>
-
-                        {/* Deficiency Symptoms */}
-                        <details className="text-xs">
-                          <summary className="cursor-pointer font-medium text-foreground flex items-center gap-1">
-                            <AlertCircle className="w-3 h-3" />
-                            Sintomas de Deficiência
-                          </summary>
-                          <ul className="mt-2 space-y-1 text-muted-foreground pl-4">
-                            {nutrientInfo.mg.deficiencySymptoms.map((symptom, idx) => (
-                              <li key={idx}>• {symptom}</li>
-                            ))}
-                          </ul>
-                        </details>
-                      </CardContent>
-                    </Card>
-
-                    {/* Ferro */}
-                    <Card className={`${nutrientInfo.fe.bgColor} ${nutrientInfo.fe.borderColor}`}>
-                      <CardContent className="pt-4 space-y-3">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <p className="text-sm font-semibold text-foreground">{nutrientInfo.fe.name}</p>
-                              <Tooltip>
-                                <TooltipTrigger>
-                                  <Info className="w-4 h-4 text-muted-foreground" />
-                                </TooltipTrigger>
-                                <TooltipContent className="max-w-xs">
-                                  <p className="font-semibold mb-1">Função:</p>
-                                  <p className="text-xs mb-2">{nutrientInfo.fe.function}</p>
-                                  <p className="font-semibold mb-1">Dica:</p>
-                                  <p className="text-xs">{nutrientInfo.fe.applicationTips}</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </div>
-                            <p className="text-3xl font-bold text-foreground">{result.feMl} ml</p>
-                            <p className="text-xs text-muted-foreground mt-1">
-                              Concentração alvo: {result.fe} ppm
-                            </p>
-                          </div>
-                          <div className={`w-14 h-14 rounded-full ${nutrientInfo.fe.bgColor} flex items-center justify-center ${nutrientInfo.fe.color}`}>
-                            {nutrientInfo.fe.icon}
-                          </div>
-                        </div>
-                        
-                        {/* Progress Bar */}
-                        <div className="space-y-1">
-                          <div className="flex justify-between text-xs text-muted-foreground">
-                            <span>Concentração</span>
-                            <span>{result.fe} / 6 ppm</span>
-                          </div>
-                          <Progress value={getProgressPercentage('fe', result.fe)} className="h-2" />
-                        </div>
-
-                        {/* Deficiency Symptoms */}
-                        <details className="text-xs">
-                          <summary className="cursor-pointer font-medium text-foreground flex items-center gap-1">
-                            <AlertCircle className="w-3 h-3" />
-                            Sintomas de Deficiência
-                          </summary>
-                          <ul className="mt-2 space-y-1 text-muted-foreground pl-4">
-                            {nutrientInfo.fe.deficiencySymptoms.map((symptom, idx) => (
-                              <li key={idx}>• {symptom}</li>
-                            ))}
-                          </ul>
-                        </details>
-                      </CardContent>
-                    </Card>
+              <div className="bg-primary/10 border border-primary/20 rounded-lg p-6 space-y-4">
+                <h4 className="font-semibold text-foreground mb-3">🧪 Receita de Fertilização para {waterVolume}L:</h4>
+                
+                {/* Quantidades Totais - DESTAQUE */}
+                <div className="space-y-3">
+                  <div className="bg-orange-500/10 border border-orange-500/30 rounded-lg p-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-foreground">Nitrato de Cálcio:</span>
+                      <div className="text-right">
+                        <span className="text-2xl font-bold text-orange-600">{(result.calciumNitrate * parseFloat(waterVolume)).toFixed(2)} g</span>
+                        <span className="text-xs text-muted-foreground block">({result.calciumNitrate} g/L)</span>
+                      </div>
+                    </div>
                   </div>
-                </TooltipProvider>
-
-                {/* Instructions */}
-                <Card className="bg-primary/10 border-primary/20">
-                  <CardContent className="pt-4">
-                    <h4 className="font-semibold text-sm mb-2 flex items-center gap-2">
-                      <span>💡</span>
-                      Instruções de Uso
-                    </h4>
-                    <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Adicione os nutrientes na ordem: Ca → Mg → Fe</li>
-                      <li>• Misture bem após cada adição</li>
-                      <li>• Aguarde 5 minutos entre adições</li>
-                      <li>• Meça o pH final e ajuste se necessário (5.5-6.5)</li>
-                      <li>• Use a solução em até 24 horas</li>
-                    </ul>
-                  </CardContent>
-                </Card>
+                  
+                  <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-foreground">Nitrato de Potássio:</span>
+                      <div className="text-right">
+                        <span className="text-2xl font-bold text-purple-600">{(result.potassiumNitrate * parseFloat(waterVolume)).toFixed(2)} g</span>
+                        <span className="text-xs text-muted-foreground block">({result.potassiumNitrate} g/L)</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-foreground">MKP (Fosfato Monopotássico):</span>
+                      <div className="text-right">
+                        <span className="text-2xl font-bold text-blue-600">{(result.mkp * parseFloat(waterVolume)).toFixed(2)} g</span>
+                        <span className="text-xs text-muted-foreground block">({result.mkp} g/L)</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-foreground">Sulfato de Magnésio:</span>
+                      <div className="text-right">
+                        <span className="text-2xl font-bold text-green-600">{(result.magnesiumSulfate * parseFloat(waterVolume)).toFixed(2)} g</span>
+                        <span className="text-xs text-muted-foreground block">({result.magnesiumSulfate} g/L)</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-foreground">Micronutrientes:</span>
+                      <div className="text-right">
+                        <span className="text-2xl font-bold text-yellow-600">{(result.micronutrients * parseFloat(waterVolume)).toFixed(2)} g</span>
+                        <span className="text-xs text-muted-foreground block">({result.micronutrients} g/L)</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* EC e PPM */}
+                <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 mt-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-foreground">EC Resultante:</span>
+                    <span className="text-2xl font-bold text-blue-700">{targetEC} mS/cm</span>
+                  </div>
+                  <div className="flex items-center justify-between mt-1">
+                    <span className="text-xs text-muted-foreground">PPM Aproximado:</span>
+                    <span className="text-sm font-semibold text-blue-700">{result.totalPPM} ppm</span>
+                  </div>
+                </div>
+                
+                <p className="text-xs text-muted-foreground mt-4">
+                  💡 <strong>Dica:</strong> Dissolva cada reagente separadamente e misture na ordem: Cálcio → Potássio → MKP → Magnésio → Micronutrientes
+                </p>
+                <Button 
+                  onClick={exportRecipe} 
+                  variant="outline" 
+                  className="w-full mt-4"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Exportar Receita
+                </Button>
               </div>
             )}
-          </CardContent>
-        </Card>
-
-        {/* Info Card */}
-        <Card className="mt-6 bg-card border-border">
-          <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
-              <Beaker className="w-4 h-4 text-primary" />
-              Sobre os Micronutrientes
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm text-muted-foreground space-y-3">
-            <div>
-              <strong className="text-foreground">Cálcio (Ca):</strong> Essencial para estrutura celular e transporte de nutrientes. Previne podridão apical.
-            </div>
-            <div>
-              <strong className="text-foreground">Magnésio (Mg):</strong> Centro da molécula de clorofila. Crucial para fotossíntese e produção de energia.
-            </div>
-            <div>
-              <strong className="text-foreground">Ferro (Fe):</strong> Fundamental para produção de clorofila e respiração celular. Deficiência causa clorose.
-            </div>
-            <div className="pt-2 border-t border-border text-xs">
-              <strong>Nota:</strong> Os valores são baseados em concentrações comerciais típicas. Ajuste conforme especificações do seu produto.
-            </div>
           </CardContent>
         </Card>
       </main>

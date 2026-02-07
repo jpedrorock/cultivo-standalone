@@ -876,3 +876,23 @@
 - [x] Remover prefixo do database das FKs (AhyBXV9CDav4cSFRqphBxc)
 - [x] Verificar alertHistory.tentId presente no schema
 - [x] Gerar v2.0.6 com banco-inicial.sql corrigido
+
+
+## 🧮 Melhorias nas Calculadoras
+- [x] Refazer calculadora de fertilização para calcular g/L de cada reagente:
+  - [x] Entrada: Volume (L) + EC desejado (mS/cm)
+  - [x] Saída: g/L de Nitrato de Cálcio, Nitrato de Potássio, MKP, Sulfato de Magnésio, Micronutrientes
+  - [x] Fórmula mantém proporção entre reagentes e ajusta para EC alvo
+- [x] Aumentar tamanho do ícone/bola na calculadora Lux→PPFD (w-5 → w-8)
+- [ ] Testar cálculos com valores reais da planilha
+
+
+## 🎨 Melhorias Visuais na Calculadora de Fertilização
+- [x] Corrigir dark mode (trocar bg-green-50 por bg-*-500/10 com transparência)
+- [x] Adicionar cores diferentes para cada reagente:
+  - [x] Nitrato de Cálcio: Laranja
+  - [x] Nitrato de Potássio: Roxo
+  - [x] MKP: Azul
+  - [x] Sulfato de Magnésio: Verde
+  - [x] Micronutrientes: Amarelo
+- [x] Testar visualização em dark mode
