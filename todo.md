@@ -516,3 +516,10 @@
 - [x] Implementar confirmação antes de excluir
 - [x] Testar exclusão de estufa sem ciclos
 - [x] Testar bloqueio de exclusão com ciclos ativos
+
+## 💾 Nova Tarefa: Exportação de Banco de Dados SQL
+- [x] Criar API database.export no backend que gera dump SQL completo
+- [x] Incluir todas as tabelas com estrutura e dados
+- [x] Adicionar botão "Exportar Banco de Dados" na página de Configurações
+- [x] Implementar download automático do arquivo SQL
+- [x] Testar exportação e importação do arquivo gerado

@@ -1131,8 +1131,14 @@ export const appRouter = router({
 
   // Calculations (Histórico de Cálculos)
 
-
-
+  // Database (Exportação de Banco de Dados)
+  database: router({
+    export: publicProcedure.query(async () => {
+      const { generateSQLDump } = await import("./databaseExport");
+      const sqlDump = await generateSQLDump();
+      return { sql: sqlDump };
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
