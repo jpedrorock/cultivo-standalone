@@ -609,16 +609,65 @@ function LuxPPFDCalculator() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {conversionMode === "lux-to-ppfd" ? (
-            <div className="space-y-2">
-              <Label htmlFor="lux">Leitura em Lux</Label>
-              <Input
-                id="lux"
-                type="number"
-                placeholder="Ex: 50000"
-                value={lux}
-                onChange={(e) => setLux(e.target.value)}
-              />
-            </div>
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="lux">Leitura em Lux</Label>
+                <Input
+                  id="lux"
+                  type="number"
+                  placeholder="Ex: 50000"
+                  value={lux}
+                  onChange={(e) => setLux(e.target.value)}
+                />
+              </div>
+              
+              {/* Visual Slider para Lux */}
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="lux-slider">Intensidade de Luz (Visual)</Label>
+                <div className="space-y-3">
+                  <input
+                    id="lux-slider"
+                    type="range"
+                    min="0"
+                    max="100000"
+                    step="1000"
+                    value={lux || 0}
+                    onChange={(e) => setLux(e.target.value)}
+                    className="w-full h-3 rounded-lg appearance-none cursor-pointer"
+                    style={{
+                      background: `linear-gradient(to right, 
+                        #3b82f6 0%, #3b82f6 16.67%,
+                        #10b981 16.67%, #10b981 50%,
+                        #eab308 50%, #eab308 75%,
+                        #ef4444 75%, #ef4444 100%
+                      )`
+                    }}
+                  />
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span className="flex flex-col items-center">
+                      <span className="font-medium text-blue-500">🌱</span>
+                      <span>7k-14k</span>
+                      <span>Clonagem</span>
+                    </span>
+                    <span className="flex flex-col items-center">
+                      <span className="font-medium text-green-500">🌿</span>
+                      <span>28k-42k</span>
+                      <span>Vegetativa</span>
+                    </span>
+                    <span className="flex flex-col items-center">
+                      <span className="font-medium text-yellow-500">🌸</span>
+                      <span>42k-63k</span>
+                      <span>Floração</span>
+                    </span>
+                    <span className="flex flex-col items-center">
+                      <span className="font-medium text-red-500">⚡</span>
+                      <span>70k-84k</span>
+                      <span>Máximo</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </>
           ) : (
             <>
               <div className="space-y-2">
@@ -641,7 +690,7 @@ function LuxPPFDCalculator() {
                     type="range"
                     min="0"
                     max="1200"
-                    step="50"
+                    step="10"
                     value={ppfd || 0}
                     onChange={(e) => setPpfd(e.target.value)}
                     className="w-full h-3 rounded-lg appearance-none cursor-pointer"

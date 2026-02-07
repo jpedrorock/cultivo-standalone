@@ -730,3 +730,10 @@
 - [x] Atualizar valor do input ao mover o slider
 - [x] CSS customizado para thumb do slider
 - [ ] Testar usabilidade no mobile
+
+## 🎚️ Melhorar Sliders de Lux/PPFD
+- [x] Adicionar slider visual para Lux → PPFD (atualmente só tem para PPFD → Lux)
+- [x] Aumentar precisão dos sliders (step de 50 → 10 para PPFD, 1000 para Lux)
+- [x] Slider de Lux com range 0-100.000
+- [x] Indicadores de fase em Lux (7k-14k, 28k-42k, 42k-63k, 70k-84k)
+- [ ] Testar precisão e usabilidade
