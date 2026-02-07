@@ -685,3 +685,16 @@
 - [x] Interface bonita com cards coloridos por nutriente (laranja/verde/vermelho)
 - [x] Instruções de uso e informações sobre micronutrientes
 - [x] Concentrações ideais por fase (vegetativa vs floração)
+
+## 🎨 Guias Visuais para Calculadora de Fertilização
+- [x] Substituir ícones genéricos por ícones específicos de cada nutriente
+  - [x] Ca (Cálcio) → Ícone Box (estrutura celular)
+  - [x] Mg (Magnésio) → Ícone Leaf (clorofila/fotossíntese)
+  - [x] Fe (Ferro) → Ícone Zap (energia/transporte)
+- [x] Adicionar indicadores visuais de concentração (barras de progresso)
+- [x] Expandir cards com informações detalhadas:
+  - [x] Função principal do nutriente na planta
+  - [x] Sintomas visuais de deficiência (expansível)
+  - [x] Dicas de aplicação e timing (tooltips)
+- [x] Adicionar tooltips informativos com função e dicas
+- [x] Testar usabilidade com as melhorias visuais

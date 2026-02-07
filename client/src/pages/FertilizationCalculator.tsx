@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, Beaker, Droplets, FlaskConical } from "lucide-react";
+import { ArrowLeft, Beaker, Droplets, FlaskConical, Leaf, Box, Zap, AlertCircle, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -12,6 +13,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type Phase = "vegetativa" | "floracao";
 
@@ -22,6 +29,17 @@ interface NutrientResult {
   caMl: number; // Cálcio em ml/L
   mgMl: number; // Magnésio em ml/L
   feMl: number; // Ferro em ml/L
+}
+
+interface NutrientInfo {
+  name: string;
+  icon: React.ReactNode;
+  color: string;
+  bgColor: string;
+  borderColor: string;
+  function: string;
+  deficiencySymptoms: string[];
+  applicationTips: string;
 }
 
 export default function FertilizationCalculator() {
@@ -51,6 +69,55 @@ export default function FertilizationCalculator() {
     fe: 2,  // 1ml de Fe em 1L = 2 ppm
   };
 
+  // Informações detalhadas sobre cada nutriente
+  const nutrientInfo: Record<'ca' | 'mg' | 'fe', NutrientInfo> = {
+    ca: {
+      name: "Cálcio (Ca)",
+      icon: <Box className="w-6 h-6" />,
+      color: "text-orange-500",
+      bgColor: "bg-orange-500/10",
+      borderColor: "border-orange-500/20",
+      function: "Estrutura celular, transporte de nutrientes e fortalecimento das paredes celulares",
+      deficiencySymptoms: [
+        "Pontas das folhas novas queimadas ou necróticas",
+        "Folhas jovens deformadas ou enroladas",
+        "Podridão apical em frutos",
+        "Crescimento atrofiado"
+      ],
+      applicationTips: "Adicione primeiro, antes dos outros nutrientes. Não misture diretamente com sulfatos."
+    },
+    mg: {
+      name: "Magnésio (Mg)",
+      icon: <Leaf className="w-6 h-6" />,
+      color: "text-green-500",
+      bgColor: "bg-green-500/10",
+      borderColor: "border-green-500/20",
+      function: "Centro da molécula de clorofila, essencial para fotossíntese e produção de energia",
+      deficiencySymptoms: [
+        "Clorose internerval (amarelamento entre nervuras)",
+        "Folhas mais velhas afetadas primeiro",
+        "Bordas das folhas podem ficar roxas/avermelhadas",
+        "Redução na produção de flores"
+      ],
+      applicationTips: "Adicione após o cálcio. Especialmente importante durante a floração."
+    },
+    fe: {
+      name: "Ferro (Fe)",
+      icon: <Zap className="w-6 h-6" />,
+      color: "text-red-500",
+      bgColor: "bg-red-500/10",
+      borderColor: "border-red-500/20",
+      function: "Produção de clorofila, respiração celular e transporte de oxigênio",
+      deficiencySymptoms: [
+        "Clorose severa em folhas novas (amarelo brilhante)",
+        "Nervuras permanecem verdes",
+        "Folhas pequenas e pálidas",
+        "Crescimento lento e fraco"
+      ],
+      applicationTips: "Adicione por último. Use quelatos de ferro para melhor absorção. Sensível ao pH alto."
+    }
+  };
+
   const calculateNutrients = () => {
     const vol = parseFloat(volume);
     if (isNaN(vol) || vol <= 0) {
@@ -73,6 +140,12 @@ export default function FertilizationCalculator() {
       mgMl: parseFloat(mgMl.toFixed(2)),
       feMl: parseFloat(feMl.toFixed(2)),
     });
+  };
+
+  // Calcular porcentagem para barra de progresso (baseado em valores típicos)
+  const getProgressPercentage = (nutrient: 'ca' | 'mg' | 'fe', value: number) => {
+    const maxValues = { ca: 250, mg: 80, fe: 6 };
+    return Math.min((value / maxValues[nutrient]) * 100, 100);
   };
 
   return (
@@ -161,62 +234,169 @@ export default function FertilizationCalculator() {
                   <h3 className="font-semibold text-lg">Resultados</h3>
                 </div>
 
-                {/* Nutrient Cards */}
-                <div className="grid gap-3">
-                  {/* Cálcio */}
-                  <Card className="bg-orange-500/10 border-orange-500/20">
-                    <CardContent className="pt-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground">Cálcio (Ca)</p>
-                          <p className="text-2xl font-bold text-foreground">{result.caMl} ml</p>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Alvo: {result.ca} ppm
-                          </p>
+                <TooltipProvider>
+                  {/* Nutrient Cards */}
+                  <div className="grid gap-4">
+                    {/* Cálcio */}
+                    <Card className={`${nutrientInfo.ca.bgColor} ${nutrientInfo.ca.borderColor}`}>
+                      <CardContent className="pt-4 space-y-3">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <p className="text-sm font-semibold text-foreground">{nutrientInfo.ca.name}</p>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <Info className="w-4 h-4 text-muted-foreground" />
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-xs">
+                                  <p className="font-semibold mb-1">Função:</p>
+                                  <p className="text-xs mb-2">{nutrientInfo.ca.function}</p>
+                                  <p className="font-semibold mb-1">Dica:</p>
+                                  <p className="text-xs">{nutrientInfo.ca.applicationTips}</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </div>
+                            <p className="text-3xl font-bold text-foreground">{result.caMl} ml</p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Concentração alvo: {result.ca} ppm
+                            </p>
+                          </div>
+                          <div className={`w-14 h-14 rounded-full ${nutrientInfo.ca.bgColor} flex items-center justify-center ${nutrientInfo.ca.color}`}>
+                            {nutrientInfo.ca.icon}
+                          </div>
                         </div>
-                        <div className="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center">
-                          <span className="text-2xl">🧡</span>
+                        
+                        {/* Progress Bar */}
+                        <div className="space-y-1">
+                          <div className="flex justify-between text-xs text-muted-foreground">
+                            <span>Concentração</span>
+                            <span>{result.ca} / 250 ppm</span>
+                          </div>
+                          <Progress value={getProgressPercentage('ca', result.ca)} className="h-2" />
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
 
-                  {/* Magnésio */}
-                  <Card className="bg-green-500/10 border-green-500/20">
-                    <CardContent className="pt-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground">Magnésio (Mg)</p>
-                          <p className="text-2xl font-bold text-foreground">{result.mgMl} ml</p>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Alvo: {result.mg} ppm
-                          </p>
-                        </div>
-                        <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
-                          <span className="text-2xl">💚</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                        {/* Deficiency Symptoms */}
+                        <details className="text-xs">
+                          <summary className="cursor-pointer font-medium text-foreground flex items-center gap-1">
+                            <AlertCircle className="w-3 h-3" />
+                            Sintomas de Deficiência
+                          </summary>
+                          <ul className="mt-2 space-y-1 text-muted-foreground pl-4">
+                            {nutrientInfo.ca.deficiencySymptoms.map((symptom, idx) => (
+                              <li key={idx}>• {symptom}</li>
+                            ))}
+                          </ul>
+                        </details>
+                      </CardContent>
+                    </Card>
 
-                  {/* Ferro */}
-                  <Card className="bg-red-500/10 border-red-500/20">
-                    <CardContent className="pt-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground">Ferro (Fe)</p>
-                          <p className="text-2xl font-bold text-foreground">{result.feMl} ml</p>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Alvo: {result.fe} ppm
-                          </p>
+                    {/* Magnésio */}
+                    <Card className={`${nutrientInfo.mg.bgColor} ${nutrientInfo.mg.borderColor}`}>
+                      <CardContent className="pt-4 space-y-3">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <p className="text-sm font-semibold text-foreground">{nutrientInfo.mg.name}</p>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <Info className="w-4 h-4 text-muted-foreground" />
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-xs">
+                                  <p className="font-semibold mb-1">Função:</p>
+                                  <p className="text-xs mb-2">{nutrientInfo.mg.function}</p>
+                                  <p className="font-semibold mb-1">Dica:</p>
+                                  <p className="text-xs">{nutrientInfo.mg.applicationTips}</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </div>
+                            <p className="text-3xl font-bold text-foreground">{result.mgMl} ml</p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Concentração alvo: {result.mg} ppm
+                            </p>
+                          </div>
+                          <div className={`w-14 h-14 rounded-full ${nutrientInfo.mg.bgColor} flex items-center justify-center ${nutrientInfo.mg.color}`}>
+                            {nutrientInfo.mg.icon}
+                          </div>
                         </div>
-                        <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center">
-                          <span className="text-2xl">❤️</span>
+                        
+                        {/* Progress Bar */}
+                        <div className="space-y-1">
+                          <div className="flex justify-between text-xs text-muted-foreground">
+                            <span>Concentração</span>
+                            <span>{result.mg} / 80 ppm</span>
+                          </div>
+                          <Progress value={getProgressPercentage('mg', result.mg)} className="h-2" />
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
+
+                        {/* Deficiency Symptoms */}
+                        <details className="text-xs">
+                          <summary className="cursor-pointer font-medium text-foreground flex items-center gap-1">
+                            <AlertCircle className="w-3 h-3" />
+                            Sintomas de Deficiência
+                          </summary>
+                          <ul className="mt-2 space-y-1 text-muted-foreground pl-4">
+                            {nutrientInfo.mg.deficiencySymptoms.map((symptom, idx) => (
+                              <li key={idx}>• {symptom}</li>
+                            ))}
+                          </ul>
+                        </details>
+                      </CardContent>
+                    </Card>
+
+                    {/* Ferro */}
+                    <Card className={`${nutrientInfo.fe.bgColor} ${nutrientInfo.fe.borderColor}`}>
+                      <CardContent className="pt-4 space-y-3">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <p className="text-sm font-semibold text-foreground">{nutrientInfo.fe.name}</p>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <Info className="w-4 h-4 text-muted-foreground" />
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-xs">
+                                  <p className="font-semibold mb-1">Função:</p>
+                                  <p className="text-xs mb-2">{nutrientInfo.fe.function}</p>
+                                  <p className="font-semibold mb-1">Dica:</p>
+                                  <p className="text-xs">{nutrientInfo.fe.applicationTips}</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </div>
+                            <p className="text-3xl font-bold text-foreground">{result.feMl} ml</p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Concentração alvo: {result.fe} ppm
+                            </p>
+                          </div>
+                          <div className={`w-14 h-14 rounded-full ${nutrientInfo.fe.bgColor} flex items-center justify-center ${nutrientInfo.fe.color}`}>
+                            {nutrientInfo.fe.icon}
+                          </div>
+                        </div>
+                        
+                        {/* Progress Bar */}
+                        <div className="space-y-1">
+                          <div className="flex justify-between text-xs text-muted-foreground">
+                            <span>Concentração</span>
+                            <span>{result.fe} / 6 ppm</span>
+                          </div>
+                          <Progress value={getProgressPercentage('fe', result.fe)} className="h-2" />
+                        </div>
+
+                        {/* Deficiency Symptoms */}
+                        <details className="text-xs">
+                          <summary className="cursor-pointer font-medium text-foreground flex items-center gap-1">
+                            <AlertCircle className="w-3 h-3" />
+                            Sintomas de Deficiência
+                          </summary>
+                          <ul className="mt-2 space-y-1 text-muted-foreground pl-4">
+                            {nutrientInfo.fe.deficiencySymptoms.map((symptom, idx) => (
+                              <li key={idx}>• {symptom}</li>
+                            ))}
+                          </ul>
+                        </details>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </TooltipProvider>
 
                 {/* Instructions */}
                 <Card className="bg-primary/10 border-primary/20">
