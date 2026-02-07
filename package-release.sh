@@ -10,7 +10,7 @@ set -e  # Exit on error
 echo "📦 Iniciando empacotamento do App Cultivo..."
 
 # Variáveis
-VERSION="1.0.5"
+VERSION="1.0.6"
 RELEASE_NAME="app-cultivo-v${VERSION}"
 RELEASE_DIR="./releases"
 TEMP_DIR="${RELEASE_DIR}/${RELEASE_NAME}"
@@ -55,6 +55,8 @@ cp setup-local.sh "${TEMP_DIR}/"
 chmod +x "${TEMP_DIR}/setup-local.sh"
 cp install.sh "${TEMP_DIR}/"
 chmod +x "${TEMP_DIR}/install.sh"
+cp convert-mysql-to-sqlite.sh "${TEMP_DIR}/"
+chmod +x "${TEMP_DIR}/convert-mysql-to-sqlite.sh"
 
 # Criar .gitignore para o release
 cat > "${TEMP_DIR}/.gitignore" << 'EOF'

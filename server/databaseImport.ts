@@ -25,15 +25,33 @@ export async function importSQLDump(sqlContent: string): Promise<{ success: bool
     return { success: false, message: "Invalid backup file. Must be an App Cultivo database backup.", statementsExecuted: 0 };
   }
 
+  // Convert MySQL syntax to SQLite if needed
+  if (sqlContent.includes("SET FOREIGN_KEY_CHECKS") || sqlContent.includes("MySQL Database Dump")) {
+    console.log("[Import] Detected MySQL dump, converting to SQLite format...");
+    sqlContent = sqlContent
+      .replace(/SET FOREIGN_KEY_CHECKS=0;/g, "PRAGMA foreign_keys=OFF;")
+      .replace(/SET FOREIGN_KEY_CHECKS=1;/g, "PRAGMA foreign_keys=ON;")
+      .replace(/^SET .*$/gm, "")
+      .replace(/\/\*![0-9]* .*$/gm, "")
+      .replace(/ AUTO_INCREMENT=[0-9]*/g, "")
+      .replace(/ DEFAULT CHARSET=[a-z0-9]*/g, "")
+      .replace(/ COLLATE=[a-z0-9_]*/g, "")
+      .replace(/ ENGINE=[A-Za-z]*/g, "")
+      .replace(/\\"/g, '"')
+      .replace(/\\\'/g, "'");
+    console.log("[Import] Conversion complete");
+  }
+
   // Split SQL content into individual statements
   const statements = sqlContent
     .split(";")
     .map(stmt => stmt.trim())
     .filter(stmt => {
-      // Filter out comments and empty statements
+      // Filter out comments, empty statements, and PRAGMA (already executed)
       if (!stmt) return false;
       if (stmt.startsWith("--")) return false;
       if (stmt.startsWith("/*")) return false;
+      if (stmt.startsWith("PRAGMA")) return false;
       return true;
     });
 

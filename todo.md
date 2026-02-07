@@ -782,3 +782,12 @@
 - [x] Remover local.db e logs do pacote
 - [x] Garantir compilação nativa em qualquer plataforma
 - [x] Pacote v1.0.5 gerado (648KB, sem node_modules)
+
+## 🐛 Bug: Schema MySQL vs SQLite
+- [x] Investigar configuração do Drizzle
+- [x] Identificar que schema usa MySQL e banco-inicial.sql também
+- [x] Criar conversor MySQL→SQLite (convert-mysql-to-sqlite.sh)
+- [x] Converter banco-inicial.sql para SQLite
+- [x] Adicionar conversão automática na interface de importação
+- [x] Manter schema MySQL no Manus (não quebrar nada)
+- [x] Gerar pacote v1.0.6 com conversor MySQL→SQLite

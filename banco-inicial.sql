@@ -2,7 +2,7 @@
 -- Generated at: 2026-02-07T18:10:14.350Z
 -- MySQL Database Dump
 
-SET FOREIGN_KEY_CHECKS=0;
+PRAGMA foreign_keys=OFF;
 
 -- Dumping data for table strains
 DELETE FROM strains;
@@ -282,6 +282,6 @@ INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, c
 
 -- Table alertHistory is empty
 
-SET FOREIGN_KEY_CHECKS=1;
+PRAGMA foreign_keys=ON;
 
 -- End of dump
