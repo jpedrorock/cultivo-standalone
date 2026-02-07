@@ -508,3 +508,11 @@
 - [x] Criar script seed-data.mjs para popular banco com dados de exemplo
 - [x] Atualizar documentação de instalação com instruções de seed
 - [x] Testar criação manual e via script
+
+## 🗑️ Nova Tarefa: Excluir Estufa
+- [x] Criar API tents.delete no backend
+- [x] Adicionar validação: impedir exclusão se houver ciclos ativos
+- [x] Adicionar botão de excluir em cada card de estufa
+- [x] Implementar confirmação antes de excluir
+- [x] Testar exclusão de estufa sem ciclos
+- [x] Testar bloqueio de exclusão com ciclos ativos

@@ -92,6 +92,30 @@ export const appRouter = router({
         
         return { success: true, id: result.insertId };
       }),
+    delete: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Verificar se há ciclos ativos nesta estufa
+        const activeCycles = await database
+          .select()
+          .from(cycles)
+          .where(and(
+            eq(cycles.tentId, input.id),
+            eq(cycles.status, "ACTIVE")
+          ));
+        
+        if (activeCycles.length > 0) {
+          throw new Error("Não é possível excluir uma estufa com ciclos ativos. Finalize o ciclo primeiro.");
+        }
+        
+        // Deletar estufa
+        await database.delete(tents).where(eq(tents.id, input.id));
+        
+        return { success: true };
+      }),
   }),
 
   // Strains (Variedades)

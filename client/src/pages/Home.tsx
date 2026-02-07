@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell } from "lucide-react";
+import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell, Trash2 } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 
@@ -28,6 +28,22 @@ export default function Home() {
   const handleStartCycle = (tentId: number, tentName: string) => {
     setSelectedTent({ id: tentId, name: tentName });
     setCycleModalOpen(true);
+  };
+
+  const deleteTent = trpc.tents.delete.useMutation({
+    onSuccess: () => {
+      utils.tents.list.invalidate();
+      toast.success("Estufa excluída com sucesso!");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const handleDeleteTent = (tentId: number, tentName: string) => {
+    if (confirm(`Tem certeza que deseja excluir a estufa "${tentName}"? Esta ação não pode ser desfeita.`)) {
+      deleteTent.mutate({ id: tentId });
+    }
   };
 
   const utils = trpc.useUtils();
@@ -179,6 +195,7 @@ export default function Home() {
                 onInitiateCycle={handleInitiateCycle}
                 onEditCycle={handleEditCycle}
                 onFinalizeCycle={handleFinalizeCycle}
+                onDeleteTent={handleDeleteTent}
               />
             );
           })}
@@ -255,7 +272,7 @@ export default function Home() {
 }
 
 // Separate component for Tent Card with Tasks
-function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlora, onInitiateCycle, onEditCycle, onFinalizeCycle }: any) {
+function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlora, onInitiateCycle, onEditCycle, onFinalizeCycle, onDeleteTent }: any) {
   const { data: tasks, isLoading: tasksLoading } = trpc.tasks.getTasksByTent.useQuery(
     { tentId: tent.id },
     { enabled: !!cycle } // Only fetch if there's an active cycle
@@ -511,6 +528,17 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                   Finalizar Ciclo
                 </Button>
               </>
+            )}
+            {!cycle && (
+              <Button
+                onClick={() => onDeleteTent(tent.id, tent.name)}
+                variant="outline"
+                size="sm"
+                className="w-full border-red-500 text-red-600 hover:bg-red-50 flex items-center justify-center gap-2"
+              >
+                <Trash2 className="w-4 h-4" />
+                Excluir Estufa
+              </Button>
             )}
           </div>
         </div>
