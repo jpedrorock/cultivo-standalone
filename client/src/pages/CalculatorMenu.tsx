@@ -16,8 +16,8 @@ export default function CalculatorMenu() {
     {
       id: "fertilization",
       title: "Calculadora de Fertilização",
-      description: "Determine a dosagem correta de fertilizantes",
-      icon: Sprout,
+      description: "Micronutrientes (Ca, Mg, Fe) por fase do ciclo",
+      icon: Beaker,
       color: "from-green-500 to-emerald-500",
       bgColor: "bg-primary/10",
       iconColor: "text-green-600",

@@ -664,3 +664,24 @@
 - [x] Botões de "Ações Rápidas" - melhorar contraste
 - [x] Adicionar fundo sutil para botões outline no dark mode (bg-muted/20)
 - [x] Testar todos os botões no modo escuro
+
+## 🐛 Bug: Campo "Fase Atual" Vazio no EditCycleModal
+- [x] Campo "Fase Atual" não tem opções no EditCycleModal
+- [x] Adicionar Select com opções (Clonagem, Manutenção, Vegetativa, Floração)
+- [x] Remover restrição por tentId - todas as fases disponíveis para todas as estufas
+- [ ] Conectar initialPhase do CreateTentModal com criação automática de ciclo
+- [ ] Testar edição de fase do ciclo
+
+## 🧪 Calculadora de Fertilização Inteligente - CONCLUÍDA
+- [x] Criar página FertilizationCalculator.tsx
+- [x] Campo de volume de rega (litros) com ícone
+- [x] Seletor de fase (Vegetativa/Floração)
+- [x] Cálculo de Ca (Cálcio) em ppm e ml
+- [x] Cálculo de Mg (Magnésio) em ppm e ml
+- [x] Cálculo de Fe (Ferro) em ppm e ml
+- [x] Ajustar valores automaticamente baseado em volume e fase do ciclo
+- [x] Adicionar à lista de calculadoras disponíveis (CalculatorMenu)
+- [x] Adicionar rota em App.tsx
+- [x] Interface bonita com cards coloridos por nutriente (laranja/verde/vermelho)
+- [x] Instruções de uso e informações sobre micronutrientes
+- [x] Concentrações ideais por fase (vegetativa vs floração)

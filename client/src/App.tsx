@@ -19,6 +19,7 @@ import Alerts from "./pages/Alerts";
 import HistoryTable from "./pages/HistoryTable";
 import Settings from "./pages/Settings";
 import StrainTargets from "./pages/StrainTargets";
+import FertilizationCalculator from "./pages/FertilizationCalculator";
 
 
 function Router() {
@@ -30,6 +31,7 @@ function Router() {
       <Route path={"/manage-strains"} component={ManageStrains} />
       <Route path={"/tasks"} component={Tasks} />
       <Route path={"/calculators"} component={CalculatorMenu} />
+      <Route path={"/calculators/fertilization"} component={FertilizationCalculator} />
       <Route path={"/calculators/:id"} component={Calculators} />
       <Route path={"/alerts"} component={Alerts} />
       <Route path={"/history"} component={HistoryTable} />

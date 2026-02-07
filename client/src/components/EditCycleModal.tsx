@@ -146,14 +146,10 @@ export function EditCycleModal({
                   <SelectValue placeholder="Selecione a fase" />
                 </SelectTrigger>
                 <SelectContent>
-                  {tentId === 1 && (
-                    <>
-                      <SelectItem value="CLONING">Clonagem</SelectItem>
-                      <SelectItem value="MAINTENANCE">Manutenção</SelectItem>
-                    </>
-                  )}
-                  {tentId === 2 && <SelectItem value="VEGA">Vegetativa</SelectItem>}
-                  {tentId === 3 && <SelectItem value="FLORA">Floração</SelectItem>}
+                  <SelectItem value="CLONING">🌱 Clonagem</SelectItem>
+                  <SelectItem value="MAINTENANCE">🔧 Manutenção</SelectItem>
+                  <SelectItem value="VEGA">🌿 Vegetativa</SelectItem>
+                  <SelectItem value="FLORA">🌸 Floração</SelectItem>
                 </SelectContent>
               </Select>
             </div>
