@@ -822,3 +822,9 @@
 - [x] Criar README-MYSQL.md com instruções completas
 - [x] Atualizar package-release.sh para v2.0.0
 - [x] Gerar v2.0.0 (652KB, MySQL, sem SQLite)
+
+## 🐛 Bug: banco-inicial.sql sem CREATE TABLE
+- [x] Gerar CREATE TABLE statements baseado no schema Drizzle (16 tabelas)
+- [x] Combinar CREATE TABLE + INSERT em banco-inicial.sql (80KB)
+- [x] Atualizar package-release.sh para v2.0.1
+- [x] Gerar v2.0.1 (652KB, com CREATE TABLE + dados)
