@@ -523,3 +523,9 @@
 - [x] Adicionar botão "Exportar Banco de Dados" na página de Configurações
 - [x] Implementar download automático do arquivo SQL
 - [x] Testar exportação e importação do arquivo gerado
+
+## 🐛 Bug: Botão "Novo Ciclo" não está funcionando
+- [x] Investigar erro no botão "Novo Ciclo"
+- [x] Verificar modal InitiateCycleModal
+- [x] Corrigir problema
+- [x] Testar funcionalidade

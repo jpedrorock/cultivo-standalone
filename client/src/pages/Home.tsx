@@ -250,6 +250,16 @@ export default function Home() {
       )}
 
       {/* Initiate Cycle Modal */}
+      {selectedTent && (
+        <InitiateCycleModal
+          open={initiateModalOpen}
+          onOpenChange={setInitiateModalOpen}
+          tentId={selectedTent.id}
+          tentName={selectedTent.name}
+        />
+      )}
+
+      {/* Edit Cycle Modal */}
       {selectedTent && selectedCycle && (
         <EditCycleModal
           open={editModalOpen}
