@@ -833,3 +833,10 @@
 - [x] Adicionar URL encoding automático da senha no install-mysql.sh
 - [x] Função url_encode() para escapar caracteres especiais
 - [x] Gerar v2.0.2 (652KB, com URL encoding de senha)
+
+## 🐛 Bug: Erro ao excluir estufa (foreign key sem CASCADE)
+- [x] Criar script de migração add-cascade-delete.sql
+- [x] Adicionar ON DELETE CASCADE em 9 foreign keys
+- [x] Atualizar schema-create.sql com ON DELETE CASCADE em todas as FKs
+- [x] Criar MIGRATION.md com instruções completas
+- [x] Gerar v2.0.3 (652KB, com CASCADE delete + migração)

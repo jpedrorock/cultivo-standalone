@@ -51,8 +51,8 @@ CREATE TABLE IF NOT EXISTS `cycles` (
   `status` ENUM('ACTIVE', 'FINISHED') DEFAULT 'ACTIVE' NOT NULL,
   `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   `updatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
-  FOREIGN KEY (`tentId`) REFERENCES `tents`(`id`),
-  FOREIGN KEY (`strainId`) REFERENCES `strains`(`id`),
+  FOREIGN KEY (`tentId`) REFERENCES `tents`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`strainId`) REFERENCES `strains`(`id`) ON DELETE CASCADE,
   INDEX `tentIdx` (`tentId`),
   INDEX `strainIdx` (`strainId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `cloningEvents` (
   `status` ENUM('ACTIVE', 'FINISHED') DEFAULT 'ACTIVE' NOT NULL,
   `notes` TEXT,
   `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  FOREIGN KEY (`tentId`) REFERENCES `tents`(`id`),
+  FOREIGN KEY (`tentId`) REFERENCES `tents`(`id`) ON DELETE CASCADE,
   INDEX `tentIdx` (`tentId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `tentAState` (
   `mode` ENUM('MAINTENANCE', 'CLONING') DEFAULT 'MAINTENANCE' NOT NULL,
   `activeCloningEventId` INT,
   `updatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
-  FOREIGN KEY (`tentId`) REFERENCES `tents`(`id`),
+  FOREIGN KEY (`tentId`) REFERENCES `tents`(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`activeCloningEventId`) REFERENCES `cloningEvents`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `weeklyTargets` (
   `notes` TEXT,
   `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   `updatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
-  FOREIGN KEY (`strainId`) REFERENCES `strains`(`id`),
+  FOREIGN KEY (`strainId`) REFERENCES `strains`(`id`) ON DELETE CASCADE,
   UNIQUE KEY `strainPhaseWeekUnique` (`strainId`, `phase`, `weekNumber`),
   INDEX `strainIdx` (`strainId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `dailyLogs` (
   `ec` DECIMAL(4,2),
   `notes` TEXT,
   `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  FOREIGN KEY (`tentId`) REFERENCES `tents`(`id`),
+  FOREIGN KEY (`tentId`) REFERENCES `tents`(`id`) ON DELETE CASCADE,
   UNIQUE KEY `tentDateTurnUnique` (`tentId`, `logDate`, `turn`),
   INDEX `tentIdx` (`tentId`),
   INDEX `dateIdx` (`logDate`)
@@ -137,7 +137,7 @@ CREATE TABLE IF NOT EXISTS `recipes` (
   `productsJson` TEXT,
   `notes` TEXT,
   `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  FOREIGN KEY (`tentId`) REFERENCES `tents`(`id`),
+  FOREIGN KEY (`tentId`) REFERENCES `tents`(`id`) ON DELETE CASCADE,
   UNIQUE KEY `tentDateTurnUnique` (`tentId`, `logDate`, `turn`),
   INDEX `tentIdx` (`tentId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -179,8 +179,8 @@ CREATE TABLE IF NOT EXISTS `taskInstances` (
   `completedAt` TIMESTAMP,
   `notes` TEXT,
   `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  FOREIGN KEY (`tentId`) REFERENCES `tents`(`id`),
-  FOREIGN KEY (`taskTemplateId`) REFERENCES `taskTemplates`(`id`),
+  FOREIGN KEY (`tentId`) REFERENCES `tents`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`taskTemplateId`) REFERENCES `taskTemplates`(`id`) ON DELETE CASCADE,
   UNIQUE KEY `tentTaskDateUnique` (`tentId`, `taskTemplateId`, `occurrenceDate`),
   INDEX `tentIdx` (`tentId`),
   INDEX `dateIdx` (`occurrenceDate`)
@@ -198,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `alerts` (
   `isActive` BOOLEAN DEFAULT TRUE NOT NULL,
   `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   `resolvedAt` TIMESTAMP,
-  FOREIGN KEY (`tentId`) REFERENCES `tents`(`id`),
+  FOREIGN KEY (`tentId`) REFERENCES `tents`(`id`) ON DELETE CASCADE,
   INDEX `tentIdx` (`tentId`),
   INDEX `activeIdx` (`isActive`),
   INDEX `createdIdx` (`createdAt`)
@@ -226,7 +226,7 @@ CREATE TABLE IF NOT EXISTS `alertHistory` (
   `performedBy` VARCHAR(100),
   `notes` TEXT,
   `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  FOREIGN KEY (`alertId`) REFERENCES `alerts`(`id`),
+  FOREIGN KEY (`alertId`) REFERENCES `alerts`(`id`) ON DELETE CASCADE,
   INDEX `alertIdx` (`alertId`),
   INDEX `createdIdx` (`createdAt`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
