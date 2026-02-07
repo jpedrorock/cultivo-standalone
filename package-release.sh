@@ -10,7 +10,7 @@ set -e  # Exit on error
 echo "📦 Iniciando empacotamento do App Cultivo..."
 
 # Variáveis
-VERSION="2.0.4"
+VERSION="2.0.5"
 RELEASE_NAME="app-cultivo-v${VERSION}"
 RELEASE_DIR="./releases"
 TEMP_DIR="${RELEASE_DIR}/${RELEASE_NAME}"

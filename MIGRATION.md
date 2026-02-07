@@ -11,16 +11,21 @@ Failed query: delete from `alertHistory` where `alertHistory`.`tentId` = ?
 
 ## Solução
 
-Execute o script de migração no seu banco de dados MySQL:
+Execute o script de migração automatizado:
 
 ```bash
-mysql -u root -p cultivo_local < migrations/add-cascade-delete.sql
+bash migrations/apply-cascade.sh
 ```
 
-Ou se você configurou uma senha:
+O script vai:
+1. Pedir suas credenciais MySQL
+2. Descobrir automaticamente os nomes das foreign keys
+3. Recriar cada FK com ON DELETE CASCADE
+4. Mostrar o resultado final
 
+**Alternativa manual** (se preferir):
 ```bash
-mysql -u root -pSuaSenha cultivo_local < migrations/add-cascade-delete.sql
+mysql -u root -p cultivo_local < migrations/add-cascade-delete.sql
 ```
 
 ## O que a migração faz

@@ -845,3 +845,16 @@
 - [x] Atualizar package-release.sh para incluir pasta migrations/
 - [x] Incluir MIGRATION.md também
 - [x] Gerar v2.0.4 (656KB, com migrations/ e MIGRATION.md)
+
+## 🐛 Bug: Migração falha porque nomes de FK não correspondem
+- [x] Criar apply-cascade.sh que descobre FKs automaticamente
+- [ ] Gerar v2.0.5 com migração robusta
+- [x] Atualizar MIGRATION.md com novas instruções
+
+
+## 🔧 Nova Tarefa: Correção CASCADE DELETE para Instalação Local MySQL
+- [x] Identificar problema: migration script usa nomes de FK incorretos
+- [x] Criar script dinâmico apply-cascade.sh que descobre FKs automaticamente
+- [x] Script consulta information_schema para nomes reais das FKs
+- [x] Atualizar MIGRATION.md com novas instruções
+- [x] Gerar v2.0.5 com migração robusta
