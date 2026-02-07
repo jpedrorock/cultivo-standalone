@@ -858,3 +858,21 @@
 - [x] Script consulta information_schema para nomes reais das FKs
 - [x] Atualizar MIGRATION.md com novas instruções
 - [x] Gerar v2.0.5 com migração robusta
+
+
+## 🐛 Bug Crítico: Erro ao Deletar Estufa
+- [ ] Investigar código de deleção em server/routers.ts
+- [ ] Corrigir query que tenta deletar alertHistory por tentId (não existe)
+- [ ] Implementar deleção manual em ordem correta
+- [ ] Testar deleção de estufa com todos os dados relacionados
+- [ ] Gerar v2.0.6 com correção
+
+
+## ✅ Correção Crítica: banco-inicial.sql Desatualizado
+- [x] Descobrir que banco-inicial.sql tinha schema antigo de alertHistory
+- [x] Exportar schema correto do banco Manus (TiDB)
+- [x] Exportar dados atualizados do banco Manus
+- [x] Gerar novo banco-inicial.sql (94KB) com schema + dados corretos
+- [x] Remover prefixo do database das FKs (AhyBXV9CDav4cSFRqphBxc)
+- [x] Verificar alertHistory.tentId presente no schema
+- [x] Gerar v2.0.6 com banco-inicial.sql corrigido
