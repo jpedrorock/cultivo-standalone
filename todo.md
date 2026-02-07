@@ -769,3 +769,9 @@
 - [x] Forçar rebuild do better_sqlite3 durante instalação
 - [x] Fallback para reinstalação completa se rebuild falhar
 - [x] Pacote v1.0.3 gerado com correções
+
+## 📦 Exportar Dados do Manus
+- [x] Exportar banco de dados atual do Manus (70KB)
+- [x] Substituir banco-inicial.sql com dados reais
+- [x] Incluir 3 estufas, 6 strains, 6 ciclos, registros e tarefas
+- [x] Regenerar pacote v1.0.4 com dados do usuário

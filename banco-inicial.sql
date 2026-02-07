@@ -1,133 +1,287 @@
--- ============================================
--- App Cultivo - Banco de Dados Inicial
--- ============================================
--- Este arquivo contém dados de exemplo para começar a usar o app imediatamente
--- Inclui: 3 estufas, 1 strain, ciclos ativos, tarefas e parâmetros
+-- App Cultivo - Database Backup
+-- Generated at: 2026-02-07T18:10:14.350Z
+-- MySQL Database Dump
 
--- ============================================
--- TENTS (Estufas)
--- ============================================
+SET FOREIGN_KEY_CHECKS=0;
 
-INSERT INTO tents (id, name, type, width, height, depth, isActive, createdAt) VALUES
-(1, 'Estufa A', 'A', 45, 90, 75, 1, '2026-01-31 00:00:00'),
-(2, 'Estufa B', 'B', 60, 120, 60, 1, '2026-01-10 00:00:00'),
-(3, 'Estufa C', 'C', 60, 150, 120, 1, '2026-02-07 00:00:00');
+-- Dumping data for table strains
+DELETE FROM strains;
+INSERT INTO strains (id, name, description, vegaWeeks, floraWeeks, isActive, createdAt, updatedAt) VALUES (1, 'Estufa A - Padrão', 'Valores ideais padrão para Estufa A (Mães e Clonagem)', 0, 0, 1, '2026-02-05 20:34:58', '2026-02-05 20:34:58');
+INSERT INTO strains (id, name, description, vegaWeeks, floraWeeks, isActive, createdAt, updatedAt) VALUES (2, 'Estufa B - Padrão', 'Valores ideais padrão para Estufa B (Vegetativa)', 6, 0, 1, '2026-02-05 20:34:58', '2026-02-05 20:34:58');
+INSERT INTO strains (id, name, description, vegaWeeks, floraWeeks, isActive, createdAt, updatedAt) VALUES (3, 'Estufa C - Padrão', 'Valores ideais padrão para Estufa C (Floração)', 0, 8, 1, '2026-02-05 20:34:58', '2026-02-05 20:34:58');
+INSERT INTO strains (id, name, description, vegaWeeks, floraWeeks, isActive, createdAt, updatedAt) VALUES (30001, 'Blue Dream', 'Híbrida sativa-dominante, conhecida por crescimento vigoroso e produção abundante. Ideal para iniciantes.', 6, 9, 1, '2026-02-06 05:26:50', '2026-02-06 05:26:50');
+INSERT INTO strains (id, name, description, vegaWeeks, floraWeeks, isActive, createdAt, updatedAt) VALUES (30002, 'Northern Lights', 'Indica pura clássica, compacta e resistente. Floração rápida com alta produção de resina.', 5, 7, 1, '2026-02-06 05:26:50', '2026-02-06 05:26:50');
+INSERT INTO strains (id, name, description, vegaWeeks, floraWeeks, isActive, createdAt, updatedAt) VALUES (30003, 'White Widow', 'Híbrida balanceada 50/50, famosa pela produção massiva de tricomas brancos. Potente e estável.', 6, 8, 1, '2026-02-06 05:26:50', '2026-02-06 05:26:50');
+INSERT INTO strains (id, name, description, vegaWeeks, floraWeeks, isActive, createdAt, updatedAt) VALUES (30004, 'Girl Scout Cookies', 'Híbrida indica-dominante, crescimento compacto com alta potência. Sabor doce e terroso.', 5, 9, 1, '2026-02-06 05:26:50', '2026-02-06 05:26:50');
+INSERT INTO strains (id, name, description, vegaWeeks, floraWeeks, isActive, createdAt, updatedAt) VALUES (30005, 'Gorilla Glue #4', 'Híbrida equilibrada, extremamente resinosa. Crescimento vigoroso e produção excepcional.', 6, 8, 1, '2026-02-06 05:26:50', '2026-02-06 05:26:50');
+INSERT INTO strains (id, name, description, vegaWeeks, floraWeeks, isActive, createdAt, updatedAt) VALUES (30006, 'Blue Dream V2', 'Híbrida sativa-dominante, conhecida por crescimento vigoroso e produção abundante. Ideal para iniciantes.', 6, 9, 1, '2026-02-06 05:29:15', '2026-02-06 05:29:15');
 
--- ============================================
--- STRAINS (Variedades)
--- ============================================
+-- Dumping data for table tents
+DELETE FROM tents;
+INSERT INTO tents (id, name, tentType, width, depth, height, volume, powerW, createdAt) VALUES (1, 'Estufa A', 'A', 45, 75, 90, '0.304', NULL, '2026-02-05 20:34:49');
+INSERT INTO tents (id, name, tentType, width, depth, height, volume, powerW, createdAt) VALUES (2, 'Estufa B', 'B', 60, 60, 120, '0.432', NULL, '2026-02-05 20:34:49');
+INSERT INTO tents (id, name, tentType, width, depth, height, volume, powerW, createdAt) VALUES (3, 'Estufa C', 'C', 60, 120, 150, '1.080', NULL, '2026-02-05 20:34:49');
 
-INSERT INTO strains (id, name, type, isActive, createdAt) VALUES
-(1, 'Padrão', 'HYBRID', 1, '2026-01-01 00:00:00');
+-- Dumping data for table cycles
+DELETE FROM cycles;
+INSERT INTO cycles (id, tentId, strainId, startDate, floraStartDate, status, createdAt, updatedAt) VALUES (1, 2, 1, '2026-01-23 00:00:00', NULL, 'FINISHED', '2026-02-05 20:37:59', '2026-02-07 06:33:14');
+INSERT INTO cycles (id, tentId, strainId, startDate, floraStartDate, status, createdAt, updatedAt) VALUES (30001, 3, 3, '2026-02-05 00:00:00', '2026-02-05 21:15:08', 'FINISHED', '2026-02-05 21:15:06', '2026-02-07 06:32:49');
+INSERT INTO cycles (id, tentId, strainId, startDate, floraStartDate, status, createdAt, updatedAt) VALUES (60001, 1, 1, '2026-01-31 00:00:00', NULL, 'ACTIVE', '2026-02-05 22:16:13', '2026-02-07 07:28:01');
+INSERT INTO cycles (id, tentId, strainId, startDate, floraStartDate, status, createdAt, updatedAt) VALUES (90002, 2, 1, '2026-01-10 00:00:00', NULL, 'ACTIVE', '2026-02-07 06:40:48', '2026-02-07 07:28:12');
+INSERT INTO cycles (id, tentId, strainId, startDate, floraStartDate, status, createdAt, updatedAt) VALUES (90003, 3, 30004, '2026-02-07 00:00:00', '2026-02-07 00:00:00', 'FINISHED', '2026-02-07 06:46:12', '2026-02-07 16:24:26');
+INSERT INTO cycles (id, tentId, strainId, startDate, floraStartDate, status, createdAt, updatedAt) VALUES (120002, 3, 2, '2026-02-07 00:00:00', '2026-02-07 00:00:00', 'ACTIVE', '2026-02-07 16:24:54', '2026-02-07 16:24:54');
 
--- ============================================
--- CYCLES (Ciclos Ativos)
--- ============================================
+-- Dumping data for table dailyLogs
+DELETE FROM dailyLogs;
+INSERT INTO dailyLogs (id, tentId, logDate, turn, tempC, rhPct, ppfd, notes, createdAt, ph, ec) VALUES (1, 2, '2026-02-06 04:44:59', 'AM', '35.0', '65.0', 500, NULL, '2026-02-06 04:45:00', NULL, NULL);
+INSERT INTO dailyLogs (id, tentId, logDate, turn, tempC, rhPct, ppfd, notes, createdAt, ph, ec) VALUES (30001, 2, '2026-02-06 18:02:38', 'AM', NULL, NULL, 1111, NULL, '2026-02-06 18:02:38', NULL, NULL);
 
-INSERT INTO cycles (id, tentId, strainId, phase, weekNumber, startDate, status, createdAt) VALUES
-(1, 1, 1, 'MAINTENANCE', 2, '2026-01-31', 'ACTIVE', '2026-01-31 00:00:00'),
-(2, 2, 1, 'VEGA', 5, '2026-01-10', 'ACTIVE', '2026-01-10 00:00:00'),
-(3, 3, 1, 'FLORA', 1, '2026-02-07', 'ACTIVE', '2026-02-07 00:00:00');
+-- Dumping data for table weeklyTargets
+DELETE FROM weeklyTargets;
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30001, 'VEGA', 1, '20.0', '24.0', '65.0', '75.0', 200, 300, '18/6', '5.8', '6.2', '0.8', '1.2', NULL, '2026-02-06 05:12:43', '2026-02-06 05:12:43', 1);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30002, 'VEGA', 2, '21.0', '25.0', '60.0', '70.0', 300, 400, '18/6', '5.9', '6.3', '1.0', '1.4', NULL, '2026-02-06 05:12:43', '2026-02-06 05:12:43', 1);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30003, 'VEGA', 3, '22.0', '26.0', '55.0', '65.0', 400, 500, '18/6', '6.0', '6.4', '1.2', '1.6', NULL, '2026-02-06 05:12:43', '2026-02-06 05:12:43', 1);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30004, 'VEGA', 4, '22.5', '26.5', '55.0', '65.0', 500, 600, '18/6', '6.0', '6.4', '1.4', '1.8', NULL, '2026-02-06 05:12:43', '2026-02-06 05:12:43', 1);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30005, 'VEGA', 5, '22.5', '26.5', '59.0', '69.0', 550, 650, '18/6', '6.0', '6.4', '1.5', '1.9', NULL, '2026-02-06 05:12:43', '2026-02-06 05:12:43', 1);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30006, 'VEGA', 6, '23.0', '27.0', '55.0', '65.0', 600, 700, '18/6', '6.0', '6.4', '1.6', '2.0', NULL, '2026-02-06 05:12:43', '2026-02-06 05:12:43', 1);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30007, 'FLORA', 1, '22.0', '26.0', '50.0', '60.0', 600, 700, '12/12', '6.0', '6.4', '1.6', '2.0', NULL, '2026-02-06 05:12:43', '2026-02-06 05:12:43', 1);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30008, 'FLORA', 2, '22.0', '26.0', '48.0', '58.0', 650, 750, '12/12', '6.0', '6.4', '1.7', '2.1', NULL, '2026-02-06 05:12:43', '2026-02-06 05:12:43', 1);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30009, 'FLORA', 3, '21.0', '25.0', '45.0', '55.0', 700, 800, '12/12', '6.0', '6.4', '1.8', '2.2', NULL, '2026-02-06 05:12:43', '2026-02-06 05:12:43', 1);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30010, 'FLORA', 4, '21.0', '25.0', '45.0', '55.0', 750, 850, '12/12', '6.0', '6.4', '1.9', '2.3', NULL, '2026-02-06 05:12:43', '2026-02-06 05:12:43', 1);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30011, 'FLORA', 5, '20.0', '24.0', '42.0', '52.0', 800, 900, '12/12', '6.0', '6.4', '1.9', '2.3', NULL, '2026-02-06 05:12:43', '2026-02-06 05:12:43', 1);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30012, 'FLORA', 6, '20.0', '24.0', '40.0', '50.0', 800, 900, '12/12', '6.0', '6.4', '1.8', '2.2', NULL, '2026-02-06 05:12:43', '2026-02-06 05:12:43', 1);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30013, 'FLORA', 7, '19.0', '23.0', '40.0', '50.0', 700, 800, '12/12', '6.0', '6.4', '1.6', '2.0', NULL, '2026-02-06 05:12:43', '2026-02-06 05:12:43', 1);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30014, 'FLORA', 8, '18.0', '22.0', '40.0', '50.0', 500, 600, '12/12', '6.0', '6.4', '1.2', '1.6', NULL, '2026-02-06 05:12:43', '2026-02-06 05:12:43', 1);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30015, 'VEGA', 1, '22.0', '26.0', '60.0', '70.0', 300, 400, '18/6', '5.8', '6.2', '0.8', '1.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30001);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30016, 'VEGA', 2, '22.5', '26.5', '58.0', '68.0', 400, 500, '18/6', '5.9', '6.3', '1.0', '1.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30001);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30017, 'VEGA', 3, '23.0', '27.0', '56.0', '66.0', 500, 600, '18/6', '6.0', '6.4', '1.2', '1.6', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30001);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30018, 'VEGA', 4, '23.0', '27.0', '54.0', '64.0', 550, 650, '18/6', '6.0', '6.4', '1.4', '1.8', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30001);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30019, 'VEGA', 5, '23.5', '27.5', '52.0', '62.0', 600, 700, '18/6', '6.0', '6.4', '1.6', '2.0', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30001);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30020, 'VEGA', 6, '24.0', '28.0', '50.0', '60.0', 650, 750, '18/6', '6.0', '6.4', '1.8', '2.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30001);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30021, 'FLORA', 1, '24.0', '28.0', '50.0', '60.0', 700, 800, '12/12', '6.0', '6.4', '1.8', '2.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30001);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30022, 'FLORA', 2, '24.0', '28.0', '48.0', '58.0', 750, 850, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30001);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30023, 'FLORA', 3, '23.5', '27.5', '46.0', '56.0', 800, 900, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30001);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30024, 'FLORA', 4, '23.0', '27.0', '44.0', '54.0', 800, 900, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30001);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30025, 'FLORA', 5, '23.0', '27.0', '42.0', '52.0', 750, 850, '12/12', '6.0', '6.4', '1.8', '2.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30001);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30026, 'FLORA', 6, '22.5', '26.5', '40.0', '50.0', 700, 800, '12/12', '6.0', '6.4', '1.6', '2.0', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30001);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30027, 'FLORA', 7, '22.0', '26.0', '38.0', '48.0', 650, 750, '12/12', '6.0', '6.4', '1.4', '1.8', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30001);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30028, 'FLORA', 8, '21.5', '25.5', '36.0', '46.0', 600, 700, '12/12', '6.0', '6.4', '1.0', '1.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30001);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30029, 'FLORA', 9, '21.0', '25.0', '35.0', '45.0', 500, 600, '12/12', '6.0', '6.4', '0.6', '1.0', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30001);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30030, 'VEGA', 1, '21.0', '25.0', '65.0', '75.0', 250, 350, '18/6', '5.8', '6.2', '0.8', '1.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30002);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30031, 'VEGA', 2, '21.5', '25.5', '62.0', '72.0', 350, 450, '18/6', '5.9', '6.3', '1.0', '1.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30002);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30032, 'VEGA', 3, '22.0', '26.0', '60.0', '70.0', 450, 550, '18/6', '6.0', '6.4', '1.2', '1.6', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30002);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30033, 'VEGA', 4, '22.5', '26.5', '58.0', '68.0', 500, 600, '18/6', '6.0', '6.4', '1.4', '1.8', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30002);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30034, 'VEGA', 5, '23.0', '27.0', '55.0', '65.0', 550, 650, '18/6', '6.0', '6.4', '1.6', '2.0', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30002);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30035, 'FLORA', 1, '23.0', '27.0', '55.0', '65.0', 650, 750, '12/12', '6.0', '6.4', '1.8', '2.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30002);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30036, 'FLORA', 2, '23.0', '27.0', '52.0', '62.0', 700, 800, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30002);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30037, 'FLORA', 3, '22.5', '26.5', '50.0', '60.0', 750, 850, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30002);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30038, 'FLORA', 4, '22.0', '26.0', '48.0', '58.0', 750, 850, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30002);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30039, 'FLORA', 5, '22.0', '26.0', '45.0', '55.0', 700, 800, '12/12', '6.0', '6.4', '1.6', '2.0', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30002);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30040, 'FLORA', 6, '21.5', '25.5', '42.0', '52.0', 650, 750, '12/12', '6.0', '6.4', '1.2', '1.6', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30002);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30041, 'FLORA', 7, '21.0', '25.0', '40.0', '50.0', 550, 650, '12/12', '6.0', '6.4', '0.8', '1.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30002);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30042, 'VEGA', 1, '22.0', '26.0', '62.0', '72.0', 300, 400, '18/6', '5.8', '6.2', '0.8', '1.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30003);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30043, 'VEGA', 2, '22.5', '26.5', '60.0', '70.0', 400, 500, '18/6', '5.9', '6.3', '1.0', '1.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30003);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30044, 'VEGA', 3, '23.0', '27.0', '58.0', '68.0', 500, 600, '18/6', '6.0', '6.4', '1.2', '1.6', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30003);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30045, 'VEGA', 4, '23.0', '27.0', '56.0', '66.0', 550, 650, '18/6', '6.0', '6.4', '1.4', '1.8', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30003);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30046, 'VEGA', 5, '23.5', '27.5', '54.0', '64.0', 600, 700, '18/6', '6.0', '6.4', '1.6', '2.0', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30003);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30047, 'VEGA', 6, '24.0', '28.0', '52.0', '62.0', 650, 750, '18/6', '6.0', '6.4', '1.8', '2.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30003);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30048, 'FLORA', 1, '24.0', '28.0', '52.0', '62.0', 700, 800, '12/12', '6.0', '6.4', '1.8', '2.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30003);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30049, 'FLORA', 2, '24.0', '28.0', '50.0', '60.0', 750, 850, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30003);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30050, 'FLORA', 3, '23.5', '27.5', '48.0', '58.0', 800, 900, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30003);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30051, 'FLORA', 4, '23.0', '27.0', '46.0', '56.0', 800, 900, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30003);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30052, 'FLORA', 5, '23.0', '27.0', '44.0', '54.0', 750, 850, '12/12', '6.0', '6.4', '1.8', '2.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30003);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30053, 'FLORA', 6, '22.5', '26.5', '42.0', '52.0', 700, 800, '12/12', '6.0', '6.4', '1.6', '2.0', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30003);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30054, 'FLORA', 7, '22.0', '26.0', '40.0', '50.0', 650, 750, '12/12', '6.0', '6.4', '1.2', '1.6', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30003);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30055, 'FLORA', 8, '21.5', '25.5', '38.0', '48.0', 600, 700, '12/12', '6.0', '6.4', '0.8', '1.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30003);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30056, 'VEGA', 1, '21.5', '25.5', '63.0', '73.0', 280, 380, '18/6', '5.8', '6.2', '0.8', '1.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30004);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30057, 'VEGA', 2, '22.0', '26.0', '61.0', '71.0', 380, 480, '18/6', '5.9', '6.3', '1.0', '1.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30004);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30058, 'VEGA', 3, '22.5', '26.5', '59.0', '69.0', 480, 580, '18/6', '6.0', '6.4', '1.2', '1.6', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30004);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30059, 'VEGA', 4, '23.0', '27.0', '57.0', '67.0', 530, 630, '18/6', '6.0', '6.4', '1.4', '1.8', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30004);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30060, 'VEGA', 5, '23.5', '27.5', '55.0', '65.0', 580, 680, '18/6', '6.0', '6.4', '1.6', '2.0', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30004);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30061, 'FLORA', 1, '23.5', '27.5', '55.0', '65.0', 680, 780, '12/12', '6.0', '6.4', '1.8', '2.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30004);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30062, 'FLORA', 2, '23.5', '27.5', '52.0', '62.0', 730, 830, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30004);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30063, 'FLORA', 3, '23.0', '27.0', '50.0', '60.0', 780, 880, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30004);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30064, 'FLORA', 4, '23.0', '27.0', '48.0', '58.0', 780, 880, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30004);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30065, 'FLORA', 5, '22.5', '26.5', '46.0', '56.0', 750, 850, '12/12', '6.0', '6.4', '1.8', '2.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30004);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30066, 'FLORA', 6, '22.5', '26.5', '44.0', '54.0', 720, 820, '12/12', '6.0', '6.4', '1.6', '2.0', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30004);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30067, 'FLORA', 7, '22.0', '26.0', '42.0', '52.0', 680, 780, '12/12', '6.0', '6.4', '1.4', '1.8', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30004);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30068, 'FLORA', 8, '21.5', '25.5', '40.0', '50.0', 630, 730, '12/12', '6.0', '6.4', '1.0', '1.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30004);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30069, 'FLORA', 9, '21.0', '25.0', '38.0', '48.0', 550, 650, '12/12', '6.0', '6.4', '0.6', '1.0', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30004);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30070, 'VEGA', 1, '22.5', '26.5', '61.0', '71.0', 320, 420, '18/6', '5.8', '6.2', '0.8', '1.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30005);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30071, 'VEGA', 2, '23.0', '27.0', '59.0', '69.0', 420, 520, '18/6', '5.9', '6.3', '1.0', '1.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30005);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30072, 'VEGA', 3, '23.5', '27.5', '57.0', '67.0', 520, 620, '18/6', '6.0', '6.4', '1.2', '1.6', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30005);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30073, 'VEGA', 4, '24.0', '28.0', '55.0', '65.0', 570, 670, '18/6', '6.0', '6.4', '1.4', '1.8', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30005);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30074, 'VEGA', 5, '24.0', '28.0', '53.0', '63.0', 620, 720, '18/6', '6.0', '6.4', '1.6', '2.0', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30005);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30075, 'VEGA', 6, '24.5', '28.5', '51.0', '61.0', 670, 770, '18/6', '6.0', '6.4', '1.8', '2.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30005);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30076, 'FLORA', 1, '24.5', '28.5', '51.0', '61.0', 720, 820, '12/12', '6.0', '6.4', '1.8', '2.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30005);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30077, 'FLORA', 2, '24.5', '28.5', '49.0', '59.0', 770, 870, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30005);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30078, 'FLORA', 3, '24.0', '28.0', '47.0', '57.0', 820, 920, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30005);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30079, 'FLORA', 4, '23.5', '27.5', '45.0', '55.0', 820, 920, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30005);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30080, 'FLORA', 5, '23.0', '27.0', '43.0', '53.0', 770, 870, '12/12', '6.0', '6.4', '1.8', '2.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30005);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30081, 'FLORA', 6, '22.5', '26.5', '41.0', '51.0', 720, 820, '12/12', '6.0', '6.4', '1.6', '2.0', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30005);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30082, 'FLORA', 7, '22.0', '26.0', '39.0', '49.0', 670, 770, '12/12', '6.0', '6.4', '1.2', '1.6', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30005);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30083, 'FLORA', 8, '21.5', '25.5', '37.0', '47.0', 620, 720, '12/12', '6.0', '6.4', '0.8', '1.2', NULL, '2026-02-06 05:26:50', '2026-02-06 05:26:50', 30005);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30084, 'VEGA', 1, '22.0', '26.0', '60.0', '70.0', 300, 400, '18/6', '5.8', '6.2', '0.8', '1.2', NULL, '2026-02-06 05:29:15', '2026-02-06 05:29:15', 30006);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30085, 'VEGA', 2, '22.5', '26.5', '58.0', '68.0', 400, 500, '18/6', '5.9', '6.3', '1.0', '1.4', NULL, '2026-02-06 05:29:15', '2026-02-06 05:29:15', 30006);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30086, 'VEGA', 3, '23.0', '27.0', '56.0', '66.0', 500, 600, '18/6', '6.0', '6.4', '1.2', '1.6', NULL, '2026-02-06 05:29:15', '2026-02-06 05:29:15', 30006);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30087, 'VEGA', 4, '23.0', '27.0', '54.0', '64.0', 550, 650, '18/6', '6.0', '6.4', '1.4', '1.8', NULL, '2026-02-06 05:29:15', '2026-02-06 05:29:15', 30006);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30088, 'VEGA', 5, '23.5', '27.5', '52.0', '62.0', 600, 700, '18/6', '6.0', '6.4', '1.6', '2.0', NULL, '2026-02-06 05:29:15', '2026-02-06 05:29:15', 30006);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30089, 'VEGA', 6, '24.0', '28.0', '50.0', '60.0', 650, 750, '18/6', '6.0', '6.4', '1.8', '2.2', NULL, '2026-02-06 05:29:15', '2026-02-06 05:29:15', 30006);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30090, 'FLORA', 1, '24.0', '28.0', '50.0', '60.0', 700, 800, '12/12', '6.0', '6.4', '1.8', '2.2', NULL, '2026-02-06 05:29:15', '2026-02-06 05:29:15', 30006);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30091, 'FLORA', 2, '24.0', '28.0', '48.0', '58.0', 750, 850, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:29:15', '2026-02-06 05:29:15', 30006);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30092, 'FLORA', 3, '23.5', '27.5', '46.0', '56.0', 800, 900, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:29:15', '2026-02-06 05:29:15', 30006);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30093, 'FLORA', 4, '23.0', '27.0', '44.0', '54.0', 800, 900, '12/12', '6.0', '6.4', '2.0', '2.4', NULL, '2026-02-06 05:29:15', '2026-02-06 05:29:15', 30006);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30094, 'FLORA', 5, '23.0', '27.0', '42.0', '52.0', 750, 850, '12/12', '6.0', '6.4', '1.8', '2.2', NULL, '2026-02-06 05:29:15', '2026-02-06 05:29:15', 30006);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30095, 'FLORA', 6, '22.5', '26.5', '40.0', '50.0', 700, 800, '12/12', '6.0', '6.4', '1.6', '2.0', NULL, '2026-02-06 05:29:15', '2026-02-06 05:29:15', 30006);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30096, 'FLORA', 7, '22.0', '26.0', '38.0', '48.0', 650, 750, '12/12', '6.0', '6.4', '1.4', '1.8', NULL, '2026-02-06 05:29:15', '2026-02-06 05:29:15', 30006);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30097, 'FLORA', 8, '21.5', '25.5', '36.0', '46.0', 600, 700, '12/12', '6.0', '6.4', '1.0', '1.4', NULL, '2026-02-06 05:29:15', '2026-02-06 05:29:15', 30006);
+INSERT INTO weeklyTargets (id, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax, photoperiod, phMin, phMax, ecMin, ecMax, notes, createdAt, updatedAt, strainId) VALUES (30098, 'FLORA', 9, '21.0', '25.0', '35.0', '45.0', 500, 600, '12/12', '6.0', '6.4', '0.6', '1.0', NULL, '2026-02-06 05:29:15', '2026-02-06 05:29:15', 30006);
 
--- ============================================
--- WEEKLY TARGETS (Parâmetros Semanais)
--- ============================================
+-- Dumping data for table taskTemplates
+DELETE FROM taskTemplates;
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30001, 'TENT_A', 'CLONING', 1, 'Preparar meio de enraizamento', 'Preparar cubos de lã de rocha ou jiffy pellets, pH ajustado para 5.5-6.0', '2026-02-05 21:57:31', '2026-02-05 21:57:31');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30002, 'TENT_A', 'CLONING', 1, 'Selecionar plantas-mãe', 'Escolher plantas saudáveis e vigorosas para retirada de clones', '2026-02-05 21:57:31', '2026-02-05 21:57:31');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30003, 'TENT_A', 'CLONING', 1, 'Cortar e preparar clones', 'Fazer cortes em 45° com lâmina esterilizada, aplicar hormônio enraizador', '2026-02-05 21:57:31', '2026-02-05 21:57:31');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30004, 'TENT_A', 'CLONING', 1, 'Configurar dome de propagação', 'Umidade 80-90%, temperatura 22-24°C, luz suave (100-200 PPFD)', '2026-02-05 21:57:31', '2026-02-05 21:57:31');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30005, 'TENT_A', 'CLONING', 1, 'Borrifar clones 2x ao dia', 'Manter alta umidade borrifando água pH ajustado', '2026-02-05 21:57:31', '2026-02-05 21:57:31');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30006, 'TENT_A', 'CLONING', 2, 'Monitorar enraizamento', 'Verificar aparecimento de raízes brancas nos cubos', '2026-02-05 21:57:31', '2026-02-05 21:57:31');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30007, 'TENT_A', 'CLONING', 2, 'Reduzir umidade gradualmente', 'Abrir dome progressivamente, reduzir para 70-80%', '2026-02-05 21:57:31', '2026-02-05 21:57:31');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30008, 'TENT_A', 'CLONING', 2, 'Aumentar intensidade de luz', 'Elevar PPFD para 200-300 µmol/m²/s gradualmente', '2026-02-05 21:57:31', '2026-02-05 21:57:31');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30009, 'TENT_A', 'CLONING', 2, 'Remover clones não enraizados', 'Descartar clones que não desenvolveram raízes após 10-14 dias', '2026-02-05 21:57:31', '2026-02-05 21:57:31');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30010, 'TENT_A', 'CLONING', 2, 'Preparar para transplante', 'Clones com 2-3cm de raízes estão prontos para vasos', '2026-02-05 21:57:31', '2026-02-05 21:57:31');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30011, 'TENT_A', 'MAINTENANCE', 1, 'Manter plantas-mãe saudáveis', 'Podar regularmente, manter em estado vegetativo', '2026-02-05 21:57:31', '2026-02-05 21:57:31');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30012, 'TENT_A', 'MAINTENANCE', 1, 'Aplicar nutrientes vegetativos', 'NPK balanceado, EC 1.2-1.6 mS/cm', '2026-02-05 21:57:31', '2026-02-05 21:57:31');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30013, 'TENT_A', 'MAINTENANCE', 1, 'Controlar altura das plantas', 'Técnicas de LST (Low Stress Training) se necessário', '2026-02-05 21:57:31', '2026-02-05 21:57:31');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30014, 'TENT_A', 'MAINTENANCE', 1, 'Inspecionar pragas e doenças', 'Verificar folhas, caules e solo semanalmente', '2026-02-05 21:57:31', '2026-02-05 21:57:31');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30015, 'TENT_A', 'MAINTENANCE', 1, 'Limpar e desinfetar área', 'Manter ambiente limpo para prevenir contaminação', '2026-02-05 21:57:31', '2026-02-05 21:57:31');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30016, 'TENT_BC', 'VEGA', 1, 'Transplantar clones enraizados', 'Mover para vasos de 1-2L com substrato leve', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30017, 'TENT_BC', 'VEGA', 1, 'Ajustar fotoperíodo 18/6', 'Configurar timer para 18h luz / 6h escuro', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30018, 'TENT_BC', 'VEGA', 1, 'Iniciar fertilização leve', 'EC 0.8-1.2 mS/cm, NPK com mais N (nitrogênio)', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30019, 'TENT_BC', 'VEGA', 1, 'Monitorar estresse de transplante', 'Observar murcha ou amarelamento nas primeiras 48h', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30020, 'TENT_BC', 'VEGA', 1, 'Manter umidade elevada', 'RH 65-70% para facilitar adaptação', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30021, 'TENT_BC', 'VEGA', 2, 'Aumentar intensidade luminosa', 'PPFD 400-500 µmol/m²/s conforme plantas se adaptam', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30022, 'TENT_BC', 'VEGA', 2, 'Iniciar treinamento LST', 'Dobrar caule principal para distribuir auxinas', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30023, 'TENT_BC', 'VEGA', 2, 'Aumentar EC gradualmente', 'Elevar para 1.2-1.5 mS/cm conforme crescimento', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30024, 'TENT_BC', 'VEGA', 2, 'Verificar desenvolvimento radicular', 'Raízes devem estar colonizando o vaso', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30025, 'TENT_BC', 'VEGA', 2, 'Ajustar ventilação', 'Garantir troca de ar adequada, evitar ar parado', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30026, 'TENT_BC', 'VEGA', 3, 'Verificar altura das plantas', 'Medir crescimento vertical, ajustar distância da luz', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30027, 'TENT_BC', 'VEGA', 3, 'Ajustar distância da luz', 'Manter 30-45cm das copas para evitar stress luminoso', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30028, 'TENT_BC', 'VEGA', 3, 'Verificar deficiências nutricionais', 'Inspecionar coloração e forma das folhas', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30029, 'TENT_BC', 'VEGA', 3, 'Continuar LST', 'Redirecionar ramos laterais para exposição uniforme', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30030, 'TENT_BC', 'VEGA', 3, 'Monitorar pH do substrato', 'Manter faixa 6.0-6.5 para absorção ideal', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30031, 'TENT_BC', 'VEGA', 4, 'Considerar transplante final', 'Mover para vasos de 5-10L se raízes estiverem apertadas', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30032, 'TENT_BC', 'VEGA', 4, 'Aumentar PPFD para máximo', 'Elevar para 550-650 µmol/m²/s gradualmente', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30033, 'TENT_BC', 'VEGA', 4, 'Aplicar técnica de topping', 'Cortar ponta principal para ramificação (opcional)', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30034, 'TENT_BC', 'VEGA', 4, 'Aumentar EC para pico vegetativo', 'Elevar para 1.5-1.8 mS/cm', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30035, 'TENT_BC', 'VEGA', 4, 'Verificar espaçamento entre plantas', 'Garantir circulação de ar e penetração de luz', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30036, 'TENT_BC', 'VEGA', 5, 'Realizar defoliação estratégica', 'Remover folhas grandes que bloqueiam luz inferior', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30037, 'TENT_BC', 'VEGA', 5, 'Preparar para transição', 'Plantas devem ter estrutura robusta para floração', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30038, 'TENT_BC', 'VEGA', 5, 'Verificar sexo das plantas', 'Identificar pré-flores nos nós (se aplicável)', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30039, 'TENT_BC', 'VEGA', 5, 'Manter EC estável', 'Continuar 1.5-1.8 mS/cm, evitar oscilações', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30040, 'TENT_BC', 'VEGA', 5, 'Ajustar temperatura noturna', 'Diferencial dia/noite de 4-6°C para vigor', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30041, 'TENT_BC', 'VEGA', 6, 'Última defoliação vegetativa', 'Remover folhas danificadas ou bloqueando luz', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30042, 'TENT_BC', 'VEGA', 6, 'Verificar altura final', 'Plantas devem ter 30-50cm antes de mover para floração', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30043, 'TENT_BC', 'VEGA', 6, 'Preparar transferência para Estufa C', 'Plantas prontas para iniciar floração', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30044, 'TENT_BC', 'VEGA', 6, 'Flush leve (opcional)', 'Regar com água pH ajustado para limpar sais', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30045, 'TENT_BC', 'VEGA', 6, 'Documentar estado das plantas', 'Fotografar e anotar altura, saúde geral', '2026-02-05 21:57:54', '2026-02-05 21:57:54');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30046, 'TENT_BC', 'FLORA', 1, 'Mudar fotoperíodo para 12/12', 'Configurar timer para 12h luz / 12h escuro', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30047, 'TENT_BC', 'FLORA', 1, 'Transicionar para nutrientes de floração', 'Aumentar P e K, reduzir N gradualmente', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30048, 'TENT_BC', 'FLORA', 1, 'Ajustar EC para floração inicial', 'Manter 1.6-1.8 mS/cm', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30049, 'TENT_BC', 'FLORA', 1, 'Reduzir umidade gradualmente', 'Começar a baixar RH para 55-65%', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30050, 'TENT_BC', 'FLORA', 1, 'Monitorar stretch (esticamento)', 'Plantas podem dobrar de altura nas primeiras 3 semanas', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30051, 'TENT_BC', 'FLORA', 2, 'Continuar monitorando stretch', 'Ajustar distância da luz conforme crescimento', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30052, 'TENT_BC', 'FLORA', 2, 'Instalar suportes se necessário', 'Telas ou estacas para ramos que vão carregar flores', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30053, 'TENT_BC', 'FLORA', 2, 'Aumentar P e K', 'Fórmula de floração completa, EC 1.8-2.0 mS/cm', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30054, 'TENT_BC', 'FLORA', 2, 'Identificar primeiros pistilos', 'Flores femininas começam a aparecer nos nós', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30055, 'TENT_BC', 'FLORA', 2, 'Manter temperatura estável', 'Evitar oscilações bruscas durante stretch', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30056, 'TENT_BC', 'FLORA', 3, 'Fim do stretch', 'Crescimento vertical deve desacelerar', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30057, 'TENT_BC', 'FLORA', 3, 'Defoliação de floração', 'Remover folhas grandes bloqueando sítios de flores', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30058, 'TENT_BC', 'FLORA', 3, 'Aumentar ventilação', 'Flores densas precisam de boa circulação de ar', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30059, 'TENT_BC', 'FLORA', 3, 'Monitorar formação de buds', 'Cachos de flores começam a se formar', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30060, 'TENT_BC', 'FLORA', 3, 'Reduzir umidade para 50-60%', 'Prevenir mofo e bolor em flores densas', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30061, 'TENT_BC', 'FLORA', 4, 'Pico de formação de buds', 'Flores engrossando rapidamente', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30062, 'TENT_BC', 'FLORA', 4, 'Aumentar EC para pico', 'Elevar para 2.0-2.2 mS/cm', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30063, 'TENT_BC', 'FLORA', 4, 'Verificar deficiências', 'Plantas consomem muitos nutrientes nesta fase', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30064, 'TENT_BC', 'FLORA', 4, 'Monitorar pragas', 'Ácaros e tripes são atraídos por flores', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30065, 'TENT_BC', 'FLORA', 4, 'Ajustar suportes', 'Ramos podem precisar de apoio adicional', '2026-02-05 21:58:09', '2026-02-05 21:58:09');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30066, 'TENT_BC', 'FLORA', 5, 'Flores atingindo tamanho máximo', 'Buds densos e resinosos', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30067, 'TENT_BC', 'FLORA', 5, 'Manter EC alto', 'Continuar 2.0-2.2 mS/cm', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30068, 'TENT_BC', 'FLORA', 5, 'Reduzir umidade para 45-55%', 'Minimizar risco de mofo', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30069, 'TENT_BC', 'FLORA', 5, 'Verificar tricomas com lupa', 'Começar a monitorar maturação', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30070, 'TENT_BC', 'FLORA', 5, 'Aumentar diferencial de temperatura', 'Noites mais frias intensificam aromas', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30071, 'TENT_BC', 'FLORA', 6, 'Monitorar maturação de tricomas', 'Maioria deve estar leitosa/turva', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30072, 'TENT_BC', 'FLORA', 6, 'Reduzir EC gradualmente', 'Começar a baixar para 1.6-1.8 mS/cm', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30073, 'TENT_BC', 'FLORA', 6, 'Observar coloração de pistilos', '50-70% devem estar alaranjados/marrons', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30074, 'TENT_BC', 'FLORA', 6, 'Manter umidade baixa', 'RH 40-50% para prevenir mofo', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30075, 'TENT_BC', 'FLORA', 6, 'Preparar para flush', 'Planejar início da lavagem nas próximas semanas', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30076, 'TENT_BC', 'FLORA', 7, 'Iniciar flush (lavagem)', 'Regar apenas com água pH ajustado, sem nutrientes', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30077, 'TENT_BC', 'FLORA', 7, 'Monitorar tricomas diariamente', 'Colher quando 10-30% estiverem âmbar', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30078, 'TENT_BC', 'FLORA', 7, 'Verificar amarelamento de folhas', 'Normal durante flush, planta consome reservas', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30079, 'TENT_BC', 'FLORA', 7, 'Reduzir rega', 'Deixar substrato secar mais entre regas', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30080, 'TENT_BC', 'FLORA', 7, 'Preparar área de secagem', 'Ambiente escuro, 18-21°C, RH 50-60%', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30081, 'TENT_BC', 'FLORA', 8, 'Decisão de colheita', 'Avaliar tricomas, pistilos e densidade das flores', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30082, 'TENT_BC', 'FLORA', 8, 'Continuar flush', 'Manter apenas água pH ajustado', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30083, 'TENT_BC', 'FLORA', 8, 'Reduzir umidade para 40-45%', 'Facilitar secagem pós-colheita', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30084, 'TENT_BC', 'FLORA', 8, 'Escurecer últimas 48h (opcional)', 'Alguns cultivadores escurecem antes da colheita', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
+INSERT INTO taskTemplates (id, context, phase, weekNumber, title, description, createdAt, updatedAt) VALUES (30085, 'TENT_BC', 'FLORA', 8, 'Preparar ferramentas de colheita', 'Tesouras limpas, luvas, área de processamento', '2026-02-05 21:58:25', '2026-02-05 21:58:25');
 
--- Clonagem (Semanas 1-3)
-INSERT INTO weekly_targets (strainId, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax) VALUES
-(1, 'CLONING', 1, 22, 26, 70, 80, 100, 150),
-(1, 'CLONING', 2, 22, 26, 70, 80, 150, 200),
-(1, 'CLONING', 3, 22, 26, 65, 75, 150, 200);
+-- Dumping data for table taskInstances
+DELETE FROM taskInstances;
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30001, 3, 30046, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-05 21:58:55');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30002, 2, 30026, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-05 21:58:55');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30003, 3, 30047, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-05 21:58:55');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30004, 2, 30027, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-05 21:58:55');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30005, 3, 30048, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-05 21:58:55');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30006, 2, 30028, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-05 21:58:55');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30007, 3, 30049, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-05 21:58:55');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30008, 2, 30029, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-05 21:58:55');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30009, 3, 30050, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-05 21:58:55');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30010, 2, 30030, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-05 21:58:55');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30011, 1, 30011, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-05 22:16:14');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30012, 1, 30012, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-05 22:16:14');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30013, 1, 30013, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-05 22:16:14');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30014, 1, 30014, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-05 22:16:14');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30015, 1, 30015, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-05 22:16:14');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30016, 1, 30011, '2026-02-01 00:00:00', 0, NULL, NULL, '2026-02-05 22:16:40');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30017, 2, 30026, '2026-02-01 00:00:00', 0, NULL, NULL, '2026-02-05 22:16:40');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30018, 1, 30012, '2026-02-01 00:00:00', 0, NULL, NULL, '2026-02-05 22:16:40');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30019, 3, 30046, '2026-02-01 00:00:00', 1, '2026-02-06 18:05:23', NULL, '2026-02-05 22:16:40');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30020, 2, 30027, '2026-02-01 00:00:00', 0, NULL, NULL, '2026-02-05 22:16:40');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30021, 1, 30013, '2026-02-01 00:00:00', 0, NULL, NULL, '2026-02-05 22:16:40');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30022, 3, 30047, '2026-02-01 00:00:00', 1, '2026-02-06 18:05:23', NULL, '2026-02-05 22:16:40');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30023, 2, 30028, '2026-02-01 00:00:00', 0, NULL, NULL, '2026-02-05 22:16:40');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30024, 1, 30014, '2026-02-01 00:00:00', 0, NULL, NULL, '2026-02-05 22:16:40');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30025, 3, 30048, '2026-02-01 00:00:00', 1, '2026-02-06 18:05:20', NULL, '2026-02-05 22:16:40');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30026, 2, 30029, '2026-02-01 00:00:00', 0, NULL, NULL, '2026-02-05 22:16:40');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30027, 1, 30015, '2026-02-01 00:00:00', 0, NULL, NULL, '2026-02-05 22:16:40');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30028, 3, 30049, '2026-02-01 00:00:00', 1, '2026-02-06 18:05:21', NULL, '2026-02-05 22:16:40');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30029, 2, 30030, '2026-02-01 00:00:00', 0, NULL, NULL, '2026-02-05 22:16:40');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (30030, 3, 30050, '2026-02-01 00:00:00', 0, NULL, NULL, '2026-02-05 22:16:40');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (60001, 2, 30016, '2026-02-01 00:00:00', 1, '2026-02-06 18:05:35', NULL, '2026-02-06 18:04:59');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (60002, 2, 30017, '2026-02-01 00:00:00', 0, NULL, NULL, '2026-02-06 18:04:59');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (60003, 2, 30018, '2026-02-01 00:00:00', 1, '2026-02-06 18:05:36', NULL, '2026-02-06 18:04:59');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (60004, 2, 30019, '2026-02-01 00:00:00', 1, '2026-02-06 18:05:37', NULL, '2026-02-06 18:04:59');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (60005, 2, 30020, '2026-02-01 00:00:00', 1, '2026-02-06 18:05:39', NULL, '2026-02-06 18:04:59');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (60006, 2, 30016, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-06 18:05:00');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (60007, 2, 30017, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-06 18:05:00');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (60008, 2, 30018, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-06 18:05:00');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (60009, 2, 30019, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-06 18:05:00');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (60010, 2, 30020, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-06 18:05:00');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (90001, 2, 30036, '2026-02-01 00:00:00', 0, NULL, NULL, '2026-02-07 07:28:23');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (90002, 2, 30037, '2026-02-01 00:00:00', 0, NULL, NULL, '2026-02-07 07:28:23');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (90003, 2, 30038, '2026-02-01 00:00:00', 0, NULL, NULL, '2026-02-07 07:28:23');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (90004, 2, 30039, '2026-02-01 00:00:00', 0, NULL, NULL, '2026-02-07 07:28:23');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (90005, 2, 30040, '2026-02-01 00:00:00', 0, NULL, NULL, '2026-02-07 07:28:23');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (120001, 2, 30036, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-07 13:43:02');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (120002, 2, 30037, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-07 13:43:02');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (120003, 2, 30038, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-07 13:43:02');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (120004, 2, 30039, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-07 13:43:02');
+INSERT INTO taskInstances (id, tentId, taskTemplateId, occurrenceDate, isDone, completedAt, notes, createdAt) VALUES (120005, 2, 30040, '2026-02-01 05:00:00', 0, NULL, NULL, '2026-02-07 13:43:02');
 
--- Manutenção (Plantas-mãe)
-INSERT INTO weekly_targets (strainId, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax) VALUES
-(1, 'MAINTENANCE', 1, 22, 26, 55, 65, 300, 400),
-(1, 'MAINTENANCE', 2, 22, 26, 55, 65, 300, 400),
-(1, 'MAINTENANCE', 3, 22, 26, 55, 65, 300, 400);
+-- Table alertSettings is empty
 
--- Vegetativa (Semanas 1-8)
-INSERT INTO weekly_targets (strainId, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax) VALUES
-(1, 'VEGA', 1, 22, 28, 60, 70, 300, 400),
-(1, 'VEGA', 2, 22, 28, 60, 70, 350, 450),
-(1, 'VEGA', 3, 22, 28, 55, 65, 400, 500),
-(1, 'VEGA', 4, 22, 28, 55, 65, 450, 550),
-(1, 'VEGA', 5, 22, 28, 50, 60, 500, 600),
-(1, 'VEGA', 6, 22, 28, 50, 60, 500, 600),
-(1, 'VEGA', 7, 22, 28, 50, 60, 500, 600),
-(1, 'VEGA', 8, 22, 28, 50, 60, 500, 600);
+-- Table alertHistory is empty
 
--- Floração (Semanas 1-12)
-INSERT INTO weekly_targets (strainId, phase, weekNumber, tempMin, tempMax, rhMin, rhMax, ppfdMin, ppfdMax) VALUES
-(1, 'FLORA', 1, 20, 26, 50, 60, 500, 600),
-(1, 'FLORA', 2, 20, 26, 50, 60, 550, 650),
-(1, 'FLORA', 3, 20, 26, 45, 55, 600, 700),
-(1, 'FLORA', 4, 20, 26, 45, 55, 650, 750),
-(1, 'FLORA', 5, 20, 26, 40, 50, 700, 800),
-(1, 'FLORA', 6, 20, 26, 40, 50, 750, 850),
-(1, 'FLORA', 7, 20, 26, 40, 50, 800, 900),
-(1, 'FLORA', 8, 20, 26, 35, 45, 800, 900),
-(1, 'FLORA', 9, 20, 26, 35, 45, 750, 850),
-(1, 'FLORA', 10, 20, 26, 30, 40, 700, 800),
-(1, 'FLORA', 11, 20, 26, 30, 40, 650, 750),
-(1, 'FLORA', 12, 20, 26, 30, 40, 600, 700);
+SET FOREIGN_KEY_CHECKS=1;
 
--- ============================================
--- TASK TEMPLATES (Templates de Tarefas)
--- ============================================
-
--- Tarefas para Estufa A (Manutenção)
-INSERT INTO task_templates (context, phase, weekNumber, title, description, frequency) VALUES
-('TENT_A', 'MAINTENANCE', 1, 'Manter plantas-mãe saudáveis', 'Verificar saúde geral, remover folhas mortas', 'WEEKLY'),
-('TENT_A', 'MAINTENANCE', 1, 'Aplicar nutrientes vegetativos', 'Manter EC estável, pH 5.8-6.2', 'WEEKLY'),
-('TENT_A', 'MAINTENANCE', 1, 'Controlar altura das plantas', 'Podar se necessário para manter tamanho', 'WEEKLY'),
-('TENT_A', 'MAINTENANCE', 1, 'Inspecionar pragas e doenças', 'Verificar folhas e caules', 'WEEKLY'),
-('TENT_A', 'MAINTENANCE', 1, 'Limpar e desinfetar área', 'Manter ambiente limpo', 'WEEKLY');
-
--- Tarefas para Estufa B/C (Vegetativa)
-INSERT INTO task_templates (context, phase, weekNumber, title, description, frequency) VALUES
-('TENT_BC', 'VEGA', 1, 'Transplantar para vaso maior', 'Usar substrato novo, regar bem', 'ONCE'),
-('TENT_BC', 'VEGA', 1, 'Iniciar nutrientes vegetativos', 'Começar com 50% da dose', 'ONCE'),
-('TENT_BC', 'VEGA', 2, 'Aumentar intensidade de luz', 'Ajustar para 400-500 PPFD', 'ONCE'),
-('TENT_BC', 'VEGA', 3, 'Aplicar LST (Low Stress Training)', 'Amarrar ramos para distribuir luz', 'WEEKLY'),
-('TENT_BC', 'VEGA', 4, 'Realizar defoliação estratégica', 'Remover folhas grandes que bloqueiam luz', 'ONCE'),
-('TENT_BC', 'VEGA', 5, 'Preparar para transição', 'Verificar sexo das plantas', 'ONCE');
-
--- Tarefas para Estufa B/C (Floração)
-INSERT INTO task_templates (context, phase, weekNumber, title, description, frequency) VALUES
-('TENT_BC', 'FLORA', 1, 'Mudar fotoperíodo para 12/12', 'Ajustar timer de luz', 'ONCE'),
-('TENT_BC', 'FLORA', 1, 'Transicionar para nutrientes de floração', 'Reduzir N, aumentar P e K', 'ONCE'),
-('TENT_BC', 'FLORA', 2, 'Ajustar temperatura noturna', 'Reduzir para 18-20°C', 'ONCE'),
-('TENT_BC', 'FLORA', 3, 'Verificar sexo das plantas', 'Remover machos se houver', 'ONCE'),
-('TENT_BC', 'FLORA', 4, 'Ajustar EC para floração inicial', 'Aumentar gradualmente EC', 'ONCE'),
-('TENT_BC', 'FLORA', 5, 'Manter EC estável', 'Monitorar e ajustar diariamente', 'WEEKLY'),
-('TENT_BC', 'FLORA', 6, 'Reduzir umidade gradualmente', 'Alvo: 40-45%', 'WEEKLY'),
-('TENT_BC', 'FLORA', 7, 'Ajustar temperatura noturna', 'Reduzir para 16-18°C', 'ONCE'),
-('TENT_BC', 'FLORA', 8, 'Monitorar tricomas', 'Verificar maturação com lupa', 'WEEKLY'),
-('TENT_BC', 'FLORA', 9, 'Reduzir umidade para 35%', 'Prevenir mofo', 'ONCE'),
-('TENT_BC', 'FLORA', 10, 'Iniciar flush (lavagem)', 'Regar apenas com água pH ajustado', 'ONCE'),
-('TENT_BC', 'FLORA', 11, 'Continuar flush', 'Manter apenas água', 'WEEKLY'),
-('TENT_BC', 'FLORA', 12, 'Preparar para colheita', 'Verificar tricomas, planejar secagem', 'ONCE');
-
--- ============================================
--- SAFETY LIMITS (Limites de Segurança)
--- ============================================
-
-INSERT INTO safety_limits (context, phase, metric, minValue, maxValue) VALUES
--- Estufa A (Manutenção)
-('TENT_A', 'MAINTENANCE', 'TEMP', 18, 30),
-('TENT_A', 'MAINTENANCE', 'RH', 45, 75),
-('TENT_A', 'MAINTENANCE', 'PPFD', 200, 500),
-
--- Estufa B/C (Vegetativa)
-('TENT_BC', 'VEGA', 'TEMP', 18, 32),
-('TENT_BC', 'VEGA', 'RH', 40, 80),
-('TENT_BC', 'VEGA', 'PPFD', 250, 700),
-
--- Estufa B/C (Floração)
-('TENT_BC', 'FLORA', 'TEMP', 16, 28),
-('TENT_BC', 'FLORA', 'RH', 25, 60),
-('TENT_BC', 'FLORA', 'PPFD', 400, 1000);
-
--- ============================================
--- FIM DO ARQUIVO
--- ============================================
+-- End of dump
