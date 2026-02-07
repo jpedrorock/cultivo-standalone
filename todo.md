@@ -529,3 +529,11 @@
 - [x] Verificar modal InitiateCycleModal
 - [x] Corrigir problema
 - [x] Testar funcionalidade
+
+## 📥 New Task: SQL Backup Import
+- [x] Create backend API database.import to process SQL files
+- [x] Add SQL parsing and validation for security
+- [x] Add file upload interface in Settings page
+- [x] Implement progress feedback during import
+- [x] Test import with exported SQL files
+- [x] Add error handling for invalid SQL files

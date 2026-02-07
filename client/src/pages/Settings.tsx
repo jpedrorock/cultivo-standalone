@@ -1,6 +1,6 @@
 import { NotificationSettings } from "@/components/NotificationSettings";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { ArrowLeft, Download } from "lucide-react";
+import { ArrowLeft, Download, Upload } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,6 +33,7 @@ export default function Settings() {
         <div className="max-w-2xl mx-auto space-y-6">
           <ThemeToggle />
           <DatabaseExport />
+          <DatabaseImport />
           <NotificationSettings />
         </div>
       </main>
@@ -96,6 +97,109 @@ function DatabaseExport() {
         <p className="text-xs text-gray-500 mt-3">
           O arquivo SQL conterá todas as estufas, ciclos, registros, strains e configurações.
         </p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function DatabaseImport() {
+  const [isImporting, setIsImporting] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const utils = trpc.useUtils();
+  
+  const importDatabase = trpc.database.import.useMutation({
+    onSuccess: (result) => {
+      if (result.success) {
+        toast.success(result.message);
+        setSelectedFile(null);
+        // Invalidate all queries to refresh data
+        utils.invalidate();
+      } else {
+        toast.error(result.message);
+      }
+      setIsImporting(false);
+    },
+    onError: (error) => {
+      toast.error(`Erro ao importar: ${error.message}`);
+      setIsImporting(false);
+    },
+  });
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.name.endsWith('.sql')) {
+        toast.error("Por favor, selecione um arquivo .sql");
+        return;
+      }
+      setSelectedFile(file);
+    }
+  };
+
+  const handleImport = async () => {
+    if (!selectedFile) {
+      toast.error("Por favor, selecione um arquivo SQL");
+      return;
+    }
+
+    // Confirm before importing
+    if (!confirm("⚠️ ATENÇÃO: Esta ação irá sobrescrever todos os dados existentes. Tem certeza que deseja continuar?")) {
+      return;
+    }
+
+    setIsImporting(true);
+    try {
+      const fileContent = await selectedFile.text();
+      importDatabase.mutate({ sqlContent: fileContent });
+    } catch (error: any) {
+      toast.error(`Erro ao ler arquivo: ${error.message}`);
+      setIsImporting(false);
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Importar Backup do Banco de Dados</CardTitle>
+        <CardDescription>
+          Restaure seus dados a partir de um arquivo SQL exportado anteriormente
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-3">
+            <input
+              type="file"
+              accept=".sql"
+              onChange={handleFileSelect}
+              className="flex-1 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+              disabled={isImporting}
+            />
+          </div>
+          
+          {selectedFile && (
+            <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-md">
+              <strong>Arquivo selecionado:</strong> {selectedFile.name} ({(selectedFile.size / 1024).toFixed(2)} KB)
+            </div>
+          )}
+
+          <Button
+            onClick={handleImport}
+            disabled={!selectedFile || isImporting}
+            className="w-full sm:w-auto"
+            variant="destructive"
+          >
+            <Upload className="w-4 h-4 mr-2" />
+            {isImporting ? "Importando..." : "Importar Banco de Dados"}
+          </Button>
+        </div>
+
+        <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
+          <p className="text-xs text-yellow-800">
+            <strong>⚠️ Aviso:</strong> A importação irá sobrescrever todos os dados existentes. Certifique-se de exportar um backup atual antes de importar.
+          </p>
+        </div>
       </CardContent>
     </Card>
   );

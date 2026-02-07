@@ -1138,6 +1138,13 @@ export const appRouter = router({
       const sqlDump = await generateSQLDump();
       return { sql: sqlDump };
     }),
+    import: publicProcedure
+      .input(z.object({ sqlContent: z.string() }))
+      .mutation(async ({ input }) => {
+        const { importSQLDump } = await import("./databaseImport");
+        const result = await importSQLDump(input.sqlContent);
+        return result;
+      }),
   }),
 });
 
