@@ -803,3 +803,9 @@
 - [x] Corrigir server/db.ts para usar mysql2.createConnection()
 - [x] Já tinha detecção SQLite vs MySQL implementada
 - [x] Gerar v1.0.8 (656KB, com correção MySQL connection)
+
+## 🔧 Solução: Incluir local.db pré-populado no pacote
+- [x] Criar local.db a partir do banco-inicial.sql (196KB)
+- [x] Incluir local.db no pacote ZIP
+- [x] Atualizar instalador para apenas verificar banco
+- [x] Gerar v1.0.9 (656KB, com local.db pré-populado)

@@ -192,64 +192,25 @@ if [ -f local.db ]; then
     fi
 fi
 
-# 7. Criar banco de dados e importar dados
+# 7. Verificar banco de dados pré-populado
 echo ""
-echo "📊 Criando banco de dados SQLite..."
-echo "   (Criando tabelas e importando dados...)"
+echo "📊 Verificando banco de dados SQLite..."
 echo ""
 
-# Verificar se sqlite3 está disponível
-if ! command -v sqlite3 &> /dev/null; then
-    print_error "❌ ERRO CRÍTICO: sqlite3 não encontrado!"
+if [ ! -f local.db ]; then
+    print_error "❌ ERRO: Banco de dados não encontrado!"
     echo ""
-    echo "O instalador precisa do sqlite3 para criar o banco de dados."
-    echo ""
-    echo "Instale sqlite3:"
-    echo "  macOS:   brew install sqlite3"
-    echo "  Ubuntu:  sudo apt-get install sqlite3"
-    echo "  Windows: https://www.sqlite.org/download.html"
+    echo "O arquivo local.db deveria estar incluído no pacote."
+    echo "Verifique se o download foi completo."
     echo ""
     exit 1
 fi
 
-# Remover banco antigo se existir e criar novo
-if [ -f local.db ]; then
-    print_warning "Banco de dados existente encontrado"
-    read -p "Deseja recriá-lo? (s/N): " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Ss]$ ]]; then
-        rm -f local.db
-        print_info "Banco de dados removido"
-    else
-        print_info "Mantendo banco existente (pulando importação)"
-        SKIP_IMPORT=true
-    fi
-fi
-
-# Importar schema + dados
-if [ "$SKIP_IMPORT" != "true" ] && [ -f banco-inicial.sql ]; then
-    if sqlite3 local.db < banco-inicial.sql 2>&1; then
-        print_success "Banco de dados criado com sucesso!"
-        print_info "   • 3 estufas (A, B, C)"
-        print_info "   • 6 strains cadastradas"
-        print_info "   • 6 ciclos (ativos e finalizados)"
-        print_info "   • Registros diários e tarefas"
-    else
-        print_error "Erro ao criar banco de dados"
-        echo ""
-        echo "Tente manualmente:"
-        echo "  sqlite3 local.db < banco-inicial.sql"
-        echo ""
-        exit 1
-    fi
-else
-    if [ ! -f banco-inicial.sql ]; then
-        print_warning "banco-inicial.sql não encontrado"
-        print_info "Banco será criado vazio"
-    fi
-fi
-
-print_success "Banco de dados configurado"
+print_success "Banco de dados pré-populado encontrado!"
+print_info "   • 3 estufas (A, B, C)"
+print_info "   • 6 strains cadastradas"
+print_info "   • 6 ciclos (ativos e finalizados)"
+print_info "   • Registros diários e tarefas"
 
 # 8. Testar conexão do banco
 echo ""

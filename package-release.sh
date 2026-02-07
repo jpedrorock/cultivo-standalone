@@ -10,7 +10,7 @@ set -e  # Exit on error
 echo "📦 Iniciando empacotamento do App Cultivo..."
 
 # Variáveis
-VERSION="1.0.8"
+VERSION="1.0.9"
 RELEASE_NAME="app-cultivo-v${VERSION}"
 RELEASE_DIR="./releases"
 TEMP_DIR="${RELEASE_DIR}/${RELEASE_NAME}"
@@ -47,8 +47,9 @@ cp QUICK-START.md "${TEMP_DIR}/"
 cp CHANGELOG.md "${TEMP_DIR}/"
 [ -f .env.example ] && cp .env.example "${TEMP_DIR}/" || echo "⚠️  .env.example not found, skipping..."
 
-# Copiar banco de dados inicial
+# Copiar banco de dados inicial e banco pré-populado
 cp banco-inicial.sql "${TEMP_DIR}/"
+cp local.db "${TEMP_DIR}/"
 
 # Copiar scripts de setup
 cp setup-local.sh "${TEMP_DIR}/"
