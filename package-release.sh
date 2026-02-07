@@ -10,7 +10,7 @@ set -e  # Exit on error
 echo "📦 Iniciando empacotamento do App Cultivo..."
 
 # Variáveis
-VERSION="1.0.10"
+VERSION="2.0.0"
 RELEASE_NAME="app-cultivo-v${VERSION}"
 RELEASE_DIR="./releases"
 TEMP_DIR="${RELEASE_DIR}/${RELEASE_NAME}"
@@ -41,23 +41,18 @@ cp .prettierrc "${TEMP_DIR}/"
 cp .prettierignore "${TEMP_DIR}/"
 
 # Copiar documentação
-cp README-LOCAL.md "${TEMP_DIR}/README.md"
-cp GUIA-COMPLETO.md "${TEMP_DIR}/"
-cp QUICK-START.md "${TEMP_DIR}/"
-cp CHANGELOG.md "${TEMP_DIR}/"
+cp README-MYSQL.md "${TEMP_DIR}/README.md"
+[ -f GUIA-COMPLETO.md ] && cp GUIA-COMPLETO.md "${TEMP_DIR}/" || true
+[ -f QUICK-START.md ] && cp QUICK-START.md "${TEMP_DIR}/" || true
+[ -f CHANGELOG.md ] && cp CHANGELOG.md "${TEMP_DIR}/" || true
 [ -f .env.example ] && cp .env.example "${TEMP_DIR}/" || echo "⚠️  .env.example not found, skipping..."
 
-# Copiar banco de dados inicial e banco pré-populado
+# Copiar banco de dados inicial (MySQL)
 cp banco-inicial.sql "${TEMP_DIR}/"
-cp local.db "${TEMP_DIR}/"
 
-# Copiar scripts de setup
-cp setup-local.sh "${TEMP_DIR}/"
-chmod +x "${TEMP_DIR}/setup-local.sh"
-cp install.sh "${TEMP_DIR}/"
-chmod +x "${TEMP_DIR}/install.sh"
-cp convert-mysql-to-sqlite.sh "${TEMP_DIR}/"
-chmod +x "${TEMP_DIR}/convert-mysql-to-sqlite.sh"
+# Copiar instalador MySQL
+cp install-mysql.sh "${TEMP_DIR}/"
+chmod +x "${TEMP_DIR}/install-mysql.sh"
 
 # Criar .gitignore para o release
 cat > "${TEMP_DIR}/.gitignore" << 'EOF'

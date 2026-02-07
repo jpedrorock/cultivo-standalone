@@ -814,3 +814,11 @@
 - [x] Remover linha que deletava local.db do package-release.sh
 - [x] Gerar v1.0.10 (668KB, com local.db incluído)
 - [x] Verificado: local.db (196KB) está no ZIP
+
+## 🔧 Solução Definitiva: Migrar para MySQL (igual ao Manus)
+- [x] Criar instalador MySQL com detecção automática (install-mysql.sh)
+- [x] Reverter banco-inicial.sql para formato MySQL original (70KB)
+- [x] Configurar DATABASE_URL para MySQL local no instalador
+- [x] Criar README-MYSQL.md com instruções completas
+- [x] Atualizar package-release.sh para v2.0.0
+- [x] Gerar v2.0.0 (652KB, MySQL, sem SQLite)
