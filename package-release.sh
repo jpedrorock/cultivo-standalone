@@ -10,7 +10,7 @@ set -e  # Exit on error
 echo "📦 Iniciando empacotamento do App Cultivo..."
 
 # Variáveis
-VERSION="2.0.3"
+VERSION="2.0.4"
 RELEASE_NAME="app-cultivo-v${VERSION}"
 RELEASE_DIR="./releases"
 TEMP_DIR="${RELEASE_DIR}/${RELEASE_NAME}"
@@ -49,6 +49,12 @@ cp README-MYSQL.md "${TEMP_DIR}/README.md"
 
 # Copiar banco de dados inicial (MySQL)
 cp banco-inicial.sql "${TEMP_DIR}/"
+
+# Copiar pasta de migrações
+[ -d migrations ] && cp -r migrations "${TEMP_DIR}/" || echo "⚠️  migrations directory not found, skipping..."
+
+# Copiar MIGRATION.md
+[ -f MIGRATION.md ] && cp MIGRATION.md "${TEMP_DIR}/" || echo "⚠️  MIGRATION.md not found, skipping..."
 
 # Copiar instalador MySQL
 cp install-mysql.sh "${TEMP_DIR}/"

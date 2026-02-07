@@ -840,3 +840,8 @@
 - [x] Atualizar schema-create.sql com ON DELETE CASCADE em todas as FKs
 - [x] Criar MIGRATION.md com instruções completas
 - [x] Gerar v2.0.3 (652KB, com CASCADE delete + migração)
+
+## 🐛 Bug: Pasta migrations não incluída no pacote
+- [x] Atualizar package-release.sh para incluir pasta migrations/
+- [x] Incluir MIGRATION.md também
+- [x] Gerar v2.0.4 (656KB, com migrations/ e MIGRATION.md)
