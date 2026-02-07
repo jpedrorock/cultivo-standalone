@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Sprout, ThermometerSun, Droplets, Sun, ArrowLeft, Save, Beaker, FlaskConical, Clock } from "lucide-react";
+import { Loader2, Sprout, ThermometerSun, Droplets, Sun, ArrowLeft, Save, Beaker, FlaskConical, Clock, Sunrise, Moon } from "lucide-react";
 import { Link, useParams } from "wouter";
 import { toast } from "sonner";
 
@@ -346,26 +346,71 @@ export default function TentLog() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Turn Selection */}
-              <div className="space-y-2">
-                <Label>Turno</Label>
-                <div className="flex gap-3">
-                  <Button
+              {/* Turn Selection with Visual Indicator */}
+              <div className="space-y-3">
+                <Label className="text-base font-semibold">Período do Registro</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  {/* AM Button */}
+                  <button
                     type="button"
-                    variant={turn === "AM" ? "default" : "outline"}
-                    className="flex-1"
                     onClick={() => setTurn("AM")}
+                    className={`relative overflow-hidden rounded-lg border-2 transition-all duration-300 ${
+                      turn === "AM"
+                        ? "border-yellow-400 bg-gradient-to-br from-yellow-50 to-orange-50 shadow-lg scale-105"
+                        : "border-gray-200 bg-white hover:border-yellow-300 hover:shadow-md"
+                    }`}
                   >
-                    Manhã (AM)
-                  </Button>
-                  <Button
+                    <div className="p-6 flex flex-col items-center gap-3">
+                      <Sunrise className={`w-12 h-12 ${
+                        turn === "AM" ? "text-yellow-500" : "text-gray-400"
+                      }`} />
+                      <div className="text-center">
+                        <div className={`text-2xl font-bold ${
+                          turn === "AM" ? "text-yellow-700" : "text-gray-600"
+                        }`}>AM</div>
+                        <div className={`text-sm ${
+                          turn === "AM" ? "text-yellow-600" : "text-gray-500"
+                        }`}>Manhã</div>
+                        <div className={`text-xs mt-1 ${
+                          turn === "AM" ? "text-yellow-500" : "text-gray-400"
+                        }`}>06:00 - 18:00</div>
+                      </div>
+                    </div>
+                    {turn === "AM" && (
+                      <div className="absolute top-2 right-2 w-3 h-3 bg-yellow-500 rounded-full animate-pulse" />
+                    )}
+                  </button>
+
+                  {/* PM Button */}
+                  <button
                     type="button"
-                    variant={turn === "PM" ? "default" : "outline"}
-                    className="flex-1"
                     onClick={() => setTurn("PM")}
+                    className={`relative overflow-hidden rounded-lg border-2 transition-all duration-300 ${
+                      turn === "PM"
+                        ? "border-indigo-400 bg-gradient-to-br from-indigo-900 to-purple-900 shadow-lg scale-105"
+                        : "border-gray-200 bg-white hover:border-indigo-300 hover:shadow-md"
+                    }`}
                   >
-                    Noite (PM)
-                  </Button>
+                    <div className="p-6 flex flex-col items-center gap-3">
+                      <Moon className={`w-12 h-12 ${
+                        turn === "PM" ? "text-indigo-200" : "text-gray-400"
+                      }`} />
+                      <div className="text-center">
+                        <div className={`text-2xl font-bold ${
+                          turn === "PM" ? "text-white" : "text-gray-600"
+                        }`}>PM</div>
+                        <div className={`text-sm ${
+                          turn === "PM" ? "text-indigo-200" : "text-gray-500"
+                        }`}>Noite</div>
+                        <div className={`text-xs mt-1 ${
+                          turn === "PM" ? "text-indigo-300" : "text-gray-400"
+                        }`}>18:00 - 06:00</div>
+                      </div>
+                    </div>
+                    {turn === "PM" && (
+                      <div className="absolute top-2 right-2 w-3 h-3 bg-indigo-300 rounded-full animate-pulse" />
+                    )}
+                  </button>
                 </div>
               </div>
 

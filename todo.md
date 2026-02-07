@@ -537,3 +537,19 @@
 - [x] Implement progress feedback during import
 - [x] Test import with exported SQL files
 - [x] Add error handling for invalid SQL files
+
+## ⌨️ Nova Tarefa: Atalhos de Teclado
+- [x] Criar hook useKeyboardShortcuts para gerenciar atalhos
+- [x] Implementar Ctrl+N para abrir modal de nova estufa
+- [x] Adicionar indicadores visuais dos atalhos nos botões
+- [x] Implementar Ctrl+/ para mostrar lista de atalhos disponíveis
+- [x] Testar atalhos em diferentes navegadores
+- [x] Adicionar feedback visual quando atalho é acionado
+
+## 🎨 Ajustes de UX: Atalhos e Registro
+- [x] Remover badges visuais "Ctrl+N" dos botões
+- [x] Remover botão de teclado da Home
+- [x] Mover ajuda de atalhos para página de Configurações
+- [x] Adicionar indicador visual AM/PM na página de registro
+- [x] Box escuro para período noturno (PM)
+- [x] Testar mudanças visuais

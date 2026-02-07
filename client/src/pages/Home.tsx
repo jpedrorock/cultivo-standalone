@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell, Trash2 } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 
 export default function Home() {
@@ -21,6 +22,7 @@ export default function Home() {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedCycle, setSelectedCycle] = useState<any>(null);
   const [createTentModalOpen, setCreateTentModalOpen] = useState(false);
+
   
   const { data: tents, isLoading } = trpc.tents.list.useQuery();
   const { data: activeCycles } = trpc.cycles.listActive.useQuery();
@@ -100,6 +102,20 @@ export default function Home() {
   };
 
 
+
+  // Keyboard shortcuts
+  useKeyboardShortcuts([
+    {
+      key: 'n',
+      ctrl: true,
+      description: 'Criar Nova Estufa',
+      action: () => {
+        setCreateTentModalOpen(true);
+        toast.success('Atalho acionado: Criar Nova Estufa');
+      },
+    },
+
+  ]);
 
   if (isLoading) {
     return (
@@ -277,6 +293,8 @@ export default function Home() {
         open={createTentModalOpen}
         onOpenChange={setCreateTentModalOpen}
       />
+
+
     </div>
   );
 }
