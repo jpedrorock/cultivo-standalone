@@ -15,8 +15,8 @@ export function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50 md:hidden">
-      <div className="max-w-screen-xl mx-auto px-4">
-        <div className="flex justify-around items-center h-16">
+      <div className="max-w-screen-xl mx-auto px-4 py-3">
+        <div className="flex justify-around items-center">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = location === item.href;
@@ -26,7 +26,7 @@ export function BottomNav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex flex-col items-center justify-center gap-1 py-2 px-3 rounded-lg transition-colors",
+                  "flex flex-col items-center justify-center gap-1 py-3 px-3 rounded-lg transition-colors",
                   "hover:bg-green-50",
                   isActive
                     ? "text-green-600"

@@ -553,3 +553,7 @@
 - [x] Adicionar indicador visual AM/PM na página de registro
 - [x] Box escuro para período noturno (PM)
 - [x] Testar mudanças visuais
+
+## 📱 Ajuste Mobile: Padding do Menu
+- [x] Aumentar padding top e bottom do BottomNav
+- [x] Testar no celular
