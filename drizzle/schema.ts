@@ -404,6 +404,7 @@ export const alertHistory = mysqlTable(
     targetMax: decimal("targetMax", { precision: 10, scale: 2 }),
     message: text("message").notNull(),
     notificationSent: boolean("notificationSent").default(false).notNull(),
+    isRead: boolean("isRead").default(false).notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (table) => ({

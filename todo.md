@@ -904,3 +904,23 @@
 - [x] Corrigir navegação mobile para incluir todos os itens (adicionado Settings ao navItems)
 - [x] Testar em viewport mobile (6 itens confirmados: Home, Calculadoras, Histórico, Alertas, Strains, Configurações)
 - [ ] Salvar checkpoint com correção
+
+
+## 📱 Reorganização do Menu Mobile
+- [x] Criar menu "Mais" com submenu (Histórico, Strains, Configurações)
+- [x] Reduzir BottomNav para 4 itens principais (Home, Calculadoras, Alertas, Mais)
+- [x] Implementar sheet/dialog para submenu Mais
+- [x] Adicionar campo isRead em alertHistory schema (via SQL)
+- [x] Criar API alerts.getUnreadCount (já existia: getNewCount)
+- [x] Adicionar badge de notificação no ícone Alertas
+- [x] Testar navegação e badges (4 itens confirmados: Home, Calculadoras, Alertas, Mais)
+- [ ] Salvar checkpoint
+
+## 🔔 Sistema de Notificações Push
+- [ ] Implementar permissão de notificações web/mobile
+- [ ] Criar sistema de lembretes diários configuráveis
+- [ ] Notificação "Registre seus dados" (horário configurável)
+- [ ] Notificação quando houver alertas (Temp/RH/PPFD fora da faixa)
+- [ ] Adicionar página de configuração de lembretes
+- [ ] Testar notificações em mobile e desktop
+- [ ] Salvar checkpoint

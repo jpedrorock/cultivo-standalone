@@ -1,0 +1,1 @@
+ALTER TABLE `alertHistory` ADD `isRead` boolean DEFAULT false NOT NULL;

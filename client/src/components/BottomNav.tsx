@@ -1,24 +1,42 @@
-import { Home, Calculator, BarChart3, Bell, Sprout, Settings } from "lucide-react";
+import { Home, Calculator, Bell, MoreHorizontal, BarChart3, Sprout, Settings } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { trpc } from "@/lib/trpc";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 export function BottomNav() {
   const [location] = useLocation();
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+  
+  // Buscar contagem de alertas não lidos
+  const { data: alertCount } = trpc.alerts.getNewCount.useQuery({});
 
-  const navItems = [
+  const mainNavItems = [
     { href: "/", icon: Home, label: "Home" },
     { href: "/calculators", icon: Calculator, label: "Calculadoras" },
+    { href: "/alerts", icon: Bell, label: "Alertas", badge: alertCount || 0 },
+  ];
+
+  const moreMenuItems = [
     { href: "/history", icon: BarChart3, label: "Histórico" },
-    { href: "/alerts", icon: Bell, label: "Alertas" },
     { href: "/manage-strains", icon: Sprout, label: "Strains" },
     { href: "/settings", icon: Settings, label: "Configurações" },
   ];
+
+  const isMoreMenuActive = moreMenuItems.some(item => location === item.href);
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border shadow-lg z-50 md:hidden">
       <div className="max-w-screen-xl mx-auto px-4 py-3">
         <div className="flex justify-around items-center">
-          {navItems.map((item) => {
+          {mainNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = location === item.href;
             
@@ -27,7 +45,7 @@ export function BottomNav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex flex-col items-center justify-center gap-1 py-3 px-3 rounded-lg transition-colors",
+                  "flex flex-col items-center justify-center gap-1 py-3 px-4 rounded-lg transition-colors relative",
                   "hover:bg-primary/10",
                   isActive
                     ? "text-primary"
@@ -36,9 +54,61 @@ export function BottomNav() {
               >
                 <Icon className={cn("w-6 h-6", isActive && "stroke-[2.5]")} />
                 <span className="text-xs font-medium">{item.label}</span>
+                {item.badge !== undefined && item.badge > 0 && (
+                  <span className="absolute top-2 right-2 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                    {item.badge > 9 ? '9+' : item.badge}
+                  </span>
+                )}
               </Link>
             );
           })}
+
+          {/* More Menu */}
+          <Sheet open={moreMenuOpen} onOpenChange={setMoreMenuOpen}>
+            <SheetTrigger asChild>
+              <button
+                className={cn(
+                  "flex flex-col items-center justify-center gap-1 py-3 px-4 rounded-lg transition-colors",
+                  "hover:bg-primary/10",
+                  isMoreMenuActive
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-primary"
+                )}
+              >
+                <MoreHorizontal className={cn("w-6 h-6", isMoreMenuActive && "stroke-[2.5]")} />
+                <span className="text-xs font-medium">Mais</span>
+              </button>
+            </SheetTrigger>
+            <SheetContent side="bottom" className="h-auto">
+              <SheetHeader>
+                <SheetTitle>Menu</SheetTitle>
+              </SheetHeader>
+              <div className="mt-6 space-y-2">
+                {moreMenuItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location === item.href;
+                  
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMoreMenuOpen(false)}
+                      className={cn(
+                        "flex items-center gap-4 px-4 py-4 rounded-lg transition-colors",
+                        "hover:bg-primary/10",
+                        isActive
+                          ? "bg-primary/10 text-primary font-semibold"
+                          : "text-foreground"
+                      )}
+                    >
+                      <Icon className={cn("w-5 h-5", isActive && "stroke-[2.5]")} />
+                      <span className="text-base">{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </nav>
