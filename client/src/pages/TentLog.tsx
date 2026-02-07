@@ -374,12 +374,12 @@ export default function TentLog() {
                         : "border-gray-200 bg-white hover:border-yellow-300 hover:shadow-md"
                     }`}
                   >
-                    <div className="p-6 flex flex-col items-center gap-3">
-                      <Sunrise className={`w-12 h-12 ${
+                    <div className="p-4 flex flex-col items-center gap-2">
+                      <Sunrise className={`w-8 h-8 ${
                         turn === "AM" ? "text-yellow-500" : "text-gray-400"
                       }`} />
                       <div className="text-center">
-                        <div className={`text-2xl font-bold ${
+                        <div className={`text-lg font-bold ${
                           turn === "AM" ? "text-yellow-700" : "text-gray-600"
                         }`}>AM</div>
                         <div className={`text-sm ${
@@ -405,12 +405,12 @@ export default function TentLog() {
                         : "border-gray-200 bg-white hover:border-indigo-300 hover:shadow-md"
                     }`}
                   >
-                    <div className="p-6 flex flex-col items-center gap-3">
-                      <Moon className={`w-12 h-12 ${
+                    <div className="p-4 flex flex-col items-center gap-2">
+                      <Moon className={`w-8 h-8 ${
                         turn === "PM" ? "text-indigo-200" : "text-gray-400"
                       }`} />
                       <div className="text-center">
-                        <div className={`text-2xl font-bold ${
+                        <div className={`text-lg font-bold ${
                           turn === "PM" ? "text-white" : "text-gray-600"
                         }`}>PM</div>
                         <div className={`text-sm ${

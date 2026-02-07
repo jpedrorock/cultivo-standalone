@@ -571,3 +571,8 @@
 - [x] Implementar cálculo PPFD → Lux (PPFD × 54)
 - [x] Adicionar interface similar à calculadora Lux → PPFD
 - [x] Testar conversão
+
+## 🎨 Ajuste Visual: Botões AM/PM
+- [x] Reduzir tamanho dos botões AM/PM
+- [x] Ajustar padding e espaçamento
+- [x] Manter legibilidade dos ícones e texto
