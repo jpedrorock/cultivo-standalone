@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 
 
 interface CreateTentModalProps {
@@ -41,7 +42,7 @@ export function CreateTentModal({ open, onOpenChange }: CreateTentModalProps) {
 
   const createTent = trpc.tents.create.useMutation({
     onSuccess: () => {
-      alert("Estufa criada com sucesso!");
+      toast.success("Estufa criada com sucesso!");
       utils.tents.list.invalidate();
       onOpenChange(false);
       // Resetar formulário
@@ -56,7 +57,7 @@ export function CreateTentModal({ open, onOpenChange }: CreateTentModalProps) {
       });
     },
     onError: (error) => {
-      alert(`Erro ao criar estufa: ${error.message}`);
+      toast.error(`Erro ao criar estufa: ${error.message}`);
     },
   });
 
@@ -65,7 +66,7 @@ export function CreateTentModal({ open, onOpenChange }: CreateTentModalProps) {
 
     // Validação básica
     if (!formData.name || !formData.width || !formData.depth || !formData.height) {
-      alert("Preencha todos os campos obrigatórios.");
+      toast.error("Preencha todos os campos obrigatórios.");
       return;
     }
 

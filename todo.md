@@ -743,3 +743,11 @@
 - [x] Melhorar tratamento de erros no setup-local.sh
 - [x] Validar instalação de dependências antes de continuar
 - [x] Pacote regenerado com patches inclusos
+
+## 🐛 Bug: Erro ao Criar Estufa (Database not available)
+- [x] Investigar erro "Database not available" na instalação local
+- [x] Melhorado setup-local.sh para aplicar migrações corretamente
+- [x] Adicionado tratamento de erro crítico se migrações falharem
+- [x] Melhoradas mensagens de erro em português
+- [x] Substituído alert() por toast() no CreateTentModal
+- [x] Pacote v1.0.1 gerado com correções

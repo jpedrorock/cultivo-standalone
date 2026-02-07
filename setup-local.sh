@@ -61,20 +61,48 @@ else
     echo "ℹ️  Arquivo .env já existe, pulando..."
 fi
 
-# Criar banco de dados SQLite
-if [ ! -f local.db ]; then
-    echo "🗄️  Criando banco de dados SQLite..."
-    touch local.db
-    echo "✅ Banco de dados criado: local.db"
-else
-    echo "ℹ️  Banco de dados já existe, pulando..."
+# Criar banco de dados SQLite e aplicar migrações
+echo "🗄️  Configurando banco de dados SQLite..."
+
+# Remover banco antigo se existir (para garantir estado limpo)
+if [ -f local.db ]; then
+    echo "ℹ️  Removendo banco de dados antigo..."
+    rm -f local.db
 fi
 
-# Rodar migrações
+# Criar banco vazio
+touch local.db
+echo "✅ Arquivo local.db criado"
+
+# Aplicar migrações (CRÍTICO - deve funcionar)
 echo "🔄 Aplicando migrações do banco de dados..."
 if ! pnpm db:push; then
-    echo "⚠️  Erro ao aplicar migrações, mas continuando..."
-    echo "Você pode rodar 'pnpm db:push' manualmente depois."
+    echo ""
+    echo "❌ ERRO CRÍTICO: Falha ao aplicar migrações!"
+    echo ""
+    echo "Possíveis causas:"
+    echo "  1. drizzle-kit não instalado (rode: pnpm install)"
+    echo "  2. Erro no schema do banco (verifique drizzle/schema.ts)"
+    echo "  3. Permissões de arquivo (verifique se pode escrever em local.db)"
+    echo ""
+    echo "Tente rodar manualmente:"
+    echo "  pnpm db:push"
+    echo ""
+    exit 1
+fi
+
+echo "✅ Migrações aplicadas com sucesso"
+
+# Importar dados iniciais se banco-inicial.sql existir
+if [ -f banco-inicial.sql ]; then
+    echo "📊 Importando dados iniciais..."
+    if command -v sqlite3 &> /dev/null; then
+        sqlite3 local.db < banco-inicial.sql
+        echo "✅ Dados iniciais importados"
+    else
+        echo "⚠️  sqlite3 não encontrado, pulando importação de dados"
+        echo "   Você pode importar manualmente depois pela interface"
+    fi
 fi
 
 echo ""

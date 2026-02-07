@@ -81,7 +81,9 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         
         // Calcular volume (em litros)
         const volume = (input.width * input.depth * input.height) / 1000;
@@ -97,7 +99,9 @@ export const appRouter = router({
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         
         // Verificar se há ciclos ativos nesta estufa
         const activeCycles = await database
@@ -171,7 +175,9 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         await database.insert(strains).values(input);
         return { success: true };
       }),
@@ -188,7 +194,9 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         const { id, ...updateData } = input;
         await database.update(strains).set(updateData).where(eq(strains.id, id));
         return { success: true };
@@ -197,7 +205,9 @@ export const appRouter = router({
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         await database.delete(strains).where(eq(strains.id, input.id));
         return { success: true };
       }),
@@ -213,7 +223,9 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         
         // Criar nova strain
         const [newStrain] = await database.insert(strains).values({
@@ -273,7 +285,9 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         await database.insert(cycles).values(input);
         return { success: true };
       }),
@@ -286,7 +300,9 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         await database
           .update(cycles)
           .set({ floraStartDate: input.floraStartDate })
@@ -297,7 +313,9 @@ export const appRouter = router({
       .input(z.object({ cycleId: z.number() }))
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         await database
           .update(cycles)
           .set({ status: "FINISHED" })
@@ -316,7 +334,9 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         
         // Calcular startDate baseado na fase e semana
         const startDate = new Date(input.startDate);
@@ -347,7 +367,9 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         
         const updates: any = {};
         
@@ -479,7 +501,9 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         await database.insert(dailyLogs).values(input);
         
         // Verificar alertas automaticamente
@@ -591,7 +615,9 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         
         const { id, ...updateData } = input;
         
@@ -607,7 +633,9 @@ export const appRouter = router({
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         
         await database
           .delete(dailyLogs)
@@ -645,7 +673,9 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         
         // Verificar se já existe configuração
         const existing = await database
@@ -726,7 +756,9 @@ export const appRouter = router({
       .input(z.object({ alertId: z.number() }))
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         await database.update(alerts).set({ status: "SEEN" }).where(eq(alerts.id, input.alertId));
         return { success: true };
       }),
@@ -832,7 +864,9 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         await database.insert(weeklyTargets).values(input);
         return { success: true };
       }),
@@ -1087,7 +1121,9 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         await database
           .update(taskInstances)
           .set({ isDone: true, completedAt: new Date(), notes: input.notes })
@@ -1098,7 +1134,9 @@ export const appRouter = router({
       .input(z.object({ taskId: z.number() }))
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
         
         // Get current state
         const task = await database
@@ -1136,7 +1174,9 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         const database = await getDb();
-        if (!database) throw new Error("Database not available");
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
 
         // Calcular end date (start + 13 dias = 14 dias totais)
         const endDate = new Date(input.startDate);

@@ -7,7 +7,13 @@ import { sql } from "drizzle-orm";
  */
 export async function importSQLDump(sqlContent: string): Promise<{ success: boolean; message: string; statementsExecuted: number }> {
   const database = await getDb();
-  if (!database) throw new Error("Database not available");
+  if (!database) {
+    return {
+      success: false,
+      message: "Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.",
+      statementsExecuted: 0
+    };
+  }
 
   // Basic validation
   if (!sqlContent || sqlContent.trim().length === 0) {
