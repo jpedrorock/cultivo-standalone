@@ -798,3 +798,8 @@
 - [x] Atualizar instalador para usar sqlite3 diretamente
 - [x] Remover dependência de pnpm db:push
 - [x] Gerar pacote v1.0.7 (656KB, com schema SQLite completo)
+
+## 🐛 Bug: Servidor não conecta no SQLite local
+- [x] Corrigir server/db.ts para usar mysql2.createConnection()
+- [x] Já tinha detecção SQLite vs MySQL implementada
+- [x] Gerar v1.0.8 (656KB, com correção MySQL connection)

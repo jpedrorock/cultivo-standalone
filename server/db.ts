@@ -2,6 +2,7 @@ import { eq, and, desc, gte, lte, sql } from "drizzle-orm";
 import { drizzle as drizzleMysql } from "drizzle-orm/mysql2";
 import { drizzle as drizzleSqlite } from "drizzle-orm/better-sqlite3";
 import Database from "better-sqlite3";
+import mysql from "mysql2/promise";
 import {
   InsertUser,
   users,
@@ -51,7 +52,8 @@ export async function getDb() {
         console.log(`[Database] Connected to SQLite: ${dbPath}`);
       } else {
         // MySQL connection (production)
-        _db = drizzleMysql(connectionString);
+        const connection = await mysql.createConnection(connectionString);
+        _db = drizzleMysql(connection);
         console.log(`[Database] Connected to MySQL`);
       }
     } catch (error) {
