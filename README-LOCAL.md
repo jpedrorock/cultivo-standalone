@@ -4,6 +4,36 @@ Este guia explica como rodar o **App Cultivo** localmente, sem depender da plata
 
 ---
 
+## 🚀 Instalação Rápida (Recomendado)
+
+### Instalador Automático
+
+O jeito mais fácil de instalar é usar o instalador automático que verifica e instala todas as dependências:
+
+```bash
+# 1. Extrair o pacote
+unzip app-cultivo-v*.zip
+cd app-cultivo-v*
+
+# 2. Executar instalador automático
+bash install.sh
+
+# 3. Iniciar o servidor
+pnpm dev
+```
+
+O instalador automático:
+- ✅ Verifica Node.js e pnpm
+- ✅ Instala todas as dependências
+- ✅ Cria o banco de dados SQLite
+- ✅ Aplica migrações automaticamente
+- ✅ Importa dados de exemplo (3 estufas, ciclos, tarefas)
+- ✅ Testa a conexão do banco
+
+Após a instalação, acesse: **http://localhost:3000**
+
+---
+
 ## 📋 Pré-requisitos
 
 - **Node.js** 18+ ([Download](https://nodejs.org/))

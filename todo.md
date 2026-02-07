@@ -751,3 +751,14 @@
 - [x] Melhoradas mensagens de erro em português
 - [x] Substituído alert() por toast() no CreateTentModal
 - [x] Pacote v1.0.1 gerado com correções
+
+## 🔧 Melhorias: Instalador Robusto
+- [x] Criar instalador completo com verificação de dependências
+- [x] Instalar pnpm automaticamente se não estiver presente
+- [x] Verificar drizzle-kit antes de rodar migrações
+- [x] Importar dados iniciais automaticamente
+- [x] Adicionar diagnóstico completo do ambiente
+- [x] Testar conexão do banco após setup
+- [x] Cores e formatação visual no terminal
+- [x] Perguntas interativas para sobrescrever arquivos
+- [x] Pacote v1.0.2 gerado com install.sh
