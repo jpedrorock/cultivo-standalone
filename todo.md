@@ -809,3 +809,8 @@
 - [x] Incluir local.db no pacote ZIP
 - [x] Atualizar instalador para apenas verificar banco
 - [x] Gerar v1.0.9 (656KB, com local.db pré-populado)
+
+## 🐛 Bug: local.db não incluído no ZIP (gitignore)
+- [x] Remover linha que deletava local.db do package-release.sh
+- [x] Gerar v1.0.10 (668KB, com local.db incluído)
+- [x] Verificado: local.db (196KB) está no ZIP

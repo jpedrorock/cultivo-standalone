@@ -10,7 +10,7 @@ set -e  # Exit on error
 echo "📦 Iniciando empacotamento do App Cultivo..."
 
 # Variáveis
-VERSION="1.0.9"
+VERSION="1.0.10"
 RELEASE_NAME="app-cultivo-v${VERSION}"
 RELEASE_DIR="./releases"
 TEMP_DIR="${RELEASE_DIR}/${RELEASE_NAME}"
@@ -103,7 +103,7 @@ rm -rf "${TEMP_DIR}/client/node_modules" 2>/dev/null || true
 rm -rf "${TEMP_DIR}/server/node_modules" 2>/dev/null || true
 rm -rf "${TEMP_DIR}/.git" 2>/dev/null || true
 rm -rf "${TEMP_DIR}/dist" 2>/dev/null || true
-rm -rf "${TEMP_DIR}/local.db" 2>/dev/null || true
+# NÃO remover local.db - é o banco pré-populado!
 rm -rf "${TEMP_DIR}/.manus-logs" 2>/dev/null || true
 
 echo "📝 Criando arquivo de versão..."
