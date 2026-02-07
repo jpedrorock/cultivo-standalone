@@ -896,3 +896,11 @@
   - [x] Sulfato de Magnésio: Verde
   - [x] Micronutrientes: Amarelo
 - [x] Testar visualização em dark mode
+
+
+## 📱 Bug: Menu Configurações Inacessível no Mobile
+- [x] Investigar estrutura do menu lateral no mobile (Sidebar hidden md:flex, BottomNav md:hidden)
+- [x] Identificar por que Configurações não aparece (BottomNav tinha apenas 5 itens)
+- [x] Corrigir navegação mobile para incluir todos os itens (adicionado Settings ao navItems)
+- [x] Testar em viewport mobile (6 itens confirmados: Home, Calculadoras, Histórico, Alertas, Strains, Configurações)
+- [ ] Salvar checkpoint com correção

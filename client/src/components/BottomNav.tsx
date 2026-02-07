@@ -1,4 +1,4 @@
-import { Home, Calculator, BarChart3, Bell, Sprout } from "lucide-react";
+import { Home, Calculator, BarChart3, Bell, Sprout, Settings } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +11,7 @@ export function BottomNav() {
     { href: "/history", icon: BarChart3, label: "Histórico" },
     { href: "/alerts", icon: Bell, label: "Alertas" },
     { href: "/manage-strains", icon: Sprout, label: "Strains" },
+    { href: "/settings", icon: Settings, label: "Configurações" },
   ];
 
   return (
