@@ -83,7 +83,7 @@ export function BottomNav() {
               <SheetHeader>
                 <SheetTitle>Menu</SheetTitle>
               </SheetHeader>
-              <div className="mt-6 space-y-2">
+              <div className="mt-6 space-y-2 pb-6">
                 {moreMenuItems.map((item) => {
                   const Icon = item.icon;
                   const isActive = location === item.href;
