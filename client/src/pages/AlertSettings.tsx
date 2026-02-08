@@ -1,0 +1,360 @@
+import { useState, useEffect } from "react";
+import { Bell, BellOff, Clock, AlertTriangle, CheckSquare, ArrowLeft } from "lucide-react";
+import { Link } from "wouter";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { toast } from "sonner";
+import {
+  isNotificationSupported,
+  getNotificationPermission,
+  requestNotificationPermission,
+  showNotification,
+  scheduleDailyReminder,
+} from "@/lib/notifications";
+
+interface NotificationConfig {
+  dailyReminderEnabled: boolean;
+  reminderTime: string;
+  alertsEnabled: boolean;
+  taskRemindersEnabled: boolean;
+}
+
+export default function AlertSettings() {
+  const [config, setConfig] = useState<NotificationConfig>({
+    dailyReminderEnabled: false,
+    reminderTime: "18:00",
+    alertsEnabled: false,
+    taskRemindersEnabled: false,
+  });
+  const [permission, setPermission] = useState<string>(getNotificationPermission());
+
+  useEffect(() => {
+    const saved = localStorage.getItem("notificationConfig");
+    if (saved) {
+      try {
+        setConfig(JSON.parse(saved));
+      } catch (e) {
+        console.error("Error parsing notification config:", e);
+      }
+    }
+
+    if ("Notification" in window) {
+      setPermission(Notification.permission);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("notificationConfig", JSON.stringify(config));
+
+    if (config.dailyReminderEnabled && permission === "granted") {
+      const [hour, minute] = config.reminderTime.split(":").map(Number);
+      scheduleDailyReminder(hour, minute);
+    }
+  }, [config, permission]);
+
+  const handleRequestPermission = async () => {
+    const result = await requestNotificationPermission();
+    setPermission(result);
+
+    if (result === "granted") {
+      toast.success("Notificações ativadas!");
+      await showNotification("🧪 Teste - App Cultivo", {
+        body: "Notificações funcionando! Som e vibração ativos. 🌱",
+        tag: "test-notification",
+      });
+    } else if (result === "denied") {
+      toast.error("Permissão negada. Ative nas configurações do navegador.");
+    }
+  };
+
+  const handleToggleDailyReminder = (enabled: boolean) => {
+    if (enabled && permission !== "granted") {
+      handleRequestPermission();
+      return;
+    }
+    setConfig({ ...config, dailyReminderEnabled: enabled });
+  };
+
+  const handleToggleAlerts = (enabled: boolean) => {
+    if (enabled && permission !== "granted") {
+      handleRequestPermission();
+      return;
+    }
+    setConfig({ ...config, alertsEnabled: enabled });
+    if (enabled) {
+      toast.success("Alertas automáticos ativados!");
+    }
+  };
+
+  const handleToggleTaskReminders = (enabled: boolean) => {
+    if (enabled && permission !== "granted") {
+      handleRequestPermission();
+      return;
+    }
+    setConfig({ ...config, taskRemindersEnabled: enabled });
+    if (enabled) {
+      toast.success("Lembretes de tarefas ativados!");
+    }
+  };
+
+  const handleTestNotification = async () => {
+    if (permission === "granted") {
+      await showNotification("📝 Teste - Lembrete Diário", {
+        body: "Hora de registrar os dados das estufas! 🌱📊",
+        tag: "test-daily-reminder",
+      });
+      toast.success("Notificação de teste enviada!");
+    } else {
+      toast.error("Permissão de notificações necessária");
+    }
+  };
+
+  if (!isNotificationSupported()) {
+    return (
+      <div className="min-h-screen bg-background">
+        <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center gap-4">
+              <Button asChild variant="ghost" size="icon">
+                <Link href="/settings">
+                  <ArrowLeft className="w-5 h-5" />
+                </Link>
+              </Button>
+              <div>
+                <h1 className="text-2xl font-bold">Configurações de Alertas</h1>
+                <p className="text-sm text-muted-foreground">Gerenciar notificações</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main className="container mx-auto px-4 py-8">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BellOff className="w-5 h-5" />
+                Notificações Não Suportadas
+              </CardTitle>
+              <CardDescription>
+                Seu navegador não suporta notificações push. Tente usar Chrome, Firefox, Edge ou Safari.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </main>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center gap-4">
+            <Button asChild variant="ghost" size="icon">
+              <Link href="/settings">
+                <ArrowLeft className="w-5 h-5" />
+              </Link>
+            </Button>
+            <div>
+              <h1 className="text-2xl font-bold">Configurações de Alertas</h1>
+              <p className="text-sm text-muted-foreground">Gerenciar notificações e lembretes</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Content */}
+      <main className="container mx-auto px-4 py-8">
+        <div className="max-w-2xl mx-auto space-y-6">
+          {/* Permission Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Bell className="w-5 h-5" />
+                Permissão de Notificações
+              </CardTitle>
+              <CardDescription>
+                Permita que o aplicativo envie notificações para seu dispositivo
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Status:</p>
+                  <p className="text-sm text-muted-foreground">
+                    {permission === "granted" && "✅ Ativado"}
+                    {permission === "denied" && "❌ Negado"}
+                    {permission === "default" && "⏸️ Não configurado"}
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  {permission !== "granted" && (
+                    <Button onClick={handleRequestPermission}>
+                      Ativar Notificações
+                    </Button>
+                  )}
+                  {permission === "granted" && (
+                    <Button variant="outline" onClick={handleTestNotification}>
+                      Testar Notificação
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Daily Reminder Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Clock className="w-5 h-5" />
+                Lembrete Diário
+              </CardTitle>
+              <CardDescription>
+                Receba um lembrete para registrar os dados das estufas todos os dias
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="daily-reminder">Ativar lembrete diário</Label>
+                <Switch
+                  id="daily-reminder"
+                  checked={config.dailyReminderEnabled}
+                  onCheckedChange={handleToggleDailyReminder}
+                  disabled={permission !== "granted"}
+                />
+              </div>
+
+              {config.dailyReminderEnabled && (
+                <div className="space-y-2 pl-4 border-l-2 border-primary/20">
+                  <Label htmlFor="reminder-time">Horário do lembrete</Label>
+                  <Input
+                    id="reminder-time"
+                    type="time"
+                    value={config.reminderTime}
+                    onChange={(e) => setConfig({ ...config, reminderTime: e.target.value })}
+                    className="max-w-xs"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Você receberá um lembrete todos os dias às {config.reminderTime}
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Alerts Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5" />
+                Alertas Automáticos
+              </CardTitle>
+              <CardDescription>
+                Receba notificações quando Temperatura, Umidade ou PPFD estiverem fora da faixa ideal
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="alerts">Ativar alertas automáticos</Label>
+                <Switch
+                  id="alerts"
+                  checked={config.alertsEnabled}
+                  onCheckedChange={handleToggleAlerts}
+                  disabled={permission !== "granted"}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Task Reminders Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CheckSquare className="w-5 h-5" />
+                Lembretes de Tarefas
+              </CardTitle>
+              <CardDescription>
+                Receba notificações sobre tarefas semanais pendentes (2 dias, 1 dia e último dia da semana)
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="task-reminders">Ativar lembretes de tarefas</Label>
+                <Switch
+                  id="task-reminders"
+                  checked={config.taskRemindersEnabled}
+                  onCheckedChange={handleToggleTaskReminders}
+                  disabled={permission !== "granted"}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Status Summary */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Resumo de Notificações</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center gap-2">
+                  {config.dailyReminderEnabled && permission === "granted" ? (
+                    <>
+                      <Bell className="w-4 h-4 text-green-600" />
+                      <span className="text-primary font-medium">Lembretes diários ativos</span>
+                    </>
+                  ) : (
+                    <>
+                      <BellOff className="w-4 h-4 text-gray-400" />
+                      <span className="text-muted-foreground">Lembretes diários desativados</span>
+                    </>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  {config.alertsEnabled && permission === "granted" ? (
+                    <>
+                      <AlertTriangle className="w-4 h-4 text-orange-600" />
+                      <span className="text-primary font-medium">Alertas automáticos ativos</span>
+                    </>
+                  ) : (
+                    <>
+                      <AlertTriangle className="w-4 h-4 text-gray-400" />
+                      <span className="text-muted-foreground">Alertas automáticos desativados</span>
+                    </>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  {config.taskRemindersEnabled && permission === "granted" ? (
+                    <>
+                      <CheckSquare className="w-4 h-4 text-blue-600" />
+                      <span className="text-primary font-medium">Lembretes de tarefas ativos</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckSquare className="w-4 h-4 text-gray-400" />
+                      <span className="text-muted-foreground">Lembretes de tarefas desativados</span>
+                    </>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Link to History */}
+          <div className="flex justify-center">
+            <Button asChild variant="outline">
+              <Link href="/alerts/history">
+                Ver Histórico de Alertas
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}

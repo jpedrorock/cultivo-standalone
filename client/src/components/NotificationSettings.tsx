@@ -11,6 +11,7 @@ interface NotificationConfig {
   dailyReminderEnabled: boolean;
   reminderTime: string; // HH:MM format
   alertsEnabled: boolean;
+  taskRemindersEnabled: boolean;
 }
 
 export function NotificationSettings() {
@@ -18,6 +19,7 @@ export function NotificationSettings() {
     dailyReminderEnabled: false,
     reminderTime: "18:00",
     alertsEnabled: false,
+    taskRemindersEnabled: false,
   });
   const [permission, setPermission] = useState<NotificationPermission>("default");
 
@@ -144,6 +146,17 @@ export function NotificationSettings() {
     setConfig({ ...config, alertsEnabled: enabled });
     if (enabled) {
       toast.success("Alertas automáticos ativados! Você será notificado quando Temp/RH/PPFD estiverem fora da faixa.");
+    }
+  };
+
+  const handleToggleTaskReminders = (enabled: boolean) => {
+    if (enabled && permission !== "granted") {
+      requestPermission();
+      return;
+    }
+    setConfig({ ...config, taskRemindersEnabled: enabled });
+    if (enabled) {
+      toast.success("Lembretes de tarefas ativados! Você será notificado sobre tarefas pendentes.");
     }
   };
 

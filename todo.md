@@ -906,6 +906,14 @@
 - [ ] Salvar checkpoint com correção
 
 
+## 🔔 Páginas de Gerenciamento de Alertas
+- [ ] Criar página /settings/alerts com todas as configurações de notificações
+- [ ] Criar página /alerts/history com histórico de notificações enviadas
+- [ ] Adicionar backend API para armazenar histórico de alertas
+- [ ] Adicionar backend API para buscar histórico de alertas
+- [ ] Mostrar timestamp, tipo, status de leitura no histórico
+- [ ] Testar páginas e salvar checkpoint
+
 ## 📱 Reorganização do Menu Mobile
 - [x] Criar menu "Mais" com submenu (Histórico, Strains, Configurações)
 - [x] Reduzir BottomNav para 4 itens principais (Home, Calculadoras, Alertas, Mais)
@@ -937,3 +945,12 @@
 - [x] Encontrar Dialog sem DialogTitle (ManusDialog.tsx)
 - [x] Adicionar DialogTitle com sr-only para acessibilidade
 - [ ] Testar e confirmar erro resolvido
+
+
+## 📋 Sistema de Lembretes de Tarefas Pendentes
+- [ ] Criar API backend para verificar tarefas pendentes por estufa/semana
+- [ ] Implementar lógica de notificação progressiva (2 dias, 1 dia, último dia)
+- [ ] Adicionar toggle em Configurações para ativar/desativar lembretes de tarefas
+- [ ] Mostrar detalhes na notificação (quais tarefas + qual estufa)
+- [ ] Testar sistema de lembretes
+- [ ] Salvar checkpoint

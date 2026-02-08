@@ -995,6 +995,51 @@ export const appRouter = router({
 
         return tasks;
       }),
+    getPendingTasks: publicProcedure.query(async () => {
+      const database = await getDb();
+      if (!database) throw new Error("Database not available");
+
+      // Get all active cycles
+      const activeCycles = await db.getActiveCycles();
+      const pendingTasks: any[] = [];
+
+      for (const cycle of activeCycles) {
+        // Get tent info
+        const tent = await database.select().from(tents).where(eq(tents.id, cycle.tentId)).limit(1);
+        if (tent.length === 0) continue;
+
+        // Get all incomplete tasks for this tent in current week
+        const now = new Date();
+        const startOfWeek = new Date(now);
+        startOfWeek.setDate(now.getDate() - now.getDay());
+        startOfWeek.setHours(0, 0, 0, 0);
+
+        const incompleteTasks = await database
+          .select()
+          .from(taskInstances)
+          .leftJoin(taskTemplates, eq(taskInstances.taskTemplateId, taskTemplates.id))
+          .where(
+            and(
+              eq(taskInstances.tentId, cycle.tentId),
+              eq(taskInstances.isDone, false),
+              eq(taskInstances.occurrenceDate, startOfWeek)
+            )
+          );
+
+        for (const task of incompleteTasks) {
+          pendingTasks.push({
+            id: task.task_instances.id,
+            tentId: cycle.tentId,
+            tentName: tent[0].name,
+            title: task.task_templates?.title || "Tarefa",
+            description: task.task_templates?.description || "",
+            occurrenceDate: task.task_instances.occurrenceDate,
+          });
+        }
+      }
+
+      return pendingTasks;
+    }),
     getCurrentWeekTasks: publicProcedure.query(async () => {
       const database = await getDb();
       if (!database) throw new Error("Database not available");
