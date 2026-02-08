@@ -924,3 +924,9 @@
 - [ ] Adicionar página de configuração de lembretes
 - [ ] Testar notificações em mobile e desktop
 - [ ] Salvar checkpoint
+
+
+## 🎬 Animação no Badge de Alertas
+- [x] Adicionar animação pulse no badge quando alertCount > 0
+- [ ] Testar animação no mobile e desktop
+- [ ] Salvar checkpoint

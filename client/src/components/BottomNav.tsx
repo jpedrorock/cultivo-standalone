@@ -55,7 +55,7 @@ export function BottomNav() {
                 <Icon className={cn("w-6 h-6", isActive && "stroke-[2.5]")} />
                 <span className="text-xs font-medium">{item.label}</span>
                 {item.badge !== undefined && item.badge > 0 && (
-                  <span className="absolute top-2 right-2 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  <span className="absolute top-2 right-2 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center animate-pulse">
                     {item.badge > 9 ? '9+' : item.badge}
                   </span>
                 )}
