@@ -80,10 +80,7 @@ export function BottomNav() {
               </button>
             </SheetTrigger>
             <SheetContent side="bottom" className="h-auto">
-              <SheetHeader>
-                <SheetTitle>Menu</SheetTitle>
-              </SheetHeader>
-              <div className="mt-6 space-y-2 pb-6">
+              <div className="space-y-2 pb-6 pt-4">
                 {moreMenuItems.map((item) => {
                   const Icon = item.icon;
                   const isActive = location === item.href;
