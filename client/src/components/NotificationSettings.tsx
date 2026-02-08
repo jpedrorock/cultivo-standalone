@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Bell, BellOff, Clock } from "lucide-react";
+import { Bell, BellOff, Clock, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -8,14 +8,16 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 
 interface NotificationConfig {
-  enabled: boolean;
-  time: string; // HH:MM format
+  dailyReminderEnabled: boolean;
+  reminderTime: string; // HH:MM format
+  alertsEnabled: boolean;
 }
 
 export function NotificationSettings() {
   const [config, setConfig] = useState<NotificationConfig>({
-    enabled: false,
-    time: "18:00",
+    dailyReminderEnabled: false,
+    reminderTime: "18:00",
+    alertsEnabled: false,
   });
   const [permission, setPermission] = useState<NotificationPermission>("default");
 
@@ -23,7 +25,12 @@ export function NotificationSettings() {
     // Load saved config from localStorage
     const saved = localStorage.getItem("notificationConfig");
     if (saved) {
-      setConfig(JSON.parse(saved));
+      try {
+        setConfig(JSON.parse(saved));
+      } catch (e) {
+        // If parsing fails, use defaults
+        console.error("Error parsing notification config:", e);
+      }
     }
 
     // Check current permission status
@@ -37,8 +44,8 @@ export function NotificationSettings() {
     localStorage.setItem("notificationConfig", JSON.stringify(config));
 
     // Setup daily reminder if enabled
-    if (config.enabled && permission === "granted") {
-      setupDailyReminder(config.time);
+    if (config.dailyReminderEnabled && permission === "granted") {
+      setupDailyReminder(config.reminderTime);
     }
   }, [config, permission]);
 
@@ -54,12 +61,8 @@ export function NotificationSettings() {
 
       if (result === "granted") {
         toast.success("Permissão concedida! Você receberá lembretes diários.");
-        // Send a test notification
-        new Notification("App Cultivo", {
-          body: "Notificações ativadas com sucesso! 🌱",
-          icon: "/icon-192x192.png",
-          badge: "/icon-192x192.png",
-        });
+        // Send a test notification with sound and vibration
+        sendTestNotification();
       } else if (result === "denied") {
         toast.error("Permissão negada. Ative nas configurações do navegador.");
       }
@@ -91,39 +94,66 @@ export function NotificationSettings() {
 
     // Set initial timeout
     setTimeout(() => {
-      sendReminder();
+      sendDailyReminder();
       // Then set daily interval (24 hours)
-      const intervalId = setInterval(sendReminder, 24 * 60 * 60 * 1000);
+      const intervalId = setInterval(sendDailyReminder, 24 * 60 * 60 * 1000);
       localStorage.setItem("reminderIntervalId", String(intervalId));
     }, msUntilReminder);
   };
 
-  const sendReminder = () => {
-    if (permission === "granted" && config.enabled) {
-      new Notification("Lembrete - App Cultivo", {
-        body: "Hora de registrar os dados das estufas! 🌱📊",
+  const sendTestNotification = () => {
+    if (permission === "granted") {
+      new Notification("🧪 Teste - App Cultivo", {
+        body: "Notificações ativadas com sucesso! Som e vibração funcionando. 🌱",
         icon: "/icon-192x192.png",
         badge: "/icon-192x192.png",
-        tag: "daily-reminder",
+        tag: "test-notification",
+        vibrate: [200, 100, 200], // Vibration pattern
         requireInteraction: false,
       });
     }
   };
 
-  const handleToggle = (enabled: boolean) => {
+  const sendDailyReminder = () => {
+    if (permission === "granted" && config.dailyReminderEnabled) {
+      new Notification("📝 Lembrete - App Cultivo", {
+        body: "Hora de registrar os dados das estufas! 🌱📊",
+        icon: "/icon-192x192.png",
+        badge: "/icon-192x192.png",
+        tag: "daily-reminder",
+        vibrate: [200, 100, 200],
+        requireInteraction: false,
+        data: { url: "/" },
+      });
+    }
+  };
+
+  const handleToggleDailyReminder = (enabled: boolean) => {
     if (enabled && permission !== "granted") {
       requestPermission();
+      return;
     }
-    setConfig({ ...config, enabled });
+    setConfig({ ...config, dailyReminderEnabled: enabled });
+  };
+
+  const handleToggleAlerts = (enabled: boolean) => {
+    if (enabled && permission !== "granted") {
+      requestPermission();
+      return;
+    }
+    setConfig({ ...config, alertsEnabled: enabled });
+    if (enabled) {
+      toast.success("Alertas automáticos ativados! Você será notificado quando Temp/RH/PPFD estiverem fora da faixa.");
+    }
   };
 
   const handleTimeChange = (time: string) => {
-    setConfig({ ...config, time });
+    setConfig({ ...config, reminderTime: time });
   };
 
   const testNotification = () => {
     if (permission === "granted") {
-      sendReminder();
+      sendDailyReminder();
       toast.success("Notificação de teste enviada!");
     } else {
       toast.error("Permissão de notificações necessária");
@@ -135,10 +165,10 @@ export function NotificationSettings() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Bell className="w-5 h-5" />
-          Lembretes Diários
+          Notificações
         </CardTitle>
         <CardDescription>
-          Configure lembretes para registrar os dados das estufas
+          Configure lembretes diários e alertas automáticos
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -146,7 +176,7 @@ export function NotificationSettings() {
         {permission === "default" && (
           <div className="p-4 bg-blue-500/100/10 border border-blue-500/20 rounded-lg">
             <p className="text-sm text-blue-900 mb-3">
-              Para receber lembretes, precisamos de permissão para enviar notificações.
+              Para receber lembretes e alertas, precisamos de permissão para enviar notificações.
             </p>
             <Button onClick={requestPermission} size="sm">
               <Bell className="w-4 h-4 mr-2" />
@@ -165,26 +195,26 @@ export function NotificationSettings() {
 
         {permission === "granted" && (
           <>
-            {/* Enable/Disable Toggle */}
+            {/* Daily Reminder Toggle */}
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="enable-notifications" className="text-base">
-                  Ativar Lembretes
+                <Label htmlFor="enable-daily-reminder" className="text-base">
+                  Lembrete Diário
                 </Label>
                 <p className="text-sm text-muted-foreground">
-                  Receba um lembrete diário no horário configurado
+                  Receba um lembrete para registrar os dados das estufas
                 </p>
               </div>
               <Switch
-                id="enable-notifications"
-                checked={config.enabled}
-                onCheckedChange={handleToggle}
+                id="enable-daily-reminder"
+                checked={config.dailyReminderEnabled}
+                onCheckedChange={handleToggleDailyReminder}
               />
             </div>
 
             {/* Time Picker */}
-            {config.enabled && (
-              <div className="space-y-2">
+            {config.dailyReminderEnabled && (
+              <div className="space-y-2 pl-4 border-l-2 border-primary/20">
                 <Label htmlFor="reminder-time" className="flex items-center gap-2">
                   <Clock className="w-4 h-4" />
                   Horário do Lembrete
@@ -192,40 +222,73 @@ export function NotificationSettings() {
                 <Input
                   id="reminder-time"
                   type="time"
-                  value={config.time}
+                  value={config.reminderTime}
                   onChange={(e) => handleTimeChange(e.target.value)}
                   className="max-w-xs"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Você receberá um lembrete todos os dias às {config.time}
+                  Você receberá um lembrete todos os dias às {config.reminderTime}
                 </p>
               </div>
             )}
 
+            {/* Alerts Toggle */}
+            <div className="flex items-center justify-between pt-2">
+              <div className="space-y-0.5">
+                <Label htmlFor="enable-alerts" className="text-base flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4" />
+                  Alertas Automáticos
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Notificações quando Temp/RH/PPFD estiverem fora da faixa ideal
+                </p>
+              </div>
+              <Switch
+                id="enable-alerts"
+                checked={config.alertsEnabled}
+                onCheckedChange={handleToggleAlerts}
+              />
+            </div>
+
             {/* Test Button */}
-            {config.enabled && (
+            <div className="pt-4 border-t">
               <Button onClick={testNotification} variant="outline" size="sm">
                 <Bell className="w-4 h-4 mr-2" />
                 Testar Notificação
               </Button>
-            )}
+            </div>
           </>
         )}
 
         {/* Status Badge */}
         <div className="pt-4 border-t">
-          <div className="flex items-center gap-2 text-sm">
-            {config.enabled && permission === "granted" ? (
-              <>
-                <Bell className="w-4 h-4 text-green-600" />
-                <span className="text-primary font-medium">Lembretes ativos</span>
-              </>
-            ) : (
-              <>
-                <BellOff className="w-4 h-4 text-gray-400" />
-                <span className="text-gray-600">Lembretes desativados</span>
-              </>
-            )}
+          <div className="flex flex-col gap-2 text-sm">
+            <div className="flex items-center gap-2">
+              {config.dailyReminderEnabled && permission === "granted" ? (
+                <>
+                  <Bell className="w-4 h-4 text-green-600" />
+                  <span className="text-primary font-medium">Lembretes diários ativos</span>
+                </>
+              ) : (
+                <>
+                  <BellOff className="w-4 h-4 text-gray-400" />
+                  <span className="text-gray-600">Lembretes diários desativados</span>
+                </>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              {config.alertsEnabled && permission === "granted" ? (
+                <>
+                  <AlertTriangle className="w-4 h-4 text-orange-600" />
+                  <span className="text-primary font-medium">Alertas automáticos ativos</span>
+                </>
+              ) : (
+                <>
+                  <AlertTriangle className="w-4 h-4 text-gray-400" />
+                  <span className="text-gray-600">Alertas automáticos desativados</span>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </CardContent>

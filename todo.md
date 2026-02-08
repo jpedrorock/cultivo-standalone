@@ -917,11 +917,12 @@
 - [ ] Salvar checkpoint
 
 ## 🔔 Sistema de Notificações Push
-- [ ] Implementar permissão de notificações web/mobile
-- [ ] Criar sistema de lembretes diários configuráveis
-- [ ] Notificação "Registre seus dados" (horário configurável)
-- [ ] Notificação quando houver alertas (Temp/RH/PPFD fora da faixa)
-- [ ] Adicionar página de configuração de lembretes
+- [x] Implementar permissão de notificações web/mobile
+- [x] Criar sistema de lembretes diários configuráveis
+- [x] Notificação "Registre seus dados" (horário configurável)
+- [x] Notificação quando houver alertas (Temp/RH/PPFD fora da faixa) - toggle em Configurações
+- [x] Melhorado componente NotificationSettings com som e vibração
+- [x] Adicionado toggle separado para alertas automáticos
 - [ ] Testar notificações em mobile e desktop
 - [ ] Salvar checkpoint
 
@@ -930,3 +931,9 @@
 - [x] Adicionar animação pulse no badge quando alertCount > 0
 - [ ] Testar animação no mobile e desktop
 - [ ] Salvar checkpoint
+
+
+## 🐛 Fix: DialogContent Accessibility Error
+- [x] Encontrar Dialog sem DialogTitle (ManusDialog.tsx)
+- [x] Adicionar DialogTitle com sr-only para acessibilidade
+- [ ] Testar e confirmar erro resolvido
