@@ -97,35 +97,30 @@ fi
 
 print_success "Dependências instaladas"
 
-# 3.5. Aprovar e recompilar módulos nativos (better_sqlite3)
+# 3.5. Compilar módulos nativos (better_sqlite3)
 echo ""
-print_info "Configurando build scripts..."
+print_info "Compilando módulos nativos para seu sistema..."
 
-# Aprovar build scripts PRIMEIRO
-if pnpm approve-builds better-sqlite3 esbuild core-js @tailwindcss/oxide 2>/dev/null; then
-    print_success "Build scripts aprovados"
-else
-    print_warning "Não foi possível aprovar automaticamente"
-fi
+# Remover node_modules e reinstalar com build scripts habilitados
+print_info "Removendo node_modules para forçar recompilação..."
+rm -rf node_modules
 
-print_info "Recompilando módulos nativos para seu sistema..."
-if pnpm rebuild better-sqlite3; then
-    print_success "Módulos nativos recompilados com sucesso"
+# Reinstalar SEM ignorar build scripts
+print_info "Reinstalando dependências com build scripts..."
+if pnpm install --ignore-scripts=false; then
+    print_success "Módulos nativos compilados com sucesso"
 else
-    print_error "Falha ao recompilar better-sqlite3"
-    print_info "Tentando reinstalação completa com build scripts..."
-    rm -rf node_modules
-    if pnpm install && pnpm approve-builds better-sqlite3 && pnpm rebuild better-sqlite3; then
-        print_success "Reinstalação e compilação concluídas"
-    else
-        print_error "Falha na reinstalação"
-        echo ""
-        echo "Por favor, rode manualmente:"
-        echo "  pnpm approve-builds better-sqlite3"
-        echo "  pnpm rebuild better-sqlite3"
-        echo ""
-        exit 1
-    fi
+    print_error "Falha ao compilar better-sqlite3"
+    echo ""
+    echo "Isso pode acontecer se:"
+    echo "  1. Você não tem ferramentas de compilação instaladas"
+    echo "  2. O pnpm está bloqueando build scripts"
+    echo ""
+    echo "Tente instalar ferramentas de compilação:"
+    echo "  macOS: xcode-select --install"
+    echo "  Linux: sudo apt install build-essential python3"
+    echo ""
+    exit 1
 fi
 
 # 4. Verificar se drizzle-kit está disponível
