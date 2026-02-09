@@ -1084,3 +1084,13 @@
 - [x] Melhorar design do Brush (fill="transparent" em todos os 4 gráficos)
 - [x] Testar com estufa selecionada e sem estufa (funcionando perfeitamente)
 - [ ] Salvar checkpoint v2.1.2
+
+## 📦 Nova Tarefa: Pacote de Deploy e Guias
+- [x] Criar guia de deploy para servidores (DEPLOY_GUIDE.md - VPS, Docker, Nginx)
+- [x] Criar guia de instalação local (Windows, Mac, Linux no DEPLOY_GUIDE.md)
+- [x] Documentar variáveis de ambiente necessárias (ENV_VARS.md)
+- [x] Documentação de backup/restauração do banco
+- [x] Documentação de substituição do OAuth Manus
+- [x] Checklist de deploy e troubleshooting
+- [x] Gerar arquivo ZIP do projeto completo (app-cultivo-deploy.zip - 13MB)
+- [ ] Salvar checkpoint v2.2.0
