@@ -77,15 +77,25 @@ if ! command -v pnpm &> /dev/null; then
         exit 1
     fi
 else
-    print_success "pnpm $(pnpm -v) detectado"
+    print_success "pnpm detectado"
 fi
 
+# 3. Configurar .npmrc para habilitar build scripts
+echo ""
+print_info "Configurando .npmrc para habilitar build scripts..."
+cat > .npmrc << 'EOF'
+# Força execução de build scripts (necessário para better-sqlite3)
+enable-pre-post-scripts=true
+ignore-scripts=false
+EOF
+print_success ".npmrc configurado"
+
+# 4. Instalar dependências
 echo ""
 echo "📦 Instalando dependências do projeto..."
 echo "   (Isso pode levar alguns minutos...)"
 echo ""
 
-# 3. Instalar dependências
 if ! pnpm install; then
     print_error "Falha ao instalar dependências!"
     echo ""
@@ -95,47 +105,19 @@ if ! pnpm install; then
     exit 1
 fi
 
-print_success "Dependências instaladas"
+print_success "Dependências instaladas (com build scripts habilitados)"
 
-# 3.5. Compilar módulos nativos (better_sqlite3)
+# Verificar se better-sqlite3 foi compilado corretamente
 echo ""
-print_info "Compilando módulos nativos para seu sistema..."
-
-# Remover node_modules e reinstalar com build scripts habilitados
-print_info "Removendo node_modules para forçar recompilação..."
-
-# Múltiplas tentativas de remoção (macOS pode ter problemas com rm -rf)
-if [ -d node_modules ]; then
-    rm -rf node_modules 2>/dev/null || {
-        print_warning "rm -rf falhou, tentando com find..."
-        find node_modules -delete 2>/dev/null || {
-            print_warning "find -delete falhou, tentando com perl..."
-            perl -e 'use File::Path qw(remove_tree); remove_tree("node_modules");' 2>/dev/null || {
-                print_error "Não foi possível remover node_modules"
-                print_info "Por favor, remova manualmente: rm -rf node_modules"
-                exit 1
-            }
-        }
-    }
-    print_success "node_modules removido"
-fi
-
-# Reinstalar SEM ignorar build scripts
-print_info "Reinstalando dependências com build scripts..."
-if pnpm install --ignore-scripts=false; then
-    print_success "Módulos nativos compilados com sucesso"
+print_info "Verificando compilação do better-sqlite3..."
+if [ -f "node_modules/.pnpm/better-sqlite3@*/node_modules/better-sqlite3/build/Release/better_sqlite3.node" ] || \
+   [ -f "node_modules/.pnpm/better-sqlite3@*/node_modules/better-sqlite3/lib/binding/node-v*/better_sqlite3.node" ]; then
+    print_success "better-sqlite3 compilado com sucesso"
 else
-    print_error "Falha ao compilar better-sqlite3"
-    echo ""
-    echo "Isso pode acontecer se:"
-    echo "  1. Você não tem ferramentas de compilação instaladas"
-    echo "  2. O pnpm está bloqueando build scripts"
-    echo ""
-    echo "Tente instalar ferramentas de compilação:"
+    print_warning "Não foi possível verificar a compilação do better-sqlite3"
+    print_info "Se houver erros ao criar o banco, instale ferramentas de compilação:"
     echo "  macOS: xcode-select --install"
     echo "  Linux: sudo apt install build-essential python3"
-    echo ""
-    exit 1
 fi
 
 # 4. Verificar se drizzle-kit está disponível
