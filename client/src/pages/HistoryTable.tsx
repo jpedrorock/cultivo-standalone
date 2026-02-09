@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { EditLogDialog } from "@/components/EditLogDialog";
+import { AnalyticsCharts } from "@/components/AnalyticsCharts";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -190,7 +191,13 @@ export default function HistoryTable() {
       </header>
 
       {/* Content */}
-      <main className="container mx-auto px-4 py-8" id="history-table-container">
+      <main className="container mx-auto px-4 py-8 space-y-8" id="history-table-container">
+        {/* Analytics Charts */}
+        {logsData?.logs && logsData.logs.length > 0 && (
+          <AnalyticsCharts logs={logsData.logs} />
+        )}
+
+        {/* Filters and Table */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">

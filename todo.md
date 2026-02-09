@@ -1056,3 +1056,15 @@
 - [x] Garantir que a bolinha fique perfeitamente centralizada no gradiente (h-6 track = w-6 h-6 thumb)
 - [x] Aplicado em ambos sliders (Lux e PPFD)
 - [ ] Salvar checkpoint v2.0.20
+
+## 📊 Nova Tarefa: Dashboard de Análise com Gráficos
+- [x] Instalar biblioteca Recharts
+- [x] Criar componente de gráfico de linha para Temperatura
+- [x] Criar componente de gráfico de linha para Umidade Relativa (RH)
+- [x] Criar componente de gráfico de linha para PPFD
+- [x] Criar gráfico combinado para pH e EC
+- [x] Adicionar seção de Analytics na página de Histórico
+- [x] Integrar gráficos com dados filtrados (estufa + período)
+- [x] Adicionar responsividade mobile para os gráficos (ResponsiveContainer)
+- [x] Testar visualização com diferentes períodos (integrado com filtros existentes)
+- [ ] Salvar checkpoint v2.1.0
