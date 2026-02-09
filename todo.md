@@ -1094,3 +1094,8 @@
 - [x] Checklist de deploy e troubleshooting
 - [x] Gerar arquivo ZIP do projeto completo (app-cultivo-deploy.zip - 13MB)
 - [ ] Salvar checkpoint v2.2.0
+
+## 🔧 Nova Tarefa: Corrigir package.json para Deploy
+- [x] Remover seção patchedDependencies do package.json
+- [x] Gerar novo ZIP limpo sem erros de patch (app-cultivo-deploy-v2.2.1.zip - 13MB)
+- [ ] Salvar checkpoint v2.2.1
