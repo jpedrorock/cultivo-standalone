@@ -331,20 +331,20 @@ export default function HistoryTable() {
               </div>
             ) : (
               <>
-                <div className="overflow-x-auto">
-                  <Table>
+                <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+                  <Table className="min-w-full">
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Data</TableHead>
-                        <TableHead>Turno</TableHead>
-                        <TableHead>Estufa</TableHead>
-                        <TableHead className="text-right">Temp (°C)</TableHead>
-                        <TableHead className="text-right">RH (%)</TableHead>
-                        <TableHead className="text-right">PPFD</TableHead>
-                        <TableHead className="text-right">pH</TableHead>
-                        <TableHead className="text-right">EC</TableHead>
-                        <TableHead>Observações</TableHead>
-                        <TableHead className="text-right">Ações</TableHead>
+                        <TableHead className="whitespace-nowrap">Data</TableHead>
+                        <TableHead className="whitespace-nowrap">Turno</TableHead>
+                        <TableHead className="whitespace-nowrap">Estufa</TableHead>
+                        <TableHead className="text-right whitespace-nowrap">Temp<br className="md:hidden"/><span className="hidden md:inline"> (°C)</span></TableHead>
+                        <TableHead className="text-right whitespace-nowrap">RH<br className="md:hidden"/><span className="hidden md:inline"> (%)</span></TableHead>
+                        <TableHead className="text-right whitespace-nowrap">PPFD</TableHead>
+                        <TableHead className="text-right whitespace-nowrap">pH</TableHead>
+                        <TableHead className="text-right whitespace-nowrap">EC</TableHead>
+                        <TableHead className="whitespace-nowrap hidden md:table-cell">Observações</TableHead>
+                        <TableHead className="text-right whitespace-nowrap">Ações</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -364,7 +364,7 @@ export default function HistoryTable() {
                           <TableCell className="text-right">{log.ppfd || "-"}</TableCell>
                           <TableCell className="text-right">{log.ph || "-"}</TableCell>
                           <TableCell className="text-right">{log.ec || "-"}</TableCell>
-                          <TableCell className="max-w-xs truncate" title={log.notes || ""}>
+                          <TableCell className="max-w-xs truncate hidden md:table-cell" title={log.notes || ""}>
                             {log.notes || "-"}
                           </TableCell>
                           <TableCell className="text-right">

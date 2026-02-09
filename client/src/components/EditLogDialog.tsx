@@ -86,7 +86,7 @@ export function EditLogDialog({ log, open, onOpenChange, onSuccess }: EditLogDia
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="max-w-[95vw] sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Editar Registro</DialogTitle>
           <DialogDescription>

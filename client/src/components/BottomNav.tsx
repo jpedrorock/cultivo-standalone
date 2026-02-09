@@ -80,6 +80,9 @@ export function BottomNav() {
               </button>
             </SheetTrigger>
             <SheetContent side="bottom" className="h-auto">
+              <SheetHeader className="sr-only">
+                <SheetTitle>Menu Mais</SheetTitle>
+              </SheetHeader>
               <div className="space-y-2 pb-6 pt-4">
                 {moreMenuItems.map((item) => {
                   const Icon = item.icon;

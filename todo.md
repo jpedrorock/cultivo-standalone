@@ -981,3 +981,30 @@
 - [x] Adicionar botões de teste para cada tipo de som
 - [ ] Testar sons em diferentes navegadores
 - [ ] Salvar checkpoint
+
+
+## 📱 Correções de UI Mobile
+- [x] Corrigir overflow da tabela de histórico (min-w-800px + overflow-x-auto)
+- [ ] Melhorar visualização de pop-ups de mudança de fase no mobile
+- [ ] Corrigir alinhamento do menu de detalhes/novo registro
+- [ ] Testar todas as correções em viewport mobile
+- [ ] Salvar checkpoint
+
+## 📱 Nova Tarefa: Correções de UX Mobile (v2.0.16)
+- [x] Corrigido erro de acessibilidade DialogContent (adicionado SheetTitle com sr-only no BottomNav)
+- [x] Corrigido popups de mudança de fase difíceis de visualizar no mobile:
+  - [x] EditCycleModal: max-w-[95vw] + max-h-[90vh] + overflow-y-auto
+  - [x] InitiateCycleModal: max-w-[95vw] + max-h-[90vh] + overflow-y-auto
+  - [x] StartCycleModal: max-w-[95vw] + max-h-[90vh] + overflow-y-auto
+  - [x] CreateTentModal: max-w-[95vw] + max-h-[90vh] + overflow-y-auto
+  - [x] EditLogDialog: max-w-[95vw] + max-h-[90vh] + overflow-y-auto
+- [x] Corrigido menu de detalhes/novo cadastro desalinhado:
+  - [x] TentDetails header: layout responsivo com botões empilhados no mobile
+  - [x] Botões "Imprimir" e "Novo Registro" com flex-1 no mobile
+  - [x] Ícone Imprimir visível no mobile, texto oculto
+- [x] Corrigido lista de histórico com problemas de visualização:
+  - [x] Tabela HistoryTable: removido min-w-[800px], adicionado min-w-full
+  - [x] Headers com whitespace-nowrap para evitar quebra
+  - [x] Temp e RH com quebra de linha no mobile (Temp<br/>(°C))
+  - [x] Coluna Observações oculta no mobile (hidden md:table-cell)
+  - [x] TableCell de Observações também oculto no mobile

@@ -104,30 +104,34 @@ export default function TentDetails() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
-        <div className="container py-6">
-          <div className="flex items-center gap-4">
-            <Button asChild variant="ghost" size="icon">
-              <Link href="/">
-                <ArrowLeft className="w-5 h-5" />
-              </Link>
-            </Button>
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-                <Sprout className="w-7 h-7 text-primary" />
-                {tent.name}
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                Tipo {tent.tentType} • {tent.width}×{tent.depth}×{tent.height}cm
-              </p>
+        <div className="container py-4 md:py-6">
+          <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+            <div className="flex items-center gap-4">
+              <Button asChild variant="ghost" size="icon">
+                <Link href="/">
+                  <ArrowLeft className="w-5 h-5" />
+                </Link>
+              </Button>
+              <div className="flex-1">
+                <h1 className="text-xl md:text-2xl font-bold text-foreground flex items-center gap-2 md:gap-3">
+                  <Sprout className="w-6 h-6 md:w-7 md:h-7 text-primary" />
+                  {tent.name}
+                </h1>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Tipo {tent.tentType} • {tent.width}×{tent.depth}×{tent.height}cm
+                </p>
+              </div>
+              <Badge className={`${phaseInfo.color} text-white border-0 text-xs md:text-sm`}>{phaseInfo.phase}</Badge>
             </div>
-            <Badge className={`${phaseInfo.color} text-white border-0`}>{phaseInfo.phase}</Badge>
-            <Button variant="outline" onClick={handlePrint}>
-              <Printer className="w-4 h-4 mr-2" />
-              Imprimir
-            </Button>
-            <Button asChild>
-              <Link href={`/tent/${tentId}/log`}>Novo Registro</Link>
-            </Button>
+            <div className="flex gap-2 md:ml-auto">
+              <Button variant="outline" onClick={handlePrint} className="flex-1 md:flex-none">
+                <Printer className="w-4 h-4 md:mr-2" />
+                <span className="hidden md:inline">Imprimir</span>
+              </Button>
+              <Button asChild className="flex-1 md:flex-none">
+                <Link href={`/tent/${tentId}/log`}>Novo Registro</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </header>
