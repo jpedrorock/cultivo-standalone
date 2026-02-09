@@ -165,24 +165,24 @@ export default function HistoryTable() {
       {/* Header */}
       <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                <TableIcon className="w-6 h-6 text-green-600" />
+              <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                <TableIcon className="w-6 h-6 text-green-600 dark:text-green-400" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-foreground">Histórico de Registros</h1>
                 <p className="text-sm text-muted-foreground">Visualize e exporte todos os registros diários</p>
               </div>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={handlePrint} disabled={!logsData?.logs || logsData.logs.length === 0}>
-                <Printer className="w-4 h-4 mr-2" />
-                Imprimir
+            <div className="flex gap-2 w-full md:w-auto">
+              <Button variant="outline" onClick={handlePrint} disabled={!logsData?.logs || logsData.logs.length === 0} className="flex-1 md:flex-none">
+                <Printer className="w-4 h-4 md:mr-2" />
+                <span className="hidden md:inline">Imprimir</span>
               </Button>
-              <Button onClick={exportToCSV} disabled={!logsData?.logs || logsData.logs.length === 0}>
-                <Download className="w-4 h-4 mr-2" />
-                Exportar CSV
+              <Button onClick={exportToCSV} disabled={!logsData?.logs || logsData.logs.length === 0} className="flex-1 md:flex-none">
+                <Download className="w-4 h-4 md:mr-2" />
+                <span className="hidden md:inline">Exportar CSV</span>
               </Button>
             </div>
           </div>
@@ -331,7 +331,79 @@ export default function HistoryTable() {
               </div>
             ) : (
               <>
-                <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+                {/* Mobile Card Layout */}
+                <div className="md:hidden space-y-4">
+                  {logsData.logs.map((log) => (
+                    <Card key={log.id} className="overflow-hidden">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Badge variant={log.turn === "AM" ? "default" : "secondary"}>
+                              {log.turn || "-"}
+                            </Badge>
+                            <span className="text-sm font-medium">
+                              {new Date(log.logDate).toLocaleDateString("pt-BR")}
+                            </span>
+                          </div>
+                          <div className="flex gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => setEditingLog(log)}
+                              title="Editar registro"
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                              onClick={() => setDeletingLogId(log.id)}
+                              title="Excluir registro"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">{log.tentName || "-"}</p>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <div className="grid grid-cols-2 gap-3 text-sm">
+                          <div>
+                            <p className="text-muted-foreground">Temp (°C)</p>
+                            <p className="font-medium">{log.tempC || "-"}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">RH (%)</p>
+                            <p className="font-medium">{log.rhPct || "-"}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">PPFD</p>
+                            <p className="font-medium">{log.ppfd || "-"}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">pH</p>
+                            <p className="font-medium">{log.ph || "-"}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">EC</p>
+                            <p className="font-medium">{log.ec || "-"}</p>
+                          </div>
+                        </div>
+                        {log.notes && (
+                          <div className="mt-3 pt-3 border-t">
+                            <p className="text-xs text-muted-foreground">Observações</p>
+                            <p className="text-sm mt-1">{log.notes}</p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                {/* Desktop Table Layout */}
+                <div className="hidden md:block overflow-x-auto">
                   <Table className="min-w-full">
                     <TableHeader>
                       <TableRow>

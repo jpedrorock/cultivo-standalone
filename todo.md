@@ -1043,3 +1043,10 @@
 - [x] Afastar botão X do menu Histórico na sidebar (pt-4 para pt-8)
 - [x] Corrigir atalhos de teclado no dark mode (mudado bg-white para bg-background)
 - [ ] Salvar checkpoint v2.0.18
+
+## 📱 Nova Tarefa: Corrigir Histórico no Mobile
+- [x] Corrigir botão "Exportar" cortado no header (flex-col md:flex-row, botões flex-1)
+- [x] Melhorar visualização da tabela no mobile (cards no mobile, tabela no desktop)
+- [x] Criar layout de cards para mobile ao invés de tabela (grid 2 colunas com dados)
+- [x] Ajustar splash screen para seguir tema escuro (dark:from-black dark:via-gray-950)
+- [ ] Salvar checkpoint v2.0.19
