@@ -1068,3 +1068,13 @@
 - [x] Adicionar responsividade mobile para os gráficos (ResponsiveContainer)
 - [x] Testar visualização com diferentes períodos (integrado com filtros existentes)
 - [ ] Salvar checkpoint v2.1.0
+
+## 🔍 Nova Tarefa: Zoom e Panorâmica nos Gráficos
+- [x] Corrigir erro "Invalid time value" no AnalyticsCharts (filtro de datas inválidas)
+- [x] Adicionar dados de exemplo no banco para visualizar gráficos (27 registros de 14 dias)
+- [x] Adicionar funcionalidade de zoom nos gráficos (Brush component)
+- [x] Brush adicionado em todos os 4 gráficos (Temp, RH, PPFD, pH/EC)
+- [x] Brush com cores correspondentes (vermelho, azul, amarelo, roxo)
+- [x] Testar zoom em diferentes intervalos de tempo (Brush funcionando em todos os gráficos)
+- [x] Corrigir erro toFixed no CustomTooltip (validação de tipo number)
+- [ ] Salvar checkpoint v2.1.1
