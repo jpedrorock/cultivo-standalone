@@ -88,7 +88,7 @@ export async function showTaskReminderNotification(pendingTasks: PendingTask[]):
     requireInteraction: urgencyLevel === 'high',
     vibrate: urgencyLevel === 'high' ? [200, 100, 200, 100, 200] : [200, 100, 200],
     data: { url: '/' },
-  });
+  }, 'task_reminder');
 }
 
 /**

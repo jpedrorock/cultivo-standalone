@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Bell, BellOff, Clock, AlertTriangle } from "lucide-react";
+import { testSound, saveSoundConfig } from "@/lib/notificationSounds";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -12,6 +13,8 @@ interface NotificationConfig {
   reminderTime: string; // HH:MM format
   alertsEnabled: boolean;
   taskRemindersEnabled: boolean;
+  soundEnabled: boolean;
+  soundVolume: number; // 0-1
 }
 
 export function NotificationSettings() {
@@ -20,6 +23,8 @@ export function NotificationSettings() {
     reminderTime: "18:00",
     alertsEnabled: false,
     taskRemindersEnabled: false,
+    soundEnabled: true,
+    soundVolume: 0.5,
   });
   const [permission, setPermission] = useState<NotificationPermission>("default");
 
@@ -44,6 +49,9 @@ export function NotificationSettings() {
   useEffect(() => {
     // Save config to localStorage whenever it changes
     localStorage.setItem("notificationConfig", JSON.stringify(config));
+    
+    // Save sound config separately
+    saveSoundConfig({ enabled: config.soundEnabled, volume: config.soundVolume });
 
     // Setup daily reminder if enabled
     if (config.dailyReminderEnabled && permission === "granted") {
@@ -262,6 +270,83 @@ export function NotificationSettings() {
                 onCheckedChange={handleToggleAlerts}
               />
             </div>
+
+            {/* Task Reminders Toggle */}
+            <div className="flex items-center justify-between pt-2">
+              <div className="space-y-0.5">
+                <Label htmlFor="enable-task-reminders" className="text-base flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  Lembretes de Tarefas
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Notificações sobre tarefas pendentes no fim da semana
+                </p>
+              </div>
+              <Switch
+                id="enable-task-reminders"
+                checked={config.taskRemindersEnabled}
+                onCheckedChange={handleToggleTaskReminders}
+              />
+            </div>
+
+            {/* Sound Controls */}
+            <div className="flex items-center justify-between pt-2">
+              <div className="space-y-0.5">
+                <Label htmlFor="enable-sound" className="text-base flex items-center gap-2">
+                  🔊 Sons de Notificação
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Tocar som quando receber notificações
+                </p>
+              </div>
+              <Switch
+                id="enable-sound"
+                checked={config.soundEnabled}
+                onCheckedChange={(enabled) => setConfig({ ...config, soundEnabled: enabled })}
+              />
+            </div>
+
+            {/* Volume Slider */}
+            {config.soundEnabled && (
+              <div className="space-y-2 pl-4 border-l-2 border-primary/20">
+                <Label htmlFor="sound-volume" className="flex items-center justify-between">
+                  <span>Volume</span>
+                  <span className="text-sm text-muted-foreground">{Math.round(config.soundVolume * 100)}%</span>
+                </Label>
+                <input
+                  id="sound-volume"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={config.soundVolume * 100}
+                  onChange={(e) => setConfig({ ...config, soundVolume: parseInt(e.target.value) / 100 })}
+                  className="w-full"
+                />
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => testSound("daily_reminder", config.soundVolume)}
+                    variant="outline"
+                    size="sm"
+                  >
+                    🔔 Lembrete
+                  </Button>
+                  <Button
+                    onClick={() => testSound("environment_alert", config.soundVolume)}
+                    variant="outline"
+                    size="sm"
+                  >
+                    ⚠️ Alerta
+                  </Button>
+                  <Button
+                    onClick={() => testSound("task_reminder", config.soundVolume)}
+                    variant="outline"
+                    size="sm"
+                  >
+                    📋 Tarefa
+                  </Button>
+                </div>
+              </div>
+            )}
 
             {/* Test Button */}
             <div className="pt-4 border-t">

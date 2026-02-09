@@ -3,7 +3,10 @@
  * Handles browser push notifications for daily reminders and alerts
  */
 
+import { playNotificationSound } from './notificationSounds';
+
 export type NotificationPermissionStatus = 'granted' | 'denied' | 'default';
+export type NotificationType = 'daily_reminder' | 'environment_alert' | 'task_reminder';
 
 /**
  * Check if push notifications are supported in this browser
@@ -43,7 +46,8 @@ export async function requestNotificationPermission(): Promise<NotificationPermi
  */
 export async function showNotification(
   title: string,
-  options?: NotificationOptions
+  options?: NotificationOptions,
+  soundType?: NotificationType
 ): Promise<void> {
   if (getNotificationPermission() !== 'granted') {
     console.warn('Notification permission not granted');
@@ -51,6 +55,11 @@ export async function showNotification(
   }
 
   try {
+    // Play notification sound if type is provided
+    if (soundType) {
+      playNotificationSound(soundType);
+    }
+
     // If service worker is available, use it
     if ('serviceWorker' in navigator) {
       const registration = await navigator.serviceWorker.ready;
@@ -82,7 +91,7 @@ export async function showDailyReminder(): Promise<void> {
     tag: 'daily-reminder',
     requireInteraction: false,
     data: { url: '/' },
-  });
+  }, 'daily_reminder');
 }
 
 /**
@@ -105,7 +114,7 @@ export async function showAlertNotification(
     tag: `alert-${tentName}-${metric}`,
     requireInteraction: true,
     data: { url: '/alerts' },
-  });
+  }, 'environment_alert');
 }
 
 /**

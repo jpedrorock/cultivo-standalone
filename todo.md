@@ -970,3 +970,14 @@
 - [x] Criar serviço taskReminders.ts
 - [x] Corrigir erro de acessibilidade DialogContent
 - [ ] Testar notificações e salvar checkpoint
+
+
+## 🔊 Sons Personalizados para Notificações
+- [x] Criar sistema de sons usando Web Audio API (notificationSounds.ts)
+- [x] Definir 3 sons diferentes (lembrete diário, alerta ambiental, lembrete de tarefa)
+- [x] Adicionar controle de volume nas configurações (slider 0-100%)
+- [x] Adicionar toggle para ativar/desativar sons
+- [x] Integrar sons com sistema de notificações existente (notifications.ts, taskReminders.ts)
+- [x] Adicionar botões de teste para cada tipo de som
+- [ ] Testar sons em diferentes navegadores
+- [ ] Salvar checkpoint
