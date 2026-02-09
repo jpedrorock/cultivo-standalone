@@ -103,7 +103,22 @@ print_info "Compilando módulos nativos para seu sistema..."
 
 # Remover node_modules e reinstalar com build scripts habilitados
 print_info "Removendo node_modules para forçar recompilação..."
-rm -rf node_modules
+
+# Múltiplas tentativas de remoção (macOS pode ter problemas com rm -rf)
+if [ -d node_modules ]; then
+    rm -rf node_modules 2>/dev/null || {
+        print_warning "rm -rf falhou, tentando com find..."
+        find node_modules -delete 2>/dev/null || {
+            print_warning "find -delete falhou, tentando com perl..."
+            perl -e 'use File::Path qw(remove_tree); remove_tree("node_modules");' 2>/dev/null || {
+                print_error "Não foi possível remover node_modules"
+                print_info "Por favor, remova manualmente: rm -rf node_modules"
+                exit 1
+            }
+        }
+    }
+    print_success "node_modules removido"
+fi
 
 # Reinstalar SEM ignorar build scripts
 print_info "Reinstalando dependências com build scripts..."
