@@ -1018,3 +1018,28 @@
 - [x] Corrigir bug split() em NotificationSettings e AlertSettings
 - [x] Testar instalação no mobile (PWA já configurado e funcional)
 - [ ] Salvar checkpoint v2.0.17
+
+## 🎨 Nova Tarefa: Splash Screen Moderna
+- [x] Criar componente SplashScreen.tsx com design moderno
+- [x] Adicionar animações suaves (fade-in, pulse, scale, bounce)
+- [x] Integrar com App.tsx para exibir antes do carregamento
+- [x] Adicionar logo e gradiente verde tema do app
+- [x] Adicionar animação bounce-slow customizada no index.css
+- [x] Testar em web e mobile (funcionando perfeitamente)
+- [ ] Salvar checkpoint v2.0.18
+
+## 🔔 Nova Tarefa: Melhorar Design de Notificações
+- [x] Redesenhar NotificationSettings com cards modernos
+- [x] Melhorar hierarquia visual e espaçamento
+- [x] Destacar ícones e botões de teste (cards coloridos com ícones grandes)
+- [x] Organizar em seções claras (cada configuração em card separado)
+- [x] Botões de teste de som em grid 3 colunas com emojis grandes
+- [x] Ajustar splash screen para aparecer apenas 1x por sessão
+- [ ] Salvar checkpoint v2.0.18
+
+## 🎨 Nova Tarefa: Ajustes de UI
+- [x] Centralizar bolinha do slider de intensidade de luz (webkit e moz thumb com w-6 h-6)
+- [x] Aumentar espessura da linha do gradiente do slider (h-3 para h-4)
+- [x] Afastar botão X do menu Histórico na sidebar (pt-4 para pt-8)
+- [x] Corrigir atalhos de teclado no dark mode (mudado bg-white para bg-background)
+- [ ] Salvar checkpoint v2.0.18

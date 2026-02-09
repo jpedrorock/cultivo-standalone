@@ -70,7 +70,7 @@ function KeyboardShortcuts() {
                 <span className="text-sm font-medium text-foreground">{item.description}</span>
                 <span className="text-xs text-muted-foreground">{item.context}</span>
               </div>
-              <kbd className="px-2 py-1 text-xs font-semibold text-foreground bg-white border border-border rounded shadow-sm">
+              <kbd className="px-2 py-1 text-xs font-semibold text-foreground bg-background border border-border rounded shadow-sm">
                 {item.shortcut}
               </kbd>
             </div>

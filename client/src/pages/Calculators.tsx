@@ -569,7 +569,7 @@ function LuxPPFDCalculator() {
                     step="1000"
                     value={lux || 0}
                     onChange={(e) => setLux(e.target.value)}
-                    className="w-full h-3 rounded-lg appearance-none cursor-pointer"
+                    className="w-full h-4 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-gray-300 [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-gray-300 [&::-moz-range-thumb]:shadow-lg [&::-moz-range-thumb]:cursor-pointer"
                     style={{
                       background: `linear-gradient(to right, 
                         #3b82f6 0%, #3b82f6 16.67%,
@@ -629,7 +629,7 @@ function LuxPPFDCalculator() {
                     step="10"
                     value={ppfd || 0}
                     onChange={(e) => setPpfd(e.target.value)}
-                    className="w-full h-3 rounded-lg appearance-none cursor-pointer"
+                    className="w-full h-4 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-gray-300 [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-gray-300 [&::-moz-range-thumb]:shadow-lg [&::-moz-range-thumb]:cursor-pointer"
                     style={{
                       background: `linear-gradient(to right, 
                         #3b82f6 0%, #3b82f6 16.67%,

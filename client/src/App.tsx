@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/sonner";
+import { useState } from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
@@ -6,6 +7,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { InstallPWA } from "./components/InstallPWA";
 import { BottomNav } from "./components/BottomNav";
 import { Sidebar } from "./components/Sidebar";
+import { SplashScreen } from "./components/SplashScreen";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import TentLog from "./pages/TentLog";
@@ -59,6 +61,21 @@ function Router() {
 // - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
 function App() {
+  const [showSplash, setShowSplash] = useState(() => {
+    // Show splash only once per session
+    const hasSeenSplash = sessionStorage.getItem('hasSeenSplash');
+    return !hasSeenSplash;
+  });
+
+  const handleSplashFinish = () => {
+    sessionStorage.setItem('hasSeenSplash', 'true');
+    setShowSplash(false);
+  };
+
+  if (showSplash) {
+    return <SplashScreen onFinish={handleSplashFinish} />;
+  }
+
   return (
     <ErrorBoundary>
       <ThemeProvider
