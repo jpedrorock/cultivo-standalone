@@ -105,19 +105,49 @@ if ! pnpm install; then
     exit 1
 fi
 
-print_success "Dependências instaladas (com build scripts habilitados)"
+print_success "Dependências instaladas"
 
-# Verificar se better-sqlite3 foi compilado corretamente
+# 4.5. Baixar bindings pré-compilados do better-sqlite3
 echo ""
-print_info "Verificando compilação do better-sqlite3..."
+print_info "Configurando better-sqlite3..."
+
+# Verificar se já foi compilado
 if [ -f "node_modules/.pnpm/better-sqlite3@*/node_modules/better-sqlite3/build/Release/better_sqlite3.node" ] || \
    [ -f "node_modules/.pnpm/better-sqlite3@*/node_modules/better-sqlite3/lib/binding/node-v*/better_sqlite3.node" ]; then
-    print_success "better-sqlite3 compilado com sucesso"
+    print_success "better-sqlite3 já compilado"
 else
-    print_warning "Não foi possível verificar a compilação do better-sqlite3"
-    print_info "Se houver erros ao criar o banco, instale ferramentas de compilação:"
-    echo "  macOS: xcode-select --install"
-    echo "  Linux: sudo apt install build-essential python3"
+    print_warning "Bindings não encontrados, tentando baixar pré-compilados..."
+    
+    # Tornar script executável
+    chmod +x download-sqlite-bindings.sh
+    
+    # Tentar baixar bindings pré-compilados
+    if bash download-sqlite-bindings.sh; then
+        print_success "Bindings pré-compilados instalados"
+    else
+        print_error "Falha ao baixar bindings pré-compilados"
+        print_info "Tentando compilar manualmente..."
+        
+        # Última tentativa: compilar diretamente no diretório do pacote
+        SQLITE_DIR="node_modules/.pnpm/better-sqlite3@12.6.2/node_modules/better-sqlite3"
+        if [ -d "$SQLITE_DIR" ]; then
+            cd "$SQLITE_DIR"
+            if npm run build-release 2>/dev/null; then
+                cd - > /dev/null
+                print_success "better-sqlite3 compilado manualmente"
+            else
+                cd - > /dev/null
+                print_error "Falha na compilação manual"
+                echo ""
+                echo "Por favor, instale ferramentas de compilação:"
+                echo "  macOS: xcode-select --install"
+                echo "  Linux: sudo apt install build-essential python3"
+                echo ""
+                echo "Depois execute novamente: bash install.sh"
+                exit 1
+            fi
+        fi
+    fi
 fi
 
 # 4. Verificar se drizzle-kit está disponível
