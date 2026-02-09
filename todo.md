@@ -1078,3 +1078,9 @@
 - [x] Testar zoom em diferentes intervalos de tempo (Brush funcionando em todos os gráficos)
 - [x] Corrigir erro toFixed no CustomTooltip (validação de tipo number)
 - [ ] Salvar checkpoint v2.1.1
+
+## 🎨 Nova Tarefa: Melhorias nos Gráficos
+- [x] Ocultar gráficos quando "Todas as estufas" estiver selecionado (selectedTentId)
+- [x] Melhorar design do Brush (fill="transparent" em todos os 4 gráficos)
+- [x] Testar com estufa selecionada e sem estufa (funcionando perfeitamente)
+- [ ] Salvar checkpoint v2.1.2

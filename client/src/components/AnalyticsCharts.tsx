@@ -109,7 +109,7 @@ export function AnalyticsCharts({ logs }: AnalyticsChartsProps) {
                     name="Temp (°C)"
                     connectNulls
                   />
-                  <Brush dataKey="date" height={30} stroke="#ef4444" />
+                  <Brush dataKey="date" height={30} stroke="#ef4444" fill="transparent" />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
@@ -143,7 +143,7 @@ export function AnalyticsCharts({ logs }: AnalyticsChartsProps) {
                     name="RH (%)"
                     connectNulls
                   />
-                  <Brush dataKey="date" height={30} stroke="#3b82f6" />
+                  <Brush dataKey="date" height={30} stroke="#3b82f6" fill="transparent" />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
@@ -177,7 +177,7 @@ export function AnalyticsCharts({ logs }: AnalyticsChartsProps) {
                     name="PPFD (μmol/m²/s)"
                     connectNulls
                   />
-                  <Brush dataKey="date" height={30} stroke="#eab308" />
+                  <Brush dataKey="date" height={30} stroke="#eab308" fill="transparent" />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
@@ -227,7 +227,7 @@ export function AnalyticsCharts({ logs }: AnalyticsChartsProps) {
                       connectNulls
                     />
                   )}
-                  <Brush dataKey="date" height={30} stroke="#a855f7" />
+                  <Brush dataKey="date" height={30} stroke="#a855f7" fill="transparent" />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>

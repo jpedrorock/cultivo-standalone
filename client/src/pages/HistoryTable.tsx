@@ -192,8 +192,8 @@ export default function HistoryTable() {
 
       {/* Content */}
       <main className="container mx-auto px-4 py-8 space-y-8" id="history-table-container">
-        {/* Analytics Charts */}
-        {logsData?.logs && logsData.logs.length > 0 && (
+        {/* Analytics Charts - Only show when a specific tent is selected */}
+        {selectedTentId && logsData?.logs && logsData.logs.length > 0 && (
           <AnalyticsCharts logs={logsData.logs} />
         )}
 
