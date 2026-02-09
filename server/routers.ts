@@ -20,6 +20,7 @@ import {
   cloningEvents,
   alertSettings,
   alertHistory,
+  notificationHistory,
 } from "../drizzle/schema";
 
 export const appRouter = router({
@@ -1263,6 +1264,53 @@ export const appRouter = router({
         const { importSQLDump } = await import("./databaseImport");
         const result = await importSQLDump(input.sqlContent);
         return result;
+      }),
+  }),
+
+  // Notifications (Notificações)
+  notifications: router({
+    getHistory: publicProcedure.query(async () => {
+      const database = await getDb();
+      if (!database) throw new Error("Database not available");
+      const history = await database
+        .select()
+        .from(notificationHistory)
+        .orderBy(desc(notificationHistory.sentAt))
+        .limit(100);
+      return history;
+    }),
+    create: publicProcedure
+      .input(
+        z.object({
+          type: z.enum(["daily_reminder", "environment_alert", "task_reminder"]),
+          title: z.string(),
+          message: z.string(),
+          metadata: z.string().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        const [notification] = await database
+          .insert(notificationHistory)
+          .values({
+            type: input.type,
+            title: input.title,
+            message: input.message,
+            metadata: input.metadata,
+          });
+        return notification;
+      }),
+    markAsRead: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        await database
+          .update(notificationHistory)
+          .set({ isRead: true })
+          .where(eq(notificationHistory.id, input.id));
+        return { success: true };
       }),
   }),
 });

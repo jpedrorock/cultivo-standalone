@@ -415,3 +415,26 @@ export const alertHistory = mysqlTable(
 
 export type AlertHistory = typeof alertHistory.$inferSelect;
 export type InsertAlertHistory = typeof alertHistory.$inferInsert;
+
+/**
+ * Histórico de Notificações Enviadas
+ */
+export const notificationHistory = mysqlTable(
+  "notificationHistory",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    type: mysqlEnum("type", ["daily_reminder", "environment_alert", "task_reminder"]).notNull(),
+    title: varchar("title", { length: 255 }).notNull(),
+    message: text("message").notNull(),
+    metadata: text("metadata"), // JSON string with additional data
+    isRead: boolean("isRead").default(false).notNull(),
+    sentAt: timestamp("sentAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    typeIdx: index("typeIdx").on(table.type),
+    dateIdx: index("dateIdx").on(table.sentAt),
+  })
+);
+
+export type NotificationHistory = typeof notificationHistory.$inferSelect;
+export type InsertNotificationHistory = typeof notificationHistory.$inferInsert;

@@ -21,6 +21,8 @@ import Settings from "./pages/Settings";
 import StrainTargets from "./pages/StrainTargets";
 import FertilizationCalculator from "./pages/FertilizationCalculator";
 import NotificationSettings from "./pages/NotificationSettings";
+import AlertHistory from "./pages/AlertHistory";
+import AlertSettings from "./pages/AlertSettings";
 
 
 function Router() {
@@ -38,6 +40,8 @@ function Router() {
       <Route path={"/history"} component={HistoryTable} />
       <Route path={"/settings"} component={Settings} />
       <Route path={"/settings/notifications"} component={NotificationSettings} />
+      <Route path={"/settings/alerts"} component={AlertSettings} />
+      <Route path={"/alerts/history"} component={AlertHistory} />
       <Route path={"/strains/:id/targets"} component={StrainTargets} />
 
       <Route path={"/tent/:id"} component={TentDetails} />

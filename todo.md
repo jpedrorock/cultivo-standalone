@@ -907,11 +907,12 @@
 
 
 ## 🔔 Páginas de Gerenciamento de Alertas
-- [ ] Criar página /settings/alerts com todas as configurações de notificações
+- [x] Criar página /settings/alerts com todas as configurações de notificações
 - [ ] Criar página /alerts/history com histórico de notificações enviadas
 - [ ] Adicionar backend API para armazenar histórico de alertas
 - [ ] Adicionar backend API para buscar histórico de alertas
-- [ ] Mostrar timestamp, tipo, status de leitura no histórico
+- [ ] Mostrar timestamp, tipo, mensagem, status de leitura no histórico
+- [ ] Adicionar rota no App.tsx para /settings/alerts e /alerts/history
 - [ ] Testar páginas e salvar checkpoint
 
 ## 📱 Reorganização do Menu Mobile
@@ -954,3 +955,18 @@
 - [ ] Mostrar detalhes na notificação (quais tarefas + qual estufa)
 - [ ] Testar sistema de lembretes
 - [ ] Salvar checkpoint
+
+
+## 🔔 Sistema Completo de Notificações e Alertas
+- [x] Criar tabela notificationHistory no banco de dados
+- [x] Adicionar API notifications.getHistory para buscar histórico
+- [x] Adicionar API notifications.create para salvar notificações
+- [x] Adicionar API notifications.markAsRead para marcar como lida
+- [x] Criar página AlertHistory (/alerts/history) com filtros e listagem
+- [x] Criar página AlertSettings (/settings/alerts) com configurações
+- [x] Adicionar rotas no App.tsx
+- [x] Implementar lembretes de tarefas pendentes
+- [x] Adicionar API tasks.getPendingTasks
+- [x] Criar serviço taskReminders.ts
+- [x] Corrigir erro de acessibilidade DialogContent
+- [ ] Testar notificações e salvar checkpoint
