@@ -89,6 +89,12 @@ export function NotificationSettings() {
       clearInterval(Number(existingInterval));
     }
 
+    // Safety check for time format
+    if (!time || typeof time !== 'string' || !time.includes(':')) {
+      console.error('Invalid time format:', time);
+      return;
+    }
+
     // Calculate milliseconds until next reminder
     const [hours, minutes] = time.split(":").map(Number);
     const now = new Date();

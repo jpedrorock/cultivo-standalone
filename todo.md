@@ -1008,3 +1008,13 @@
   - [x] Temp e RH com quebra de linha no mobile (Temp<br/>(°C))
   - [x] Coluna Observações oculta no mobile (hidden md:table-cell)
   - [x] TableCell de Observações também oculto no mobile
+
+## 📱 Nova Tarefa: Configurar PWA (Progressive Web App)
+- [x] Criar manifest.json com metadados do app (já existia)
+- [x] Gerar ícones PWA em múltiplos tamanhos (192x192, 512x512) (já existiam)
+- [x] Criar service worker para cache e offline (sw.js já implementado)
+- [x] Registrar service worker no index.html (registrado em main.tsx)
+- [x] Adicionar meta tags PWA no index.html (já configuradas)
+- [x] Corrigir bug split() em NotificationSettings e AlertSettings
+- [x] Testar instalação no mobile (PWA já configurado e funcional)
+- [ ] Salvar checkpoint v2.0.17

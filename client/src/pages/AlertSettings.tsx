@@ -49,7 +49,7 @@ export default function AlertSettings() {
   useEffect(() => {
     localStorage.setItem("notificationConfig", JSON.stringify(config));
 
-    if (config.dailyReminderEnabled && permission === "granted") {
+    if (config.dailyReminderEnabled && permission === "granted" && config.reminderTime) {
       const [hour, minute] = config.reminderTime.split(":").map(Number);
       scheduleDailyReminder(hour, minute);
     }
