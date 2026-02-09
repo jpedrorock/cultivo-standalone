@@ -97,19 +97,33 @@ fi
 
 print_success "Dependências instaladas"
 
-# 3.5. Recompilar módulos nativos (better_sqlite3)
+# 3.5. Aprovar e recompilar módulos nativos (better_sqlite3)
 echo ""
-print_info "Recompilando módulos nativos para seu sistema..."
-if pnpm rebuild better-sqlite3 2>/dev/null; then
-    print_success "Módulos nativos recompilados"
+print_info "Configurando build scripts..."
+
+# Aprovar build scripts PRIMEIRO
+if pnpm approve-builds better-sqlite3 esbuild core-js @tailwindcss/oxide 2>/dev/null; then
+    print_success "Build scripts aprovados"
 else
-    print_warning "Não foi possível recompilar better-sqlite3"
-    print_info "Tentando reinstalação completa..."
+    print_warning "Não foi possível aprovar automaticamente"
+fi
+
+print_info "Recompilando módulos nativos para seu sistema..."
+if pnpm rebuild better-sqlite3; then
+    print_success "Módulos nativos recompilados com sucesso"
+else
+    print_error "Falha ao recompilar better-sqlite3"
+    print_info "Tentando reinstalação completa com build scripts..."
     rm -rf node_modules
-    if pnpm install; then
-        print_success "Reinstalação concluída"
+    if pnpm install && pnpm approve-builds better-sqlite3 && pnpm rebuild better-sqlite3; then
+        print_success "Reinstalação e compilação concluídas"
     else
         print_error "Falha na reinstalação"
+        echo ""
+        echo "Por favor, rode manualmente:"
+        echo "  pnpm approve-builds better-sqlite3"
+        echo "  pnpm rebuild better-sqlite3"
+        echo ""
         exit 1
     fi
 fi
