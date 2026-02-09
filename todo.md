@@ -1050,3 +1050,9 @@
 - [x] Criar layout de cards para mobile ao invés de tabela (grid 2 colunas com dados)
 - [x] Ajustar splash screen para seguir tema escuro (dark:from-black dark:via-gray-950)
 - [ ] Salvar checkpoint v2.0.19
+
+## 🎯 Nova Tarefa: Corrigir Bolinha do Slider
+- [x] Ajustar posicionamento vertical da bolinha do slider de intensidade de luz
+- [x] Garantir que a bolinha fique perfeitamente centralizada no gradiente (h-6 track = w-6 h-6 thumb)
+- [x] Aplicado em ambos sliders (Lux e PPFD)
+- [ ] Salvar checkpoint v2.0.20
