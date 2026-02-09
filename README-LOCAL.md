@@ -55,6 +55,10 @@ cd cultivo-architecture-docs
 
 ```bash
 pnpm install
+
+# IMPORTANTE: Aprovar e compilar better-sqlite3
+pnpm approve-builds better-sqlite3 esbuild core-js
+pnpm rebuild better-sqlite3
 ```
 
 ### 3. Configure o banco de dados SQLite
@@ -62,11 +66,11 @@ pnpm install
 O projeto está configurado para usar **SQLite** por padrão (banco local, sem servidor).
 
 ```bash
-# Criar arquivo de banco de dados local
-touch local.db
+# Inicializar banco com schema e dados de exemplo
+node init-db.mjs
 
-# Rodar migrações
-pnpm db:push
+# OU use o script automático (recomendado)
+./setup-local.sh
 ```
 
 ### 4. Inicie o servidor de desenvolvimento
@@ -170,10 +174,23 @@ Acesse: **http://localhost:4983**
 
 ## 🐛 Troubleshooting
 
-### Erro: "Cannot find module 'better-sqlite3'"
+### Erro: "Cannot find module 'better-sqlite3'" ou "Could not locate the bindings file"
 
+**Causa:** O better-sqlite3 precisa compilar bindings nativos para seu sistema operacional.
+
+**Solução:**
 ```bash
-pnpm add better-sqlite3 @types/better-sqlite3
+# 1. Aprovar build scripts
+pnpm approve-builds better-sqlite3 esbuild core-js
+
+# 2. Recompilar bindings nativos
+pnpm rebuild better-sqlite3
+
+# 3. Se ainda não funcionar, reinstale tudo
+rm -rf node_modules
+pnpm install
+pnpm approve-builds better-sqlite3 esbuild core-js
+pnpm rebuild better-sqlite3
 ```
 
 ### Erro: "Port 3000 is already in use"
@@ -190,7 +207,18 @@ Execute novamente:
 
 ```bash
 rm local.db
-pnpm db:push
+node init-db.mjs
+```
+
+### Erro: "drizzle/meta/XXXX_snapshot.json data is malformed"
+
+**Causa:** Arquivos de migração do Drizzle incompatíveis com SQLite local.
+
+**Solução:** Use o script de inicialização ao invés de drizzle-kit:
+```bash
+rm local.db
+node init-db.mjs
+pnpm dev
 ```
 
 ---
