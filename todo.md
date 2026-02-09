@@ -1099,3 +1099,21 @@
 - [x] Remover seção patchedDependencies do package.json
 - [x] Gerar novo ZIP limpo sem erros de patch (app-cultivo-deploy-v2.2.1.zip - 13MB)
 - [ ] Salvar checkpoint v2.2.1
+
+## 📸 Nova Tarefa: Adicionar Screenshots Reais ao Guia do Usuário
+- [x] Criar GUIA-DO-USUARIO.PDF com documentação completa
+- [ ] Corrigir banco de dados para app funcionar no preview (aguardando usuário publicar)
+- [ ] Capturar screenshots de todas as seções (mobile + desktop)
+  - [ ] Tela inicial com estufas
+  - [ ] Gerenciar estufas (criar/editar)
+  - [ ] Registrar dados diários
+  - [ ] Calculadora de Luz
+  - [ ] Calculadora de VPD
+  - [ ] Calculadora de Fertilização
+  - [ ] Histórico com gráficos
+  - [ ] Alertas
+  - [ ] Gerenciar Strains
+  - [ ] Configurações
+- [ ] Inserir imagens no GUIA-DO-USUARIO.md
+- [ ] Gerar PDF final com screenshots
+- [ ] Salvar checkpoint
