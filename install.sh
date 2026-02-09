@@ -192,25 +192,37 @@ if [ -f local.db ]; then
     fi
 fi
 
-# 7. Verificar banco de dados pré-populado
+# 7. Criar e popular banco de dados
 echo ""
-echo "📊 Verificando banco de dados SQLite..."
+echo "📊 Criando banco de dados SQLite..."
 echo ""
 
 if [ ! -f local.db ]; then
-    print_error "❌ ERRO: Banco de dados não encontrado!"
-    echo ""
-    echo "O arquivo local.db deveria estar incluído no pacote."
-    echo "Verifique se o download foi completo."
-    echo ""
-    exit 1
+    print_info "Inicializando banco de dados..."
+    
+    # Usar init-db.mjs se existir
+    if [ -f init-db.mjs ]; then
+        if node init-db.mjs; then
+            print_success "Banco criado com dados de exemplo"
+            print_info "   • 19 tabelas criadas"
+            print_info "   • 29 registros de exemplo (14 dias)"
+            print_info "   • 1 estufa de exemplo"
+            print_info "   • 1 ciclo ativo"
+        else
+            print_error "Falha ao criar banco de dados"
+            exit 1
+        fi
+    else
+        # Fallback: criar banco vazio
+        touch local.db
+        print_warning "Banco criado vazio (sem dados de exemplo)"
+        print_info "O schema será criado quando o servidor iniciar"
+    fi
+else
+    print_success "Banco de dados já existe"
+    DB_SIZE=$(du -h local.db | cut -f1)
+    print_info "Tamanho: $DB_SIZE"
 fi
-
-print_success "Banco de dados pré-populado encontrado!"
-print_info "   • 3 estufas (A, B, C)"
-print_info "   • 6 strains cadastradas"
-print_info "   • 6 ciclos (ativos e finalizados)"
-print_info "   • Registros diários e tarefas"
 
 # 8. Testar conexão do banco
 echo ""
