@@ -585,6 +585,17 @@ function IrrigationCalculator() {
                   <span className="text-sm font-medium text-foreground">Frequência recomendada:</span>
                   <span className="text-lg font-semibold text-blue-600">{result.frequency}</span>
                 </div>
+                {result.adjustment && (
+                  <div className={`mt-4 p-3 rounded-lg border ${
+                    result.adjustment.includes('adequado') 
+                      ? 'bg-green-500/10 border-green-500/20' 
+                      : 'bg-yellow-500/10 border-yellow-500/20'
+                  }`}>
+                    <p className="text-sm font-medium">
+                      🎯 <strong>Recomendação:</strong> {result.adjustment}
+                    </p>
+                  </div>
+                )}
                 <p className="text-xs text-muted-foreground mt-4">
                   💡 <strong>Dica:</strong> Regue até ver 10-20% de drenagem no fundo do vaso para evitar acúmulo de sais.
                 </p>
@@ -610,6 +621,17 @@ function IrrigationCalculator() {
                     <span className="text-2xl font-bold text-green-600">{result.tankSize}L</span>
                   </div>
                 </div>
+                {result.adjustment && (
+                  <div className={`mt-4 p-3 rounded-lg border ${
+                    result.adjustment.includes('adequado') 
+                      ? 'bg-green-500/10 border-green-500/20' 
+                      : 'bg-yellow-500/10 border-yellow-500/20'
+                  }`}>
+                    <p className="text-sm font-medium">
+                      🎯 <strong>Recomendação:</strong> {result.adjustment}
+                    </p>
+                  </div>
+                )}
                 <p className="text-xs text-muted-foreground mt-4">
                   💡 <strong>Dica:</strong> O tank recomendado inclui +10% de margem de segurança. Prepare a solução nutritiva uma vez por semana.
                 </p>

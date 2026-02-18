@@ -115,8 +115,8 @@
 
 ## Correção: Calculadora de Rega
 
-- [ ] Adicionar campo "Runoff Real Medido (%)" na calculadora
-- [ ] Calcular diferença entre runoff desejado e runoff real
-- [ ] Mostrar recomendação de ajuste de volume baseado na diferença
-- [ ] Se runoff real < desejado → aumentar volume
-- [ ] Se runoff real > desejado → diminuir volume
+- [x] Adicionar campo "Runoff Real Medido (%)" na calculadora
+- [x] Calcular diferença entre runoff desejado e runoff real
+- [x] Mostrar recomendação de ajuste de volume baseado na diferença
+- [x] Se runoff real < desejado → aumentar volume
+- [x] Se runoff real > desejado → diminuir volume
