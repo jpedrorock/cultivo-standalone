@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Heart, Upload, X, ZoomIn } from "lucide-react";
 import { toast } from "sonner";
+import { processImage, blobToBase64, formatFileSize } from "@/lib/imageUtils";
 
 interface PlantHealthTabProps {
   plantId: number;
@@ -36,7 +37,7 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
     },
   });
 
-  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -46,19 +47,38 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Imagem muito grande (máx 5MB)");
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("Imagem muito grande (máx 10MB)");
       return;
     }
 
-    setPhotoFile(file);
+    try {
+      toast.info("Processando imagem...");
+      
+      // Processar imagem: comprimir e ajustar para aspect ratio iPhone (3:4)
+      const processedBlob = await processImage(file, {
+        maxWidth: 1080,
+        maxHeight: 1440,
+        quality: 0.85,
+        aspectRatio: 3 / 4, // iPhone aspect ratio
+        format: 'image/jpeg'
+      });
 
-    // Preview
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPhotoPreview(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+      // Converter para File
+      const processedFile = new File([processedBlob], file.name, { type: 'image/jpeg' });
+      setPhotoFile(processedFile);
+
+      // Preview
+      const base64 = await blobToBase64(processedBlob);
+      setPhotoPreview(base64);
+
+      const originalSize = formatFileSize(file.size);
+      const newSize = formatFileSize(processedFile.size);
+      toast.success(`Imagem otimizada: ${originalSize} → ${newSize}`);
+    } catch (error) {
+      console.error('Erro ao processar imagem:', error);
+      toast.error('Erro ao processar imagem');
+    }
   };
 
   const handleSubmit = () => {
@@ -77,7 +97,7 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
           symptoms: symptoms || undefined,
           treatment: treatment || undefined,
           notes: notes || undefined,
-          photoUrl: reader.result as string,
+          photoBase64: reader.result as string, // Envia base64 para o backend fazer upload no S3
         });
       };
       reader.readAsDataURL(photoFile);
@@ -256,11 +276,11 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
               </CardHeader>
               <CardContent className="space-y-3">
                 {log.photoUrl && (
-                  <div className="relative group">
+                  <div className="relative group aspect-[3/4] w-full max-w-md mx-auto">
                     <img
                       src={log.photoUrl}
                       alt="Foto da planta"
-                      className="w-full h-48 object-cover rounded-lg cursor-pointer"
+                      className="w-full h-full object-cover rounded-lg cursor-pointer"
                       onClick={() => setLightboxPhoto(log.photoUrl)}
                     />
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">

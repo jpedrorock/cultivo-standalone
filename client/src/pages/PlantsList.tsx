@@ -248,10 +248,10 @@ export default function PlantsList() {
                             </CardHeader>
                             <CardContent className="space-y-3">
                               {/* Última foto da planta */}
-                              {plant.lastPhotoUrl && (
-                                <div className="w-full h-32 rounded-lg overflow-hidden">
+                              {plant.lastHealthPhotoUrl && (
+                                <div className="w-full aspect-[3/4] rounded-lg overflow-hidden">
                                   <img
-                                    src={plant.lastPhotoUrl}
+                                    src={plant.lastHealthPhotoUrl}
                                     alt={plant.name}
                                     className="w-full h-full object-cover"
                                   />

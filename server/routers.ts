@@ -1667,10 +1667,38 @@ export const appRouter = router({
         symptoms: z.string().optional(),
         treatment: z.string().optional(),
         notes: z.string().optional(),
+        photoBase64: z.string().optional(), // Base64 da foto para upload no S3
       }))
       .mutation(async ({ input }) => {
         const database = await getDb();
         if (!database) throw new Error("Database not available");
+        
+        let photoUrl: string | undefined;
+        let photoKey: string | undefined;
+
+        // Se tem foto, fazer upload para S3
+        if (input.photoBase64) {
+          try {
+            // Converter base64 para buffer
+            const base64Data = input.photoBase64.replace(/^data:image\/\w+;base64,/, "");
+            const buffer = Buffer.from(base64Data, 'base64');
+            
+            // Gerar nome único para o arquivo
+            const timestamp = Date.now();
+            const randomSuffix = Math.random().toString(36).substring(7);
+            const key = `plants/${input.plantId}/health/${timestamp}-${randomSuffix}.jpg`;
+            
+            // Upload para storage configurado (local ou S3)
+            const { storagePut } = await import('./storageUnified');
+            const result = await storagePut(key, buffer, 'image/jpeg');
+            
+            photoUrl = result.url;
+            photoKey = result.key;
+          } catch (error) {
+            console.error('Erro ao fazer upload da foto:', error);
+            // Continua sem a foto se o upload falhar
+          }
+        }
         
         await database.insert(plantHealthLogs).values({
           plantId: input.plantId,
@@ -1678,6 +1706,8 @@ export const appRouter = router({
           symptoms: input.symptoms,
           treatment: input.treatment,
           notes: input.notes,
+          photoUrl,
+          photoKey,
         });
         
         return { success: true };
@@ -1702,23 +1732,55 @@ export const appRouter = router({
     create: publicProcedure
       .input(z.object({
         plantId: z.number(),
+        weekNumber: z.number(),
         trichomeStatus: z.enum(["CLEAR", "CLOUDY", "AMBER", "MIXED"]),
         clearPercent: z.number().optional(),
         cloudyPercent: z.number().optional(),
         amberPercent: z.number().optional(),
         notes: z.string().optional(),
+        photoBase64: z.string().optional(), // Base64 da foto para upload no S3
       }))
       .mutation(async ({ input }) => {
         const database = await getDb();
         if (!database) throw new Error("Database not available");
         
+        let photoUrl: string | undefined;
+        let photoKey: string | undefined;
+
+        // Se tem foto, fazer upload para S3
+        if (input.photoBase64) {
+          try {
+            // Converter base64 para buffer
+            const base64Data = input.photoBase64.replace(/^data:image\/\w+;base64,/, "");
+            const buffer = Buffer.from(base64Data, 'base64');
+            
+            // Gerar nome único para o arquivo
+            const timestamp = Date.now();
+            const randomSuffix = Math.random().toString(36).substring(7);
+            const key = `plants/${input.plantId}/trichomes/${timestamp}-${randomSuffix}.jpg`;
+            
+            // Upload para storage configurado (local ou S3)
+            const { storagePut } = await import('./storageUnified');
+            const result = await storagePut(key, buffer, 'image/jpeg');
+            
+            photoUrl = result.url;
+            photoKey = result.key;
+          } catch (error) {
+            console.error('Erro ao fazer upload da foto:', error);
+            // Continua sem a foto se o upload falhar
+          }
+        }
+        
         await database.insert(plantTrichomeLogs).values({
           plantId: input.plantId,
+          weekNumber: input.weekNumber,
           trichomeStatus: input.trichomeStatus,
           clearPercent: input.clearPercent,
           cloudyPercent: input.cloudyPercent,
           amberPercent: input.amberPercent,
           notes: input.notes,
+          photoUrl,
+          photoKey,
         });
         
         return { success: true };

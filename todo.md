@@ -292,3 +292,22 @@
 - [x] Remover rota `/watering-runoff` do App.tsx
 - [x] Remover link "Rega e Runoff" do Sidebar
 - [x] Remover arquivo WateringRunoff.tsx
+
+## Melhorias no Sistema de Fotos
+
+- [x] Implementar compressão de imagens no frontend antes do upload
+- [x] Adicionar crop/resize para aspect ratio iPhone (3:4 vertical)
+- [x] Migrar armazenamento de fotos para sistema flexível (local ou S3)
+- [x] Garantir que última foto aparece nos cards da lista de plantas
+- [x] Corrigir visualização da galeria de fotos nas abas de Saúde e Tricomas
+- [x] Atualizar backend para usar storagePut() unificado
+- [x] Atualizar schema do banco para armazenar URLs ao invés de base64
+
+## Sistema de Storage Flexível
+
+- [x] Criar sistema de storage local (pasta uploads/)
+- [x] Adicionar variável de ambiente STORAGE_TYPE (local ou s3)
+- [x] Atualizar backend para suportar storage local e S3
+- [x] Criar guia de configuração para diferentes opções de storage
+- [x] Adicionar .gitignore para pasta uploads/
+- [x] Criar endpoint para servir arquivos estáticos da pasta uploads/

@@ -590,6 +590,8 @@ export const plantHealthLogs = mysqlTable(
     symptoms: text("symptoms"), // Deficiências, pragas, etc.
     treatment: text("treatment"), // Ações tomadas
     notes: text("notes"),
+    photoUrl: varchar("photoUrl", { length: 500 }), // URL da foto no S3
+    photoKey: varchar("photoKey", { length: 500 }), // Chave da foto no S3
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (table) => ({
