@@ -382,3 +382,11 @@
 - [x] Integrar com procedure plants.moveTent do backend
 - [x] Adicionar notificação toast de sucesso/erro
 - [x] Conectar modal ao botão "Mover para Outra Estufa" do dropdown
+
+## Correção da Calculadora de Rega
+
+- [x] Remover seletor de fase/semana da calculadora de rega (era confusão)
+- [x] Manter apenas inputs manuais na calculadora de rega
+- [x] Adicionar cálculo semanal embaixo do resultado diário
+- [x] Mostrar "Rega Diária: X litros" e "Rega Semanal: Y litros"
+- [x] Confirmar que seletor de fase/semana permanece apenas na calculadora de fertilização

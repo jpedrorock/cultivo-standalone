@@ -210,27 +210,7 @@ function WateringRunoffCalculator() {
   const [desiredRunoff, setDesiredRunoff] = useState<number>(20);
   const [lastRunoff, setLastRunoff] = useState<string>("");
   
-  // Seletor de fase/semana para valores recomendados
-  const [useRecommended, setUseRecommended] = useState<boolean>(false);
-  const [selectedPhase, setSelectedPhase] = useState<string>("VEGA");
-  const [selectedWeek, setSelectedWeek] = useState<number>(1);
-  
-  // Buscar targets da semana selecionada
-  const { data: weeklyTargets } = trpc.weeklyTargets.list.useQuery();
-  const recommendedTarget = React.useMemo(() => {
-    if (!weeklyTargets || !useRecommended) return null;
-    return weeklyTargets.find(
-      (t: any) => t.phase === selectedPhase && t.weekNumber === selectedWeek
-    );
-  }, [weeklyTargets, selectedPhase, selectedWeek, useRecommended]);
-  
-  // Atualizar runoff desejado quando usar recomendado
-  React.useEffect(() => {
-    if (recommendedTarget && useRecommended) {
-      // Usar 20% como padrão se não houver valor específico
-      setDesiredRunoff(20);
-    }
-  }, [recommendedTarget, useRecommended]);
+  // Removido seletor de fase/semana - não é necessário para rega
   
   // Calculadora de Runoff
   const [volumeIn, setVolumeIn] = useState<string>("");
@@ -326,50 +306,6 @@ function WateringRunoffCalculator() {
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Seletor de Fase/Semana */}
-            <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-              <input
-                type="checkbox"
-                id="useRecommended"
-                checked={useRecommended}
-                onChange={(e) => setUseRecommended(e.target.checked)}
-                className="w-4 h-4"
-              />
-              <Label htmlFor="useRecommended" className="cursor-pointer">
-                Usar valores recomendados por fase/semana
-              </Label>
-            </div>
-            
-            {useRecommended && (
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="phase">Fase</Label>
-                  <select
-                    id="phase"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                    value={selectedPhase}
-                    onChange={(e) => setSelectedPhase(e.target.value)}
-                  >
-                    <option value="VEGA">Vega</option>
-                    <option value="FLORA">Flora</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="week">Semana</Label>
-                  <select
-                    id="week"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                    value={selectedWeek}
-                    onChange={(e) => setSelectedWeek(parseInt(e.target.value))}
-                  >
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map((week) => (
-                      <option key={week} value={week}>
-                        Semana {week}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            )}
             
             <div className="space-y-4">
               <div className="space-y-2">
@@ -446,10 +382,14 @@ function WateringRunoffCalculator() {
                       <span className="font-bold">{wateringResult.adjustedVolume}L por planta</span>
                     </div>
                     <div className="flex justify-between pt-2 border-t">
-                      <span className="text-sm font-semibold">Total para {numPlants} plantas:</span>
-                      <span className="font-bold text-lg">{wateringResult.totalVolume}L</span>
-                    </div>
+                    <span className="text-sm font-semibold">Rega Diária ({numPlants} plantas):</span>
+                    <span className="font-bold text-lg text-blue-600">{wateringResult.totalVolume}L</span>
                   </div>
+                  <div className="flex justify-between pt-2 border-t">
+                    <span className="text-sm font-semibold">Rega Semanal (7 dias):</span>
+                    <span className="font-bold text-lg text-green-600">{(parseFloat(wateringResult.totalVolume) * 7).toFixed(2)}L</span>
+                  </div>
+                </div>
                 </div>
               ) : (
                 <div className="bg-muted/50 p-4 rounded-lg space-y-2">
@@ -458,8 +398,12 @@ function WateringRunoffCalculator() {
                     <span className="font-medium">{wateringResult.baseVolume}L</span>
                   </div>
                   <div className="flex justify-between pt-2 border-t">
-                    <span className="text-sm font-semibold">Total para {numPlants} plantas:</span>
-                    <span className="font-bold text-lg">{wateringResult.totalVolume}L</span>
+                    <span className="text-sm font-semibold">Rega Diária ({numPlants} plantas):</span>
+                    <span className="font-bold text-lg text-blue-600">{wateringResult.totalVolume}L</span>
+                  </div>
+                  <div className="flex justify-between pt-2 border-t">
+                    <span className="text-sm font-semibold">Rega Semanal (7 dias):</span>
+                    <span className="font-bold text-lg text-green-600">{(parseFloat(wateringResult.totalVolume) * 7).toFixed(2)}L</span>
                   </div>
                 </div>
               )}
