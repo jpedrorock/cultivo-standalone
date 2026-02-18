@@ -5,6 +5,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Trash2, BookmarkPlus } from "lucide-react";
 import { toast } from "sonner";
 
 export function FertilizationCalculator() {
@@ -13,6 +15,8 @@ export function FertilizationCalculator() {
   const [volume, setVolume] = useState(10);
   const [customEC, setCustomEC] = useState<number | null>(null);
   const [result, setResult] = useState<any>(null);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [presetName, setPresetName] = useState("");
 
   // Buscar EC recomendado do backend
   const { data: weeklyTarget } = trpc.weeklyTargets.get.useQuery({
@@ -21,6 +25,53 @@ export function FertilizationCalculator() {
   });
 
   const targetEC = customEC !== null ? customEC : (weeklyTarget?.targetEC || 0);
+
+  // Mutations para predefinições
+  const createPreset = trpc.fertilizationPresets.create.useMutation({
+    onSuccess: () => {
+      toast.success("Predefinição salva com sucesso!");
+      setShowSaveDialog(false);
+      setPresetName("");
+      presetsList.refetch();
+    },
+    onError: (error) => {
+      toast.error(`Erro ao salvar: ${error.message}`);
+    },
+  });
+
+  const deletePreset = trpc.fertilizationPresets.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Predefinição excluída!");
+      presetsList.refetch();
+    },
+  });
+
+  const presetsList = trpc.fertilizationPresets.list.useQuery();
+
+  const handleSavePreset = () => {
+    if (!presetName.trim()) {
+      toast.error("Digite um nome para a predefinição");
+      return;
+    }
+
+    createPreset.mutate({
+      name: presetName,
+      waterVolume: volume,
+      targetEC: targetEC,
+      phase,
+      weekNumber,
+      irrigationsPerWeek: null,
+      calculationMode: "per-irrigation",
+    });
+  };
+
+  const handleLoadPreset = (preset: any) => {
+    setPhase(preset.phase);
+    setWeekNumber(preset.weekNumber);
+    setVolume(parseFloat(preset.waterVolume));
+    setCustomEC(preset.targetEC);
+    toast.success(`Predefinição "${preset.name}" carregada!`);
+  };
 
   const handleCalculate = () => {
     if (volume <= 0) {
@@ -119,9 +170,20 @@ export function FertilizationCalculator() {
             />
           </div>
 
-          <Button onClick={handleCalculate} className="w-full" size="lg">
-            📊 Calcular Receita
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={handleCalculate} className="flex-1" size="lg">
+              📊 Calcular Receita
+            </Button>
+            <Button
+              onClick={() => setShowSaveDialog(true)}
+              variant="outline"
+              size="lg"
+              className="flex-1"
+            >
+              <BookmarkPlus className="mr-2 h-4 w-4" />
+              Salvar Predefinição
+            </Button>
+          </div>
         </div>
       </Card>
 
@@ -151,6 +213,82 @@ export function FertilizationCalculator() {
               <span className="font-medium">Potássio (K):</span>
               <span className="font-bold text-orange-600">{result.potassium}g</span>
             </div>
+          </div>
+        </Card>
+      )}
+
+      {/* Modal de Salvar Predefinição */}
+      <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Salvar Predefinição</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="preset-name">Nome da Predefinição</Label>
+              <Input
+                id="preset-name"
+                value={presetName}
+                onChange={(e) => setPresetName(e.target.value)}
+                placeholder="Ex: Vega Semana 3 - 10L"
+              />
+            </div>
+            <div className="text-sm text-muted-foreground">
+              <p><strong>Fase:</strong> {phase === "vega" ? "Vegetativa" : "Floração"}</p>
+              <p><strong>Semana:</strong> {weekNumber}</p>
+              <p><strong>Volume:</strong> {volume}L</p>
+              <p><strong>EC:</strong> {targetEC} mS/cm</p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowSaveDialog(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleSavePreset} disabled={createPreset.isPending}>
+              {createPreset.isPending ? "Salvando..." : "Salvar"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Lista de Predefinições Salvas */}
+      {presetsList.data && presetsList.data.length > 0 && (
+        <Card className="p-6">
+          <h3 className="text-xl font-bold mb-4">📚 Minhas Predefinições</h3>
+          <div className="space-y-3">
+            {presetsList.data.map((preset: any) => (
+              <div
+                key={preset.id}
+                className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors"
+              >
+                <div className="flex-1">
+                  <p className="font-medium">{preset.name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {preset.phase === "vega" ? "🌱 Vega" : "🌸 Flora"} Semana {preset.weekNumber} • {preset.waterVolume}L • {preset.targetEC} mS/cm
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleLoadPreset(preset)}
+                  >
+                    Carregar
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => {
+                      if (confirm(`Excluir predefinição "${preset.name}"?`)) {
+                        deletePreset.mutate({ id: preset.id });
+                      }
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
+                </div>
+              </div>
+            ))}
           </div>
         </Card>
       )}

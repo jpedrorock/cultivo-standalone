@@ -572,3 +572,14 @@
 - [x] Permitir EC personalizado
 - [x] Calcular reagentes NPK baseado em volume e EC
 - [ ] Testar no navegador (aguardando cache limpar)
+
+
+## 💾 Sistema de Predefinições de Fertilização
+
+- [x] Adicionar botão "💾 Salvar Predefinição" na calculadora
+- [x] Modal para nomear predefinição
+- [x] Salvar valores atuais (fase, semana, volume, EC) no backend
+- [x] Listar predefinições salvas abaixo do formulário
+- [x] Botão "Carregar" em cada predefinição
+- [x] Botão "Excluir" em cada predefinição
+- [ ] Testar fluxo completo (aguardando teste no navegador)
