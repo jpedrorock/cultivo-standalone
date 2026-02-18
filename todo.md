@@ -344,3 +344,18 @@
 - [x] Fotos à direita (aspect ratio 3:4)
 - [x] Dados (status, sintomas, tratamento, notas) à esquerda
 - [x] Melhorar responsividade para mobile
+
+## Correções de Sinalização e Ações de Plantas
+
+- [x] Corrigir sinalizações duplicadas/confusas no menu da planta (Ativa + Flora Semana quando está na Vega)
+- [x] Mostrar apenas uma badge com fase atual da estufa (ex: "Vega Semana 3")
+- [ ] Adicionar menu de ações rápidas no detalhe da planta
+- [ ] Implementar botão "Transplantar para Flora" (move planta para estufa de Flora)
+- [ ] Implementar botão "Colher" (marca planta como colhida)
+- [ ] Manter botão "Mover Estufa" existente para escolha manual
+
+## Restaurar Cálculo de Rega por Semana
+
+- [x] Adicionar seletor de fase/semana na calculadora de rega
+- [x] Buscar valores recomendados de rega baseados na tabela weeklyTargets
+- [x] Manter opção de edição manual dos valores

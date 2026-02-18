@@ -210,6 +210,28 @@ function WateringRunoffCalculator() {
   const [desiredRunoff, setDesiredRunoff] = useState<number>(20);
   const [lastRunoff, setLastRunoff] = useState<string>("");
   
+  // Seletor de fase/semana para valores recomendados
+  const [useRecommended, setUseRecommended] = useState<boolean>(false);
+  const [selectedPhase, setSelectedPhase] = useState<string>("VEGA");
+  const [selectedWeek, setSelectedWeek] = useState<number>(1);
+  
+  // Buscar targets da semana selecionada
+  const { data: weeklyTargets } = trpc.weeklyTargets.list.useQuery();
+  const recommendedTarget = React.useMemo(() => {
+    if (!weeklyTargets || !useRecommended) return null;
+    return weeklyTargets.find(
+      (t: any) => t.phase === selectedPhase && t.weekNumber === selectedWeek
+    );
+  }, [weeklyTargets, selectedPhase, selectedWeek, useRecommended]);
+  
+  // Atualizar runoff desejado quando usar recomendado
+  React.useEffect(() => {
+    if (recommendedTarget && useRecommended) {
+      // Usar 20% como padrão se não houver valor específico
+      setDesiredRunoff(20);
+    }
+  }, [recommendedTarget, useRecommended]);
+  
   // Calculadora de Runoff
   const [volumeIn, setVolumeIn] = useState<string>("");
   const [volumeOut, setVolumeOut] = useState<string>("");
@@ -303,6 +325,52 @@ function WateringRunoffCalculator() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
+            {/* Seletor de Fase/Semana */}
+            <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+              <input
+                type="checkbox"
+                id="useRecommended"
+                checked={useRecommended}
+                onChange={(e) => setUseRecommended(e.target.checked)}
+                className="w-4 h-4"
+              />
+              <Label htmlFor="useRecommended" className="cursor-pointer">
+                Usar valores recomendados por fase/semana
+              </Label>
+            </div>
+            
+            {useRecommended && (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="phase">Fase</Label>
+                  <select
+                    id="phase"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    value={selectedPhase}
+                    onChange={(e) => setSelectedPhase(e.target.value)}
+                  >
+                    <option value="VEGA">Vega</option>
+                    <option value="FLORA">Flora</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="week">Semana</Label>
+                  <select
+                    id="week"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    value={selectedWeek}
+                    onChange={(e) => setSelectedWeek(parseInt(e.target.value))}
+                  >
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((week) => (
+                      <option key={week} value={week}>
+                        Semana {week}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
+            
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="numPlants">Número de Plantas</Label>

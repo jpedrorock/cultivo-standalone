@@ -13,8 +13,18 @@ import {
   Sparkles, 
   Scissors,
   Edit,
-  MoveRight
+  MoveRight,
+  MoreVertical,
+  Flower2,
+  CheckCircle
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 import PlantObservationsTab from "@/components/PlantObservationsTab";
 import PlantHealthTab from "@/components/PlantHealthTab";
 import PlantTrichomesTab from "@/components/PlantTrichomesTab";
@@ -107,9 +117,7 @@ export default function PlantDetail() {
                   <p className="text-sm text-muted-foreground font-mono">{plant.code}</p>
                 )}
               </div>
-              <div className={`px-3 py-1 rounded-md text-sm font-medium border ${getStatusColor(plant.status)}`}>
-                {getStatusLabel(plant.status)}
-              </div>
+              {/* Badge de fase/semana da estufa */}
               {tent && (
                 <div className="px-3 py-1 rounded-md text-sm font-medium border bg-primary/10 text-primary border-primary/30">
                   {tent.currentPhase === "VEGA" ? "🌱" : "🌺"} {tent.currentPhase === "VEGA" ? "Vega" : "Flora"} Semana {tent.currentWeek}
@@ -121,10 +129,33 @@ export default function PlantDetail() {
                 <Edit className="w-4 h-4 mr-2" />
                 Editar
               </Button>
-              <Button variant="outline">
-                <MoveRight className="w-4 h-4 mr-2" />
-                Mover Estufa
-              </Button>
+              
+              {/* Menu de Ações Rápidas */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline">
+                    <MoreVertical className="w-4 h-4 mr-2" />
+                    Ações
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  {tent?.currentPhase === "VEGA" && (
+                    <DropdownMenuItem>
+                      <Flower2 className="w-4 h-4 mr-2" />
+                      Transplantar para Flora
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem>
+                    <MoveRight className="w-4 h-4 mr-2" />
+                    Mover para Outra Estufa
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="text-green-600">
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Marcar como Colhida
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>
