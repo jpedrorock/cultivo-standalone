@@ -1338,7 +1338,7 @@ export const appRouter = router({
         const database = getDb();
         if (!database) throw new Error("Database not available");
         
-        const [plant] = await database.insert(plants).values({
+        const result = await database.insert(plants).values({
           name: input.name,
           code: input.code,
           strainId: input.strainId,
@@ -1348,7 +1348,8 @@ export const appRouter = router({
           status: "ACTIVE",
         });
         
-        return plant;
+        // Retornar o ID inserido
+        return { id: result.insertId };
       }),
 
     // Listar plantas

@@ -378,7 +378,8 @@ function IrrigationCalculator() {
   const [numPlants, setNumPlants] = useState<string>("1");
   const [irrigationFrequency, setIrrigationFrequency] = useState<string>("2");
   const [runoffPercent, setRunoffPercent] = useState<string>("20");
-  const [result, setResult] = useState<{ volume: number; frequency: string; weeklyTotal?: number; irrigationsPerWeek?: number; tankSize?: number } | null>(null);
+  const [runoffReal, setRunoffReal] = useState<string>("");
+  const [result, setResult] = useState<{ volume: number; frequency: string; weeklyTotal?: number; irrigationsPerWeek?: number; tankSize?: number; adjustment?: string; adjustmentPercent?: number } | null>(null);
 
   const calculateIrrigation = () => {
     const volume = parseFloat(potVolume);
@@ -403,10 +404,36 @@ function IrrigationCalculator() {
 
     const waterPerPlant = volume * waterPercentage * (1 + runoff);
 
+    // Calcular ajuste baseado no runoff real
+    let adjustment = "";
+    let adjustmentPercent = 0;
+    const realRunoff = parseFloat(runoffReal);
+    
+    if (!isNaN(realRunoff) && realRunoff > 0) {
+      const targetRunoff = parseFloat(runoffPercent);
+      const diff = targetRunoff - realRunoff;
+      
+      if (Math.abs(diff) > 2) { // Só sugerir ajuste se diferença > 2%
+        adjustmentPercent = Math.round((diff / targetRunoff) * 100);
+        
+        if (diff > 0) {
+          // Runoff real menor que desejado → aumentar volume
+          adjustment = `Aumente o volume em ~${Math.abs(adjustmentPercent)}% (runoff atual: ${realRunoff}%)`;
+        } else {
+          // Runoff real maior que desejado → diminuir volume
+          adjustment = `Diminua o volume em ~${Math.abs(adjustmentPercent)}% (runoff atual: ${realRunoff}%)`;
+        }
+      } else {
+        adjustment = `Volume adequado! Runoff atual (${realRunoff}%) está dentro da faixa ideal.`;
+      }
+    }
+
     if (calculationMode === "daily") {
       setResult({
         volume: Math.round(waterPerPlant * 100) / 100,
         frequency,
+        adjustment,
+        adjustmentPercent,
       });
     } else {
       // Cálculo semanal
@@ -421,6 +448,8 @@ function IrrigationCalculator() {
         irrigationsPerWeek: Math.round(irrigationsPerWeek * 10) / 10,
         weeklyTotal: Math.round(weeklyTotal * 100) / 100,
         tankSize,
+        adjustment,
+        adjustmentPercent,
       });
     }
   };
@@ -523,6 +552,20 @@ function IrrigationCalculator() {
               </div>
             </>
           )}
+
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="runoffReal">% Runoff Real Medido (opcional)</Label>
+            <Input
+              id="runoffReal"
+              type="number"
+              placeholder="Ex: 15 (medido na última rega)"
+              value={runoffReal}
+              onChange={(e) => setRunoffReal(e.target.value)}
+            />
+            <p className="text-xs text-muted-foreground">
+              💡 Meça o runoff real para ajustar o volume de rega. Se runoff real &lt; desejado → aumente volume. Se runoff real &gt; desejado → diminua volume.
+            </p>
+          </div>
         </div>
 
         <Button onClick={calculateIrrigation} className="w-full">

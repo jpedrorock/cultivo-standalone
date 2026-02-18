@@ -27,6 +27,7 @@ import AlertHistory from "./pages/AlertHistory";
 import AlertSettings from "./pages/AlertSettings";
 import PlantsList from "./pages/PlantsList";
 import PlantDetail from "./pages/PlantDetail";
+import NewPlant from "./pages/NewPlant";
 
 
 function Router() {
@@ -49,6 +50,7 @@ function Router() {
       <Route path={"/strains/:id/targets"} component={StrainTargets} />
 
       <Route path={"/plants"} component={PlantsList} />
+      <Route path={"/plants/new"} component={NewPlant} />
       <Route path={"/plants/:id"} component={PlantDetail} />
 
       <Route path={"/tent/:id"} component={TentDetails} />

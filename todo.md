@@ -103,3 +103,20 @@
 - [ ] Criar/atualizar guia do usuário
 - [ ] Salvar checkpoint final
 - [ ] Gerar pacote de deploy
+
+## Nova Tarefa: Página de Adicionar Planta
+
+- [x] Criar página `/plants/new` com formulário
+- [x] Campos: nome, código (opcional), strain, estufa inicial, data de germinação, notas
+- [x] Validação de campos obrigatórios
+- [x] Integração com tRPC `plants.create`
+- [x] Redirecionamento após criação bem-sucedida
+- [x] Adicionar rota no App.tsx
+
+## Correção: Calculadora de Rega
+
+- [ ] Adicionar campo "Runoff Real Medido (%)" na calculadora
+- [ ] Calcular diferença entre runoff desejado e runoff real
+- [ ] Mostrar recomendação de ajuste de volume baseado na diferença
+- [ ] Se runoff real < desejado → aumentar volume
+- [ ] Se runoff real > desejado → diminuir volume
