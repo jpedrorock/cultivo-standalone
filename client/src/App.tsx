@@ -28,7 +28,7 @@ import AlertSettings from "./pages/AlertSettings";
 import PlantsList from "./pages/PlantsList";
 import PlantDetail from "./pages/PlantDetail";
 import NewPlant from "./pages/NewPlant";
-import WateringRunoff from "./pages/WateringRunoff";
+
 
 
 function Router() {
@@ -42,7 +42,7 @@ function Router() {
       <Route path={"/calculators"} component={CalculatorMenu} />
       <Route path={"/calculators/fertilization"} component={FertilizationCalculator} />
       <Route path={"/calculators/:id"} component={Calculators} />
-      <Route path={"/watering-runoff"} component={WateringRunoff} />
+
       <Route path={"/alerts"} component={Alerts} />
       <Route path={"/history"} component={HistoryTable} />
       <Route path={"/settings"} component={Settings} />

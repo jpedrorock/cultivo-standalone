@@ -112,6 +112,11 @@ export default function PlantDetail() {
               <div className={`px-3 py-1 rounded-md text-sm font-medium border ${getStatusColor(plant.status)}`}>
                 {getStatusLabel(plant.status)}
               </div>
+              {tent && (
+                <div className="px-3 py-1 rounded-md text-sm font-medium border bg-primary/10 text-primary border-primary/30">
+                  {tent.currentPhase === "VEGA" ? "🌱" : "🌺"} {tent.currentPhase === "VEGA" ? "Vega" : "Flora"} Semana {tent.currentWeek}
+                </div>
+              )}
             </div>
             <div className="flex gap-2">
               <Button variant="outline">

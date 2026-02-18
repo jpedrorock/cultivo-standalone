@@ -279,3 +279,16 @@
 - [x] Remover procedures watering.log, watering.list, watering.delete
 - [x] Remover modo semanal/tank
 - [x] Simplificar página WateringRunoff para apenas 2 calculadoras
+
+## Tarefas Finais
+
+- [x] Adicionar cálculo de custo semanal na calculadora de fertilização
+- [x] Adicionar indicador de fase no header da página de detalhes da planta
+
+## Reorganização de Calculadoras
+
+- [x] Mover componentes de Rega e Runoff para página de Calculadoras como aba
+- [x] Remover calculadoras antigas de rega e runoff da página de Calculadoras
+- [x] Remover rota `/watering-runoff` do App.tsx
+- [x] Remover link "Rega e Runoff" do Sidebar
+- [x] Remover arquivo WateringRunoff.tsx

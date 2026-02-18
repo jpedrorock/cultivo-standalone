@@ -8,7 +8,6 @@ export function Sidebar() {
   const navItems = [
     { href: "/", icon: Home, label: "Home" },
     { href: "/plants", icon: Sprout, label: "Plantas" },
-    { href: "/watering-runoff", icon: Droplets, label: "Rega e Runoff" },
     { href: "/calculators", icon: Calculator, label: "Calculadoras" },
     { href: "/history", icon: BarChart3, label: "Histórico" },
     { href: "/alerts", icon: Bell, label: "Alertas" },
