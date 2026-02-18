@@ -35,7 +35,6 @@ import {
   type SafetyLimit,
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
-import { eq, and, sql } from 'drizzle-orm';
 
 let _db: any = null;
 

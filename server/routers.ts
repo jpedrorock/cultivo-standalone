@@ -1335,7 +1335,7 @@ export const appRouter = router({
         notes: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        const database = getDb();
+        const database = await getDb();
         if (!database) throw new Error("Database not available");
         
         const result = await database.insert(plants).values({
@@ -1360,7 +1360,7 @@ export const appRouter = router({
         status: z.enum(["ACTIVE", "HARVESTED", "DEAD"]).optional(),
       }))
       .query(async ({ input }) => {
-        const database = getDb();
+        const database = await getDb();
         if (!database) throw new Error("Database not available");
         
         let query = database.select().from(plants);
@@ -1382,7 +1382,7 @@ export const appRouter = router({
     getById: publicProcedure
       .input(z.object({ id: z.number() }))
       .query(async ({ input }) => {
-        const database = getDb();
+        const database = await getDb();
         if (!database) throw new Error("Database not available");
         
         const [plant] = await database
@@ -1402,7 +1402,7 @@ export const appRouter = router({
         notes: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        const database = getDb();
+        const database = await getDb();
         if (!database) throw new Error("Database not available");
         
         await database
@@ -1425,7 +1425,7 @@ export const appRouter = router({
         reason: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        const database = getDb();
+        const database = await getDb();
         if (!database) throw new Error("Database not available");
         
         // Buscar estufa atual
@@ -1460,7 +1460,7 @@ export const appRouter = router({
         status: z.enum(["HARVESTED", "DEAD"]),
       }))
       .mutation(async ({ input }) => {
-        const database = getDb();
+        const database = await getDb();
         if (!database) throw new Error("Database not available");
         
         await database
@@ -1480,7 +1480,7 @@ export const appRouter = router({
         content: z.string(),
       }))
       .mutation(async ({ input }) => {
-        const database = getDb();
+        const database = await getDb();
         if (!database) throw new Error("Database not available");
         
         await database.insert(plantObservations).values({
@@ -1494,7 +1494,7 @@ export const appRouter = router({
     list: publicProcedure
       .input(z.object({ plantId: z.number() }))
       .query(async ({ input }) => {
-        const database = getDb();
+        const database = await getDb();
         if (!database) throw new Error("Database not available");
         
         return await database
@@ -1510,7 +1510,7 @@ export const appRouter = router({
     list: publicProcedure
       .input(z.object({ plantId: z.number() }))
       .query(async ({ input }) => {
-        const database = getDb();
+        const database = await getDb();
         if (!database) throw new Error("Database not available");
         
         return await database
@@ -1531,7 +1531,7 @@ export const appRouter = router({
         notes: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        const database = getDb();
+        const database = await getDb();
         if (!database) throw new Error("Database not available");
         
         const runoffPercent = (input.volumeOut / input.volumeIn) * 100;
@@ -1550,7 +1550,7 @@ export const appRouter = router({
     list: publicProcedure
       .input(z.object({ plantId: z.number() }))
       .query(async ({ input }) => {
-        const database = getDb();
+        const database = await getDb();
         if (!database) throw new Error("Database not available");
         
         return await database
@@ -1572,7 +1572,7 @@ export const appRouter = router({
         notes: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        const database = getDb();
+        const database = await getDb();
         if (!database) throw new Error("Database not available");
         
         await database.insert(plantHealthLogs).values({
@@ -1589,7 +1589,7 @@ export const appRouter = router({
     list: publicProcedure
       .input(z.object({ plantId: z.number() }))
       .query(async ({ input }) => {
-        const database = getDb();
+        const database = await getDb();
         if (!database) throw new Error("Database not available");
         
         return await database
@@ -1612,7 +1612,7 @@ export const appRouter = router({
         notes: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        const database = getDb();
+        const database = await getDb();
         if (!database) throw new Error("Database not available");
         
         await database.insert(plantTrichomeLogs).values({
@@ -1630,7 +1630,7 @@ export const appRouter = router({
     list: publicProcedure
       .input(z.object({ plantId: z.number() }))
       .query(async ({ input }) => {
-        const database = getDb();
+        const database = await getDb();
         if (!database) throw new Error("Database not available");
         
         return await database
@@ -1651,7 +1651,7 @@ export const appRouter = router({
         notes: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        const database = getDb();
+        const database = await getDb();
         if (!database) throw new Error("Database not available");
         
         await database.insert(plantLSTLogs).values({
@@ -1667,7 +1667,7 @@ export const appRouter = router({
     list: publicProcedure
       .input(z.object({ plantId: z.number() }))
       .query(async ({ input }) => {
-        const database = getDb();
+        const database = await getDb();
         if (!database) throw new Error("Database not available");
         
         return await database

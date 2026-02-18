@@ -134,3 +134,10 @@
 - [x] Botão rápido para mover planta entre estufas
 - [x] Modal de confirmação ao mover planta
 - [x] Atualizar lista após mover planta
+
+## Correção de Erros - Página de Nova Planta
+
+- [x] Corrigir erro "Objects are not valid as a React child" no toast
+- [x] Corrigir erro "database.insert is not a function" no backend
+- [x] Corrigir erro "database.select is not a function" no backend
+- [x] Testar criação de nova planta após correções

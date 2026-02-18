@@ -24,15 +24,11 @@ export default function NewPlant() {
   
   const createPlant = trpc.plants.create.useMutation({
     onSuccess: (data) => {
-      toast({ title: "Planta criada com sucesso!" });
+      toast.success("Planta criada com sucesso!");
       setLocation(`/plants/${data.id}`);
     },
     onError: (error) => {
-      toast({ 
-        title: "Erro ao criar planta", 
-        description: error.message,
-        variant: "destructive" 
-      });
+      toast.error(`Erro ao criar planta: ${error.message}`);
     },
   });
 
@@ -40,22 +36,22 @@ export default function NewPlant() {
     e.preventDefault();
 
     if (!name.trim()) {
-      toast({ title: "Erro", description: "Nome é obrigatório", variant: "destructive" });
+      toast.error("Nome é obrigatório");
       return;
     }
 
     if (!strainId) {
-      toast({ title: "Erro", description: "Selecione uma strain", variant: "destructive" });
+      toast.error("Selecione uma strain");
       return;
     }
 
     if (!tentId) {
-      toast({ title: "Erro", description: "Selecione uma estufa", variant: "destructive" });
+      toast.error("Selecione uma estufa");
       return;
     }
 
     if (!germDate) {
-      toast({ title: "Erro", description: "Data de germinação é obrigatória", variant: "destructive" });
+      toast.error("Data de germinação é obrigatória");
       return;
     }
 
