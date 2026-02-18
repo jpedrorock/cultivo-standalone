@@ -778,6 +778,58 @@ export const appRouter = router({
 
   // Weekly Targets (Padrões Semanais)
   weeklyTargets: router({
+    get: publicProcedure
+      .input(
+        z.object({
+          phase: z.enum(["vega", "flora"]),
+          weekNumber: z.number(),
+        })
+      )
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) return null;
+        
+        // Converte para uppercase para match com o enum do banco
+        const phaseUpper = input.phase.toUpperCase() as "VEGA" | "FLORA";
+        
+        // Busca targets genéricos (pode ser de qualquer strain)
+        // Para calculadora genérica, retorna valores padrão baseados na fase/semana
+        const targets = await database
+          .select()
+          .from(weeklyTargets)
+          .where(
+            and(
+              eq(weeklyTargets.phase, phaseUpper),
+              eq(weeklyTargets.weekNumber, input.weekNumber)
+            )
+          )
+          .limit(1);
+        
+        // Se não encontrar targets específicos, retorna valores padrão
+        if (targets.length === 0) {
+          // Valores padrão de EC por fase e semana
+          const defaultEC = input.phase === "vega" 
+            ? 1.0 + (input.weekNumber - 1) * 0.2 // Vega: 1.0 a 2.0
+            : 1.6 + (input.weekNumber - 1) * 0.15; // Flora: 1.6 a 2.65
+          
+          return {
+            targetEC: Math.min(defaultEC, input.phase === "vega" ? 2.0 : 2.8).toFixed(1),
+            phase: phaseUpper,
+            weekNumber: input.weekNumber,
+          };
+        }
+        
+        // Retorna o target encontrado com targetEC calculado da média de ecMin e ecMax
+        const target = targets[0];
+        const ecMin = parseFloat(target.ecMin || "0");
+        const ecMax = parseFloat(target.ecMax || "0");
+        const targetEC = ecMax > 0 ? ((ecMin + ecMax) / 2).toFixed(1) : "1.5";
+        
+        return {
+          ...target,
+          targetEC,
+        };
+      }),
     getTargetsByWeek: publicProcedure
       .input(
         z.object({

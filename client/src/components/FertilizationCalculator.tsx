@@ -268,6 +268,29 @@ export function FertilizationCalculator() {
             )}
           </div>
 
+          {/* Botão Calcular Receita */}
+          <Button
+            onClick={() => {
+              // Força recalcular (useEffect já faz isso automaticamente, mas o botão dá feedback visual)
+              if (volume > 0 && targetEC > 0) {
+                toast.success("✅ Receita calculada com sucesso!");
+                // Scroll suave até o resultado
+                setTimeout(() => {
+                  const resultElement = document.querySelector('[data-result-card]');
+                  if (resultElement) {
+                    resultElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                  }
+                }, 100);
+              } else {
+                toast.error("⚠️ Preencha volume e EC para calcular");
+              }
+            }}
+            size="lg"
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold text-lg py-6"
+          >
+            🧪 Calcular Receita
+          </Button>
+
           <div className="space-y-2">
             <div className="flex gap-2">
               <Button
@@ -295,7 +318,7 @@ export function FertilizationCalculator() {
 
       {/* Resultado */}
       {result && (
-        <Card className="p-6 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-2 border-green-200 dark:border-green-800">
+        <Card data-result-card className="p-6 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-2 border-green-200 dark:border-green-800">
           <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
             🧪 Receita de Fertilização para {result.volume}L:
           </h3>

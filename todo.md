@@ -649,3 +649,11 @@
 - [x] Mostra quantidade total e por litro de cada nutriente
 - [x] Exibe: Nitrato de Cálcio, Nitrato de Potássio, MKP, Sulfato de Magnésio, Micronutrientes
 - [x] Mostra EC resultante e PPM aproximado
+
+## Correções Urgentes
+
+- [x] Criar procedure weeklyTargets.get no backend
+- [x] Adicionar botão verde "Calcular Receita" na calculadora de fertilização
+- [x] Corrigir erro "No procedure found on path weeklyTargets.get"
+- [x] Procedure retorna valores padrão de EC quando não há dados no banco
+- [x] Botão faz scroll suave até o resultado e mostra toast de sucesso
