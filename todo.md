@@ -672,3 +672,10 @@
 - [x] Download automático do arquivo com nome descritivo (ex: receita-fertilizacao-10L-2mS.txt)
 - [x] Inclui aviso de segurança sobre não misturar cálcio com sulfato/fosfato
 - [x] Inclui ordem correta de mistura dos nutrientes
+
+## Correção de Tabelas Faltantes no Banco de Dados
+
+- [x] Criar tabela `tents` (estufas A, B, C)
+- [x] Criar tabela `cycles` (ciclos ativos)
+- [x] Criar tabela `alerts` (alertas de métricas)
+- [x] Resolver erros "Failed query" na página Home
