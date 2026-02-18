@@ -693,3 +693,12 @@
 - [x] Aplicar invalidação em createHealthLog e updateHealthLog
 - [x] Servidor estático já configurado corretamente em server/_core/index.ts
 - [x] Garantir que última foto apareça no card da lista de plantas
+
+## Otimização de Imagens para Mobile
+
+- [x] Função de compressão já implementada em lib/imageUtils.ts
+- [x] Redimensionamento para 1080x1440px (aspect ratio iPhone 3:4)
+- [x] Compressão com qualidade de 85% aplicada
+- [x] Crop automático para manter aspect ratio iPhone
+- [x] Conversão automática HEIC/HEIF → JPEG
+- [x] Otimização já aplicada em PlantHealthTab.handlePhotoSelect
