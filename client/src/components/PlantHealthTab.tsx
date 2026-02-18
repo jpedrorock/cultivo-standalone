@@ -4,9 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Heart, Upload, X, ZoomIn } from "lucide-react";
+import { Plus, Heart, Upload, X, ZoomIn, Download, ChevronLeft, ChevronRight, Edit, Trash2, Camera, Image } from "lucide-react";
 import { toast } from "sonner";
-import { processImage, blobToBase64, formatFileSize } from "@/lib/imageUtils";
+import { processImage, blobToBase64, formatFileSize, isHEIC, processImageFile } from "@/lib/imageUtils";
 
 interface PlantHealthTabProps {
   plantId: number;
@@ -20,8 +20,12 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [lightboxPhoto, setLightboxPhoto] = useState<string | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number>(0);
+  const [editingLogId, setEditingLogId] = useState<number | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const { data: healthLogs, refetch } = trpc.plantHealth.list.useQuery({ plantId });
+  
   const createHealthLog = trpc.plantHealth.create.useMutation({
     onSuccess: () => {
       toast.success("Registro de saúde adicionado!");
@@ -37,12 +41,39 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
     },
   });
 
+  const updateHealthLog = trpc.plantHealth.update.useMutation({
+    onSuccess: () => {
+      toast.success("Registro atualizado!");
+      setIsEditModalOpen(false);
+      setEditingLogId(null);
+      setSymptoms("");
+      setTreatment("");
+      setNotes("");
+      setPhotoPreview(null);
+      setPhotoFile(null);
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(`Erro ao atualizar: ${error.message}`);
+    },
+  });
+
+  const deleteHealthLog = trpc.plantHealth.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Registro excluído!");
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(`Erro ao excluir: ${error.message}`);
+    },
+  });
+
   const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    let file = e.target.files?.[0];
     if (!file) return;
 
     // Validação
-    if (!file.type.startsWith("image/")) {
+    if (!file.type.startsWith("image/") && !isHEIC(file)) {
       toast.error("Por favor, selecione apenas imagens");
       return;
     }
@@ -53,6 +84,13 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
     }
 
     try {
+      // Converter HEIC para JPEG se necessário
+      if (isHEIC(file)) {
+        toast.info("🔄 Convertendo HEIC para JPEG...");
+        file = await processImageFile(file);
+        toast.success("✅ Imagem convertida com sucesso!");
+      }
+      
       toast.info("Processando imagem...");
       
       // Processar imagem: comprimir e ajustar para aspect ratio iPhone (3:4)
@@ -172,30 +210,48 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
           <div className="space-y-2">
             <Label>Foto da Planta</Label>
             {!photoPreview ? (
-              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <Upload className="w-8 h-8 mb-2 text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground">
-                    Clique para adicionar foto
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    PNG, JPG até 5MB
-                  </p>
-                </div>
-                <input
-                  type="file"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handlePhotoSelect}
-                />
-              </label>
+              <div className="space-y-3">
+                {/* Botão Tirar Foto (Câmera) */}
+                <label className="flex items-center justify-center gap-2 w-full h-14 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors bg-primary/5 border-primary/30">
+                  <Camera className="w-5 h-5 text-primary" />
+                  <span className="text-sm font-medium text-primary">
+                    📸 Tirar Foto
+                  </span>
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    capture="environment"
+                    onChange={handlePhotoSelect}
+                  />
+                </label>
+                
+                {/* Botão Escolher Arquivo */}
+                <label className="flex items-center justify-center gap-2 w-full h-14 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+                  <Image className="w-5 h-5 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">
+                    📁 Escolher da Galeria
+                  </span>
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/*,.heic,.heif"
+                    onChange={handlePhotoSelect}
+                  />
+                </label>
+                
+                <p className="text-xs text-center text-muted-foreground">
+                  PNG, JPG, HEIC até 10MB
+                </p>
+              </div>
             ) : (
               <div className="relative">
-                <img
-                  src={photoPreview}
-                  alt="Preview"
-                  className="w-full h-48 object-cover rounded-lg"
-                />
+                        <img
+                          src={photoPreview}
+                          alt="Preview"
+                          className="w-full h-48 object-cover rounded-lg"
+                          style={{ aspectRatio: '3/4' }}
+                        />
                 <Button
                   size="icon"
                   variant="destructive"
@@ -267,10 +323,41 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
                       })}
                     </span>
                   </div>
-                  <div
-                    className={`px-3 py-1 rounded-md text-sm font-medium border ${getStatusColor(log.healthStatus)}`}
-                  >
-                    {getStatusLabel(log.healthStatus)}
+                  <div className="flex items-center gap-2">
+                    <div
+                      className={`px-3 py-1 rounded-md text-sm font-medium border ${getStatusColor(log.healthStatus)}`}
+                    >
+                      {getStatusLabel(log.healthStatus)}
+                    </div>
+                    <div className="flex gap-1">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-8 w-8"
+                        onClick={() => {
+                          setEditingLogId(log.id);
+                          setHealthStatus(log.healthStatus);
+                          setSymptoms(log.symptoms || "");
+                          setTreatment(log.treatment || "");
+                          setNotes(log.notes || "");
+                          setIsEditModalOpen(true);
+                        }}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
+                        onClick={() => {
+                          if (confirm("Deseja realmente excluir este registro?")) {
+                            deleteHealthLog.mutate({ id: log.id });
+                          }
+                        }}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </CardHeader>
@@ -316,7 +403,12 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
                           src={log.photoUrl}
                           alt="Foto da planta"
                           className="w-full h-full object-cover rounded-lg cursor-pointer"
-                          onClick={() => setLightboxPhoto(log.photoUrl)}
+                          onClick={() => {
+                            const photoLogs = healthLogs?.filter(l => l.photoUrl) || [];
+                            const index = photoLogs.findIndex(l => l.id === log.id);
+                            setLightboxIndex(index);
+                            setLightboxPhoto(log.photoUrl);
+                          }}
                         />
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
                           <ZoomIn className="w-8 h-8 text-white" />
@@ -343,29 +435,120 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
         )}
       </div>
 
-      {/* Lightbox */}
-      {lightboxPhoto && (
-        <div
-          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
-          onClick={() => setLightboxPhoto(null)}
-        >
-          <div className="relative max-w-4xl max-h-[90vh]">
-            <img
-              src={lightboxPhoto}
-              alt="Foto ampliada"
-              className="max-w-full max-h-[90vh] object-contain"
-            />
-            <Button
-              size="icon"
-              variant="destructive"
-              className="absolute top-4 right-4"
-              onClick={() => setLightboxPhoto(null)}
-            >
-              <X className="w-4 h-4" />
-            </Button>
+      {/* Lightbox Aprimorado */}
+      {lightboxPhoto && (() => {
+        const photoLogs = healthLogs?.filter(l => l.photoUrl) || [];
+        const currentLog = photoLogs[lightboxIndex];
+        const totalPhotos = photoLogs.length;
+        
+        const handlePrevious = (e: React.MouseEvent) => {
+          e.stopPropagation();
+          if (lightboxIndex > 0) {
+            setLightboxIndex(lightboxIndex - 1);
+            setLightboxPhoto(photoLogs[lightboxIndex - 1].photoUrl!);
+          }
+        };
+        
+        const handleNext = (e: React.MouseEvent) => {
+          e.stopPropagation();
+          if (lightboxIndex < totalPhotos - 1) {
+            setLightboxIndex(lightboxIndex + 1);
+            setLightboxPhoto(photoLogs[lightboxIndex + 1].photoUrl!);
+          }
+        };
+        
+        const handleDownload = async (e: React.MouseEvent) => {
+          e.stopPropagation();
+          try {
+            const response = await fetch(lightboxPhoto);
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `planta-${plantId}-saude-${currentLog?.id || Date.now()}.jpg`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            toast.success('Foto baixada com sucesso!');
+          } catch (error) {
+            toast.error('Erro ao baixar foto');
+          }
+        };
+        
+        return (
+          <div
+            className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
+            onClick={() => setLightboxPhoto(null)}
+          >
+            <div className="relative max-w-5xl w-full h-full flex flex-col items-center justify-center">
+              {/* Imagem */}
+              <img
+                src={lightboxPhoto}
+                alt="Foto ampliada"
+                className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              />
+              
+              {/* Informações */}
+              <div className="mt-4 text-center text-white" onClick={(e) => e.stopPropagation()}>
+                <p className="text-sm opacity-80">
+                  {new Date(currentLog?.logDate || Date.now()).toLocaleString('pt-BR')}
+                </p>
+                <p className="text-xs opacity-60 mt-1">
+                  Foto {lightboxIndex + 1} de {totalPhotos}
+                </p>
+              </div>
+              
+              {/* Botões de controle */}
+              <div className="absolute top-4 right-4 flex gap-2">
+                <Button
+                  size="icon"
+                  variant="secondary"
+                  className="bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                  onClick={handleDownload}
+                >
+                  <Download className="w-4 h-4 text-white" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="destructive"
+                  className="bg-red-500/80 hover:bg-red-500"
+                  onClick={() => setLightboxPhoto(null)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+              
+              {/* Navegação */}
+              {totalPhotos > 1 && (
+                <>
+                  {lightboxIndex > 0 && (
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                      onClick={handlePrevious}
+                    >
+                      <ChevronLeft className="w-6 h-6 text-white" />
+                    </Button>
+                  )}
+                  {lightboxIndex < totalPhotos - 1 && (
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                      onClick={handleNext}
+                    >
+                      <ChevronRight className="w-6 h-6 text-white" />
+                    </Button>
+                  )}
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 }

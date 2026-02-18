@@ -1775,6 +1775,82 @@ export const appRouter = router({
           .where(eq(plantHealthLogs.plantId, input.plantId))
           .orderBy(desc(plantHealthLogs.logDate));
       }),
+
+    update: publicProcedure
+      .input(z.object({
+        id: z.number(),
+        healthStatus: z.enum(["HEALTHY", "STRESSED", "SICK", "RECOVERING"]).optional(),
+        symptoms: z.string().optional(),
+        treatment: z.string().optional(),
+        notes: z.string().optional(),
+        photoBase64: z.string().optional(), // Nova foto (opcional)
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        const updateData: any = {};
+        
+        if (input.healthStatus) updateData.healthStatus = input.healthStatus;
+        if (input.symptoms !== undefined) updateData.symptoms = input.symptoms;
+        if (input.treatment !== undefined) updateData.treatment = input.treatment;
+        if (input.notes !== undefined) updateData.notes = input.notes;
+        
+        // Se tem nova foto, fazer upload
+        if (input.photoBase64) {
+          try {
+            // Buscar registro atual para pegar plantId
+            const [currentLog] = await database
+              .select()
+              .from(plantHealthLogs)
+              .where(eq(plantHealthLogs.id, input.id));
+            
+            if (currentLog) {
+              const base64Data = input.photoBase64.replace(/^data:image\/\w+;base64,/, "");
+              const buffer = Buffer.from(base64Data, 'base64');
+              
+              const timestamp = Date.now();
+              const randomSuffix = Math.random().toString(36).substring(7);
+              const key = `plants/${currentLog.plantId}/health/${timestamp}-${randomSuffix}.jpg`;
+              
+              const { storagePut } = await import('./storageUnified');
+              const result = await storagePut(key, buffer, 'image/jpeg');
+              
+              updateData.photoUrl = result.url;
+              updateData.photoKey = result.key;
+            }
+          } catch (error) {
+            console.error('Erro ao fazer upload da nova foto:', error);
+          }
+        }
+        
+        await database
+          .update(plantHealthLogs)
+          .set(updateData)
+          .where(eq(plantHealthLogs.id, input.id));
+        
+        return { success: true };
+      }),
+
+    delete: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Opcional: deletar foto do storage também
+        // const [log] = await database.select().from(plantHealthLogs).where(eq(plantHealthLogs.id, input.id));
+        // if (log?.photoKey) {
+        //   const { storageDelete } = await import('./storageUnified');
+        //   await storageDelete(log.photoKey);
+        // }
+        
+        await database
+          .delete(plantHealthLogs)
+          .where(eq(plantHealthLogs.id, input.id));
+        
+        return { success: true };
+      }),
   }),
 
   // Plant Trichome Logs

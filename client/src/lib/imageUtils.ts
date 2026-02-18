@@ -3,7 +3,10 @@
  * - Compressão para reduzir tamanho
  * - Crop/resize para aspect ratio iPhone (3:4 vertical)
  * - Conversão para formato otimizado
+ * - Conversão automática HEIC/HEIF → JPEG
  */
+
+import heic2any from 'heic2any';
 
 export interface ProcessImageOptions {
   maxWidth?: number;
@@ -161,4 +164,64 @@ export function formatFileSize(bytes: number): string {
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+}
+
+/**
+ * Detecta se o arquivo é HEIC/HEIF
+ * @param file - Arquivo a verificar
+ * @returns true se for HEIC/HEIF
+ */
+export function isHEIC(file: File): boolean {
+  const heicMimeTypes = ['image/heic', 'image/heif', 'image/heic-sequence', 'image/heif-sequence'];
+  const heicExtensions = ['.heic', '.heif'];
+  
+  // Verificar MIME type
+  if (heicMimeTypes.includes(file.type.toLowerCase())) {
+    return true;
+  }
+  
+  // Verificar extensão do arquivo
+  const fileName = file.name.toLowerCase();
+  return heicExtensions.some(ext => fileName.endsWith(ext));
+}
+
+/**
+ * Converte arquivo HEIC/HEIF para JPEG
+ * @param file - Arquivo HEIC/HEIF
+ * @returns Promise com File convertido para JPEG
+ */
+export async function convertHEICToJPEG(file: File): Promise<File> {
+  try {
+    // Converter HEIC para JPEG usando heic2any
+    const convertedBlob = await heic2any({
+      blob: file,
+      toType: 'image/jpeg',
+      quality: 0.9
+    });
+    
+    // heic2any pode retornar array de blobs, pegar o primeiro
+    const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+    
+    // Criar novo File a partir do Blob
+    const newFileName = file.name.replace(/\.(heic|heif)$/i, '.jpg');
+    return new File([blob], newFileName, { type: 'image/jpeg' });
+  } catch (error) {
+    console.error('Erro ao converter HEIC:', error);
+    throw new Error('Não foi possível converter a imagem HEIC. Tente usar uma foto em formato JPEG ou PNG.');
+  }
+}
+
+/**
+ * Processa arquivo de imagem com conversão automática de HEIC
+ * @param file - Arquivo de imagem (pode ser HEIC)
+ * @returns Promise com File processado (convertido se necessário)
+ */
+export async function processImageFile(file: File): Promise<File> {
+  // Se for HEIC, converter para JPEG primeiro
+  if (isHEIC(file)) {
+    return await convertHEICToJPEG(file);
+  }
+  
+  // Se não for HEIC, retornar o arquivo original
+  return file;
 }

@@ -403,3 +403,40 @@
 - [x] Preencher campo de EC automaticamente quando fase/semana são selecionados (já estava implementado)
 - [x] Manter opção de edição manual do EC (checkbox para alternar)
 - [x] Checkbox vem marcado por padrão para usar valores recomendados
+
+
+## 🎨 Melhorias no Sistema de Fotos e Registros de Saúde
+
+### Lightbox Aprimorado
+- [x] Adicionar botão de download de foto no lightbox
+- [x] Implementar navegação entre fotos (setas próxima/anterior)
+- [x] Melhorar escurecimento de tela (overlay mais escuro)
+- [x] Adicionar informações da foto (data, tamanho) no lightbox
+- [x] Adicionar contador de fotos (ex: "3 / 12")
+- [ ] Suporte a gestos de swipe no mobile para navegar
+
+### Edição e Exclusão de Registros de Saúde
+- [x] Backend: Criar procedure `plantHealth.update` para editar registro
+- [x] Backend: Criar procedure `plantHealth.delete` para excluir registro
+- [x] Frontend: Adicionar botão "Editar" em cada registro de saúde
+- [x] Frontend: Adicionar botão "Excluir" em cada registro de saúde
+- [x] Frontend: Modal de confirmação antes de excluir
+- [ ] Frontend: Modal de edição com formulário preenchido (usa mesmo formulário)
+- [x] Frontend: Possibilidade de trocar foto ao editar
+- [x] Frontend: Atualizar lista após edição/exclusão
+
+### Conversão Automática HEIC → JPEG
+- [x] Instalar biblioteca heic2any no frontend
+- [x] Detectar formato HEIC/HEIF automaticamente
+- [x] Converter para JPEG antes de processar
+- [x] Mostrar toast informando conversão
+- [ ] Testar com foto real do iPhone (precisa dispositivo físico)
+- [x] Preservar qualidade na conversão (quality: 0.9)
+
+### Acesso à Câmera no Mobile
+- [x] Adicionar botão "📸 Tirar Foto" além de "📁 Escolher Arquivo"
+- [x] Usar input[type="file"] com capture="environment"
+- [x] Abrir câmera traseira por padrão no mobile
+- [x] Preview imediato após captura
+- [ ] Testar em dispositivo mobile real (iPhone/Android)
+- [x] Fallback para seleção de arquivo se câmera não disponível (automático)
