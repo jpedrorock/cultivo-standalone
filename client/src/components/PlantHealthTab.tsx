@@ -28,6 +28,8 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
 
   const { data: healthLogs, refetch } = trpc.plantHealth.list.useQuery({ plantId });
   
+  const utils = trpc.useUtils();
+  
   const createHealthLog = trpc.plantHealth.create.useMutation({
     onSuccess: () => {
       toast.success("Registro de saúde adicionado!");
@@ -37,6 +39,9 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
       setPhotoPreview(null);
       setPhotoFile(null);
       refetch();
+      // Invalidar lista de plantas para atualizar foto no card
+      utils.plants.list.invalidate();
+      utils.plants.getById.invalidate({ id: plantId });
     },
     onError: (error) => {
       toast.error(`Erro ao adicionar registro: ${error.message}`);
@@ -46,6 +51,9 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
   const updateHealthLog = trpc.plantHealth.update.useMutation({
     onSuccess: () => {
       toast.success("Registro atualizado!");
+      // Invalidar lista de plantas para atualizar foto no card
+      utils.plants.list.invalidate();
+      utils.plants.getById.invalidate({ id: plantId });
       setIsEditModalOpen(false);
       setEditingLog(null);
       refetch();

@@ -94,12 +94,12 @@ export default function PlantDetail() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <p className="text-lg font-medium text-foreground mb-2">Planta não encontrada</p>
-          <Link href="/plants">
-            <Button variant="outline">
+          <Button variant="outline" asChild>
+            <Link href="/plants">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Voltar
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </div>
     );
@@ -140,11 +140,11 @@ export default function PlantDetail() {
         <div className="container py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Link href="/plants">
-                <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" asChild>
+                <Link href="/plants">
                   <ArrowLeft className="w-5 h-5" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
                 <Sprout className="w-6 h-6 text-white" />
               </div>

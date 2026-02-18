@@ -679,3 +679,17 @@
 - [x] Criar tabela `cycles` (ciclos ativos)
 - [x] Criar tabela `alerts` (alertas de métricas)
 - [x] Resolver erros "Failed query" na página Home
+
+## Correção de Botão Aninhado
+
+- [x] Localizar botão aninhado dentro de outro botão na página /plants/1
+- [x] Corrigir estrutura HTML usando asChild no Button
+- [x] Testar para garantir que o erro foi resolvido
+
+## Correção de Fotos Não Aparecendo nos Cards
+
+- [x] Investigar por que fotos não aparecem nos cards após upload (só após refresh)
+- [x] Adicionar invalidação de cache após upload de foto (plants.list e plants.getById)
+- [x] Aplicar invalidação em createHealthLog e updateHealthLog
+- [x] Servidor estático já configurado corretamente em server/_core/index.ts
+- [x] Garantir que última foto apareça no card da lista de plantas
