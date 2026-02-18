@@ -657,3 +657,9 @@
 - [x] Corrigir erro "No procedure found on path weeklyTargets.get"
 - [x] Procedure retorna valores padrão de EC quando não há dados no banco
 - [x] Botão faz scroll suave até o resultado e mostra toast de sucesso
+
+## Correção de Autenticação na Calculadora
+
+- [x] Corrigir erro "Not authenticated" na calculadora de fertilização
+- [x] Modificar fertilizationPresets.list para retornar array vazio sem autenticação
+- [x] Permitir uso da calculadora sem login (predefinições só aparecem após login)

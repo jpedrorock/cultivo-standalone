@@ -2052,7 +2052,7 @@ export const appRouter = router({
       .query(async ({ ctx }) => {
         const database = await getDb();
         if (!database) throw new Error("Database not available");
-        if (!ctx.user) throw new Error("Not authenticated");
+        if (!ctx.user) return []; // Retorna array vazio se não autenticado
         
         return await database
           .select()
