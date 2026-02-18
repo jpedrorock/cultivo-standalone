@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { eq, and, desc, sql } from "drizzle-orm";
+import { eq, and, desc, sql, isNotNull } from "drizzle-orm";
 import * as db from "./db";
 import { getDb } from "./db";
 import {
@@ -1513,6 +1513,58 @@ export const appRouter = router({
           .where(eq(plants.id, input.plantId));
         
         return { success: true };
+      }),
+
+    // Transplantar para Flora (encontra automaticamente estufa de Flora)
+    transplantToFlora: publicProcedure
+      .input(z.object({
+        plantId: z.number(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Buscar planta atual
+        const [plant] = await database
+          .select()
+          .from(plants)
+          .where(eq(plants.id, input.plantId));
+        
+        if (!plant) throw new Error("Plant not found");
+        
+        // Buscar estufa de Flora (ciclo ativo em fase FLORA)
+        const [floraTent] = await database
+          .select({
+            tentId: cycles.tentId,
+            tentName: tents.name,
+          })
+          .from(cycles)
+          .innerJoin(tents, eq(cycles.tentId, tents.id))
+          .where(and(
+            eq(cycles.status, "ACTIVE"),
+            isNotNull(cycles.floraStartDate)
+          ))
+          .limit(1);
+        
+        if (!floraTent) {
+          throw new Error("Nenhuma estufa de Flora ativa encontrada");
+        }
+        
+        // Registrar histórico
+        await database.insert(plantTentHistory).values({
+          plantId: input.plantId,
+          fromTentId: plant.currentTentId,
+          toTentId: floraTent.tentId,
+          reason: "Transplante para Flora",
+        });
+        
+        // Atualizar estufa atual
+        await database
+          .update(plants)
+          .set({ currentTentId: floraTent.tentId })
+          .where(eq(plants.id, input.plantId));
+        
+        return { success: true, tentName: floraTent.tentName };
       }),
 
     // Finalizar planta (harvest)

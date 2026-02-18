@@ -7,6 +7,7 @@ import superjson from "superjson";
 import App from "./App";
 import { getLoginUrl } from "./const";
 import "./index.css";
+import { Toaster } from "sonner";
 
 const queryClient = new QueryClient();
 
@@ -74,6 +75,7 @@ if ('serviceWorker' in navigator) {
 createRoot(document.getElementById("root")!).render(
   <trpc.Provider client={trpcClient} queryClient={queryClient}>
     <QueryClientProvider client={queryClient}>
+      <Toaster position="top-right" richColors />
       <App />
     </QueryClientProvider>
   </trpc.Provider>

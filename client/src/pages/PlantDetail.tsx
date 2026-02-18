@@ -29,12 +29,13 @@ import PlantObservationsTab from "@/components/PlantObservationsTab";
 import PlantHealthTab from "@/components/PlantHealthTab";
 import PlantTrichomesTab from "@/components/PlantTrichomesTab";
 import PlantLSTTab from "@/components/PlantLSTTab";
+import { toast } from "sonner";
 
 export default function PlantDetail() {
   const [, params] = useRoute("/plants/:id");
   const plantId = params?.id ? parseInt(params.id) : 0;
 
-  const { data: plant, isLoading } = trpc.plants.getById.useQuery({ id: plantId });
+  const { data: plant, isLoading, refetch } = trpc.plants.getById.useQuery({ id: plantId });
   const { data: strain } = trpc.strains.getById.useQuery(
     { id: plant?.strainId || 0 },
     { enabled: !!plant?.strainId }
@@ -43,6 +44,40 @@ export default function PlantDetail() {
     { id: plant?.currentTentId || 0 },
     { enabled: !!plant?.currentTentId }
   );
+  
+  // Mutations para ações
+  const transplantMutation = trpc.plants.transplantToFlora.useMutation({
+    onSuccess: (data) => {
+      toast.success(`Planta transplantada para ${data.tentName} com sucesso!`);
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(`Erro ao transplantar: ${error.message}`);
+    },
+  });
+  
+  const harvestMutation = trpc.plants.finish.useMutation({
+    onSuccess: () => {
+      toast.success('✅ Planta marcada como colhida com sucesso!');
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(`Erro ao marcar como colhida: ${error.message}`);
+    },
+  });
+  
+  // Handlers
+  const handleTransplantToFlora = () => {
+    if (confirm('Deseja transplantar esta planta para a estufa de Flora?')) {
+      transplantMutation.mutate({ plantId });
+    }
+  };
+  
+  const handleHarvest = () => {
+    if (confirm('Deseja marcar esta planta como colhida?')) {
+      harvestMutation.mutate({ plantId, status: 'HARVESTED' });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -140,7 +175,7 @@ export default function PlantDetail() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   {tent?.currentPhase === "VEGA" && (
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleTransplantToFlora}>
                       <Flower2 className="w-4 h-4 mr-2" />
                       Transplantar para Flora
                     </DropdownMenuItem>
@@ -150,7 +185,7 @@ export default function PlantDetail() {
                     Mover para Outra Estufa
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-green-600">
+                  <DropdownMenuItem onClick={handleHarvest} className="text-green-600">
                     <CheckCircle className="w-4 h-4 mr-2" />
                     Marcar como Colhida
                   </DropdownMenuItem>

@@ -359,3 +359,15 @@
 - [x] Adicionar seletor de fase/semana na calculadora de rega
 - [x] Buscar valores recomendados de rega baseados na tabela weeklyTargets
 - [x] Manter opção de edição manual dos valores
+
+## Implementação de Lógica de Ações de Plantas
+
+- [x] Criar procedure `plants.transplantToFlora` no backend
+- [x] Criar procedure `plants.harvest` no backend (já existia como `plants.finish`)
+- [x] Criar procedure `plants.moveTent` no backend (já existia)
+- [x] Conectar botão "Transplantar para Flora" ao procedure
+- [x] Conectar botão "Colher" ao procedure
+- [ ] Conectar botão "Mover Estufa" ao procedure (placeholder mantido)
+- [x] Adicionar sistema de notificações toast (Sonner)
+- [x] Implementar confirmação antes de ações críticas (confirm dialog)
+- [x] Atualizar lista de plantas após ações bem-sucedidas (refetch)
