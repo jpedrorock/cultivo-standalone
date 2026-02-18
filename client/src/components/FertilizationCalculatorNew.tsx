@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Calculator, Sprout } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { FertilizationPresetsManager } from "@/components/FertilizationPresetsManager";
 
 export function FertilizationCalculatorNew() {
   // Estados
@@ -46,6 +47,20 @@ export function FertilizationCalculatorNew() {
       magnesiumSulfate: number;
     };
   } | null>(null);
+
+  const handleLoadPreset = (preset: any) => {
+    setWaterVolume(preset.waterVolume);
+    setTargetEC(preset.targetEC);
+    if (preset.phase) {
+      setUsePreset(true);
+      setSelectedPhase(preset.phase);
+      setSelectedWeek(preset.weekNumber?.toString() || "1");
+    }
+    if (preset.irrigationsPerWeek) {
+      setIrrigationsPerWeek(preset.irrigationsPerWeek);
+    }
+    setCalculationMode(preset.calculationMode);
+  };
 
   const calculateFertilization = () => {
     const volume = parseFloat(waterVolume);
@@ -233,6 +248,19 @@ export function FertilizationCalculatorNew() {
           <Calculator className="w-4 h-4 mr-2" />
           Calcular Receita
         </Button>
+
+        {/* Predefinições */}
+        <FertilizationPresetsManager
+          currentValues={{
+            waterVolume,
+            targetEC,
+            phase: usePreset ? selectedPhase : undefined,
+            weekNumber: usePreset ? parseInt(selectedWeek) : undefined,
+            irrigationsPerWeek: calculationMode === "per-week" ? irrigationsPerWeek : undefined,
+            calculationMode,
+          }}
+          onLoadPreset={handleLoadPreset}
+        />
 
         {/* Resultado */}
         {result && (

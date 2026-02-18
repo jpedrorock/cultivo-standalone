@@ -30,6 +30,8 @@ import {
   plantTrichomeLogs,
   plantLSTLogs,
   wateringLogs,
+  fertilizationPresets,
+  wateringPresets,
 } from "../drizzle/schema";
 
 export const appRouter = router({
@@ -1963,6 +1965,195 @@ export const appRouter = router({
       }),
   }),
 
+  // Fertilization Presets (Predefinições de Fertilização)
+  fertilizationPresets: router({
+    create: publicProcedure
+      .input(z.object({
+        name: z.string(),
+        waterVolume: z.number(),
+        targetEC: z.number(),
+        phase: z.enum(["VEGA", "FLORA"]).optional(),
+        weekNumber: z.number().optional(),
+        irrigationsPerWeek: z.number().optional(),
+        calculationMode: z.enum(["per-irrigation", "per-week"]),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        if (!ctx.user) throw new Error("Not authenticated");
+        
+        await database.insert(fertilizationPresets).values({
+          userId: ctx.user.id,
+          name: input.name,
+          waterVolume: input.waterVolume.toString(),
+          targetEC: input.targetEC.toString(),
+          phase: input.phase,
+          weekNumber: input.weekNumber,
+          irrigationsPerWeek: input.irrigationsPerWeek?.toString(),
+          calculationMode: input.calculationMode,
+        });
+        
+        return { success: true };
+      }),
+
+    list: publicProcedure
+      .query(async ({ ctx }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        if (!ctx.user) throw new Error("Not authenticated");
+        
+        return await database
+          .select()
+          .from(fertilizationPresets)
+          .where(eq(fertilizationPresets.userId, ctx.user.id))
+          .orderBy(desc(fertilizationPresets.createdAt));
+      }),
+
+    delete: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        if (!ctx.user) throw new Error("Not authenticated");
+        
+        await database
+          .delete(fertilizationPresets)
+          .where(and(
+            eq(fertilizationPresets.id, input.id),
+            eq(fertilizationPresets.userId, ctx.user.id)
+          ));
+        
+        return { success: true };
+      }),
+
+    update: publicProcedure
+      .input(z.object({
+        id: z.number(),
+        name: z.string(),
+        waterVolume: z.number(),
+        targetEC: z.number(),
+        phase: z.enum(["VEGA", "FLORA"]).optional(),
+        weekNumber: z.number().optional(),
+        irrigationsPerWeek: z.number().optional(),
+        calculationMode: z.enum(["per-irrigation", "per-week"]),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        if (!ctx.user) throw new Error("Not authenticated");
+        
+        await database
+          .update(fertilizationPresets)
+          .set({
+            name: input.name,
+            waterVolume: input.waterVolume.toString(),
+            targetEC: input.targetEC.toString(),
+            phase: input.phase,
+            weekNumber: input.weekNumber,
+            irrigationsPerWeek: input.irrigationsPerWeek?.toString(),
+            calculationMode: input.calculationMode,
+          })
+          .where(and(
+            eq(fertilizationPresets.id, input.id),
+            eq(fertilizationPresets.userId, ctx.user.id)
+          ));
+        
+        return { success: true };
+      }),
+  }),
+
+  // Watering Presets (Predefinições de Rega)
+  wateringPresets: router({
+    create: publicProcedure
+      .input(z.object({
+        name: z.string(),
+        plantCount: z.number(),
+        potSize: z.number(),
+        targetRunoff: z.number(),
+        phase: z.enum(["VEGA", "FLORA"]).optional(),
+        weekNumber: z.number().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        if (!ctx.user) throw new Error("Not authenticated");
+        
+        await database.insert(wateringPresets).values({
+          userId: ctx.user.id,
+          name: input.name,
+          plantCount: input.plantCount,
+          potSize: input.potSize.toString(),
+          targetRunoff: input.targetRunoff.toString(),
+          phase: input.phase,
+          weekNumber: input.weekNumber,
+        });
+        
+        return { success: true };
+      }),
+
+    list: publicProcedure
+      .query(async ({ ctx }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        if (!ctx.user) throw new Error("Not authenticated");
+        
+        return await database
+          .select()
+          .from(wateringPresets)
+          .where(eq(wateringPresets.userId, ctx.user.id))
+          .orderBy(desc(wateringPresets.createdAt));
+      }),
+
+    delete: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        if (!ctx.user) throw new Error("Not authenticated");
+        
+        await database
+          .delete(wateringPresets)
+          .where(and(
+            eq(wateringPresets.id, input.id),
+            eq(wateringPresets.userId, ctx.user.id)
+          ));
+        
+        return { success: true };
+      }),
+
+    update: publicProcedure
+      .input(z.object({
+        id: z.number(),
+        name: z.string(),
+        plantCount: z.number(),
+        potSize: z.number(),
+        targetRunoff: z.number(),
+        phase: z.enum(["VEGA", "FLORA"]).optional(),
+        weekNumber: z.number().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        if (!ctx.user) throw new Error("Not authenticated");
+        
+        await database
+          .update(wateringPresets)
+          .set({
+            name: input.name,
+            plantCount: input.plantCount,
+            potSize: input.potSize.toString(),
+            targetRunoff: input.targetRunoff.toString(),
+            phase: input.phase,
+            weekNumber: input.weekNumber,
+          })
+          .where(and(
+            eq(wateringPresets.id, input.id),
+            eq(wateringPresets.userId, ctx.user.id)
+          ));
+        
+        return { success: true };
+      }),
+  }),
 
 });
 

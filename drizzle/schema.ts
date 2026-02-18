@@ -685,3 +685,47 @@ export const wateringLogs = mysqlTable(
 
 export type WateringLog = typeof wateringLogs.$inferSelect;
 export type InsertWateringLog = typeof wateringLogs.$inferInsert;
+
+
+/**
+ * Predefinições personalizadas de fertilização
+ */
+export const fertilizationPresets = mysqlTable("fertilizationPresets", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  name: varchar("name", { length: 100 }).notNull(),
+  waterVolume: decimal("waterVolume", { precision: 10, scale: 2 }).notNull(),
+  targetEC: decimal("targetEC", { precision: 10, scale: 2 }).notNull(),
+  phase: mysqlEnum("phase", ["VEGA", "FLORA"]),
+  weekNumber: int("weekNumber"),
+  irrigationsPerWeek: decimal("irrigationsPerWeek", { precision: 10, scale: 1 }),
+  calculationMode: mysqlEnum("calculationMode", ["per-irrigation", "per-week"]).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  userIdIdx: index("userId_idx").on(table.userId),
+}));
+
+export type FertilizationPreset = typeof fertilizationPresets.$inferSelect;
+export type InsertFertilizationPreset = typeof fertilizationPresets.$inferInsert;
+
+/**
+ * Predefinições personalizadas de rega
+ */
+export const wateringPresets = mysqlTable("wateringPresets", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  name: varchar("name", { length: 100 }).notNull(),
+  plantCount: int("plantCount").notNull(),
+  potSize: decimal("potSize", { precision: 10, scale: 1 }).notNull(),
+  targetRunoff: decimal("targetRunoff", { precision: 10, scale: 1 }).notNull(),
+  phase: mysqlEnum("phase", ["VEGA", "FLORA"]),
+  weekNumber: int("weekNumber"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  userIdIdx: index("userId_idx").on(table.userId),
+}));
+
+export type WateringPreset = typeof wateringPresets.$inferSelect;
+export type InsertWateringPreset = typeof wateringPresets.$inferInsert;

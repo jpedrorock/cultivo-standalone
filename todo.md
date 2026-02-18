@@ -507,3 +507,46 @@
 - [x] Substituir todas as referências pelo novo componente (FertilizationCalculatorNew)
 - [x] Limpar cache do navegador e Vite
 - [ ] Testar após publicação do site
+
+
+## 💾 Sistema de Predefinições Personalizadas
+
+### Backend - Banco de Dados
+- [x] Criar tabela `fertilizationPresets` (userId, name, waterVolume, targetEC, phase, weekNumber, irrigationsPerWeek, calculationMode)
+- [x] Criar tabela `wateringPresets` (userId, name, plantCount, potSize, targetRunoff, phase, weekNumber)
+- [x] Rodar `pnpm db:push` para criar tabelas (criadas via SQL direto)
+
+### Backend - tRPC Procedures
+- [x] fertilizationPresets.create - salvar nova predefinição
+- [x] fertilizationPresets.list - listar predefinições do usuário
+- [x] fertilizationPresets.delete - excluir predefinição
+- [x] fertilizationPresets.update - editar predefinição
+- [x] wateringPresets.create - salvar nova predefinição
+- [x] wateringPresets.list - listar predefinições do usuário
+- [x] wateringPresets.delete - excluir predefinição
+- [x] wateringPresets.update - editar predefinição
+
+### Frontend - Calculadora de Fertilização
+- [x] Adicionar botão "💾 Salvar Predefinição" no formulário
+- [x] Modal para nomear e salvar predefinição
+- [x] Seção "Minhas Predefinições" com lista de cards
+- [x] Botão "Carregar" em cada card para preencher formulário
+- [x] Botão "Excluir" em cada card
+- [ ] Botão "Editar" em cada card (pode usar update procedure)
+
+### Frontend - Calculadora de Rega
+- [x] Adicionar botão "💾 Salvar Predefinição" no formulário (componente criado)
+- [x] Modal para nomear e salvar predefinição (componente criado)
+- [x] Seção "Minhas Predefinições" com lista de cards (componente criado)
+- [x] Botão "Carregar" em cada card para preencher formulário (componente criado)
+- [x] Botão "Excluir" em cada card (componente criado)
+- [ ] Integrar WateringPresetsManager no IrrigationCalculator
+- [ ] Botão "Editar" em cada card (pode usar update procedure)
+
+### Testes
+- [ ] Testar criação de predefinição de fertilização
+- [ ] Testar carregamento de predefinição de fertilização
+- [ ] Testar exclusão de predefinição de fertilização
+- [ ] Testar criação de predefinição de rega
+- [ ] Testar carregamento de predefinição de rega
+- [ ] Testar exclusão de predefinição de rega
