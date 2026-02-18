@@ -658,3 +658,29 @@ export const plantLSTLogs = mysqlTable(
 
 export type PlantLSTLog = typeof plantLSTLogs.$inferSelect;
 export type InsertPlantLSTLog = typeof plantLSTLogs.$inferInsert;
+
+/**
+ * Registros de regas (Watering Logs)
+ */
+export const wateringLogs = mysqlTable(
+  "wateringLogs",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    tentId: int("tentId")
+      .notNull()
+      .references(() => tents.id, { onDelete: "cascade" }),
+    logDate: timestamp("logDate").defaultNow().notNull(),
+    logTime: varchar("logTime", { length: 5 }).notNull(), // HH:MM
+    volumeIn: decimal("volumeIn", { precision: 10, scale: 2 }).notNull(), // Volume de entrada (L)
+    volumeOut: decimal("volumeOut", { precision: 10, scale: 2 }).notNull(), // Volume de saída/runoff (L)
+    runoffPercent: decimal("runoffPercent", { precision: 5, scale: 2 }).notNull(), // % de runoff
+    notes: text("notes"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    tentDateIdx: index("tentDateIdx").on(table.tentId, table.logDate),
+  })
+);
+
+export type WateringLog = typeof wateringLogs.$inferSelect;
+export type InsertWateringLog = typeof wateringLogs.$inferInsert;

@@ -166,33 +166,33 @@
 ## Página Integrada de Rega e Runoff
 
 ### Modelo de Dados
-- [ ] Criar tabela `wateringLogs` (tentId, date, time, volumeIn, volumeOut, runoffPercent, notes)
-- [ ] Adicionar índices para consultas por estufa e data
+- [x] Criar tabela `wateringLogs` (tentId, date, time, volumeIn, volumeOut, runoffPercent, notes)
+- [x] Adicionar índices para consultas por estufa e data
 
 ### Backend
-- [ ] Criar procedure `watering.log` para registrar rega
-- [ ] Criar procedure `watering.list` para listar histórico (filtro por estufa e período)
-- [ ] Criar procedure `watering.delete` para remover registro
-- [ ] Calcular runoff% automaticamente no backend
+- [x] Criar procedure `watering.log` para registrar rega
+- [x] Criar procedure `watering.list` para listar histórico (filtro por estufa e período)
+- [x] Criar procedure `watering.delete` para remover registro
+- [x] Calcular runoff% automaticamente no backend
 
 ### Frontend - Calculadora (Topo)
-- [ ] Manter toggle "Por Rega" / "Semanal (Tank)"
-- [ ] Mostrar volume ideal por rega
-- [ ] Mostrar totais semanais quando em modo Tank
+- [x] Manter toggle "Por Rega" / "Semanal (Tank)"
+- [x] Mostrar volume ideal por rega
+- [x] Mostrar totais semanais quando em modo Tank
 - [ ] Salvar configuração (plantas, vasos, runoff desejado) para reutilizar
 
 ### Frontend - Registro de Runoff (Meio)
-- [ ] Botão "+ Registrar Rega"
-- [ ] Modal com campos: volume entrada, volume saída, horário, notas
-- [ ] Calcular runoff% automaticamente
-- [ ] Comparar com runoff desejado da calculadora
-- [ ] Mostrar recomendação de ajuste (aumentar/diminuir/manter)
-- [ ] Indicador visual: ✅ (ideal), ⚠️ (fora do ideal)
+- [x] Botão "+ Registrar Rega"
+- [x] Modal com campos: volume entrada, volume saída, horário, notas
+- [x] Calcular runoff% automaticamente
+- [x] Comparar com runoff desejado da calculadora
+- [x] Mostrar recomendação de ajuste (aumentar/diminuir/manter)
+- [x] Indicador visual: ✅ (ideal), ⚠️ (fora do ideal)
 
 ### Frontend - Histórico (Embaixo)
-- [ ] Lista de regas do dia agrupadas por data
-- [ ] Mostrar horário, volumes, runoff%, recomendação
-- [ ] Filtro por período (hoje, semana, mês)
+- [x] Lista de regas do dia agrupadas por data
+- [x] Mostrar horário, volumes, runoff%, recomendação
+- [x] Filtro por período (hoje, semana, mês)
 - [ ] Gráfico de evolução do runoff ao longo do tempo
 - [ ] Botão de deletar registro individual
 
@@ -235,3 +235,11 @@
 - [ ] Mostrar fase atual (Vega/Flora + semana)
 - [ ] Indicador visual de estufa atual
 - [x] Melhorar layout dos cards para acomodar novos elementos
+
+## Ajustes na Página de Plantas
+
+- [x] Remover aba de Fotos do PlantDetail
+- [x] Fotos ficam apenas na aba de Saúde
+- [x] Adicionar preview da última foto de saúde nos cards das plantas (já implementado no backend)
+- [x] Expandir descrições das técnicas de LST com mais detalhes e instruções
+- [x] Melhorar textos explicativos sobre quando aplicar cada técnica

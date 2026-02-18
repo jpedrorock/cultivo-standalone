@@ -29,6 +29,7 @@ import {
   plantHealthLogs,
   plantTrichomeLogs,
   plantLSTLogs,
+  wateringLogs,
 } from "../drizzle/schema";
 
 export const appRouter = router({
@@ -1737,6 +1738,77 @@ export const appRouter = router({
           .from(plantLSTLogs)
           .where(eq(plantLSTLogs.plantId, input.plantId))
           .orderBy(desc(plantLSTLogs.logDate));
+      }),
+  }),
+
+  // Watering (Rega e Runoff)
+  watering: router({
+    // Registrar rega
+    log: publicProcedure
+      .input(z.object({
+        tentId: z.number(),
+        logTime: z.string(), // HH:MM
+        volumeIn: z.number(),
+        volumeOut: z.number(),
+        notes: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Calcular runoff%
+        const runoffPercent = (input.volumeOut / input.volumeIn) * 100;
+        
+        await database.insert(wateringLogs).values({
+          tentId: input.tentId,
+          logTime: input.logTime,
+          volumeIn: input.volumeIn.toString(),
+          volumeOut: input.volumeOut.toString(),
+          runoffPercent: runoffPercent.toFixed(2),
+          notes: input.notes,
+        });
+        
+        return { success: true, runoffPercent: parseFloat(runoffPercent.toFixed(2)) };
+      }),
+
+    // Listar histórico de regas
+    list: publicProcedure
+      .input(z.object({
+        tentId: z.number(),
+        startDate: z.string().optional(), // YYYY-MM-DD
+        endDate: z.string().optional(), // YYYY-MM-DD
+      }))
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        let query = database
+          .select()
+          .from(wateringLogs)
+          .where(eq(wateringLogs.tentId, input.tentId));
+        
+        if (input.startDate) {
+          query = query.where(sql`${wateringLogs.logDate} >= ${input.startDate}`) as any;
+        }
+        if (input.endDate) {
+          query = query.where(sql`${wateringLogs.logDate} <= ${input.endDate}`) as any;
+        }
+        
+        return await query.orderBy(desc(wateringLogs.logDate), desc(wateringLogs.logTime));
+      }),
+
+    // Deletar registro
+    delete: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        await database
+          .delete(wateringLogs)
+          .where(eq(wateringLogs.id, input.id));
+        
+        return { success: true };
       }),
   }),
 });

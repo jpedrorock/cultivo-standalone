@@ -8,7 +8,6 @@ import {
   ArrowLeft, 
   Sprout, 
   FileText, 
-  Camera, 
   Droplets, 
   Heart, 
   Sparkles, 
@@ -17,7 +16,6 @@ import {
   MoveRight
 } from "lucide-react";
 import PlantObservationsTab from "@/components/PlantObservationsTab";
-import PlantPhotosTab from "@/components/PlantPhotosTab";
 import PlantRunoffTab from "@/components/PlantRunoffTab";
 import PlantHealthTab from "@/components/PlantHealthTab";
 import PlantTrichomesTab from "@/components/PlantTrichomesTab";
@@ -184,10 +182,7 @@ export default function PlantDetail() {
               <FileText className="w-4 h-4 mr-2" />
               Observações
             </TabsTrigger>
-            <TabsTrigger value="photos">
-              <Camera className="w-4 h-4 mr-2" />
-              Fotos
-            </TabsTrigger>
+
             <TabsTrigger value="runoff">
               <Droplets className="w-4 h-4 mr-2" />
               Runoff
@@ -208,10 +203,6 @@ export default function PlantDetail() {
 
           <TabsContent value="observations">
             <PlantObservationsTab plantId={plantId} />
-          </TabsContent>
-
-          <TabsContent value="photos">
-            <PlantPhotosTab plantId={plantId} />
           </TabsContent>
 
           <TabsContent value="runoff">
