@@ -106,5 +106,6 @@ temp/
 *.sqlite
 *.sqlite3
 
-# Uploads (fotos dos usuários)
-uploads/
+# Uploads (fotos dos usuários - ignorar conteúdo mas manter estrutura)
+uploads/*
+!uploads/.gitkeep

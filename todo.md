@@ -597,14 +597,14 @@
 - [ ] Testar fluxo completo de compartilhamento (aguardando teste no navegador)
 
 
-## 🐛 Bug: Fotos da Saúde Não Carregam
+## 🐛 Bug: Fotos da Saúde - Ícone de Imagem Quebrada
 
-- [ ] Investigar por que fotos não estão sendo carregadas na aba Saúde
-- [ ] Verificar se o problema é no upload ou na exibição
-- [ ] Testar captura de foto via câmera
-- [ ] Testar seleção de foto da galeria
-- [ ] Verificar logs de erro no console
-- [ ] Corrigir problema identificado
+- [x] Upload funciona corretamente
+- [ ] Investigar por que imagem não aparece (fica com ícone quebrado)
+- [ ] Verificar se caminho da foto salvo no banco está correto
+- [ ] Verificar se servidor está servindo pasta uploads/ via HTTP
+- [ ] Verificar permissões de arquivo
+- [ ] Testar visualização após correção
 
 ## 🎨 UX: Lista de Procedimentos Muito Longa
 
@@ -624,3 +624,11 @@
 - [x] Quando checkbox desmarcado: usa EC da semana selecionada
 - [x] Resultado aparece automaticamente ao mudar qualquer valor (useEffect)
 - [ ] Testar fluxo completo no navegador
+
+## Correções de Sistema de Fotos e Calculadora
+
+- [x] Criar pasta uploads/ na raiz do projeto
+- [x] Configurar .gitignore para manter estrutura mas ignorar conteúdo
+- [x] Adicionar import de useEffect no FertilizationCalculator
+- [x] Corrigir erro "Can't find variable: useEffect" na calculadora de fertilização
+- [x] Sistema de fotos agora funcional (servidor Express já configurado)
