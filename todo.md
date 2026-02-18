@@ -583,3 +583,15 @@
 - [x] Botão "Carregar" em cada predefinição
 - [x] Botão "Excluir" em cada predefinição
 - [ ] Testar fluxo completo (aguardando teste no navegador)
+
+
+## 🔗 Compartilhamento de Receitas de Fertilização
+
+- [x] Adicionar botão "Compartilhar" em cada predefinição
+- [x] Gerar código/link compartilhável (base64)
+- [x] Modal com código para copiar
+- [x] Botão "Importar Receita" na calculadora
+- [x] Modal para colar código/link recebido
+- [x] Validar e carregar receita importada
+- [x] Toast de sucesso ao importar
+- [ ] Testar fluxo completo de compartilhamento (aguardando teste no navegador)
