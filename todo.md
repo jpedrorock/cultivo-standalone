@@ -702,3 +702,10 @@
 - [x] Crop automático para manter aspect ratio iPhone
 - [x] Conversão automática HEIC/HEIF → JPEG
 - [x] Otimização já aplicada em PlantHealthTab.handlePhotoSelect
+
+## URGENTE - Tabela plantHealth Faltante
+
+- [x] Verificado schema: tabela se chama plantHealthLogs (não plantHealth)
+- [x] Criada tabela plantHealthLogs no banco de dados via SQL
+- [x] Servidor reiniciado para reconhecer nova tabela
+- [x] Sistema pronto para testar upload de fotos
