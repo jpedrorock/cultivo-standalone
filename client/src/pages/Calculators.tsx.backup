@@ -131,7 +131,6 @@ function downloadTextFile(content: string, filename: string) {
 
 import { useRoute, useLocation } from "wouter";
 import { ArrowLeft } from "lucide-react";
-import { FertilizationCalculatorNew } from "@/components/FertilizationCalculatorNew";
 
 export default function Calculators() {
   const [, params] = useRoute("/calculators/:id");
@@ -172,7 +171,7 @@ export default function Calculators() {
       {/* Main Content */}
       <main className="container py-8">
         {calculatorId === "watering-runoff" && <WateringRunoffCalculator />}
-        {calculatorId === "fertilization" && <FertilizationCalculatorNew />}
+        {calculatorId === "fertilization" && <FertilizationCalculator />}
         {calculatorId === "lux-ppfd" && <LuxPPFDCalculator />}
         {calculatorId === "ppm-ec" && <PPMECConverter />}
         {calculatorId === "ph-adjust" && <PHAdjustCalculator />}

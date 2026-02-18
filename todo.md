@@ -452,3 +452,34 @@
 - [x] Integrar com botão de editar nos cards
 - [x] Fechar modal após salvar com sucesso
 - [x] Testar fluxo completo de edição
+
+
+## 🐛 Bugs Reportados
+
+### Bug: Captura de Foto no iPhone
+- [ ] Investigar logs do navegador no site publicado
+- [ ] Verificar permissões de câmera no iOS
+- [ ] Testar atributo capture="environment" no iPhone
+- [ ] Implementar fallback para iOS se necessário
+- [ ] Adicionar tratamento de erro específico para iPhone
+- [ ] Testar em dispositivo iPhone real
+
+### Bug: Calculadora de Fertilização "Por Semana" Não Funciona
+- [ ] Investigar modo "per-week" na calculadora de fertilização
+- [ ] Verificar se cálculo semanal está correto
+- [ ] Verificar se resultado semanal está sendo exibido
+- [ ] Testar com diferentes valores de irrigações por semana
+- [ ] Validar fórmulas de multiplicação semanal
+
+
+## 🔧 Refazer Calculadora de Fertilização do Zero
+
+- [x] Fazer backup do código atual da FertilizationCalculator
+- [x] Reescrever FertilizationCalculator completamente (FertilizationCalculatorNew.tsx)
+- [x] Implementar seletor "Por Rega" / "Por Semana" visível
+- [x] Implementar checkbox "Usar EC recomendado por fase/semana" visível
+- [x] Implementar seletores de Fase (Vega/Flora) e Semana (1-8) visíveis
+- [x] Conectar com backend weeklyTargets.get
+- [x] Preencher EC automaticamente quando selecionar fase/semana
+- [ ] Testar funcionalidade completa no navegador (aguardando publicação)
+- [ ] Problema de cache/HMR no ambiente de desenvolvimento
