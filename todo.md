@@ -162,3 +162,76 @@
 - [x] Adicionar timeline/ordenação por data
 - [x] Botão de deletar foto
 - [x] Zoom e navegação entre fotos
+
+## Página Integrada de Rega e Runoff
+
+### Modelo de Dados
+- [ ] Criar tabela `wateringLogs` (tentId, date, time, volumeIn, volumeOut, runoffPercent, notes)
+- [ ] Adicionar índices para consultas por estufa e data
+
+### Backend
+- [ ] Criar procedure `watering.log` para registrar rega
+- [ ] Criar procedure `watering.list` para listar histórico (filtro por estufa e período)
+- [ ] Criar procedure `watering.delete` para remover registro
+- [ ] Calcular runoff% automaticamente no backend
+
+### Frontend - Calculadora (Topo)
+- [ ] Manter toggle "Por Rega" / "Semanal (Tank)"
+- [ ] Mostrar volume ideal por rega
+- [ ] Mostrar totais semanais quando em modo Tank
+- [ ] Salvar configuração (plantas, vasos, runoff desejado) para reutilizar
+
+### Frontend - Registro de Runoff (Meio)
+- [ ] Botão "+ Registrar Rega"
+- [ ] Modal com campos: volume entrada, volume saída, horário, notas
+- [ ] Calcular runoff% automaticamente
+- [ ] Comparar com runoff desejado da calculadora
+- [ ] Mostrar recomendação de ajuste (aumentar/diminuir/manter)
+- [ ] Indicador visual: ✅ (ideal), ⚠️ (fora do ideal)
+
+### Frontend - Histórico (Embaixo)
+- [ ] Lista de regas do dia agrupadas por data
+- [ ] Mostrar horário, volumes, runoff%, recomendação
+- [ ] Filtro por período (hoje, semana, mês)
+- [ ] Gráfico de evolução do runoff ao longo do tempo
+- [ ] Botão de deletar registro individual
+
+## Melhorias na Página de Plantas
+
+### Pesquisa e Documentação
+- [ ] Pesquisar técnicas de treinamento de plantas (LST, Topping, FIM, Super Cropping, Lollipopping, Defoliação, Mainlining, ScrOG)
+- [ ] Criar descrições detalhadas de cada técnica
+- [ ] Definir quando aplicar cada técnica (semana ideal)
+
+### Modelo de Dados
+- [ ] Adicionar campo `photoUrl` em `plantHealthLogs` para fotos de saúde
+- [ ] Adicionar campo `photoUrl` em `plantTrichomeLogs` para fotos macro
+- [ ] Remover aba separada de fotos (mover para contextos específicos)
+- [ ] Adicionar campo `weekNumber` em `plantTrichomeLogs`
+
+### Aba de Saúde
+- [x] Adicionar campo de data do registro
+- [x] Adicionar upload de foto (documenta estado de saúde)
+- [x] Galeria de fotos de saúde ordenadas por data
+- [x] Preview de foto antes de salvar
+
+### Aba de Tricomas
+- [x] Mostrar semana atual do ciclo da planta
+- [x] Adicionar upload de foto macro dos tricomas
+- [x] Galeria de fotos de tricomas com data e semana
+- [x] Zoom para visualizar detalhes
+
+### Aba de LST
+- [x] Criar seletor visual de técnicas com imagens ilustrativas
+- [x] Técnicas: LST, Topping, FIM, Super Cropping, Lollipopping, Defoliação, Mainlining, ScrOG
+- [x] Descrição de cada técnica ao selecionar
+- [x] Campo de resposta da planta (texto)
+- [x] Remover upload de foto (só imagens ilustrativas das técnicas)
+
+### Lista de Plantas (Cards)
+- [x] Adicionar última foto da planta no card
+- [x] Badge de saúde (💚 Saudável, 💛 Estressada, ❤️ Doente, 💜 Recuperando)
+- [x] Mostrar idade da planta (dias desde germinação)
+- [ ] Mostrar fase atual (Vega/Flora + semana)
+- [ ] Indicador visual de estufa atual
+- [x] Melhorar layout dos cards para acomodar novos elementos

@@ -247,6 +247,39 @@ export default function PlantsList() {
                               </div>
                             </CardHeader>
                             <CardContent className="space-y-3">
+                              {/* Última foto da planta */}
+                              {plant.lastPhotoUrl && (
+                                <div className="w-full h-32 rounded-lg overflow-hidden">
+                                  <img
+                                    src={plant.lastPhotoUrl}
+                                    alt={plant.name}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              )}
+
+                              {/* Indicadores visuais */}
+                              <div className="flex flex-wrap gap-2">
+                                {/* Idade */}
+                                <div className="px-2 py-1 rounded-md bg-blue-500/10 text-blue-600 border border-blue-500/30 text-xs font-medium">
+                                  📅 {Math.floor((Date.now() - new Date(plant.germDate).getTime()) / (1000 * 60 * 60 * 24))} dias
+                                </div>
+                                {/* Saúde */}
+                                {plant.lastHealthStatus && (
+                                  <div className={`px-2 py-1 rounded-md text-xs font-medium ${
+                                    plant.lastHealthStatus === "HEALTHY" ? "bg-green-500/10 text-green-600 border border-green-500/30" :
+                                    plant.lastHealthStatus === "STRESSED" ? "bg-yellow-500/10 text-yellow-600 border border-yellow-500/30" :
+                                    plant.lastHealthStatus === "SICK" ? "bg-red-500/10 text-red-600 border border-red-500/30" :
+                                    "bg-blue-500/10 text-blue-600 border border-blue-500/30"
+                                  }`}>
+                                    {plant.lastHealthStatus === "HEALTHY" ? "💚 Saudável" :
+                                     plant.lastHealthStatus === "STRESSED" ? "💛 Estressada" :
+                                     plant.lastHealthStatus === "SICK" ? "❤️ Doente" :
+                                     "💙 Recuperando"}
+                                  </div>
+                                )}
+                              </div>
+
                               <div className="space-y-2 text-sm">
                                 <div className="flex justify-between">
                                   <span className="text-muted-foreground">Strain:</span>

@@ -1375,7 +1375,36 @@ export const appRouter = router({
           query = query.where(eq(plants.status, input.status)) as any;
         }
         
-        return await query;
+        const plantsList = await query;
+        
+        // Para cada planta, buscar última foto de saúde e status de saúde
+        const plantsWithDetails = await Promise.all(
+          plantsList.map(async (plant: any) => {
+            // Última foto de saúde
+            const [lastHealthPhoto] = await database
+              .select()
+              .from(plantHealthLogs)
+              .where(eq(plantHealthLogs.plantId, plant.id))
+              .orderBy(desc(plantHealthLogs.logDate))
+              .limit(1);
+            
+            // Último status de saúde
+            const [lastHealth] = await database
+              .select()
+              .from(plantHealthLogs)
+              .where(eq(plantHealthLogs.plantId, plant.id))
+              .orderBy(desc(plantHealthLogs.logDate))
+              .limit(1);
+            
+            return {
+              ...plant,
+              lastPhotoUrl: lastHealthPhoto?.photoUrl || null,
+              lastHealthStatus: lastHealth?.healthStatus || null,
+            };
+          })
+        );
+        
+        return plantsWithDetails;
       }),
 
     // Obter planta por ID
