@@ -13,6 +13,7 @@ export function FertilizationCalculator() {
   const [phase, setPhase] = useState<"vega" | "flora">("vega");
   const [weekNumber, setWeekNumber] = useState(1);
   const [volume, setVolume] = useState(10);
+  const [useCustomEC, setUseCustomEC] = useState(false);
   const [customEC, setCustomEC] = useState<number | null>(null);
   const [result, setResult] = useState<any>(null);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
@@ -29,7 +30,27 @@ export function FertilizationCalculator() {
     weekNumber,
   });
 
-  const targetEC = customEC !== null ? customEC : (weeklyTarget?.targetEC || 0);
+  const targetEC = useCustomEC && customEC !== null ? customEC : (weeklyTarget?.targetEC || 0);
+
+  // Calcular automaticamente quando valores mudam
+  useEffect(() => {
+    if (volume > 0 && targetEC > 0) {
+      const npk = {
+        nitrogen: (targetEC * volume * 0.4).toFixed(2),
+        phosphorus: (targetEC * volume * 0.3).toFixed(2),
+        potassium: (targetEC * volume * 0.3).toFixed(2),
+      };
+      setResult({
+        volume,
+        ec: targetEC,
+        npk,
+        phase: phase === "vega" ? "🌱 Vega" : "🌸 Flora",
+        weekNumber,
+      });
+    } else {
+      setResult(null);
+    }
+  }, [volume, targetEC, phase, weekNumber]);
 
   // Mutations para predefinições
   const createPreset = trpc.fertilizationPresets.create.useMutation({
@@ -121,32 +142,7 @@ export function FertilizationCalculator() {
     }
   };
 
-  const handleCalculate = () => {
-    if (volume <= 0) {
-      toast.error("Volume deve ser maior que zero");
-      return;
-    }
 
-    if (targetEC <= 0) {
-      toast.error("EC deve ser maior que zero");
-      return;
-    }
-
-    // Fórmulas simplificadas (ajustar conforme necessário)
-    const nitrogenGrams = (targetEC * volume * 0.4).toFixed(2);
-    const phosphorusGrams = (targetEC * volume * 0.3).toFixed(2);
-    const potassiumGrams = (targetEC * volume * 0.3).toFixed(2);
-
-    setResult({
-      nitrogen: nitrogenGrams,
-      phosphorus: phosphorusGrams,
-      potassium: potassiumGrams,
-      totalVolume: volume,
-      targetEC: targetEC,
-    });
-
-    toast.success("Receita calculada com sucesso!");
-  };
 
   return (
     <div className="space-y-6">
@@ -201,28 +197,53 @@ export function FertilizationCalculator() {
           </div>
 
           {/* EC */}
-          <div>
-            <Label htmlFor="ec">EC Desejado (mS/cm)</Label>
-            {weeklyTarget && (
-              <p className="text-sm text-muted-foreground mb-2">
-                💡 EC recomendado para {phase === "vega" ? "Vega" : "Flora"} Semana {weekNumber}: {weeklyTarget.targetEC} mS/cm
-              </p>
+          <div className="space-y-3">
+            <div>
+              <Label>EC Desejado (mS/cm)</Label>
+              {weeklyTarget && !useCustomEC && (
+                <div className="mt-2 p-3 bg-accent/50 rounded-lg">
+                  <p className="text-sm font-medium">
+                    💡 EC Pré-definido: <span className="text-lg font-bold">{weeklyTarget.targetEC} mS/cm</span>
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {phase === "vega" ? "Vega" : "Flora"} Semana {weekNumber}
+                  </p>
+                </div>
+              )}
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="useCustomEC"
+                checked={useCustomEC}
+                onChange={(e) => {
+                  setUseCustomEC(e.target.checked);
+                  if (!e.target.checked) {
+                    setCustomEC(null);
+                  }
+                }}
+                className="h-4 w-4 rounded border-gray-300"
+              />
+              <Label htmlFor="useCustomEC" className="cursor-pointer">
+                Usar EC personalizado
+              </Label>
+            </div>
+
+            {useCustomEC && (
+              <Input
+                id="ec"
+                type="number"
+                step="0.1"
+                value={customEC || ""}
+                onChange={(e) => setCustomEC(parseFloat(e.target.value) || null)}
+                placeholder="Digite o EC desejado"
+              />
             )}
-            <Input
-              id="ec"
-              type="number"
-              step="0.1"
-              value={customEC !== null ? customEC : (weeklyTarget?.targetEC || "")}
-              onChange={(e) => setCustomEC(parseFloat(e.target.value) || null)}
-              placeholder="Ex: 2.0"
-            />
           </div>
 
           <div className="space-y-2">
             <div className="flex gap-2">
-              <Button onClick={handleCalculate} className="flex-1" size="lg">
-                📊 Calcular Receita
-              </Button>
               <Button
                 onClick={() => setShowSaveDialog(true)}
                 variant="outline"
@@ -232,16 +253,16 @@ export function FertilizationCalculator() {
                 <BookmarkPlus className="mr-2 h-4 w-4" />
                 Salvar Predefinição
               </Button>
+              <Button
+                onClick={() => setShowImportDialog(true)}
+                variant="secondary"
+                size="lg"
+                className="flex-1"
+              >
+                <Share2 className="mr-2 h-4 w-4" />
+                Importar Receita
+              </Button>
             </div>
-            <Button
-              onClick={() => setShowImportDialog(true)}
-              variant="secondary"
-              size="lg"
-              className="w-full"
-            >
-              <Share2 className="mr-2 h-4 w-4" />
-              Importar Receita Compartilhada
-            </Button>
           </div>
         </div>
       </Card>

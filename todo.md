@@ -595,3 +595,32 @@
 - [x] Validar e carregar receita importada
 - [x] Toast de sucesso ao importar
 - [ ] Testar fluxo completo de compartilhamento (aguardando teste no navegador)
+
+
+## 🐛 Bug: Fotos da Saúde Não Carregam
+
+- [ ] Investigar por que fotos não estão sendo carregadas na aba Saúde
+- [ ] Verificar se o problema é no upload ou na exibição
+- [ ] Testar captura de foto via câmera
+- [ ] Testar seleção de foto da galeria
+- [ ] Verificar logs de erro no console
+- [ ] Corrigir problema identificado
+
+## 🎨 UX: Lista de Procedimentos Muito Longa
+
+- [ ] Implementar Accordion/Collapsible para detalhes dos procedimentos
+- [ ] Mostrar apenas título e data por padrão
+- [ ] Botão "Ver mais" ou seta para expandir detalhes
+- [ ] Manter foto sempre visível (não colapsar)
+- [ ] Testar usabilidade no mobile
+
+
+## 🔄 Refazer UX da Calculadora de Fertilização
+
+- [x] Remover botão "Calcular" - resultado deve aparecer automaticamente
+- [x] EC pré-definido carrega automaticamente ao selecionar fase/semana
+- [x] Adicionar checkbox "Usar EC personalizado"
+- [x] Quando checkbox marcado: desabilita EC pré-definido e permite edição manual
+- [x] Quando checkbox desmarcado: usa EC da semana selecionada
+- [x] Resultado aparece automaticamente ao mudar qualquer valor (useEffect)
+- [ ] Testar fluxo completo no navegador
