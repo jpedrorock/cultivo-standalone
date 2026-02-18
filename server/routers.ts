@@ -1519,6 +1519,39 @@ export const appRouter = router({
           .where(eq(plantPhotos.plantId, input.plantId))
           .orderBy(desc(plantPhotos.photoDate));
       }),
+    
+    upload: publicProcedure
+      .input(z.object({
+        plantId: z.number(),
+        photoUrl: z.string(),
+        description: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        await database.insert(plantPhotos).values({
+          plantId: input.plantId,
+          photoUrl: input.photoUrl,
+          description: input.description,
+          photoDate: new Date(),
+        });
+        
+        return { success: true };
+      }),
+    
+    delete: publicProcedure
+      .input(z.object({ photoId: z.number() }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        await database
+          .delete(plantPhotos)
+          .where(eq(plantPhotos.id, input.photoId));
+        
+        return { success: true };
+      }),
   }),
 
   // Plant Runoff Logs

@@ -141,3 +141,24 @@
 - [x] Corrigir erro "database.insert is not a function" no backend
 - [x] Corrigir erro "database.select is not a function" no backend
 - [x] Testar criação de nova planta após correções
+
+## Sistema de Upload de Fotos para Plantas
+
+### Backend
+- [x] Criar procedure `plantPhotos.upload` para fazer upload de foto para S3
+- [x] Criar procedure `plantPhotos.delete` para remover foto
+- [x] Salvar metadados da foto no banco (URL, descrição, data)
+
+### Frontend
+- [x] Criar componente de upload com preview
+- [x] Implementar preview de imagem antes do upload
+- [x] Adicionar campo de descrição opcional
+- [x] Mostrar progresso do upload
+- [x] Atualizar PlantPhotosTab com funcionalidade de upload
+
+### Galeria
+- [x] Criar grid de fotos com thumbnails
+- [x] Implementar lightbox para visualização em tela cheia
+- [x] Adicionar timeline/ordenação por data
+- [x] Botão de deletar foto
+- [x] Zoom e navegação entre fotos
