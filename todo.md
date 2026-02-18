@@ -396,3 +396,10 @@
 - [x] Investigar por que está mostrando "Flora Semana" quando planta está na Vega
 - [x] Corrigir lógica para mostrar fase/semana correta do ciclo ativo da estufa
 - [x] Garantir que badge mostre fase atual da estufa onde a planta está
+
+## Correção da Calculadora de Fertilização - Valores Automáticos de EC
+
+- [x] Implementar busca de valores de EC da tabela weeklyTargets (já estava implementado)
+- [x] Preencher campo de EC automaticamente quando fase/semana são selecionados (já estava implementado)
+- [x] Manter opção de edição manual do EC (checkbox para alternar)
+- [x] Checkbox vem marcado por padrão para usar valores recomendados
