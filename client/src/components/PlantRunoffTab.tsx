@@ -21,14 +21,14 @@ export default function PlantRunoffTab({ plantId }: PlantRunoffTabProps) {
   const { data: runoffLogs, refetch } = trpc.plantRunoff.list.useQuery({ plantId });
   const createRunoffLog = trpc.plantRunoff.create.useMutation({
     onSuccess: (data) => {
-      toast({ 
-        title: "Runoff registrado!", 
-        description: `${data.runoffPercent.toFixed(1)}% de runoff` 
-      });
+      toast.success(`Runoff registrado! ${data.runoffPercent.toFixed(1)}% de runoff`);
       setVolumeIn("");
       setVolumeOut("");
       setNotes("");
       refetch();
+    },
+    onError: (error) => {
+      toast.error(`Erro ao registrar runoff: ${error.message}`);
     },
   });
 
@@ -37,7 +37,7 @@ export default function PlantRunoffTab({ plantId }: PlantRunoffTabProps) {
     const volOut = parseFloat(volumeOut);
     
     if (isNaN(volIn) || isNaN(volOut) || volIn <= 0) {
-      toast({ title: "Erro", description: "Valores inválidos", variant: "destructive" });
+      toast.error("Valores inválidos");
       return;
     }
 

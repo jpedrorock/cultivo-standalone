@@ -717,3 +717,40 @@
 - [x] UI do card já exibe miniatura com aspect ratio 3:4 (linhas 250-259)
 - [x] Fallback implementado: foto só aparece se existir (plant.lastHealthPhotoUrl &&)
 - [x] Layout responsivo com aspect-[3/4] e object-cover
+
+## URGENTE - Erro na Calculadora de Rega (Runoff)
+
+- [x] Investigado erro ao adicionar último número de runoff
+- [x] Problema: uso incorreto da API toast (toast({ ... }) ao invés de toast.success())
+- [x] Corrigido uso de toast em PlantRunoffTab
+- [x] Adicionado onError handler para melhor tratamento de erros
+
+## Menu de Plantas no Mobile
+
+- [ ] Adicionar link para /plants no menu de navegação mobile
+- [ ] Verificar se há bottom nav ou menu hamburguer
+- [ ] Testar navegação em mobile
+
+## URGENTE - Tabelas Faltantes no Banco
+
+- [x] Criada tabela strains no banco de dados
+- [x] Criada tabela plants no banco de dados  
+- [x] Servidor reiniciado para reconhecer novas tabelas
+
+## URGENTE - Fotos Não Aparecem Após Upload
+
+- [x] Verificado: 1 foto salva em disco mas não no banco
+- [x] Servidor estático funciona corretamente (HTTP 200)
+- [x] storageLocal salva arquivo e retorna URL correta
+- [ ] Descobrir por que INSERT no banco não está sendo executado
+- [ ] Adicionar logs no procedure plantHealth.create
+- [ ] Testar upload com logs ativos
+
+## Lightbox para Zoom nas Fotos dos Cards (PAUSADO)
+
+- [ ] Implementar componente lightbox usando Dialog do shadcn/ui
+- [ ] Adicionar estado para controlar foto selecionada
+- [ ] Tornar miniaturas clicáveis com cursor pointer
+- [ ] Exibir foto em tamanho completo no lightbox
+- [ ] Adicionar botão de fechar e overlay escuro
+- [ ] Testar em mobile e desktop
