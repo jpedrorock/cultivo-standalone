@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Plus, Heart, Upload, X, ZoomIn, Download, ChevronLeft, ChevronRight, Edit, Trash2, Camera, Image } from "lucide-react";
 import { toast } from "sonner";
 import { processImage, blobToBase64, formatFileSize, isHEIC, processImageFile } from "@/lib/imageUtils";
+import EditHealthLogDialog from "@/components/EditHealthLogDialog";
 
 interface PlantHealthTabProps {
   plantId: number;
@@ -21,7 +22,7 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [lightboxPhoto, setLightboxPhoto] = useState<string | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number>(0);
-  const [editingLogId, setEditingLogId] = useState<number | null>(null);
+  const [editingLog, setEditingLog] = useState<any | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const { data: healthLogs, refetch } = trpc.plantHealth.list.useQuery({ plantId });
@@ -45,18 +46,17 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
     onSuccess: () => {
       toast.success("Registro atualizado!");
       setIsEditModalOpen(false);
-      setEditingLogId(null);
-      setSymptoms("");
-      setTreatment("");
-      setNotes("");
-      setPhotoPreview(null);
-      setPhotoFile(null);
+      setEditingLog(null);
       refetch();
     },
     onError: (error) => {
       toast.error(`Erro ao atualizar: ${error.message}`);
     },
   });
+
+  const handleEditSave = (data: any) => {
+    updateHealthLog.mutate(data);
+  };
 
   const deleteHealthLog = trpc.plantHealth.delete.useMutation({
     onSuccess: () => {
@@ -335,11 +335,7 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
                         variant="ghost"
                         className="h-8 w-8"
                         onClick={() => {
-                          setEditingLogId(log.id);
-                          setHealthStatus(log.healthStatus);
-                          setSymptoms(log.symptoms || "");
-                          setTreatment(log.treatment || "");
-                          setNotes(log.notes || "");
+                          setEditingLog(log);
                           setIsEditModalOpen(true);
                         }}
                       >
@@ -549,6 +545,15 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
           </div>
         );
       })()}
+
+      {/* Modal de Edição */}
+      <EditHealthLogDialog
+        open={isEditModalOpen}
+        onOpenChange={setIsEditModalOpen}
+        healthLog={editingLog}
+        onSave={handleEditSave}
+        isSaving={updateHealthLog.isPending}
+      />
     </div>
   );
 }

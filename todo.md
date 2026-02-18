@@ -440,3 +440,15 @@
 - [x] Preview imediato após captura
 - [ ] Testar em dispositivo mobile real (iPhone/Android)
 - [x] Fallback para seleção de arquivo se câmera não disponível (automático)
+
+
+## 🎨 Modal de Edição Dedicado para Registros de Saúde
+
+- [x] Criar componente Dialog separado para edição
+- [x] Formulário com campos preenchidos do registro atual
+- [x] Título claro "Editar Registro de Saúde"
+- [x] Possibilidade de trocar foto (preview da foto atual)
+- [x] Botões "Cancelar" e "Salvar Alterações"
+- [x] Integrar com botão de editar nos cards
+- [x] Fechar modal após salvar com sucesso
+- [x] Testar fluxo completo de edição
