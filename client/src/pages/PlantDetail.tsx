@@ -29,11 +29,13 @@ import PlantObservationsTab from "@/components/PlantObservationsTab";
 import PlantHealthTab from "@/components/PlantHealthTab";
 import PlantTrichomesTab from "@/components/PlantTrichomesTab";
 import PlantLSTTab from "@/components/PlantLSTTab";
+import MoveTentModal from "@/components/MoveTentModal";
 import { toast } from "sonner";
 
 export default function PlantDetail() {
   const [, params] = useRoute("/plants/:id");
   const plantId = params?.id ? parseInt(params.id) : 0;
+  const [moveTentModalOpen, setMoveTentModalOpen] = useState(false);
 
   const { data: plant, isLoading, refetch } = trpc.plants.getById.useQuery({ id: plantId });
   const { data: strain } = trpc.strains.getById.useQuery(
@@ -180,7 +182,7 @@ export default function PlantDetail() {
                       Transplantar para Flora
                     </DropdownMenuItem>
                   )}
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setMoveTentModalOpen(true)}>
                     <MoveRight className="w-4 h-4 mr-2" />
                     Mover para Outra Estufa
                   </DropdownMenuItem>
@@ -265,6 +267,16 @@ export default function PlantDetail() {
           </TabsContent>
         </Tabs>
       </main>
+      
+      {/* Modal de Mover Estufa */}
+      <MoveTentModal
+        open={moveTentModalOpen}
+        onOpenChange={setMoveTentModalOpen}
+        plantId={plantId}
+        plantName={plant?.name || ""}
+        currentTentId={plant?.currentTentId || 0}
+        onSuccess={refetch}
+      />
     </div>
   );
 }

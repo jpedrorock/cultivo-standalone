@@ -371,3 +371,14 @@
 - [x] Adicionar sistema de notificações toast (Sonner)
 - [x] Implementar confirmação antes de ações críticas (confirm dialog)
 - [x] Atualizar lista de plantas após ações bem-sucedidas (refetch)
+
+## Modal de Mover Estufa
+
+- [x] Criar componente MoveTentModal com Dialog do shadcn/ui
+- [x] Buscar lista de estufas disponíveis com seus ciclos ativos
+- [x] Exibir cards visuais de cada estufa com nome, fase e semana
+- [x] Destacar estufa atual da planta
+- [x] Adicionar botão de confirmação para mover
+- [x] Integrar com procedure plants.moveTent do backend
+- [x] Adicionar notificação toast de sucesso/erro
+- [x] Conectar modal ao botão "Mover para Outra Estufa" do dropdown
