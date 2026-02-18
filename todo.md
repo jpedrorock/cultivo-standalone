@@ -258,3 +258,24 @@
 - [x] Remover import e componente PlantRunoffTab
 - [x] Runoff será medido por estufa na página de Rega e Runoff
 - [x] Cálculo considera todas as plantas da estufa juntas (base coletora única)
+
+## Simplificação das Calculadoras de Rega e Runoff
+
+### Calculadora de Rega
+- [x] Campos: número de plantas, tamanho vaso, runoff desejado, runoff real da última rega (opcional)
+- [x] Cálculo base: volume por planta baseado no runoff desejado
+- [x] Cálculo ajustado: se runoff real fornecido, ajustar volume para atingir runoff desejado
+- [x] Mostrar volume por planta e volume total
+
+### Calculadora de Runoff
+- [x] Campos: volume regado (L), volume coletado no copo (L)
+- [x] Calcular runoff % real
+- [x] Comparar com ideal (se fornecido)
+- [x] Indicador visual: ✅ ideal, ⚠️ fora do ideal
+
+### Remover
+- [x] Remover sistema de registro/histórico de regas
+- [ ] Remover tabela wateringLogs do banco (opcional - não afeta funcionamento)
+- [x] Remover procedures watering.log, watering.list, watering.delete
+- [x] Remover modo semanal/tank
+- [x] Simplificar página WateringRunoff para apenas 2 calculadoras
