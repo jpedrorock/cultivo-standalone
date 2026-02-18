@@ -389,6 +389,68 @@ export function FertilizationCalculator() {
                 </div>
               </div>
             </div>
+
+            {/* Botão Exportar TXT */}
+            <Button
+              onClick={() => {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('pt-BR');
+                
+                const txtContent = `RECEITA DE FERTILIZAÇÃO - APP CULTIVO
+================================================
+
+DATA: ${dateStr}
+
+PARÂMETROS:
+- Volume de preparo: ${result.volume}L
+- EC desejado: ${result.ec} mS/cm
+- PPM aproximado: ${result.ppmApprox} ppm
+- Fase: ${result.phase}
+- Semana: ${result.weekNumber}
+
+RECEITA (g/L):
+- Nitrato de Cálcio: ${result.calciumNitrate.perLiter} g/L
+- Nitrato de Potássio: ${result.potassiumNitrate.perLiter} g/L
+- MKP (Fosfato Monopotássico): ${result.mkp.perLiter} g/L
+- Sulfato de Magnésio: ${result.magnesiumSulfate.perLiter} g/L
+- Micronutrientes: ${result.micronutrients.perLiter} g/L
+
+QUANTIDADES TOTAIS:
+- Nitrato de Cálcio: ${result.calciumNitrate.total} g
+- Nitrato de Potássio: ${result.potassiumNitrate.total} g
+- MKP: ${result.mkp.total} g
+- Sulfato de Magnésio: ${result.magnesiumSulfate.total} g
+- Micronutrientes: ${result.micronutrients.total} g
+
+DICA:
+Dissolva cada reagente separadamente e misture na ordem:
+Cálcio → Potássio → MKP → Magnésio → Micronutrientes
+
+NUNCA misture Cálcio diretamente com Sulfato ou Fosfato!
+Aguarde cada reagente dissolver completamente antes de adicionar o próximo.
+
+---
+Gerado por App Cultivo em ${now.toLocaleString('pt-BR')}
+`;
+                
+                // Criar blob e download
+                const blob = new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `receita-fertilizacao-${result.volume}L-${result.ec}mS.txt`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                toast.success('✅ Receita exportada para TXT!');
+              }}
+              className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white"
+              size="lg"
+            >
+              💾 Exportar Receita (TXT)
+            </Button>
           </div>
         </Card>
       )}

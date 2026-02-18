@@ -663,3 +663,12 @@
 - [x] Corrigir erro "Not authenticated" na calculadora de fertilização
 - [x] Modificar fertilizationPresets.list para retornar array vazio sem autenticação
 - [x] Permitir uso da calculadora sem login (predefinições só aparecem após login)
+
+## Exportação de Receita para TXT
+
+- [x] Implementar função de exportação de receita para arquivo TXT
+- [x] Formato: cabeçalho, data, parâmetros, receita (g/L), quantidades totais, dica de preparo
+- [x] Adicionar botão "Exportar TXT" no card de resultado
+- [x] Download automático do arquivo com nome descritivo (ex: receita-fertilizacao-10L-2mS.txt)
+- [x] Inclui aviso de segurança sobre não misturar cálcio com sulfato/fosfato
+- [x] Inclui ordem correta de mistura dos nutrientes
