@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
-import { Calculator, Droplets, Sprout, Sun, Beaker, TestTube } from "lucide-react";
+import { Calculator, Droplets, Sprout, Sun, Beaker, TestTube, Waves } from "lucide-react";
 
 export default function CalculatorMenu() {
   const calculators = [
@@ -12,6 +12,15 @@ export default function CalculatorMenu() {
       color: "from-blue-500 to-cyan-500",
       bgColor: "bg-blue-500/10",
       iconColor: "text-blue-600",
+    },
+    {
+      id: "runoff",
+      title: "Calculadora de Runoff",
+      description: "Calcule o % de runoff ideal e volume de drenagem",
+      icon: Waves,
+      color: "from-cyan-500 to-blue-600",
+      bgColor: "bg-cyan-500/10",
+      iconColor: "text-cyan-600",
     },
     {
       id: "fertilization",
@@ -108,6 +117,9 @@ export default function CalculatorMenu() {
           <CardContent className="space-y-2 text-sm text-foreground">
             <p>
               <strong>💧 Rega:</strong> Calcule o volume ideal baseado no tamanho do vaso e tipo de substrato
+            </p>
+            <p>
+              <strong>🌊 Runoff:</strong> Calcule o % de runoff ideal e interprete a drenagem
             </p>
             <p>
               <strong>🌱 Fertilização:</strong> Determine a dosagem correta de nutrientes para atingir o EC desejado

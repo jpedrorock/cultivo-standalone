@@ -21,6 +21,14 @@ import {
   alertSettings,
   alertHistory,
   notificationHistory,
+  plants,
+  plantTentHistory,
+  plantObservations,
+  plantPhotos,
+  plantRunoffLogs,
+  plantHealthLogs,
+  plantTrichomeLogs,
+  plantLSTLogs,
 } from "../drizzle/schema";
 
 export const appRouter = router({
@@ -1311,6 +1319,361 @@ export const appRouter = router({
           .set({ isRead: true })
           .where(eq(notificationHistory.id, input.id));
         return { success: true };
+      }),
+  }),
+
+  // Plants (Plantas Individuais)
+  plants: router({
+    // Criar nova planta
+    create: publicProcedure
+      .input(z.object({
+        name: z.string(),
+        code: z.string().optional(),
+        strainId: z.number(),
+        currentTentId: z.number(),
+        germDate: z.string(),
+        notes: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = getDb();
+        if (!database) throw new Error("Database not available");
+        
+        const [plant] = await database.insert(plants).values({
+          name: input.name,
+          code: input.code,
+          strainId: input.strainId,
+          currentTentId: input.currentTentId,
+          germDate: new Date(input.germDate),
+          notes: input.notes,
+          status: "ACTIVE",
+        });
+        
+        return plant;
+      }),
+
+    // Listar plantas
+    list: publicProcedure
+      .input(z.object({
+        tentId: z.number().optional(),
+        strainId: z.number().optional(),
+        status: z.enum(["ACTIVE", "HARVESTED", "DEAD"]).optional(),
+      }))
+      .query(async ({ input }) => {
+        const database = getDb();
+        if (!database) throw new Error("Database not available");
+        
+        let query = database.select().from(plants);
+        
+        if (input.tentId) {
+          query = query.where(eq(plants.currentTentId, input.tentId)) as any;
+        }
+        if (input.strainId) {
+          query = query.where(eq(plants.strainId, input.strainId)) as any;
+        }
+        if (input.status) {
+          query = query.where(eq(plants.status, input.status)) as any;
+        }
+        
+        return await query;
+      }),
+
+    // Obter planta por ID
+    getById: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        const database = getDb();
+        if (!database) throw new Error("Database not available");
+        
+        const [plant] = await database
+          .select()
+          .from(plants)
+          .where(eq(plants.id, input.id));
+        
+        return plant;
+      }),
+
+    // Atualizar planta
+    update: publicProcedure
+      .input(z.object({
+        id: z.number(),
+        name: z.string().optional(),
+        code: z.string().optional(),
+        notes: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = getDb();
+        if (!database) throw new Error("Database not available");
+        
+        await database
+          .update(plants)
+          .set({
+            name: input.name,
+            code: input.code,
+            notes: input.notes,
+          })
+          .where(eq(plants.id, input.id));
+        
+        return { success: true };
+      }),
+
+    // Mover planta para outra estufa
+    moveTent: publicProcedure
+      .input(z.object({
+        plantId: z.number(),
+        toTentId: z.number(),
+        reason: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Buscar estufa atual
+        const [plant] = await database
+          .select()
+          .from(plants)
+          .where(eq(plants.id, input.plantId));
+        
+        if (!plant) throw new Error("Plant not found");
+        
+        // Registrar histórico
+        await database.insert(plantTentHistory).values({
+          plantId: input.plantId,
+          fromTentId: plant.currentTentId,
+          toTentId: input.toTentId,
+          reason: input.reason,
+        });
+        
+        // Atualizar estufa atual
+        await database
+          .update(plants)
+          .set({ currentTentId: input.toTentId })
+          .where(eq(plants.id, input.plantId));
+        
+        return { success: true };
+      }),
+
+    // Finalizar planta (harvest)
+    finish: publicProcedure
+      .input(z.object({
+        plantId: z.number(),
+        status: z.enum(["HARVESTED", "DEAD"]),
+      }))
+      .mutation(async ({ input }) => {
+        const database = getDb();
+        if (!database) throw new Error("Database not available");
+        
+        await database
+          .update(plants)
+          .set({ status: input.status })
+          .where(eq(plants.id, input.plantId));
+        
+        return { success: true };
+      }),
+  }),
+
+  // Plant Observations
+  plantObservations: router({
+    create: publicProcedure
+      .input(z.object({
+        plantId: z.number(),
+        content: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = getDb();
+        if (!database) throw new Error("Database not available");
+        
+        await database.insert(plantObservations).values({
+          plantId: input.plantId,
+          content: input.content,
+        });
+        
+        return { success: true };
+      }),
+
+    list: publicProcedure
+      .input(z.object({ plantId: z.number() }))
+      .query(async ({ input }) => {
+        const database = getDb();
+        if (!database) throw new Error("Database not available");
+        
+        return await database
+          .select()
+          .from(plantObservations)
+          .where(eq(plantObservations.plantId, input.plantId))
+          .orderBy(desc(plantObservations.observationDate));
+      }),
+  }),
+
+  // Plant Photos
+  plantPhotos: router({
+    list: publicProcedure
+      .input(z.object({ plantId: z.number() }))
+      .query(async ({ input }) => {
+        const database = getDb();
+        if (!database) throw new Error("Database not available");
+        
+        return await database
+          .select()
+          .from(plantPhotos)
+          .where(eq(plantPhotos.plantId, input.plantId))
+          .orderBy(desc(plantPhotos.photoDate));
+      }),
+  }),
+
+  // Plant Runoff Logs
+  plantRunoff: router({
+    create: publicProcedure
+      .input(z.object({
+        plantId: z.number(),
+        volumeIn: z.number(),
+        volumeOut: z.number(),
+        notes: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = getDb();
+        if (!database) throw new Error("Database not available");
+        
+        const runoffPercent = (input.volumeOut / input.volumeIn) * 100;
+        
+        await database.insert(plantRunoffLogs).values({
+          plantId: input.plantId,
+          volumeIn: input.volumeIn.toString(),
+          volumeOut: input.volumeOut.toString(),
+          runoffPercent: runoffPercent.toFixed(2),
+          notes: input.notes,
+        });
+        
+        return { success: true, runoffPercent };
+      }),
+
+    list: publicProcedure
+      .input(z.object({ plantId: z.number() }))
+      .query(async ({ input }) => {
+        const database = getDb();
+        if (!database) throw new Error("Database not available");
+        
+        return await database
+          .select()
+          .from(plantRunoffLogs)
+          .where(eq(plantRunoffLogs.plantId, input.plantId))
+          .orderBy(desc(plantRunoffLogs.logDate));
+      }),
+  }),
+
+  // Plant Health Logs
+  plantHealth: router({
+    create: publicProcedure
+      .input(z.object({
+        plantId: z.number(),
+        healthStatus: z.enum(["HEALTHY", "STRESSED", "SICK", "RECOVERING"]),
+        symptoms: z.string().optional(),
+        treatment: z.string().optional(),
+        notes: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = getDb();
+        if (!database) throw new Error("Database not available");
+        
+        await database.insert(plantHealthLogs).values({
+          plantId: input.plantId,
+          healthStatus: input.healthStatus,
+          symptoms: input.symptoms,
+          treatment: input.treatment,
+          notes: input.notes,
+        });
+        
+        return { success: true };
+      }),
+
+    list: publicProcedure
+      .input(z.object({ plantId: z.number() }))
+      .query(async ({ input }) => {
+        const database = getDb();
+        if (!database) throw new Error("Database not available");
+        
+        return await database
+          .select()
+          .from(plantHealthLogs)
+          .where(eq(plantHealthLogs.plantId, input.plantId))
+          .orderBy(desc(plantHealthLogs.logDate));
+      }),
+  }),
+
+  // Plant Trichome Logs
+  plantTrichomes: router({
+    create: publicProcedure
+      .input(z.object({
+        plantId: z.number(),
+        trichomeStatus: z.enum(["CLEAR", "CLOUDY", "AMBER", "MIXED"]),
+        clearPercent: z.number().optional(),
+        cloudyPercent: z.number().optional(),
+        amberPercent: z.number().optional(),
+        notes: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = getDb();
+        if (!database) throw new Error("Database not available");
+        
+        await database.insert(plantTrichomeLogs).values({
+          plantId: input.plantId,
+          trichomeStatus: input.trichomeStatus,
+          clearPercent: input.clearPercent,
+          cloudyPercent: input.cloudyPercent,
+          amberPercent: input.amberPercent,
+          notes: input.notes,
+        });
+        
+        return { success: true };
+      }),
+
+    list: publicProcedure
+      .input(z.object({ plantId: z.number() }))
+      .query(async ({ input }) => {
+        const database = getDb();
+        if (!database) throw new Error("Database not available");
+        
+        return await database
+          .select()
+          .from(plantTrichomeLogs)
+          .where(eq(plantTrichomeLogs.plantId, input.plantId))
+          .orderBy(desc(plantTrichomeLogs.logDate));
+      }),
+  }),
+
+  // Plant LST Logs
+  plantLST: router({
+    create: publicProcedure
+      .input(z.object({
+        plantId: z.number(),
+        technique: z.string(),
+        response: z.string().optional(),
+        notes: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = getDb();
+        if (!database) throw new Error("Database not available");
+        
+        await database.insert(plantLSTLogs).values({
+          plantId: input.plantId,
+          technique: input.technique,
+          response: input.response,
+          notes: input.notes,
+        });
+        
+        return { success: true };
+      }),
+
+    list: publicProcedure
+      .input(z.object({ plantId: z.number() }))
+      .query(async ({ input }) => {
+        const database = getDb();
+        if (!database) throw new Error("Database not available");
+        
+        return await database
+          .select()
+          .from(plantLSTLogs)
+          .where(eq(plantLSTLogs.plantId, input.plantId))
+          .orderBy(desc(plantLSTLogs.logDate));
       }),
   }),
 });

@@ -138,6 +138,7 @@ export default function Calculators() {
 
   const calculatorTitles: Record<string, string> = {
     irrigation: "Calculadora de Rega",
+    runoff: "Calculadora de Runoff",
     fertilization: "Calculadora de Fertilização",
     "lux-ppfd": "Conversor Lux → PPFD",
     "ppm-ec": "Conversor PPM ↔ EC",
@@ -176,6 +177,11 @@ export default function Calculators() {
             <IrrigationCalculator />
           </TabsContent>
 
+          {/* Calculadora de Runoff */}
+          <TabsContent value="runoff">
+            <RunoffCalculator />
+          </TabsContent>
+
           {/* Calculadora de Fertilização */}
           <TabsContent value="fertilization">
             <FertilizationCalculator />
@@ -201,34 +207,222 @@ export default function Calculators() {
   );
 }
 
+// Calculadora de Runoff
+function RunoffCalculator() {
+  const [volumeIn, setVolumeIn] = useState<string>("");
+  const [volumeOut, setVolumeOut] = useState<string>("");
+  const [phase, setPhase] = useState<string>("vega");
+  const [substrate, setSubstrate] = useState<string>("coco");
+  const [result, setResult] = useState<{ runoffPercent: number; status: string; recommendation: string; color: string } | null>(null);
+
+  const calculateRunoff = () => {
+    const volIn = parseFloat(volumeIn);
+    const volOut = parseFloat(volumeOut);
+
+    if (isNaN(volIn) || isNaN(volOut) || volIn <= 0) return;
+
+    const runoffPercent = Math.round((volOut / volIn) * 100);
+
+    // Determinar status e recomendação
+    let status = "";
+    let recommendation = "";
+    let color = "";
+
+    if (runoffPercent < 10) {
+      status = "Runoff Muito Baixo";
+      recommendation = "Risco de acúmulo de sais! Aumente o volume de água ou a frequência de rega. Ideal: 15-20%.";
+      color = "red";
+    } else if (runoffPercent >= 10 && runoffPercent < 15) {
+      status = "Runoff Baixo";
+      recommendation = "Runoff um pouco abaixo do ideal. Considere aumentar ligeiramente o volume de água.";
+      color = "yellow";
+    } else if (runoffPercent >= 15 && runoffPercent <= 25) {
+      status = "Runoff Ideal";
+      recommendation = "Perfeito! Você está na faixa ideal de drenagem. Continue assim.";
+      color = "green";
+    } else if (runoffPercent > 25 && runoffPercent <= 35) {
+      status = "Runoff Alto";
+      recommendation = "Runoff um pouco acima do ideal. Você pode estar desperdiçando água e nutrientes.";
+      color = "yellow";
+    } else {
+      status = "Runoff Muito Alto";
+      recommendation = "Desperdício excessivo de água e nutrientes! Reduza o volume de rega.";
+      color = "red";
+    }
+
+    setResult({
+      runoffPercent,
+      status,
+      recommendation,
+      color,
+    });
+  };
+
+  return (
+    <Card className="bg-card/90 backdrop-blur-sm">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Droplets className="w-5 h-5 text-cyan-500" />
+          Calculadora de Runoff
+        </CardTitle>
+        <CardDescription>
+          Calcule o % de runoff (drenagem) e verifique se está na faixa ideal
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="volumeIn">Volume de Entrada (litros)</Label>
+            <Input
+              id="volumeIn"
+              type="number"
+              placeholder="Ex: 10"
+              value={volumeIn}
+              onChange={(e) => setVolumeIn(e.target.value)}
+            />
+            <p className="text-xs text-muted-foreground">Quantidade de água que você regou</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="volumeOut">Volume de Saída (litros)</Label>
+            <Input
+              id="volumeOut"
+              type="number"
+              placeholder="Ex: 2"
+              value={volumeOut}
+              onChange={(e) => setVolumeOut(e.target.value)}
+            />
+            <p className="text-xs text-muted-foreground">Quantidade que drenou no prato</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="phase">Fase do Ciclo</Label>
+            <select
+              id="phase"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              value={phase}
+              onChange={(e) => setPhase(e.target.value)}
+            >
+              <option value="vega">Vegetativa</option>
+              <option value="flora">Floração</option>
+            </select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="substrate">Tipo de Substrato</Label>
+            <select
+              id="substrate"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              value={substrate}
+              onChange={(e) => setSubstrate(e.target.value)}
+            >
+              <option value="soil">Solo/Terra</option>
+              <option value="coco">Fibra de Coco</option>
+              <option value="hidro">Hidroponia</option>
+            </select>
+          </div>
+        </div>
+
+        <Button onClick={calculateRunoff} className="w-full">
+          <Calculator className="w-4 h-4 mr-2" />
+          Calcular Runoff
+        </Button>
+
+        {result && (
+          <div className={`border-2 rounded-lg p-6 space-y-3 ${
+            result.color === "green" ? "bg-green-500/10 border-green-500/30" :
+            result.color === "yellow" ? "bg-yellow-500/10 border-yellow-500/30" :
+            "bg-red-500/10 border-red-500/30"
+          }`}>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-foreground">Runoff:</span>
+              <span className={`text-3xl font-bold ${
+                result.color === "green" ? "text-green-600" :
+                result.color === "yellow" ? "text-yellow-600" :
+                "text-red-600"
+              }`}>{result.runoffPercent}%</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-foreground">Status:</span>
+              <span className={`text-lg font-semibold ${
+                result.color === "green" ? "text-green-600" :
+                result.color === "yellow" ? "text-yellow-600" :
+                "text-red-600"
+              }`}>{result.status}</span>
+            </div>
+            <div className="bg-background/50 rounded-lg p-3 mt-3">
+              <p className="text-sm text-foreground">
+                <strong>💡 Recomendação:</strong> {result.recommendation}
+              </p>
+            </div>
+            <div className="text-xs text-muted-foreground mt-4 space-y-1">
+              <p><strong>Faixas de Referência:</strong></p>
+              <p>🔴 &lt;10%: Muito baixo (risco de acúmulo de sais)</p>
+              <p>🟡 10-15%: Baixo</p>
+              <p>🟢 15-25%: Ideal</p>
+              <p>🟡 25-35%: Alto</p>
+              <p>🔴 &gt;35%: Muito alto (desperdício)</p>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 // Calculadora de Rega (Volume por Planta)
 function IrrigationCalculator() {
+  const [calculationMode, setCalculationMode] = useState<"daily" | "weekly">("daily");
   const [potVolume, setPotVolume] = useState<string>("");
   const [substrate, setSubstrate] = useState<string>("coco");
-  const [result, setResult] = useState<{ volume: number; frequency: string } | null>(null);
+  const [numPlants, setNumPlants] = useState<string>("1");
+  const [irrigationFrequency, setIrrigationFrequency] = useState<string>("2");
+  const [runoffPercent, setRunoffPercent] = useState<string>("20");
+  const [result, setResult] = useState<{ volume: number; frequency: string; weeklyTotal?: number; irrigationsPerWeek?: number; tankSize?: number } | null>(null);
 
   const calculateIrrigation = () => {
     const volume = parseFloat(potVolume);
+    const plants = parseFloat(numPlants);
+    const freqDays = parseFloat(irrigationFrequency);
+    const runoff = parseFloat(runoffPercent) / 100;
+
     if (isNaN(volume) || volume <= 0) return;
+    if (calculationMode === "weekly" && (isNaN(plants) || plants <= 0 || isNaN(freqDays) || freqDays <= 0)) return;
 
     // Fórmulas baseadas em práticas comuns de cultivo
     let waterPercentage = 0.25; // 25% do volume do vaso (padrão para solo)
     let frequency = "a cada 2-3 dias";
 
     if (substrate === "coco") {
-      waterPercentage = 0.3; // 30% para coco (retém menos água)
+      waterPercentage = 0.33; // 33% para coco (retém menos água)
       frequency = "diariamente";
     } else if (substrate === "hidro") {
       waterPercentage = 0.15; // 15% para hidroponia (sistema recirculante)
       frequency = "múltiplas vezes ao dia";
     }
 
-    const waterVolume = volume * waterPercentage;
+    const waterPerPlant = volume * waterPercentage * (1 + runoff);
 
-    setResult({
-      volume: Math.round(waterVolume * 100) / 100,
-      frequency,
-    });
+    if (calculationMode === "daily") {
+      setResult({
+        volume: Math.round(waterPerPlant * 100) / 100,
+        frequency,
+      });
+    } else {
+      // Cálculo semanal
+      const irrigationsPerWeek = 7 / freqDays;
+      const weeklyTotalPerPlant = waterPerPlant * irrigationsPerWeek;
+      const weeklyTotal = weeklyTotalPerPlant * plants;
+      const tankSize = Math.ceil(weeklyTotal * 1.1); // +10% margem de segurança
+
+      setResult({
+        volume: Math.round(waterPerPlant * 100) / 100,
+        frequency: `a cada ${freqDays} dias`,
+        irrigationsPerWeek: Math.round(irrigationsPerWeek * 10) / 10,
+        weeklyTotal: Math.round(weeklyTotal * 100) / 100,
+        tankSize,
+      });
+    }
   };
 
   return (
@@ -243,6 +437,30 @@ function IrrigationCalculator() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        {/* Toggle Modo de Cálculo */}
+        <div className="flex items-center justify-center gap-2 p-1 bg-muted rounded-lg">
+          <button
+            onClick={() => setCalculationMode("daily")}
+            className={`flex-1 py-2 px-4 rounded-md transition-colors ${
+              calculationMode === "daily"
+                ? "bg-primary text-primary-foreground font-medium"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Por Rega (Diário)
+          </button>
+          <button
+            onClick={() => setCalculationMode("weekly")}
+            className={`flex-1 py-2 px-4 rounded-md transition-colors ${
+              calculationMode === "weekly"
+                ? "bg-primary text-primary-foreground font-medium"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Por Semana (Tank)
+          </button>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="potVolume">Volume do Vaso (litros)</Label>
@@ -268,6 +486,43 @@ function IrrigationCalculator() {
               <option value="hidro">Hidroponia</option>
             </select>
           </div>
+
+          {calculationMode === "weekly" && (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="numPlants">Número de Plantas</Label>
+                <Input
+                  id="numPlants"
+                  type="number"
+                  placeholder="Ex: 4"
+                  value={numPlants}
+                  onChange={(e) => setNumPlants(e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="irrigationFrequency">Frequência de Rega (dias)</Label>
+                <Input
+                  id="irrigationFrequency"
+                  type="number"
+                  placeholder="Ex: 2"
+                  value={irrigationFrequency}
+                  onChange={(e) => setIrrigationFrequency(e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="runoffPercent">% Runoff Desejado</Label>
+                <Input
+                  id="runoffPercent"
+                  type="number"
+                  placeholder="Ex: 20"
+                  value={runoffPercent}
+                  onChange={(e) => setRunoffPercent(e.target.value)}
+                />
+              </div>
+            </>
+          )}
         </div>
 
         <Button onClick={calculateIrrigation} className="w-full">
@@ -276,18 +531,47 @@ function IrrigationCalculator() {
         </Button>
 
         {result && (
-          <div className="bg-blue-500/100/10 border border-blue-500/20 rounded-lg p-6 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-foreground">Volume por rega:</span>
-              <span className="text-2xl font-bold text-blue-600">{result.volume}L</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-foreground">Frequência recomendada:</span>
-              <span className="text-lg font-semibold text-blue-600">{result.frequency}</span>
-            </div>
-            <p className="text-xs text-muted-foreground mt-4">
-              💡 <strong>Dica:</strong> Regue até ver 10-20% de drenagem no fundo do vaso para evitar acúmulo de sais.
-            </p>
+          <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-6 space-y-3">
+            {calculationMode === "daily" ? (
+              <>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-foreground">Volume por rega:</span>
+                  <span className="text-2xl font-bold text-blue-600">{result.volume}L</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-foreground">Frequência recomendada:</span>
+                  <span className="text-lg font-semibold text-blue-600">{result.frequency}</span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-4">
+                  💡 <strong>Dica:</strong> Regue até ver 10-20% de drenagem no fundo do vaso para evitar acúmulo de sais.
+                </p>
+              </>
+            ) : (
+              <>
+                <h3 className="text-lg font-bold text-foreground mb-4">📊 Resultado (7 dias):</h3>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-foreground">Regas por semana:</span>
+                    <span className="text-lg font-bold text-blue-600">{result.irrigationsPerWeek}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-foreground">Volume por rega:</span>
+                    <span className="text-lg font-bold text-blue-600">{result.volume}L</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-foreground">Total semanal:</span>
+                    <span className="text-2xl font-bold text-blue-600">{result.weeklyTotal}L</span>
+                  </div>
+                  <div className="flex items-center justify-between border-t border-blue-500/20 pt-2 mt-2">
+                    <span className="text-sm font-medium text-foreground">Tank mínimo recomendado:</span>
+                    <span className="text-2xl font-bold text-green-600">{result.tankSize}L</span>
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground mt-4">
+                  💡 <strong>Dica:</strong> O tank recomendado inclui +10% de margem de segurança. Prepare a solução nutritiva uma vez por semana.
+                </p>
+              </>
+            )}
             <Button 
               onClick={() => exportIrrigationRecipe(potVolume, substrate, result)} 
               variant="outline" 
@@ -305,8 +589,10 @@ function IrrigationCalculator() {
 
 // Calculadora de Fertilização (Receita por Reagente)
 function FertilizationCalculator() {
+  const [calculationMode, setCalculationMode] = useState<"per-irrigation" | "per-week">("per-irrigation");
   const [waterVolume, setWaterVolume] = useState<string>("");
   const [targetEC, setTargetEC] = useState<string>("");
+  const [irrigationsPerWeek, setIrrigationsPerWeek] = useState<string>("3.5");
   
   const [result, setResult] = useState<{ 
     calciumNitrate: number;
@@ -315,13 +601,20 @@ function FertilizationCalculator() {
     magnesiumSulfate: number;
     micronutrients: number;
     totalPPM: number;
+    weeklyCalciumNitrate?: number;
+    weeklyPotassiumNitrate?: number;
+    weeklyMKP?: number;
+    weeklyMagnesiumSulfate?: number;
+    weeklyMicronutrients?: number;
   } | null>(null);
 
   const calculateFertilization = () => {
     const water = parseFloat(waterVolume);
     const ec = parseFloat(targetEC);
+    const irrigations = parseFloat(irrigationsPerWeek);
 
     if (isNaN(water) || isNaN(ec) || water <= 0 || ec <= 0) return;
+    if (calculationMode === "per-week" && (isNaN(irrigations) || irrigations <= 0)) return;
 
     // Proporções base da receita (g/L para EC = 2.0)
     // Baseado na planilha fornecida
@@ -337,14 +630,32 @@ function FertilizationCalculator() {
     // Ajustar proporções para o EC desejado
     const ratio = ec / baseEC;
     
-    setResult({
+    const perLiterAmounts = {
       calciumNitrate: Math.round(baseRecipe.calciumNitrate * ratio * 100) / 100,
       potassiumNitrate: Math.round(baseRecipe.potassiumNitrate * ratio * 100) / 100,
       mkp: Math.round(baseRecipe.mkp * ratio * 100) / 100,
       magnesiumSulfate: Math.round(baseRecipe.magnesiumSulfate * ratio * 100) / 100,
       micronutrients: Math.round(baseRecipe.micronutrients * ratio * 100) / 100,
-      totalPPM: Math.round(ec * 500) // Conversão aproximada EC → PPM (escala 500)
-    });
+    };
+
+    if (calculationMode === "per-irrigation") {
+      setResult({
+        ...perLiterAmounts,
+        totalPPM: Math.round(ec * 500)
+      });
+    } else {
+      // Cálculo semanal
+      const weeklyWater = water * irrigations;
+      setResult({
+        ...perLiterAmounts,
+        totalPPM: Math.round(ec * 500),
+        weeklyCalciumNitrate: Math.round(perLiterAmounts.calciumNitrate * weeklyWater * 100) / 100,
+        weeklyPotassiumNitrate: Math.round(perLiterAmounts.potassiumNitrate * weeklyWater * 100) / 100,
+        weeklyMKP: Math.round(perLiterAmounts.mkp * weeklyWater * 100) / 100,
+        weeklyMagnesiumSulfate: Math.round(perLiterAmounts.magnesiumSulfate * weeklyWater * 100) / 100,
+        weeklyMicronutrients: Math.round(perLiterAmounts.micronutrients * weeklyWater * 100) / 100,
+      });
+    }
   };
 
   return (
@@ -359,9 +670,35 @@ function FertilizationCalculator() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        {/* Toggle Modo de Cálculo */}
+        <div className="flex items-center justify-center gap-2 p-1 bg-muted rounded-lg">
+          <button
+            onClick={() => setCalculationMode("per-irrigation")}
+            className={`flex-1 py-2 px-4 rounded-md transition-colors ${
+              calculationMode === "per-irrigation"
+                ? "bg-primary text-primary-foreground font-medium"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Por Rega
+          </button>
+          <button
+            onClick={() => setCalculationMode("per-week")}
+            className={`flex-1 py-2 px-4 rounded-md transition-colors ${
+              calculationMode === "per-week"
+                ? "bg-primary text-primary-foreground font-medium"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Por Semana
+          </button>
+        </div>
+
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="waterVolume">Volume de Preparo (litros)</Label>
+            <Label htmlFor="waterVolume">
+              {calculationMode === "per-irrigation" ? "Volume de Preparo (litros)" : "Volume por Rega (litros)"}
+            </Label>
             <Input
               id="waterVolume"
               type="number"
@@ -369,7 +706,9 @@ function FertilizationCalculator() {
               value={waterVolume}
               onChange={(e) => setWaterVolume(e.target.value)}
             />
-            <p className="text-xs text-muted-foreground">Quantidade total de solução a preparar</p>
+            <p className="text-xs text-muted-foreground">
+              {calculationMode === "per-irrigation" ? "Quantidade total de solução a preparar" : "Volume usado em cada rega"}
+            </p>
           </div>
 
           <div className="space-y-2">
@@ -384,6 +723,21 @@ function FertilizationCalculator() {
             />
             <p className="text-xs text-muted-foreground">Condutividade elétrica alvo da solução</p>
           </div>
+
+          {calculationMode === "per-week" && (
+            <div className="space-y-2">
+              <Label htmlFor="irrigationsPerWeek">Regas por Semana</Label>
+              <Input
+                id="irrigationsPerWeek"
+                type="number"
+                step="0.5"
+                placeholder="Ex: 3.5"
+                value={irrigationsPerWeek}
+                onChange={(e) => setIrrigationsPerWeek(e.target.value)}
+              />
+              <p className="text-xs text-muted-foreground">Quantas vezes você rega por semana</p>
+            </div>
+          )}
         </div>
 
         <Button onClick={calculateFertilization} className="w-full">
@@ -421,6 +775,34 @@ function FertilizationCalculator() {
                 <span className="text-xl font-bold text-green-600">{result.micronutrients} g/L</span>
               </div>
             </div>
+
+            {calculationMode === "per-week" && result.weeklyCalciumNitrate && (
+              <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 mt-4">
+                <h5 className="font-semibold text-foreground mb-3">📊 Total Semanal (para o tank):</h5>
+                <div className="space-y-1 text-sm">
+                  <div className="flex justify-between">
+                    <span>Nitrato de Cálcio:</span>
+                    <span className="font-bold text-blue-700">{result.weeklyCalciumNitrate} g</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Nitrato de Potássio:</span>
+                    <span className="font-bold text-blue-700">{result.weeklyPotassiumNitrate} g</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>MKP:</span>
+                    <span className="font-bold text-blue-700">{result.weeklyMKP} g</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Sulfato de Magnésio:</span>
+                    <span className="font-bold text-blue-700">{result.weeklyMagnesiumSulfate} g</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Micronutrientes:</span>
+                    <span className="font-bold text-blue-700">{result.weeklyMicronutrients} g</span>
+                  </div>
+                </div>
+              </div>
+            )}
             
             <div className="bg-green-50 border border-green-300 rounded-lg p-3 mt-4">
               <div className="flex items-center justify-between">

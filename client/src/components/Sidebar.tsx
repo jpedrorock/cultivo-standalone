@@ -7,10 +7,11 @@ export function Sidebar() {
 
   const navItems = [
     { href: "/", icon: Home, label: "Home" },
+    { href: "/plants", icon: Sprout, label: "Plantas" },
     { href: "/calculators", icon: Calculator, label: "Calculadoras" },
     { href: "/history", icon: BarChart3, label: "Histórico" },
     { href: "/alerts", icon: Bell, label: "Alertas" },
-    { href: "/manage-strains", icon: Sprout, label: "Strains" },
+    { href: "/manage-strains", icon: Leaf, label: "Strains" },
   ];
 
   return (

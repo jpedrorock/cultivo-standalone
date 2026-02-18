@@ -25,6 +25,8 @@ import FertilizationCalculator from "./pages/FertilizationCalculator";
 import NotificationSettings from "./pages/NotificationSettings";
 import AlertHistory from "./pages/AlertHistory";
 import AlertSettings from "./pages/AlertSettings";
+import PlantsList from "./pages/PlantsList";
+import PlantDetail from "./pages/PlantDetail";
 
 
 function Router() {
@@ -45,6 +47,9 @@ function Router() {
       <Route path={"/settings/alerts"} component={AlertSettings} />
       <Route path={"/alerts/history"} component={AlertHistory} />
       <Route path={"/strains/:id/targets"} component={StrainTargets} />
+
+      <Route path={"/plants"} component={PlantsList} />
+      <Route path={"/plants/:id"} component={PlantDetail} />
 
       <Route path={"/tent/:id"} component={TentDetails} />
       <Route path={"/tent/:id/log"} component={TentLog} />

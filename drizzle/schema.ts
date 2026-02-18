@@ -438,3 +438,223 @@ export const notificationHistory = mysqlTable(
 
 export type NotificationHistory = typeof notificationHistory.$inferSelect;
 export type InsertNotificationHistory = typeof notificationHistory.$inferInsert;
+
+/**
+ * ========================================
+ * SISTEMA DE PLANTAS INDIVIDUAIS
+ * ========================================
+ */
+
+/**
+ * Plantas individuais
+ */
+export const plants = mysqlTable(
+  "plants",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    name: varchar("name", { length: 100 }).notNull(), // Ex: "Northern Lights #1"
+    code: varchar("code", { length: 50 }), // Código opcional (ex: "NL-001")
+    strainId: int("strainId")
+      .notNull()
+      .references(() => strains.id),
+    currentTentId: int("currentTentId")
+      .notNull()
+      .references(() => tents.id),
+    germDate: timestamp("germDate").notNull(), // Data de germinação
+    status: mysqlEnum("status", ["ACTIVE", "HARVESTED", "DEAD"]).default("ACTIVE").notNull(),
+    notes: text("notes"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  (table) => ({
+    strainIdx: index("strainIdx").on(table.strainId),
+    tentIdx: index("tentIdx").on(table.currentTentId),
+    statusIdx: index("statusIdx").on(table.status),
+  })
+);
+
+export type Plant = typeof plants.$inferSelect;
+export type InsertPlant = typeof plants.$inferInsert;
+
+/**
+ * Histórico de movimentação de plantas entre estufas
+ */
+export const plantTentHistory = mysqlTable(
+  "plantTentHistory",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    plantId: int("plantId")
+      .notNull()
+      .references(() => plants.id, { onDelete: "cascade" }),
+    fromTentId: int("fromTentId").references(() => tents.id),
+    toTentId: int("toTentId")
+      .notNull()
+      .references(() => tents.id),
+    movedAt: timestamp("movedAt").defaultNow().notNull(),
+    reason: text("reason"),
+  },
+  (table) => ({
+    plantIdx: index("plantIdx").on(table.plantId),
+  })
+);
+
+export type PlantTentHistory = typeof plantTentHistory.$inferSelect;
+export type InsertPlantTentHistory = typeof plantTentHistory.$inferInsert;
+
+/**
+ * Observações diárias por planta
+ */
+export const plantObservations = mysqlTable(
+  "plantObservations",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    plantId: int("plantId")
+      .notNull()
+      .references(() => plants.id, { onDelete: "cascade" }),
+    observationDate: timestamp("observationDate").defaultNow().notNull(),
+    content: text("content").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    plantIdx: index("plantIdx").on(table.plantId),
+    dateIdx: index("dateIdx").on(table.observationDate),
+  })
+);
+
+export type PlantObservation = typeof plantObservations.$inferSelect;
+export type InsertPlantObservation = typeof plantObservations.$inferInsert;
+
+/**
+ * Fotos das plantas
+ */
+export const plantPhotos = mysqlTable(
+  "plantPhotos",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    plantId: int("plantId")
+      .notNull()
+      .references(() => plants.id, { onDelete: "cascade" }),
+    photoUrl: varchar("photoUrl", { length: 500 }).notNull(), // URL S3
+    photoKey: varchar("photoKey", { length: 500 }).notNull(), // S3 key
+    description: text("description"),
+    photoDate: timestamp("photoDate").defaultNow().notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    plantIdx: index("plantIdx").on(table.plantId),
+    dateIdx: index("dateIdx").on(table.photoDate),
+  })
+);
+
+export type PlantPhoto = typeof plantPhotos.$inferSelect;
+export type InsertPlantPhoto = typeof plantPhotos.$inferInsert;
+
+/**
+ * Registros de runoff por planta
+ */
+export const plantRunoffLogs = mysqlTable(
+  "plantRunoffLogs",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    plantId: int("plantId")
+      .notNull()
+      .references(() => plants.id, { onDelete: "cascade" }),
+    logDate: timestamp("logDate").defaultNow().notNull(),
+    volumeIn: decimal("volumeIn", { precision: 6, scale: 2 }).notNull(), // Litros entrada
+    volumeOut: decimal("volumeOut", { precision: 6, scale: 2 }).notNull(), // Litros saída
+    runoffPercent: decimal("runoffPercent", { precision: 5, scale: 2 }).notNull(), // % calculado
+    notes: text("notes"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    plantIdx: index("plantIdx").on(table.plantId),
+    dateIdx: index("dateIdx").on(table.logDate),
+  })
+);
+
+export type PlantRunoffLog = typeof plantRunoffLogs.$inferSelect;
+export type InsertPlantRunoffLog = typeof plantRunoffLogs.$inferInsert;
+
+/**
+ * Registros de saúde da planta
+ */
+export const plantHealthLogs = mysqlTable(
+  "plantHealthLogs",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    plantId: int("plantId")
+      .notNull()
+      .references(() => plants.id, { onDelete: "cascade" }),
+    logDate: timestamp("logDate").defaultNow().notNull(),
+    healthStatus: mysqlEnum("healthStatus", ["HEALTHY", "STRESSED", "SICK", "RECOVERING"]).notNull(),
+    symptoms: text("symptoms"), // Deficiências, pragas, etc.
+    treatment: text("treatment"), // Ações tomadas
+    notes: text("notes"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    plantIdx: index("plantIdx").on(table.plantId),
+    dateIdx: index("dateIdx").on(table.logDate),
+  })
+);
+
+export type PlantHealthLog = typeof plantHealthLogs.$inferSelect;
+export type InsertPlantHealthLog = typeof plantHealthLogs.$inferInsert;
+
+/**
+ * Registros de qualidade dos tricomas
+ */
+export const plantTrichomeLogs = mysqlTable(
+  "plantTrichomeLogs",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    plantId: int("plantId")
+      .notNull()
+      .references(() => plants.id, { onDelete: "cascade" }),
+    logDate: timestamp("logDate").defaultNow().notNull(),
+    trichomeStatus: mysqlEnum("trichomeStatus", ["CLEAR", "CLOUDY", "AMBER", "MIXED"]).notNull(),
+    clearPercent: int("clearPercent"), // % transparentes
+    cloudyPercent: int("cloudyPercent"), // % leitosos
+    amberPercent: int("amberPercent"), // % âmbar
+    photoUrl: varchar("photoUrl", { length: 500 }), // Foto macro
+    photoKey: varchar("photoKey", { length: 500 }),
+    notes: text("notes"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    plantIdx: index("plantIdx").on(table.plantId),
+    dateIdx: index("dateIdx").on(table.logDate),
+  })
+);
+
+export type PlantTrichomeLog = typeof plantTrichomeLogs.$inferSelect;
+export type InsertPlantTrichomeLog = typeof plantTrichomeLogs.$inferInsert;
+
+/**
+ * Registros de técnicas LST (Low Stress Training)
+ */
+export const plantLSTLogs = mysqlTable(
+  "plantLSTLogs",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    plantId: int("plantId")
+      .notNull()
+      .references(() => plants.id, { onDelete: "cascade" }),
+    logDate: timestamp("logDate").defaultNow().notNull(),
+    technique: varchar("technique", { length: 100 }).notNull(), // Ex: "Topping", "FIM", "LST", "Defoliation"
+    beforePhotoUrl: varchar("beforePhotoUrl", { length: 500 }),
+    beforePhotoKey: varchar("beforePhotoKey", { length: 500 }),
+    afterPhotoUrl: varchar("afterPhotoUrl", { length: 500 }),
+    afterPhotoKey: varchar("afterPhotoKey", { length: 500 }),
+    response: text("response"), // Como a planta respondeu
+    notes: text("notes"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    plantIdx: index("plantIdx").on(table.plantId),
+    dateIdx: index("dateIdx").on(table.logDate),
+  })
+);
+
+export type PlantLSTLog = typeof plantLSTLogs.$inferSelect;
+export type InsertPlantLSTLog = typeof plantLSTLogs.$inferInsert;
