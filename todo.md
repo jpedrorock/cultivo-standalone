@@ -390,3 +390,9 @@
 - [x] Adicionar cálculo semanal embaixo do resultado diário
 - [x] Mostrar "Rega Diária: X litros" e "Rega Semanal: Y litros"
 - [x] Confirmar que seletor de fase/semana permanece apenas na calculadora de fertilização
+
+## Correção de Exibição de Fase/Semana na Página de Detalhes
+
+- [x] Investigar por que está mostrando "Flora Semana" quando planta está na Vega
+- [x] Corrigir lógica para mostrar fase/semana correta do ciclo ativo da estufa
+- [x] Garantir que badge mostre fase atual da estufa onde a planta está

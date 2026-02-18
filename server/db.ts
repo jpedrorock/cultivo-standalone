@@ -169,11 +169,69 @@ export async function getAllTents(): Promise<(Tent & { plantCount?: number })[]>
   return tentsWithPlantCount;
 }
 
-export async function getTentById(id: number): Promise<Tent | undefined> {
+export async function getTentById(id: number): Promise<any> {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(tents).where(eq(tents.id, id)).limit(1);
-  return result[0];
+  
+  // Buscar estufa com ciclo ativo
+  const result = await db
+    .select({
+      id: tents.id,
+      name: tents.name,
+      tentType: tents.tentType,
+      width: tents.width,
+      depth: tents.depth,
+      height: tents.height,
+      volume: tents.volume,
+      powerW: tents.powerW,
+      createdAt: tents.createdAt,
+      // Dados do ciclo ativo
+      cycleId: cycles.id,
+      cycleStartDate: cycles.startDate,
+      cycleFloraStartDate: cycles.floraStartDate,
+    })
+    .from(tents)
+    .leftJoin(cycles, and(
+      eq(cycles.tentId, tents.id),
+      eq(cycles.status, "ACTIVE")
+    ))
+    .where(eq(tents.id, id))
+    .limit(1);
+  
+  const tent = result[0];
+  if (!tent) return undefined;
+  
+  // Calcular fase e semana atual se houver ciclo ativo
+  if (tent.cycleStartDate) {
+    const now = new Date();
+    const startDate = new Date(tent.cycleStartDate);
+    const floraStartDate = tent.cycleFloraStartDate ? new Date(tent.cycleFloraStartDate) : null;
+    
+    let currentPhase: "VEGA" | "FLORA";
+    let currentWeek: number;
+    
+    if (floraStartDate && now >= floraStartDate) {
+      currentPhase = "FLORA";
+      const weeksSinceFlora = Math.floor(
+        (now.getTime() - floraStartDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
+      );
+      currentWeek = weeksSinceFlora + 1;
+    } else {
+      currentPhase = "VEGA";
+      const weeksSinceStart = Math.floor(
+        (now.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
+      );
+      currentWeek = weeksSinceStart + 1;
+    }
+    
+    return {
+      ...tent,
+      currentPhase,
+      currentWeek,
+    };
+  }
+  
+  return tent;
 }
 
 // ============ STRAIN FUNCTIONS ============
