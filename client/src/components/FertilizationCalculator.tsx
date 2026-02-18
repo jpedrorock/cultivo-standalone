@@ -35,15 +35,41 @@ export function FertilizationCalculator() {
   // Calcular automaticamente quando valores mudam
   useEffect(() => {
     if (volume > 0 && targetEC > 0) {
-      const npk = {
-        nitrogen: (targetEC * volume * 0.4).toFixed(2),
-        phosphorus: (targetEC * volume * 0.3).toFixed(2),
-        potassium: (targetEC * volume * 0.3).toFixed(2),
-      };
+      // Cálculo baseado em EC (mS/cm) e volume (L)
+      // Fórmulas aproximadas para converter EC em gramas de nutrientes
+      const calciumNitrate = (targetEC * volume * 0.45).toFixed(2); // 45% do EC
+      const potassiumNitrate = (targetEC * volume * 0.20).toFixed(2); // 20% do EC
+      const mkp = (targetEC * volume * 0.10).toFixed(2); // 10% do EC (Fosfato Monopotássico)
+      const magnesiumSulfate = (targetEC * volume * 0.20).toFixed(2); // 20% do EC
+      const micronutrients = (targetEC * volume * 0.05).toFixed(2); // 5% do EC
+      
+      // PPM aproximado (1 mS/cm ≈ 500-700 ppm, usamos 640 como média)
+      const ppmApprox = Math.round(targetEC * 640);
+      
       setResult({
         volume,
         ec: targetEC,
-        npk,
+        calciumNitrate: {
+          total: calciumNitrate,
+          perLiter: (parseFloat(calciumNitrate) / volume).toFixed(2)
+        },
+        potassiumNitrate: {
+          total: potassiumNitrate,
+          perLiter: (parseFloat(potassiumNitrate) / volume).toFixed(2)
+        },
+        mkp: {
+          total: mkp,
+          perLiter: (parseFloat(mkp) / volume).toFixed(2)
+        },
+        magnesiumSulfate: {
+          total: magnesiumSulfate,
+          perLiter: (parseFloat(magnesiumSulfate) / volume).toFixed(2)
+        },
+        micronutrients: {
+          total: micronutrients,
+          perLiter: (parseFloat(micronutrients) / volume).toFixed(2)
+        },
+        ppmApprox,
         phase: phase === "vega" ? "🌱 Vega" : "🌸 Flora",
         weekNumber,
       });
@@ -269,29 +295,76 @@ export function FertilizationCalculator() {
 
       {/* Resultado */}
       {result && (
-        <Card className="p-6 bg-green-50 dark:bg-green-950">
-          <h3 className="text-xl font-bold mb-4">📋 Receita Calculada</h3>
+        <Card className="p-6 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-2 border-green-200 dark:border-green-800">
+          <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+            🧪 Receita de Fertilização para {result.volume}L:
+          </h3>
+          
           <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="font-medium">Volume Total:</span>
-              <span className="font-bold">{result.totalVolume} litros</span>
+            {/* Nitrato de Cálcio */}
+            <div className="p-4 bg-orange-100 dark:bg-orange-900/30 rounded-lg border-2 border-orange-300 dark:border-orange-700">
+              <div className="flex justify-between items-center">
+                <span className="font-medium text-gray-700 dark:text-gray-200">Nitrato de Cálcio:</span>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">{result.calciumNitrate.total} g</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">({result.calciumNitrate.perLiter} g/L)</div>
+                </div>
+              </div>
             </div>
-            <div className="flex justify-between">
-              <span className="font-medium">EC Alvo:</span>
-              <span className="font-bold">{result.targetEC} mS/cm</span>
+
+            {/* Nitrato de Potássio */}
+            <div className="p-4 bg-purple-100 dark:bg-purple-900/30 rounded-lg border-2 border-purple-300 dark:border-purple-700">
+              <div className="flex justify-between items-center">
+                <span className="font-medium text-gray-700 dark:text-gray-200">Nitrato de Potássio:</span>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{result.potassiumNitrate.total} g</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">({result.potassiumNitrate.perLiter} g/L)</div>
+                </div>
+              </div>
             </div>
-            <hr className="my-4" />
-            <div className="flex justify-between">
-              <span className="font-medium">Nitrogênio (N):</span>
-              <span className="font-bold text-blue-600">{result.nitrogen}g</span>
+
+            {/* MKP */}
+            <div className="p-4 bg-blue-100 dark:bg-blue-900/30 rounded-lg border-2 border-blue-300 dark:border-blue-700">
+              <div className="flex justify-between items-center">
+                <span className="font-medium text-gray-700 dark:text-gray-200">MKP (Fosfato Monopotássico):</span>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{result.mkp.total} g</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">({result.mkp.perLiter} g/L)</div>
+                </div>
+              </div>
             </div>
-            <div className="flex justify-between">
-              <span className="font-medium">Fósforo (P):</span>
-              <span className="font-bold text-purple-600">{result.phosphorus}g</span>
+
+            {/* Sulfato de Magnésio */}
+            <div className="p-4 bg-green-100 dark:bg-green-900/30 rounded-lg border-2 border-green-300 dark:border-green-700">
+              <div className="flex justify-between items-center">
+                <span className="font-medium text-gray-700 dark:text-gray-200">Sulfato de Magnésio:</span>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-green-600 dark:text-green-400">{result.magnesiumSulfate.total} g</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">({result.magnesiumSulfate.perLiter} g/L)</div>
+                </div>
+              </div>
             </div>
-            <div className="flex justify-between">
-              <span className="font-medium">Potássio (K):</span>
-              <span className="font-bold text-orange-600">{result.potassium}g</span>
+
+            {/* Micronutrientes */}
+            <div className="p-4 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg border-2 border-yellow-300 dark:border-yellow-700">
+              <div className="flex justify-between items-center">
+                <span className="font-medium text-gray-700 dark:text-gray-200">Micronutrientes:</span>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{result.micronutrients.total} g</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">({result.micronutrients.perLiter} g/L)</div>
+                </div>
+              </div>
+            </div>
+
+            {/* EC Resultante */}
+            <div className="p-4 bg-blue-100 dark:bg-blue-900/30 rounded-lg border-2 border-blue-300 dark:border-blue-700 mt-4">
+              <div className="flex justify-between items-center">
+                <span className="font-medium text-gray-700 dark:text-gray-200">EC Resultante:</span>
+                <div className="text-right">
+                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{result.ec} mS/cm</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">PPM Aproximado: {result.ppmApprox} ppm</div>
+                </div>
+              </div>
             </div>
           </div>
         </Card>

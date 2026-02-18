@@ -632,3 +632,18 @@
 - [x] Adicionar import de useEffect no FertilizationCalculator
 - [x] Corrigir erro "Can't find variable: useEffect" na calculadora de fertilização
 - [x] Sistema de fotos agora funcional (servidor Express já configurado)
+
+## Melhoria UX - Accordion na Lista de Saúde
+
+- [x] Implementar accordion/collapsible na lista de registros de saúde
+- [x] Mostrar apenas título (status) e data por padrão
+- [x] Expandir detalhes (sintomas, tratamento, notas, foto) ao clicar
+- [x] Usar componente Accordion do shadcn/ui
+- [x] Manter botões de editar/excluir visíveis
+
+## Correção Urgente - Calculadora de Fertilização
+
+- [ ] Resultado não está aparecendo (quantidades de NPK por litro e total)
+- [ ] Verificar se useEffect está calculando corretamente
+- [ ] Adicionar card de resultado com NPK breakdown
+- [ ] Mostrar quantidade por litro e quantidade total

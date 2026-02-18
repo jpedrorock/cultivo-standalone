@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -313,30 +314,30 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
         </CardContent>
       </Card>
 
-      {/* Health Logs List */}
+      {/* Health Logs List with Accordion */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">Histórico de Saúde</h3>
         {healthLogs && healthLogs.length > 0 ? (
-          healthLogs.map((log) => (
-            <Card key={log.id}>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Heart className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">
-                      {new Date(log.logDate).toLocaleString("pt-BR", {
-                        dateStyle: "short",
-                        timeStyle: "short",
-                      })}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div
-                      className={`px-3 py-1 rounded-md text-sm font-medium border ${getStatusColor(log.healthStatus)}`}
-                    >
-                      {getStatusLabel(log.healthStatus)}
+          <Accordion type="multiple" className="space-y-2">
+            {healthLogs.map((log) => (
+              <AccordionItem key={log.id} value={`log-${log.id}`} className="border rounded-lg px-4">
+                <AccordionTrigger className="hover:no-underline py-4">
+                  <div className="flex items-center justify-between w-full pr-4">
+                    <div className="flex items-center gap-3">
+                      <Heart className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">
+                        {new Date(log.logDate).toLocaleString("pt-BR", {
+                          dateStyle: "short",
+                          timeStyle: "short",
+                        })}
+                      </span>
+                      <div
+                        className={`px-3 py-1 rounded-md text-sm font-medium border ${getStatusColor(log.healthStatus)}`}
+                      >
+                        {getStatusLabel(log.healthStatus)}
+                      </div>
                     </div>
-                    <div className="flex gap-1">
+                    <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
                       <Button
                         size="icon"
                         variant="ghost"
@@ -362,67 +363,67 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
                       </Button>
                     </div>
                   </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col md:flex-row gap-4">
-                  {/* Dados à esquerda */}
-                  <div className="flex-1 space-y-3">
-                    {log.symptoms && (
-                      <div>
-                        <p className="text-sm font-medium text-foreground">
-                          Sintomas:
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {log.symptoms}
-                        </p>
-                      </div>
-                    )}
-                    {log.treatment && (
-                      <div>
-                        <p className="text-sm font-medium text-foreground">
-                          Tratamento:
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {log.treatment}
-                        </p>
-                      </div>
-                    )}
-                    {log.notes && (
-                      <div>
-                        <p className="text-sm font-medium text-foreground">
-                          Notas:
-                        </p>
-                        <p className="text-sm text-muted-foreground">{log.notes}</p>
+                </AccordionTrigger>
+                <AccordionContent className="pb-4">
+                  <div className="flex flex-col md:flex-row gap-4 pt-2">
+                    {/* Dados à esquerda */}
+                    <div className="flex-1 space-y-3">
+                      {log.symptoms && (
+                        <div>
+                          <p className="text-sm font-medium text-foreground">
+                            Sintomas:
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {log.symptoms}
+                          </p>
+                        </div>
+                      )}
+                      {log.treatment && (
+                        <div>
+                          <p className="text-sm font-medium text-foreground">
+                            Tratamento:
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {log.treatment}
+                          </p>
+                        </div>
+                      )}
+                      {log.notes && (
+                        <div>
+                          <p className="text-sm font-medium text-foreground">
+                            Notas:
+                          </p>
+                          <p className="text-sm text-muted-foreground">{log.notes}</p>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Foto à direita */}
+                    {log.photoUrl && (
+                      <div className="md:w-64 flex-shrink-0">
+                        <div className="relative group aspect-[3/4] w-full">
+                          <img
+                            src={log.photoUrl}
+                            alt="Foto da planta"
+                            className="w-full h-full object-cover rounded-lg cursor-pointer"
+                            onClick={() => {
+                              const photoLogs = healthLogs?.filter(l => l.photoUrl) || [];
+                              const index = photoLogs.findIndex(l => l.id === log.id);
+                              setLightboxIndex(index);
+                              setLightboxPhoto(log.photoUrl);
+                            }}
+                          />
+                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                            <ZoomIn className="w-8 h-8 text-white" />
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
-                  
-                  {/* Foto à direita */}
-                  {log.photoUrl && (
-                    <div className="md:w-64 flex-shrink-0">
-                      <div className="relative group aspect-[3/4] w-full">
-                        <img
-                          src={log.photoUrl}
-                          alt="Foto da planta"
-                          className="w-full h-full object-cover rounded-lg cursor-pointer"
-                          onClick={() => {
-                            const photoLogs = healthLogs?.filter(l => l.photoUrl) || [];
-                            const index = photoLogs.findIndex(l => l.id === log.id);
-                            setLightboxIndex(index);
-                            setLightboxPhoto(log.photoUrl);
-                          }}
-                        />
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                          <ZoomIn className="w-8 h-8 text-white" />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         ) : (
           <Card>
             <CardContent className="py-12 text-center">
