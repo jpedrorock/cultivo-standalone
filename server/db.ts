@@ -19,6 +19,7 @@ import {
   taskInstances,
   alerts,
   safetyLimits,
+  plants,
   type Tent,
   type Strain,
   type Cycle,
@@ -34,6 +35,7 @@ import {
   type SafetyLimit,
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
+import { eq, and, sql } from 'drizzle-orm';
 
 let _db: any = null;
 
@@ -137,10 +139,35 @@ export async function getUserByOpenId(openId: string) {
 
 // ============ TENT FUNCTIONS ============
 
-export async function getAllTents(): Promise<Tent[]> {
+export async function getAllTents(): Promise<(Tent & { plantCount?: number })[]> {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(tents);
+  
+  // Buscar estufas
+  const allTents = await db.select().from(tents);
+  
+  // Para cada estufa, contar plantas ativas
+  const tentsWithPlantCount = await Promise.all(
+    allTents.map(async (tent) => {
+      try {
+        const plantCountResult = await db
+          .select({ count: sql<number>`count(*)` })
+          .from(plants)
+          .where(and(
+            eq(plants.currentTentId, tent.id),
+            eq(plants.status, "ACTIVE")
+          ));
+        
+        const plantCount = plantCountResult[0]?.count || 0;
+        return { ...tent, plantCount };
+      } catch (error) {
+        // Se a tabela plants não existir ainda, retornar 0
+        return { ...tent, plantCount: 0 };
+      }
+    })
+  );
+  
+  return tentsWithPlantCount;
 }
 
 export async function getTentById(id: number): Promise<Tent | undefined> {

@@ -120,3 +120,17 @@
 - [x] Mostrar recomendação de ajuste de volume baseado na diferença
 - [x] Se runoff real < desejado → aumentar volume
 - [x] Se runoff real > desejado → diminuir volume
+
+## Melhoria: Indicador de Plantas nas Estufas
+
+- [x] Adicionar contador de plantas em cada card de estufa na página inicial
+- [x] Mostrar ícone de planta + número no card
+- [x] Atualizar backend para retornar contagem de plantas por estufa
+
+## Melhoria: Agrupamento de Plantas por Estufa
+
+- [x] Reorganizar página de plantas para agrupar por estufa
+- [x] Adicionar seções colapsáveis para cada estufa
+- [x] Botão rápido para mover planta entre estufas
+- [x] Modal de confirmação ao mover planta
+- [x] Atualizar lista após mover planta

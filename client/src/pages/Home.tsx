@@ -444,8 +444,14 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                 {phaseInfo.phase}
               </Badge>
             </CardTitle>
-            <CardDescription className="mt-2">
-              Tipo {tent.tentType} • {tent.width}×{tent.depth}×{tent.height}cm
+            <CardDescription className="mt-2 flex items-center gap-3">
+              <span>Tipo {tent.tentType} • {tent.width}×{tent.depth}×{tent.height}cm</span>
+              {tent.plantCount !== undefined && (
+                <Badge variant="outline" className="gap-1">
+                  <Sprout className="w-3 h-3" />
+                  {tent.plantCount} {tent.plantCount === 1 ? 'planta' : 'plantas'}
+                </Badge>
+              )}
             </CardDescription>
           </div>
         </div>
