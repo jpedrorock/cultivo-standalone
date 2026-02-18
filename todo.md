@@ -328,3 +328,19 @@
 - [x] Implementar valores predefinidos de EC baseados na tabela weeklyTargets
 - [x] Adicionar checkbox para alternar entre EC predefinido e manual
 - [x] Manter opção de edição manual dos valores se necessário
+
+## Correção de Carregamento de Fotos
+
+- [x] Investigar por que fotos não aparecem nos cards das plantas
+- [x] Investigar por que fotos não aparecem na galeria de saúde
+- [x] Verificar se URLs das fotos estão corretas no banco de dados
+- [x] Verificar se servidor está servindo arquivos da pasta uploads/
+- [x] Corrigir caminho absoluto para pasta uploads no servidor
+- [x] Limpar registros antigos de fotos para novo teste
+
+## Melhoria de Layout - Galeria de Saúde
+
+- [x] Reorganizar layout da galeria de saúde para visualização lateral
+- [x] Fotos à direita (aspect ratio 3:4)
+- [x] Dados (status, sintomas, tratamento, notas) à esquerda
+- [x] Melhorar responsividade para mobile

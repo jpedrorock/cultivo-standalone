@@ -274,48 +274,57 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-3">
-                {log.photoUrl && (
-                  <div className="relative group aspect-[3/4] w-full max-w-md mx-auto">
-                    <img
-                      src={log.photoUrl}
-                      alt="Foto da planta"
-                      className="w-full h-full object-cover rounded-lg cursor-pointer"
-                      onClick={() => setLightboxPhoto(log.photoUrl)}
-                    />
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                      <ZoomIn className="w-8 h-8 text-white" />
+              <CardContent>
+                <div className="flex flex-col md:flex-row gap-4">
+                  {/* Dados à esquerda */}
+                  <div className="flex-1 space-y-3">
+                    {log.symptoms && (
+                      <div>
+                        <p className="text-sm font-medium text-foreground">
+                          Sintomas:
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {log.symptoms}
+                        </p>
+                      </div>
+                    )}
+                    {log.treatment && (
+                      <div>
+                        <p className="text-sm font-medium text-foreground">
+                          Tratamento:
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {log.treatment}
+                        </p>
+                      </div>
+                    )}
+                    {log.notes && (
+                      <div>
+                        <p className="text-sm font-medium text-foreground">
+                          Notas:
+                        </p>
+                        <p className="text-sm text-muted-foreground">{log.notes}</p>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Foto à direita */}
+                  {log.photoUrl && (
+                    <div className="md:w-64 flex-shrink-0">
+                      <div className="relative group aspect-[3/4] w-full">
+                        <img
+                          src={log.photoUrl}
+                          alt="Foto da planta"
+                          className="w-full h-full object-cover rounded-lg cursor-pointer"
+                          onClick={() => setLightboxPhoto(log.photoUrl)}
+                        />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                          <ZoomIn className="w-8 h-8 text-white" />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                )}
-                {log.symptoms && (
-                  <div>
-                    <p className="text-sm font-medium text-foreground">
-                      Sintomas:
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {log.symptoms}
-                    </p>
-                  </div>
-                )}
-                {log.treatment && (
-                  <div>
-                    <p className="text-sm font-medium text-foreground">
-                      Tratamento:
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {log.treatment}
-                    </p>
-                  </div>
-                )}
-                {log.notes && (
-                  <div>
-                    <p className="text-sm font-medium text-foreground">
-                      Notas:
-                    </p>
-                    <p className="text-sm text-muted-foreground">{log.notes}</p>
-                  </div>
-                )}
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))
