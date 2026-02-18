@@ -550,3 +550,25 @@
 - [ ] Testar criação de predefinição de rega
 - [ ] Testar carregamento de predefinição de rega
 - [ ] Testar exclusão de predefinição de rega
+
+
+## 🐛 Bug Crítico: Mudanças Não Aparecem
+
+- [ ] Verificar status do servidor de desenvolvimento
+- [ ] Confirmar que arquivos foram salvos corretamente
+- [ ] Limpar cache do Vite completamente
+- [ ] Forçar rebuild completo
+- [ ] Verificar se preview mostra mudanças
+- [ ] Verificar se site publicado mostra mudanças após republish
+
+
+## 🔥 URGENTE: Reescrever Calculadora de Fertilização
+
+- [x] Apagar FertilizationCalculatorNew.tsx
+- [x] Apagar FertilizationPresetsManager.tsx  
+- [x] Criar nova calculadora simples e funcional (FertilizationCalculator.tsx)
+- [x] Implementar seletor de Fase (Vega/Flora) e Semana (1-8)
+- [x] Buscar EC recomendado do backend (weeklyTargets)
+- [x] Permitir EC personalizado
+- [x] Calcular reagentes NPK baseado em volume e EC
+- [ ] Testar no navegador (aguardando cache limpar)
