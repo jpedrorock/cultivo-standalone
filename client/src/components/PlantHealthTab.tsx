@@ -70,16 +70,23 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
 
   const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     let file = e.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      console.log("❌ Nenhum arquivo selecionado");
+      return;
+    }
+
+    console.log("📸 Arquivo selecionado:", file.name, file.type, formatFileSize(file.size));
 
     // Validação
     if (!file.type.startsWith("image/") && !isHEIC(file)) {
       toast.error("Por favor, selecione apenas imagens");
+      console.error("❌ Tipo de arquivo inválido:", file.type);
       return;
     }
 
     if (file.size > 10 * 1024 * 1024) {
       toast.error("Imagem muito grande (máx 10MB)");
+      console.error("❌ Arquivo muito grande:", formatFileSize(file.size));
       return;
     }
 
@@ -220,7 +227,7 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
                   <input
                     type="file"
                     className="hidden"
-                    accept="image/*"
+                    accept="image/*,image/jpeg,image/jpg,image/png,image/heic,image/heif"
                     capture="environment"
                     onChange={handlePhotoSelect}
                   />
@@ -235,7 +242,7 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
                   <input
                     type="file"
                     className="hidden"
-                    accept="image/*,.heic,.heif"
+                    accept="image/*,image/jpeg,image/jpg,image/png,image/heic,image/heif"
                     onChange={handlePhotoSelect}
                   />
                 </label>

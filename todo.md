@@ -483,3 +483,27 @@
 - [x] Preencher EC automaticamente quando selecionar fase/semana
 - [ ] Testar funcionalidade completa no navegador (aguardando publicação)
 - [ ] Problema de cache/HMR no ambiente de desenvolvimento
+
+
+## 🐛 Bug: Câmera não Funciona no iPhone
+
+### Investigação
+- [x] Pesquisar problemas conhecidos do iOS Safari com input[type="file"] e capture
+- [x] Verificar se HTTPS é obrigatório para acesso à câmera no iOS
+- [x] Testar se atributo accept precisa incluir formatos específicos do iOS
+- [x] Verificar se há restrições de permissões no iOS Safari
+
+### Correções
+- [x] Adicionar accept="image/*,image/heic,image/heif" explicitamente
+- [x] Manter atributo capture para iOS (funciona em versões recentes)
+- [x] Adicionar tratamento de erro específico com console.log para debug
+- [x] Adicionar logs detalhados de seleção de arquivo
+- [ ] Testar em iPhone real após correções (requer dispositivo físico)
+
+
+## 🐛 Bug: Calculadora de Fertilização Não Atualiza
+
+- [x] Remover completamente componente FertilizationCalculator antigo (deletado linhas 958-1310)
+- [x] Substituir todas as referências pelo novo componente (FertilizationCalculatorNew)
+- [x] Limpar cache do navegador e Vite
+- [ ] Testar após publicação do site
