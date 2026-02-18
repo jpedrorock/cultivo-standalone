@@ -321,3 +321,10 @@
 - [x] Remover cálculo de idade baseado em germDate
 - [x] Atualizar cards de plantas para mostrar fase/semana do ciclo da estufa
 - [x] Testar movimentação de plantas entre estufas (devem adotar novo ciclo)
+
+## Calculadora de Fertilização - Predefinições de EC
+
+- [x] Adicionar seletor de fase/semana na calculadora de fertilização
+- [x] Implementar valores predefinidos de EC baseados na tabela weeklyTargets
+- [x] Adicionar checkbox para alternar entre EC predefinido e manual
+- [x] Manter opção de edição manual dos valores se necessário

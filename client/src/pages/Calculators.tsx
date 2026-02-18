@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -969,6 +970,26 @@ function FertilizationCalculator() {
   const [waterVolume, setWaterVolume] = useState<string>("");
   const [targetEC, setTargetEC] = useState<string>("");
   const [irrigationsPerWeek, setIrrigationsPerWeek] = useState<string>("3.5");
+  const [usePreset, setUsePreset] = useState<boolean>(true);
+  const [selectedPhase, setSelectedPhase] = useState<"VEGA" | "FLORA">("VEGA");
+  const [selectedWeek, setSelectedWeek] = useState<string>("1");
+  
+  const { data: strains } = trpc.strains.list.useQuery();
+  const { data: weeklyTarget } = trpc.weeklyTargets.get.useQuery(
+    {
+      strainId: strains?.[0]?.id ?? 0,
+      phase: selectedPhase,
+      weekNumber: parseInt(selectedWeek) || 1,
+    },
+    { enabled: usePreset && !!strains?.[0]?.id }
+  );
+  
+  // Atualizar EC quando mudar preset
+  React.useEffect(() => {
+    if (usePreset && weeklyTarget?.ecMax) {
+      setTargetEC(weeklyTarget.ecMax.toString());
+    }
+  }, [usePreset, weeklyTarget]);
   
   const [result, setResult] = useState<{ 
     calciumNitrate: number;
@@ -1113,17 +1134,74 @@ function FertilizationCalculator() {
             </p>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="targetEC">EC Desejado (mS/cm)</Label>
-            <Input
-              id="targetEC"
-              type="number"
-              step="0.1"
-              placeholder="Ex: 2.0"
-              value={targetEC}
-              onChange={(e) => setTargetEC(e.target.value)}
-            />
-            <p className="text-xs text-muted-foreground">Condutividade elétrica alvo da solução</p>
+          <div className="space-y-2 lg:col-span-2">
+            <div className="flex items-center gap-2 mb-2">
+              <input
+                type="checkbox"
+                id="usePreset"
+                checked={usePreset}
+                onChange={(e) => setUsePreset(e.target.checked)}
+                className="w-4 h-4"
+              />
+              <Label htmlFor="usePreset" className="cursor-pointer">
+                Usar EC recomendado por fase/semana
+              </Label>
+            </div>
+            
+            {usePreset ? (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="phase">Fase</Label>
+                  <select
+                    id="phase"
+                    value={selectedPhase}
+                    onChange={(e) => setSelectedPhase(e.target.value as "VEGA" | "FLORA")}
+                    className="w-full px-3 py-2 border rounded-md bg-background"
+                  >
+                    <option value="VEGA">Vegetativa (Vega)</option>
+                    <option value="FLORA">Floração (Flora)</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="week">Semana</Label>
+                  <select
+                    id="week"
+                    value={selectedWeek}
+                    onChange={(e) => setSelectedWeek(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-md bg-background"
+                  >
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map(week => (
+                      <option key={week} value={week}>Semana {week}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            ) : null}
+            
+            <div className="space-y-2">
+              <Label htmlFor="targetEC">
+                EC Desejado (mS/cm)
+                {usePreset && weeklyTarget && (
+                  <span className="ml-2 text-xs text-green-600">
+                    (Recomendado: {weeklyTarget.ecMin} - {weeklyTarget.ecMax})
+                  </span>
+                )}
+              </Label>
+              <Input
+                id="targetEC"
+                type="number"
+                step="0.1"
+                placeholder="Ex: 2.0"
+                value={targetEC}
+                onChange={(e) => setTargetEC(e.target.value)}
+                disabled={usePreset}
+              />
+              <p className="text-xs text-muted-foreground">
+                {usePreset 
+                  ? "EC preenchido automaticamente baseado na fase/semana selecionada"
+                  : "Digite manualmente o EC desejado"}
+              </p>
+            </div>
           </div>
 
           {calculationMode === "per-week" && (
