@@ -84,9 +84,7 @@ export default function PlantDetail() {
     }
   };
 
-  const daysOld = Math.floor(
-    (new Date().getTime() - new Date(plant.germDate).getTime()) / (1000 * 60 * 60 * 24)
-  );
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -135,7 +133,7 @@ export default function PlantDetail() {
       {/* Main Content */}
       <main className="container py-8">
         {/* Info Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <Card>
             <CardHeader className="pb-3">
               <CardDescription>Strain</CardDescription>
@@ -147,22 +145,6 @@ export default function PlantDetail() {
             <CardHeader className="pb-3">
               <CardDescription>Estufa Atual</CardDescription>
               <CardTitle className="text-xl">{tent?.name || "Unknown"}</CardTitle>
-            </CardHeader>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardDescription>Germinação</CardDescription>
-              <CardTitle className="text-xl">
-                {new Date(plant.germDate).toLocaleDateString("pt-BR")}
-              </CardTitle>
-            </CardHeader>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardDescription>Idade</CardDescription>
-              <CardTitle className="text-xl">{daysOld} dias</CardTitle>
             </CardHeader>
           </Card>
         </div>
@@ -180,14 +162,8 @@ export default function PlantDetail() {
         )}
 
         {/* Tabs */}
-        <Tabs defaultValue="observations" className="w-full">
+        <Tabs defaultValue="health" className="w-full">
           <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="observations">
-              <FileText className="w-4 h-4 mr-2" />
-              Observações
-            </TabsTrigger>
-
-
             <TabsTrigger value="health">
               <Heart className="w-4 h-4 mr-2" />
               Saúde
@@ -200,11 +176,11 @@ export default function PlantDetail() {
               <Scissors className="w-4 h-4 mr-2" />
               LST
             </TabsTrigger>
+            <TabsTrigger value="observations">
+              <FileText className="w-4 h-4 mr-2" />
+              Observações
+            </TabsTrigger>
           </TabsList>
-
-          <TabsContent value="observations">
-            <PlantObservationsTab plantId={plantId} />
-          </TabsContent>
 
           <TabsContent value="health">
             <PlantHealthTab plantId={plantId} />
@@ -216,6 +192,10 @@ export default function PlantDetail() {
 
           <TabsContent value="lst">
             <PlantLSTTab plantId={plantId} />
+          </TabsContent>
+
+          <TabsContent value="observations">
+            <PlantObservationsTab plantId={plantId} />
           </TabsContent>
         </Tabs>
       </main>

@@ -16,7 +16,7 @@ export default function NewPlant() {
   const [code, setCode] = useState("");
   const [strainId, setStrainId] = useState<number | undefined>();
   const [tentId, setTentId] = useState<number | undefined>();
-  const [germDate, setGermDate] = useState("");
+
   const [notes, setNotes] = useState("");
 
   const { data: strains, isLoading: loadingStrains } = trpc.strains.list.useQuery();
@@ -50,17 +50,11 @@ export default function NewPlant() {
       return;
     }
 
-    if (!germDate) {
-      toast.error("Data de germinação é obrigatória");
-      return;
-    }
-
     createPlant.mutate({
       name: name.trim(),
       code: code.trim() || undefined,
       strainId,
       currentTentId: tentId,
-      germDate,
       notes: notes.trim() || undefined,
     });
   };
@@ -183,23 +177,7 @@ export default function NewPlant() {
                   </select>
                 </div>
 
-                {/* Data de Germinação */}
-                <div className="space-y-2">
-                  <Label htmlFor="germDate">
-                    Data de Germinação <span className="text-red-500">*</span>
-                  </Label>
-                  <Input
-                    id="germDate"
-                    type="date"
-                    value={germDate}
-                    onChange={(e) => setGermDate(e.target.value)}
-                    max={new Date().toISOString().split('T')[0]}
-                    required
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Data em que a semente germinou ou clone foi cortado
-                  </p>
-                </div>
+
 
                 {/* Notas */}
                 <div className="space-y-2">

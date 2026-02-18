@@ -1332,7 +1332,6 @@ export const appRouter = router({
         code: z.string().optional(),
         strainId: z.number(),
         currentTentId: z.number(),
-        germDate: z.string(),
         notes: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
@@ -1344,7 +1343,6 @@ export const appRouter = router({
           code: input.code,
           strainId: input.strainId,
           currentTentId: input.currentTentId,
-          germDate: new Date(input.germDate),
           notes: input.notes,
           status: "ACTIVE",
         });

@@ -460,7 +460,6 @@ export const plants = mysqlTable(
     currentTentId: int("currentTentId")
       .notNull()
       .references(() => tents.id),
-    germDate: timestamp("germDate").notNull(), // Data de germinação
     status: mysqlEnum("status", ["ACTIVE", "HARVESTED", "DEAD"]).default("ACTIVE").notNull(),
     notes: text("notes"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),

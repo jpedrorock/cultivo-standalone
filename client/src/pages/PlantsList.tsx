@@ -260,10 +260,6 @@ export default function PlantsList() {
 
                               {/* Indicadores visuais */}
                               <div className="flex flex-wrap gap-2">
-                                {/* Idade */}
-                                <div className="px-2 py-1 rounded-md bg-blue-500/10 text-blue-600 border border-blue-500/30 text-xs font-medium">
-                                  📅 {Math.floor((Date.now() - new Date(plant.germDate).getTime()) / (1000 * 60 * 60 * 24))} dias
-                                </div>
                                 {/* Fase do Ciclo */}
                                 {plant.cyclePhase && plant.cycleWeek && (
                                   <div className={`px-2 py-1 rounded-md text-xs font-medium ${
@@ -294,12 +290,6 @@ export default function PlantsList() {
                                 <div className="flex justify-between">
                                   <span className="text-muted-foreground">Strain:</span>
                                   <span className="font-medium">{getStrainName(plant.strainId)}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Germinação:</span>
-                                  <span className="font-medium">
-                                    {new Date(plant.germDate).toLocaleDateString("pt-BR")}
-                                  </span>
                                 </div>
                               </div>
 

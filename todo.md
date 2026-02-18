@@ -311,3 +311,13 @@
 - [x] Criar guia de configuração para diferentes opções de storage
 - [x] Adicionar .gitignore para pasta uploads/
 - [x] Criar endpoint para servir arquivos estáticos da pasta uploads/
+
+## Refatoração do Sistema de Plantas
+
+- [x] Reordenar menu de plantas: Saúde primeiro, Observações último
+- [x] Remover campo germDate (data de germinação) do schema de plantas
+- [x] Remover input de data de germinação do formulário de criação de plantas
+- [x] Atualizar lógica para plantas seguirem automaticamente o ciclo da estufa
+- [x] Remover cálculo de idade baseado em germDate
+- [x] Atualizar cards de plantas para mostrar fase/semana do ciclo da estufa
+- [x] Testar movimentação de plantas entre estufas (devem adotar novo ciclo)
