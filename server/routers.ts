@@ -1378,7 +1378,7 @@ export const appRouter = router({
         
         const plantsList = await query;
         
-        // Para cada planta, buscar última foto de saúde e status de saúde
+        // Para cada planta, buscar última foto de saúde, status de saúde e fase do ciclo
         const plantsWithDetails = await Promise.all(
           plantsList.map(async (plant: any) => {
             // Última foto de saúde
@@ -1397,10 +1397,44 @@ export const appRouter = router({
               .orderBy(desc(plantHealthLogs.logDate))
               .limit(1);
             
+            // Buscar ciclo ativo da estufa
+            const [activeCycle] = await database
+              .select()
+              .from(cycles)
+              .where(and(
+                eq(cycles.tentId, plant.currentTentId),
+                eq(cycles.status, "ACTIVE")
+              ))
+              .limit(1);
+            
+            // Calcular fase e semana do ciclo
+            let cyclePhase = null;
+            let cycleWeek = null;
+            
+            if (activeCycle) {
+              const now = new Date();
+              const startDate = new Date(activeCycle.startDate);
+              const floraStartDate = activeCycle.floraStartDate ? new Date(activeCycle.floraStartDate) : null;
+              
+              if (floraStartDate && now >= floraStartDate) {
+                // Está em FLORA
+                cyclePhase = "FLORA";
+                const daysInFlora = Math.floor((now.getTime() - floraStartDate.getTime()) / (1000 * 60 * 60 * 24));
+                cycleWeek = Math.floor(daysInFlora / 7) + 1;
+              } else {
+                // Está em VEGA
+                cyclePhase = "VEGA";
+                const daysInVega = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+                cycleWeek = Math.floor(daysInVega / 7) + 1;
+              }
+            }
+            
             return {
               ...plant,
-              lastPhotoUrl: lastHealthPhoto?.photoUrl || null,
+              lastHealthPhotoUrl: lastHealthPhoto?.photoUrl || null,
               lastHealthStatus: lastHealth?.healthStatus || null,
+              cyclePhase,
+              cycleWeek,
             };
           })
         );

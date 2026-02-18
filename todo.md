@@ -243,3 +243,18 @@
 - [x] Adicionar preview da última foto de saúde nos cards das plantas (já implementado no backend)
 - [x] Expandir descrições das técnicas de LST com mais detalhes e instruções
 - [x] Melhorar textos explicativos sobre quando aplicar cada técnica
+
+## Indicador de Fase da Planta
+
+- [x] Atualizar backend plants.list para incluir fase do ciclo da estufa (VEGA/FLORA + semana)
+- [ ] Atualizar backend plants.getById para incluir fase do ciclo da estufa
+- [x] Adicionar badge de fase nos cards das plantas (ex: "Vega Semana 4", "Flora Semana 2")
+- [ ] Adicionar indicador de fase no header da página de detalhes da planta
+- [x] Calcular semana baseado na data de início do ciclo e fase atual
+
+## Ajustes de Runoff - Por Estufa (não por planta)
+
+- [x] Remover aba de Runoff da página de detalhes da planta (PlantDetail.tsx)
+- [x] Remover import e componente PlantRunoffTab
+- [x] Runoff será medido por estufa na página de Rega e Runoff
+- [x] Cálculo considera todas as plantas da estufa juntas (base coletora única)

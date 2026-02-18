@@ -16,7 +16,6 @@ import {
   MoveRight
 } from "lucide-react";
 import PlantObservationsTab from "@/components/PlantObservationsTab";
-import PlantRunoffTab from "@/components/PlantRunoffTab";
 import PlantHealthTab from "@/components/PlantHealthTab";
 import PlantTrichomesTab from "@/components/PlantTrichomesTab";
 import PlantLSTTab from "@/components/PlantLSTTab";
@@ -183,10 +182,7 @@ export default function PlantDetail() {
               Observações
             </TabsTrigger>
 
-            <TabsTrigger value="runoff">
-              <Droplets className="w-4 h-4 mr-2" />
-              Runoff
-            </TabsTrigger>
+
             <TabsTrigger value="health">
               <Heart className="w-4 h-4 mr-2" />
               Saúde
@@ -203,10 +199,6 @@ export default function PlantDetail() {
 
           <TabsContent value="observations">
             <PlantObservationsTab plantId={plantId} />
-          </TabsContent>
-
-          <TabsContent value="runoff">
-            <PlantRunoffTab plantId={plantId} />
           </TabsContent>
 
           <TabsContent value="health">

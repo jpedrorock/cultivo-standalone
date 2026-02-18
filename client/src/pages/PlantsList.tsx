@@ -264,6 +264,16 @@ export default function PlantsList() {
                                 <div className="px-2 py-1 rounded-md bg-blue-500/10 text-blue-600 border border-blue-500/30 text-xs font-medium">
                                   📅 {Math.floor((Date.now() - new Date(plant.germDate).getTime()) / (1000 * 60 * 60 * 24))} dias
                                 </div>
+                                {/* Fase do Ciclo */}
+                                {plant.cyclePhase && plant.cycleWeek && (
+                                  <div className={`px-2 py-1 rounded-md text-xs font-medium ${
+                                    plant.cyclePhase === "VEGA" 
+                                      ? "bg-green-500/10 text-green-600 border border-green-500/30" 
+                                      : "bg-purple-500/10 text-purple-600 border border-purple-500/30"
+                                  }`}>
+                                    {plant.cyclePhase === "VEGA" ? "🌱" : "🌸"} {plant.cyclePhase === "VEGA" ? "Vega" : "Flora"} Semana {plant.cycleWeek}
+                                  </div>
+                                )}
                                 {/* Saúde */}
                                 {plant.lastHealthStatus && (
                                   <div className={`px-2 py-1 rounded-md text-xs font-medium ${
