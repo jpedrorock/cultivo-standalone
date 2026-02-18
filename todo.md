@@ -709,3 +709,11 @@
 - [x] Criada tabela plantHealthLogs no banco de dados via SQL
 - [x] Servidor reiniciado para reconhecer nova tabela
 - [x] Sistema pronto para testar upload de fotos
+
+## Miniatura de Última Foto no Card da Planta
+
+- [x] Query plants.list já busca última foto (linhas 1437-1442)
+- [x] Backend retorna lastHealthPhotoUrl corretamente (linha 1486)
+- [x] UI do card já exibe miniatura com aspect ratio 3:4 (linhas 250-259)
+- [x] Fallback implementado: foto só aparece se existir (plant.lastHealthPhotoUrl &&)
+- [x] Layout responsivo com aspect-[3/4] e object-cover
