@@ -338,7 +338,7 @@ export const appRouter = router({
           tentId: z.number(),
           strainId: z.number().optional().nullable(),
           startDate: z.date(),
-          phase: z.enum(["CLONING", "MAINTENANCE", "VEGA", "FLORA"]),
+          phase: z.enum(["CLONING", "MAINTENANCE", "VEGA", "FLORA", "DRYING"]),
           weekNumber: z.number().min(1),
         })
       )
@@ -371,7 +371,7 @@ export const appRouter = router({
           strainId: z.number().optional(),
           startDate: z.date().optional(),
           floraStartDate: z.date().optional().nullable(),
-          phase: z.enum(["CLONING", "MAINTENANCE", "VEGA", "FLORA"]).optional(),
+          phase: z.enum(["CLONING", "MAINTENANCE", "VEGA", "FLORA", "DRYING"]).optional(),
           weekNumber: z.number().min(1).optional(),
         })
       )

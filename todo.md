@@ -553,11 +553,11 @@
 
 ## 🍂 Implementar Fase DRYING nos Ciclos (19/02/2026)
 
-- [ ] Adicionar opção "Secagem" no modal de criar/editar ciclo
-- [ ] Atualizar lógica de StartCycleModal para incluir DRYING como fase selecionável
-- [ ] Adicionar weeklyTargets para fase DRYING (temperatura, umidade ideais para secagem)
-- [ ] Pesquisar e adicionar taskTemplates para fase DRYING (2 semanas)
-- [ ] Testar criação de ciclo com fase DRYING
+- [x] Pesquisar tarefas típicas de secagem na web (Leafly + guias brasileiros)
+- [x] Criar weeklyTargets para DRYING (18-20°C, 55-60% RH, 0 PPFD, pH N/A)
+- [x] Criar 20 taskTemplates para 2 semanas de secagem (verificações diárias)
+- [x] Adicionar DRYING nos enums de phase em routers.ts e EditCycleModal.tsx
+- [x] Testar fase DRYING - aparece como "🍂 Secagem (2 semanas)" no select
 
 
 ## 🐛 Corrigir Estado Padrão do Botão "Ocultar Concluídas" (19/02/2026)

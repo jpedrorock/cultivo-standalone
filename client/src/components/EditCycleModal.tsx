@@ -44,7 +44,7 @@ export function EditCycleModal({
   const [startDate, setStartDate] = useState(
     new Date().toISOString().split("T")[0]
   );
-  const [phase, setPhase] = useState<"CLONING" | "MAINTENANCE" | "VEGA" | "FLORA">("VEGA");
+  const [phase, setPhase] = useState<"CLONING" | "MAINTENANCE" | "VEGA" | "FLORA" | "DRYING">("VEGA");
   const [weekNumber, setWeekNumber] = useState(1);
   const [strainId, setStrainId] = useState<number | null>(null);
 
@@ -102,6 +102,8 @@ export function EditCycleModal({
         return 6;
       case "FLORA":
         return 8;
+      case "DRYING":
+        return 2;
       default:
         return 1;
     }
@@ -155,9 +157,10 @@ export function EditCycleModal({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="CLONING">Clonagem</SelectItem>
-                  <SelectItem value="MAINTENANCE">Manutencao</SelectItem>
+                  <SelectItem value="MAINTENANCE">Manutenção</SelectItem>
                   <SelectItem value="VEGA">Vegetativa</SelectItem>
-                  <SelectItem value="FLORA">Floracao</SelectItem>
+                  <SelectItem value="FLORA">Floração</SelectItem>
+                  <SelectItem value="DRYING">🍂 Secagem (2 semanas)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
