@@ -440,3 +440,58 @@
 - [x] Testar implementação no navegador - lightbox abre corretamente
 - [x] Implementar swipe gestures em PlantHealthTab.tsx (linhas 93-96, 622-653, 661-677)
 - [x] Implementar swipe gestures em PlantPhotosTab.tsx (linhas 18-21, 107-137, 250-259)
+
+
+## 🔔 Sistema de Alertas Inteligentes com Valores Ideais das Strains (19/02/2026)
+
+- [ ] Analisar schema atual de alertSettings e weeklyTargets
+- [ ] Atualizar schema alertSettings para incluir margens de erro (tempMargin, rhMargin, phMargin, ppfdMargin)
+- [ ] Implementar backend procedure para calcular valores ideais por estufa (getIdealValuesByTent)
+- [ ] Calcular média dos valores ideais quando estufa tem múltiplas strains
+- [ ] Atualizar UI de AlertSettings para mostrar valores ideais automáticos
+- [ ] Adicionar campos de margem de erro configuráveis (±2°C, ±5% RH, ±0.2 pH, ±50 PPFD)
+- [ ] Implementar lógica de alertas contextuais com valores ideais + margem
+- [ ] Testar sistema completo com diferentes configurações de estufas
+
+
+## 🏗️ Refatoração: Estufas Dinâmicas (Número Ilimitado) (19/02/2026)
+
+- [ ] Analisar impacto da remoção do enum tentType (A, B, C fixos)
+- [ ] Atualizar schema: remover tentType enum, adicionar campo category (Manutenção, Vegetativo, Floração)
+- [ ] Atualizar seed data para usar novo formato
+- [ ] Atualizar backend procedures (getAll, create, update, delete)
+- [ ] Atualizar Home.tsx para renderizar estufas dinamicamente do banco
+- [ ] Implementar funcionalidade do botão "Criar Nova Estufa"
+- [ ] Atualizar TentDetails.tsx para trabalhar com IDs dinâmicos
+- [ ] Testar criação, edição e exclusão de estufas
+- [ ] Verificar impacto em alertas, tarefas e histórico
+
+
+## 🏗️ Refatoração: Estufas Dinâmicas com Categorias Selecionáveis (19/02/2026)
+
+- [x] Remover enum tentType (A, B, C) do schema
+- [x] Adicionar campo category enum (MAINTENANCE, VEGA, FLORA, DRYING) selecionável
+- [x] Adicionar fase DRYING (2 semanas) em weeklyTargets, taskTemplates, safetyLimits
+- [x] Manter campo name como texto livre para nome customizável
+- [x] Adicionar updatedAt em tabela tents
+- [ ] Aplicar migration do schema (pnpm db:push)
+- [ ] Atualizar seed data para novo formato
+- [ ] Atualizar backend procedures (tents.getAll, create, update, delete)
+- [ ] Atualizar Home.tsx para renderizar estufas dinamicamente
+- [ ] Implementar modal "Criar Nova Estufa" com seletor de categoria
+- [ ] Atualizar lógica de tarefas para usar category ao invés de tentType
+- [ ] Testar criação de múltiplas estufas da mesma categoria
+
+
+## 🔔 Alertas Inteligentes por Estufa com Valores Ideais (19/02/2026)
+
+- [x] Manter tentId em alertSettings (configuração individual por estufa)
+- [x] Adicionar margens de erro configuráveis (tempMargin, rhMargin, ppfdMargin, phMargin)
+- [x] Adicionar phEnabled toggle
+- [ ] Aplicar migration do schema (pnpm db:push)
+- [ ] Criar procedure getIdealValuesByTent(tentId) que retorna valores ideais da strain/semana
+- [ ] Calcular média quando estufa tem múltiplas strains
+- [ ] Lógica de alertas: valor real vs (ideal ± margem da estufa)
+- [ ] Atualizar UI de AlertSettings para mostrar configuração por estufa
+- [ ] Mostrar valores ideais atuais da estufa na UI como referência
+- [ ] Testar alertas contextuais: "Estufa B: Temp 28°C acima do ideal 24°C (±2°C)"

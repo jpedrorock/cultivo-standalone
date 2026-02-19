@@ -37,18 +37,19 @@ export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
 /**
- * Estufas (A, B, C)
+ * Estufas (número ilimitado, categoria selecionável)
  */
 export const tents = mysqlTable("tents", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 50 }).notNull(),
-  tentType: mysqlEnum("tentType", ["A", "B", "C"]).notNull(),
+  category: mysqlEnum("category", ["MAINTENANCE", "VEGA", "FLORA", "DRYING"]).notNull(),
   width: int("width").notNull(),
   depth: int("depth").notNull(),
   height: int("height").notNull(),
   volume: decimal("volume", { precision: 10, scale: 3 }).notNull(),
   powerW: int("powerW"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
 export type Tent = typeof tents.$inferSelect;
@@ -149,7 +150,7 @@ export const weeklyTargets = mysqlTable(
     strainId: int("strainId")
       .notNull()
       .references(() => strains.id),
-    phase: mysqlEnum("phase", ["CLONING", "VEGA", "FLORA", "MAINTENANCE"]).notNull(),
+    phase: mysqlEnum("phase", ["CLONING", "VEGA", "FLORA", "MAINTENANCE", "DRYING"]).notNull(),
     weekNumber: int("weekNumber").notNull(),
     tempMin: decimal("tempMin", { precision: 4, scale: 1 }),
     tempMax: decimal("tempMax", { precision: 4, scale: 1 }),
@@ -344,7 +345,7 @@ export const safetyLimits = mysqlTable(
   {
     id: int("id").autoincrement().primaryKey(),
     context: mysqlEnum("context", ["TENT_A", "TENT_BC"]).notNull(),
-    phase: mysqlEnum("phase", ["CLONING", "VEGA", "FLORA", "MAINTENANCE"]).notNull(),
+    phase: mysqlEnum("phase", ["CLONING", "VEGA", "FLORA", "MAINTENANCE", "DRYING"]).notNull(),
     metric: mysqlEnum("metric", ["TEMP", "RH", "PPFD"]).notNull(),
     minValue: decimal("minValue", { precision: 10, scale: 2 }),
     maxValue: decimal("maxValue", { precision: 10, scale: 2 }),
@@ -375,11 +376,18 @@ export const alertSettings = mysqlTable("alertSettings", {
   id: int("id").autoincrement().primaryKey(),
   tentId: int("tentId")
     .notNull()
-    .references(() => tents.id),
+    .references(() => tents.id)
+    .unique(),
   alertsEnabled: boolean("alertsEnabled").default(true).notNull(),
   tempEnabled: boolean("tempEnabled").default(true).notNull(),
   rhEnabled: boolean("rhEnabled").default(true).notNull(),
   ppfdEnabled: boolean("ppfdEnabled").default(true).notNull(),
+  phEnabled: boolean("phEnabled").default(true).notNull(),
+  // Margens de erro globais configuráveis (±)
+  tempMargin: decimal("tempMargin", { precision: 3, scale: 1 }).default("2.0").notNull(), // ±2°C
+  rhMargin: decimal("rhMargin", { precision: 3, scale: 1 }).default("5.0").notNull(), // ±5%
+  ppfdMargin: int("ppfdMargin").default(50).notNull(), // ±50 PPFD
+  phMargin: decimal("phMargin", { precision: 2, scale: 1 }).default("0.2").notNull(), // ±0.2 pH
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
