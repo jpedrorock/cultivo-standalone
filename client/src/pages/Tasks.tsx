@@ -3,9 +3,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, CheckCircle2, Circle, Sprout } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
+import { TaskTemplatesManager } from "@/components/TaskTemplatesManager";
 
 export default function Tasks() {
   const { data: tasks, isLoading } = trpc.tasks.getCurrentWeekTasks.useQuery();
@@ -73,6 +75,13 @@ export default function Tasks() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
+        <Tabs defaultValue="tasks" className="space-y-6">
+          <TabsList className="grid w-full max-w-md grid-cols-2">
+            <TabsTrigger value="tasks">Tarefas da Semana</TabsTrigger>
+            <TabsTrigger value="manage">Gerenciar</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="tasks" className="space-y-6">
         {/* Progress Card */}
         <Card className="mb-6 bg-card/80 backdrop-blur-sm">
           <CardHeader>
@@ -181,16 +190,23 @@ export default function Tasks() {
             })}
           </div>
         ) : (
+          /* No tasks */
           <Card className="bg-card/80 backdrop-blur-sm">
-            <CardContent className="py-12 text-center">
-              <Circle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <Circle className="w-16 h-16 text-muted-foreground/50 mb-4" />
               <h3 className="text-lg font-semibold text-foreground mb-2">Nenhuma tarefa</h3>
-              <p className="text-muted-foreground">
+              <p className="text-sm text-muted-foreground text-center max-w-sm">
                 Não há ciclos ativos no momento. Inicie um ciclo para ver as tarefas semanais.
               </p>
             </CardContent>
           </Card>
         )}
+          </TabsContent>
+
+          <TabsContent value="manage">
+            <TaskTemplatesManager />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

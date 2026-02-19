@@ -1140,16 +1140,30 @@ export const appRouter = router({
 
         // Get templates for this phase/week
         const context = tent.tentType === "A" ? "TENT_A" : "TENT_BC";
-        const templates = await database
-          .select()
-          .from(taskTemplates)
-          .where(
-            and(
-              eq(taskTemplates.context, context),
-              eq(taskTemplates.phase, currentPhase),
-              eq(taskTemplates.weekNumber, weekNumber)
-            )
-          );
+        let templates;
+        if (currentPhase === "MAINTENANCE") {
+          // For maintenance, don't filter by week number
+          templates = await database
+            .select()
+            .from(taskTemplates)
+            .where(
+              and(
+                eq(taskTemplates.context, context),
+                eq(taskTemplates.phase, currentPhase)
+              )
+            );
+        } else {
+          templates = await database
+            .select()
+            .from(taskTemplates)
+            .where(
+              and(
+                eq(taskTemplates.context, context),
+                eq(taskTemplates.phase, currentPhase),
+                eq(taskTemplates.weekNumber, weekNumber)
+              )
+            );
+        }
 
         const tasks = [];
         const startOfWeek = new Date(now);
@@ -1264,37 +1278,61 @@ export const appRouter = router({
         const startDate = new Date(cycle.startDate);
         const floraStartDate = cycle.floraStartDate ? new Date(cycle.floraStartDate) : null;
 
-        let currentPhase: "VEGA" | "FLORA";
-        let weekNumber: number;
+        let currentPhase: "VEGA" | "FLORA" | "MAINTENANCE";
+        let weekNumber: number | null;
+        let context: "TENT_BC" | "TENT_A";
 
-        if (floraStartDate && now >= floraStartDate) {
+        // Get tent info to check if it's maintenance
+        const tent = await database.select().from(tents).where(eq(tents.id, cycle.tentId)).limit(1);
+        const tentName = tent[0]?.name || "";
+        
+        // Check if this is a maintenance tent (Estufa A or no flora start date)
+        if (tentName.includes("A") || !floraStartDate) {
+          currentPhase = "MAINTENANCE";
+          weekNumber = null;
+          context = "TENT_A";
+        } else if (floraStartDate && now >= floraStartDate) {
           currentPhase = "FLORA";
           const weeksSinceFlora = Math.floor(
             (now.getTime() - floraStartDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
           );
           weekNumber = weeksSinceFlora + 1;
+          context = "TENT_BC";
         } else {
           currentPhase = "VEGA";
           const weeksSinceStart = Math.floor(
             (now.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
           );
           weekNumber = weeksSinceStart + 1;
+          context = "TENT_BC";
         }
 
         // Get templates for this phase/week
-        const templates = await database
-          .select()
-          .from(taskTemplates)
-          .where(
-            and(
-              eq(taskTemplates.context, "TENT_BC"),
-              eq(taskTemplates.phase, currentPhase),
-              eq(taskTemplates.weekNumber, weekNumber)
-            )
-          );
-
-        // Get tent info
-        const tent = await database.select().from(tents).where(eq(tents.id, cycle.tentId)).limit(1);
+        let templates;
+        if (currentPhase === "MAINTENANCE") {
+          // For maintenance, get tasks without week number filter
+          templates = await database
+            .select()
+            .from(taskTemplates)
+            .where(
+              and(
+                eq(taskTemplates.context, context),
+                eq(taskTemplates.phase, currentPhase)
+              )
+            );
+        } else {
+          // For VEGA/FLORA, filter by week number
+          templates = await database
+            .select()
+            .from(taskTemplates)
+            .where(
+              and(
+                eq(taskTemplates.context, context),
+                eq(taskTemplates.phase, currentPhase),
+                eq(taskTemplates.weekNumber, weekNumber!)
+              )
+            );
+        }
 
         for (const template of templates) {
           // Check if instance already exists for this week
@@ -1412,6 +1450,94 @@ export const appRouter = router({
           .where(eq(taskInstances.id, input.taskId));
         
         return { success: true, isDone: newIsDone };
+      }),
+  }),
+
+  // Task Templates (Modelos de Tarefas)
+  taskTemplates: router({
+    list: publicProcedure.query(async () => {
+      const database = await getDb();
+      if (!database) return [];
+      
+      const templates = await database
+        .select()
+        .from(taskTemplates)
+        .orderBy(taskTemplates.phase, taskTemplates.weekNumber, taskTemplates.context);
+      
+      return templates;
+    }),
+    
+    create: publicProcedure
+      .input(
+        z.object({
+          title: z.string().min(1),
+          description: z.string().optional(),
+          phase: z.enum(["CLONING", "VEGA", "FLORA", "MAINTENANCE"]),
+          weekNumber: z.number().nullable(),
+          context: z.enum(["TENT_A", "TENT_BC"]),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        await database.insert(taskTemplates).values({
+          title: input.title,
+          description: input.description || null,
+          phase: input.phase,
+          weekNumber: input.weekNumber,
+          context: input.context,
+        });
+        
+        return { success: true };
+      }),
+    
+    update: publicProcedure
+      .input(
+        z.object({
+          id: z.number(),
+          title: z.string().min(1),
+          description: z.string().optional(),
+          phase: z.enum(["CLONING", "VEGA", "FLORA", "MAINTENANCE"]),
+          weekNumber: z.number().nullable(),
+          context: z.enum(["TENT_A", "TENT_BC"]),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        await database
+          .update(taskTemplates)
+          .set({
+            title: input.title,
+            description: input.description || null,
+            phase: input.phase,
+            weekNumber: input.weekNumber,
+            context: input.context,
+          })
+          .where(eq(taskTemplates.id, input.id));
+        
+        return { success: true };
+      }),
+    
+    delete: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Delete all task instances associated with this template
+        await database
+          .delete(taskInstances)
+          .where(eq(taskInstances.taskTemplateId, input.id));
+        
+        // Delete the template
+        await database
+          .delete(taskTemplates)
+          .where(eq(taskTemplates.id, input.id));
+        
+        return { success: true };
       }),
   }),
 

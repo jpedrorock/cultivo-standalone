@@ -236,3 +236,20 @@
 - [x] Melhorar card view existente com melhor hierarquia visual e espaçamento
 - [x] Ajustar breakpoint de md para lg (cards até 1024px, tabela acima)
 - [x] Testar card view - funcionando em viewports < 1024px
+
+
+## Bug - Tarefas da Estufa A não aparecem
+
+- [x] Investigar por que tarefas da Estufa A (MAINTENANCE) não estavam aparecendo (weekNumber NULL não era tratado)
+- [x] Verificar se taskTemplates de MAINTENANCE existem no banco (3 tarefas encontradas)
+- [x] Corrigir lógica de busca de tarefas para incluir fase MAINTENANCE (getTasksByTent atualizado)
+- [x] Testar tarefas da Estufa A - funcionando corretamente (Regar plantas-mãe, Fazer clones, Podar plantas-mãe)
+
+## Gerenciador de Tarefas Personalizadas
+
+- [x] Criar procedures backend para CRUD de taskTemplates (create, update, delete, list)
+- [x] Criar componente TaskTemplatesManager na página de Tasks com Tabs
+- [x] Implementar modal de criar/editar taskTemplate (fase, semana, contexto, título, descrição)
+- [x] Implementar listagem de taskTemplates por fase/contexto (40 templates listados)
+- [x] Implementar botões de editar e excluir em cada taskTemplate
+- [x] Testar modal de criar taskTemplate - funcionando perfeitamente
