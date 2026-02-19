@@ -770,3 +770,13 @@
 - [x] Implementar novo design na página Nutrientes
 - [x] Remover calculadora de fertilização do menu de calculadoras
 - [x] Testar design unificado em diferentes viewports
+
+## Widget de Alertas na Home
+
+- [x] Criar componente AlertsWidget.tsx
+- [x] Implementar lógica de contagem de alertas por estufa (NEW + SEEN)
+- [x] Adicionar badges coloridos (verde: 0 alertas, amarelo: 1-3 alertas, vermelho: 4+ alertas)
+- [x] Mostrar tipos de alertas (temperatura, umidade, PPFD, pH)
+- [x] Adicionar link para página de alertas ao clicar no card
+- [x] Integrar AlertsWidget na página Home
+- [x] Testar widget com diferentes cenários de alertas

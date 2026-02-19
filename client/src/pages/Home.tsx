@@ -1,6 +1,7 @@
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import { AlertsWidget } from "@/components/AlertsWidget";
 import StartCycleModal from "@/components/StartCycleModal";
 import { InitiateCycleModal } from "@/components/InitiateCycleModal";
 import { EditCycleModal } from "@/components/EditCycleModal";
@@ -266,6 +267,11 @@ export default function Home() {
               />
             );
           })}
+        </div>
+
+        {/* Alerts Widget */}
+        <div className="mt-8">
+          <AlertsWidget />
         </div>
 
         {/* Weather Widget */}
