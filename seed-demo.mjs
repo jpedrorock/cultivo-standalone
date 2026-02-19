@@ -715,6 +715,86 @@ for (const tentName of Object.keys(tentMap)) {
   );
 }
 console.log(`  ✓ Alertas configurados para ${Object.keys(tentMap).length} estufas`);
+
+// ============================================================
+// 17. TASK TEMPLATES
+// ============================================================
+console.log('✅ Criando templates de tarefas...');
+
+const taskTemplatesData = [
+  // VEGA - Semana 1
+  { context: 'TENT_BC', phase: 'VEGA', weekNumber: 1, title: 'Verificar pH e EC da água', description: 'Medir pH (5.8-6.0) e EC (0.8-1.0) da solução nutritiva' },
+  { context: 'TENT_BC', phase: 'VEGA', weekNumber: 1, title: 'Regar plantas', description: 'Regar com 20% de runoff, verificar drenagem' },
+  { context: 'TENT_BC', phase: 'VEGA', weekNumber: 1, title: 'Verificar temperatura e umidade', description: 'Temp: 22-26°C, RH: 60-70%' },
+  
+  // VEGA - Semana 2
+  { context: 'TENT_BC', phase: 'VEGA', weekNumber: 2, title: 'Verificar pH e EC da água', description: 'Medir pH (5.8-6.0) e EC (1.0-1.2) da solução nutritiva' },
+  { context: 'TENT_BC', phase: 'VEGA', weekNumber: 2, title: 'Regar plantas', description: 'Regar com 20% de runoff' },
+  { context: 'TENT_BC', phase: 'VEGA', weekNumber: 2, title: 'Aplicar LST (Low Stress Training)', description: 'Dobrar ramos principais para aumentar exposição à luz' },
+  
+  // VEGA - Semana 3
+  { context: 'TENT_BC', phase: 'VEGA', weekNumber: 3, title: 'Verificar pH e EC da água', description: 'Medir pH (5.8-6.0) e EC (1.2-1.4) da solução nutritiva' },
+  { context: 'TENT_BC', phase: 'VEGA', weekNumber: 3, title: 'Regar plantas', description: 'Regar com 20% de runoff' },
+  { context: 'TENT_BC', phase: 'VEGA', weekNumber: 3, title: 'Continuar LST', description: 'Ajustar amarras e dobrar novos ramos' },
+  { context: 'TENT_BC', phase: 'VEGA', weekNumber: 3, title: 'Verificar pragas', description: 'Inspecionar folhas (cima e baixo) para detectar pragas' },
+  
+  // VEGA - Semana 4
+  { context: 'TENT_BC', phase: 'VEGA', weekNumber: 4, title: 'Verificar pH e EC da água', description: 'Medir pH (5.8-6.0) e EC (1.4-1.6) da solução nutritiva' },
+  { context: 'TENT_BC', phase: 'VEGA', weekNumber: 4, title: 'Regar plantas', description: 'Regar com 20% de runoff' },
+  { context: 'TENT_BC', phase: 'VEGA', weekNumber: 4, title: 'Preparar para floração', description: 'Verificar se plantas estão prontas para mudar fotoperíodo' },
+  
+  // FLORA - Semana 1
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 1, title: 'Mudar fotoperíodo para 12/12', description: 'Ajustar timer para 12h luz / 12h escuro' },
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 1, title: 'Verificar pH e EC da água', description: 'Medir pH (6.0-6.2) e EC (1.6-1.8) da solução nutritiva' },
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 1, title: 'Regar plantas', description: 'Regar com 20% de runoff' },
+  
+  // FLORA - Semana 2-3
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 2, title: 'Verificar pH e EC', description: 'pH: 6.0-6.2, EC: 1.8-2.0' },
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 2, title: 'Regar plantas', description: 'Regar com 20% de runoff' },
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 2, title: 'Remover folhas baixas', description: 'Desfoliação leve para melhorar circulação de ar' },
+  
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 3, title: 'Verificar pH e EC', description: 'pH: 6.0-6.2, EC: 2.0-2.2' },
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 3, title: 'Regar plantas', description: 'Regar com 20% de runoff' },
+  
+  // FLORA - Semana 4-5 (pico de floração)
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 4, title: 'Verificar pH e EC', description: 'pH: 6.0-6.2, EC: 2.2-2.4' },
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 4, title: 'Regar plantas', description: 'Regar com 20% de runoff' },
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 4, title: 'Verificar tricomas', description: 'Inspecionar tricomas com lupa (60x) para monitorar maturação' },
+  
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 5, title: 'Verificar pH e EC', description: 'pH: 6.0-6.2, EC: 2.2-2.4' },
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 5, title: 'Regar plantas', description: 'Regar com 20% de runoff' },
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 5, title: 'Verificar tricomas', description: 'Inspecionar tricomas para monitorar maturação' },
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 5, title: 'Verificar pragas e mofo', description: 'Inspecionar buds para detectar mofo ou pragas' },
+  
+  // FLORA - Semana 6-7 (reta final)
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 6, title: 'Verificar pH e EC', description: 'pH: 6.0-6.2, EC: 2.0-2.2' },
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 6, title: 'Regar plantas', description: 'Regar com 20% de runoff' },
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 6, title: 'Verificar tricomas diariamente', description: 'Monitorar tricomas para decidir ponto de colheita' },
+  
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 7, title: 'Verificar pH e EC', description: 'pH: 6.0-6.2, EC: 1.6-1.8 (reduzir nutrientes)' },
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 7, title: 'Regar plantas', description: 'Regar com 20% de runoff' },
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 7, title: 'Verificar tricomas', description: 'Decidir ponto de colheita (70-90% leitosos)' },
+  
+  // FLORA - Semana 8 (flush)
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 8, title: 'Iniciar flush', description: 'Regar apenas com água pH ajustado (sem nutrientes)' },
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 8, title: 'Regar com água pura', description: 'Flush com 30% de runoff para limpar sais' },
+  { context: 'TENT_BC', phase: 'FLORA', weekNumber: 8, title: 'Preparar para colheita', description: 'Organizar ferramentas e espaço de secagem' },
+  
+  // MAINTENANCE (Estufa A - plantas-mãe)
+  { context: 'TENT_A', phase: 'MAINTENANCE', weekNumber: null, title: 'Regar plantas-mãe', description: 'Regar com EC baixo (1.0-1.2) para manter crescimento vegetativo' },
+  { context: 'TENT_A', phase: 'MAINTENANCE', weekNumber: null, title: 'Fazer clones', description: 'Cortar e enraizar clones das plantas-mãe' },
+  { context: 'TENT_A', phase: 'MAINTENANCE', weekNumber: null, title: 'Podar plantas-mãe', description: 'Remover crescimento excessivo e manter tamanho controlado' },
+];
+
+let taskTemplateCount = 0;
+for (const tt of taskTemplatesData) {
+  await conn.execute(
+    'INSERT INTO taskTemplates (context, phase, weekNumber, title, description) VALUES (?, ?, ?, ?, ?)',
+    [tt.context, tt.phase, tt.weekNumber, tt.title, tt.description]
+  );
+  taskTemplateCount++;
+}
+console.log(`  ✓ ${taskTemplateCount} templates de tarefas criados`);
   
 // ============================================================
 // RESUMO FINAL
@@ -734,10 +814,11 @@ console.log(`  🌀 ${lstCount} registros de LST`);
 console.log(`  📝 ${obsCount} observações`);
 console.log(`  🎯 ${targetCount} weekly targets`);
 console.log(`  🧪 ${fertPresets.length} predefinições de fertilização`);
-console.log(`  💧 ${waterPresets.length} predefinições de rega`);
-console.log(`  📋 ${recipeCount} receitas`);
-console.log(`  📚 ${recipeTemplatesData.length} templates de receitas`);
-console.log('═══════════════════════════════════════════');
+  console.log(`  💧 ${waterPresets.length} predefinições de rega`);
+  console.log(`  📋 ${recipeCount} receitas`);
+  console.log(`  📚 ${recipeTemplatesData.length} templates de receitas`);
+  console.log(`  ✅ ${taskTemplateCount} templates de tarefas`);
+  console.log('═══════════════════════════════════════════');
 
 await conn.end();
 process.exit(0);

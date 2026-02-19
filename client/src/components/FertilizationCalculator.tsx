@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Trash2, BookmarkPlus, Share2, Copy, Check } from "lucide-react";
+import { Trash2, BookmarkPlus, Share2, Copy, Check, Edit } from "lucide-react";
 import { toast } from "sonner";
 
 export function FertilizationCalculator() {
@@ -23,6 +23,9 @@ export function FertilizationCalculator() {
   const [copied, setCopied] = useState(false);
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [importCode, setImportCode] = useState("");
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [editingPreset, setEditingPreset] = useState<any>(null);
+  const [editPresetName, setEditPresetName] = useState("");
 
   // Buscar EC recomendado do backend
   const { data: weeklyTarget } = trpc.weeklyTargets.get.useQuery({
@@ -98,6 +101,18 @@ export function FertilizationCalculator() {
     },
   });
 
+  const updatePreset = trpc.fertilizationPresets.update.useMutation({
+    onSuccess: () => {
+      toast.success("Predefinição atualizada!");
+      setShowEditDialog(false);
+      setEditingPreset(null);
+      presetsList.refetch();
+    },
+    onError: (error) => {
+      toast.error(`Erro ao atualizar: ${error.message}`);
+    },
+  });
+
   const presetsList = trpc.fertilizationPresets.list.useQuery();
 
   const handleSavePreset = () => {
@@ -137,6 +152,30 @@ export function FertilizationCalculator() {
     setShareCode(code);
     setShowShareDialog(true);
     setCopied(false);
+  };
+
+  const handleEditPreset = (preset: any) => {
+    setEditingPreset(preset);
+    setEditPresetName(preset.name);
+    setShowEditDialog(true);
+  };
+
+  const handleUpdatePreset = () => {
+    if (!editPresetName.trim()) {
+      toast.error("Digite um nome para a predefinição");
+      return;
+    }
+
+    updatePreset.mutate({
+      id: editingPreset.id,
+      name: editPresetName,
+      waterVolume: parseFloat(editingPreset.waterVolume),
+      targetEC: parseFloat(editingPreset.targetEC),
+      phase: editingPreset.phase,
+      weekNumber: editingPreset.weekNumber,
+      irrigationsPerWeek: editingPreset.irrigationsPerWeek,
+      calculationMode: editingPreset.calculationMode,
+    });
   };
 
   const handleCopyCode = async () => {
@@ -510,13 +549,23 @@ Gerado por App Cultivo em ${now.toLocaleString('pt-BR')}
                     size="sm"
                     variant="outline"
                     onClick={() => handleLoadPreset(preset)}
+                    title="Carregar predefinição"
                   >
                     Carregar
                   </Button>
                   <Button
                     size="sm"
                     variant="outline"
+                    onClick={() => handleEditPreset(preset)}
+                    title="Editar predefinição"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
                     onClick={() => handleSharePreset(preset)}
+                    title="Compartilhar predefinição"
                   >
                     <Share2 className="h-4 w-4" />
                   </Button>
@@ -528,6 +577,7 @@ Gerado por App Cultivo em ${now.toLocaleString('pt-BR')}
                         deletePreset.mutate({ id: preset.id });
                       }
                     }}
+                    title="Excluir predefinição"
                   >
                     <Trash2 className="h-4 w-4 text-destructive" />
                   </Button>
@@ -597,6 +647,45 @@ Gerado por App Cultivo em ${now.toLocaleString('pt-BR')}
             </Button>
             <Button onClick={handleImportRecipe} disabled={!importCode.trim()}>
               Importar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de Editar Predefinição */}
+      <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Editar Predefinição</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="edit-preset-name">Nome da Predefinição</Label>
+              <Input
+                id="edit-preset-name"
+                value={editPresetName}
+                onChange={(e) => setEditPresetName(e.target.value)}
+                placeholder="Ex: Vega Semana 3 - 10L"
+              />
+            </div>
+            {editingPreset && (
+              <div className="text-sm text-muted-foreground space-y-1">
+                <p>🌱 Fase: {editingPreset.phase === "vega" ? "Vegetativa" : "Floração"}</p>
+                <p>📅 Semana: {editingPreset.weekNumber}</p>
+                <p>💧 Volume: {editingPreset.waterVolume}L</p>
+                <p>⚡ EC: {editingPreset.targetEC} mS/cm</p>
+              </div>
+            )}
+            <p className="text-xs text-muted-foreground">
+              Nota: Apenas o nome pode ser editado. Para alterar os valores, crie uma nova predefinição.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowEditDialog(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleUpdatePreset} disabled={updatePreset.isPending}>
+              {updatePreset.isPending ? "Salvando..." : "Salvar Alterações"}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -12,38 +12,47 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Save, Trash2, Upload, Edit } from "lucide-react";
 import { toast } from "sonner";
 
-interface WateringPresetsManagerProps {
+interface FertilizationPresetsManagerProps {
   currentValues: {
-    plantCount: string;
-    potSize: string;
-    targetRunoff: string;
+    waterVolume: string;
+    targetEC: string;
     phase?: "VEGA" | "FLORA";
     weekNumber?: number;
+    irrigationsPerWeek?: string;
+    calculationMode: "per-irrigation" | "per-week";
   };
   onLoadPreset: (preset: any) => void;
 }
 
-export function WateringPresetsManager({
+export function FertilizationPresetsManager({
   currentValues,
   onLoadPreset,
-}: WateringPresetsManagerProps) {
+}: FertilizationPresetsManagerProps) {
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [presetName, setPresetName] = useState("");
   const [editingPreset, setEditingPreset] = useState<any>(null);
   const [editValues, setEditValues] = useState({
     name: "",
-    plantCount: "",
-    potSize: "",
-    targetRunoff: "",
+    waterVolume: "",
+    targetEC: "",
+    irrigationsPerWeek: "",
+    calculationMode: "per-irrigation" as "per-irrigation" | "per-week",
   });
 
-  const { data: presets, refetch } = trpc.wateringPresets.list.useQuery();
+  const { data: presets, refetch } = trpc.fertilizationPresets.list.useQuery();
 
-  const createPreset = trpc.wateringPresets.create.useMutation({
+  const createPreset = trpc.fertilizationPresets.create.useMutation({
     onSuccess: () => {
       toast.success("Predefinição salva!");
       setIsSaveDialogOpen(false);
@@ -55,7 +64,7 @@ export function WateringPresetsManager({
     },
   });
 
-  const deletePreset = trpc.wateringPresets.delete.useMutation({
+  const deletePreset = trpc.fertilizationPresets.delete.useMutation({
     onSuccess: () => {
       toast.success("Predefinição excluída!");
       refetch();
@@ -65,7 +74,7 @@ export function WateringPresetsManager({
     },
   });
 
-  const updatePreset = trpc.wateringPresets.update.useMutation({
+  const updatePreset = trpc.fertilizationPresets.update.useMutation({
     onSuccess: () => {
       toast.success("Predefinição atualizada!");
       setIsEditDialogOpen(false);
@@ -83,32 +92,44 @@ export function WateringPresetsManager({
       return;
     }
 
-    const plantCount = parseInt(currentValues.plantCount);
-    const potSize = parseFloat(currentValues.potSize);
-    const targetRunoff = parseFloat(currentValues.targetRunoff);
+    const waterVolume = parseFloat(currentValues.waterVolume);
+    const targetEC = parseFloat(currentValues.targetEC);
+    const irrigationsPerWeek = currentValues.irrigationsPerWeek
+      ? parseInt(currentValues.irrigationsPerWeek)
+      : undefined;
 
-    if (isNaN(plantCount) || isNaN(potSize) || isNaN(targetRunoff)) {
+    if (isNaN(waterVolume) || isNaN(targetEC)) {
       toast.error("Preencha todos os campos");
+      return;
+    }
+
+    if (
+      currentValues.calculationMode === "per-week" &&
+      (!irrigationsPerWeek || isNaN(irrigationsPerWeek))
+    ) {
+      toast.error("Preencha o número de irrigações por semana");
       return;
     }
 
     createPreset.mutate({
       name: presetName,
-      plantCount,
-      potSize,
-      targetRunoff,
+      waterVolume,
+      targetEC,
       phase: currentValues.phase,
       weekNumber: currentValues.weekNumber,
+      irrigationsPerWeek,
+      calculationMode: currentValues.calculationMode,
     });
   };
 
   const handleLoadPreset = (preset: any) => {
     onLoadPreset({
-      plantCount: preset.plantCount.toString(),
-      potSize: preset.potSize,
-      targetRunoff: preset.targetRunoff,
+      waterVolume: preset.waterVolume,
+      targetEC: preset.targetEC,
       phase: preset.phase,
       weekNumber: preset.weekNumber,
+      irrigationsPerWeek: preset.irrigationsPerWeek,
+      calculationMode: preset.calculationMode,
     });
     toast.success(`Predefinição "${preset.name}" carregada!`);
   };
@@ -123,9 +144,10 @@ export function WateringPresetsManager({
     setEditingPreset(preset);
     setEditValues({
       name: preset.name,
-      plantCount: preset.plantCount.toString(),
-      potSize: preset.potSize,
-      targetRunoff: preset.targetRunoff,
+      waterVolume: preset.waterVolume,
+      targetEC: preset.targetEC,
+      irrigationsPerWeek: preset.irrigationsPerWeek || "",
+      calculationMode: preset.calculationMode,
     });
     setIsEditDialogOpen(true);
   };
@@ -136,23 +158,34 @@ export function WateringPresetsManager({
       return;
     }
 
-    const plantCount = parseInt(editValues.plantCount);
-    const potSize = parseFloat(editValues.potSize);
-    const targetRunoff = parseFloat(editValues.targetRunoff);
+    const waterVolume = parseFloat(editValues.waterVolume);
+    const targetEC = parseFloat(editValues.targetEC);
+    const irrigationsPerWeek = editValues.irrigationsPerWeek
+      ? parseInt(editValues.irrigationsPerWeek)
+      : undefined;
 
-    if (isNaN(plantCount) || isNaN(potSize) || isNaN(targetRunoff)) {
+    if (isNaN(waterVolume) || isNaN(targetEC)) {
       toast.error("Preencha todos os campos corretamente");
+      return;
+    }
+
+    if (
+      editValues.calculationMode === "per-week" &&
+      (!irrigationsPerWeek || isNaN(irrigationsPerWeek))
+    ) {
+      toast.error("Preencha o número de irrigações por semana");
       return;
     }
 
     updatePreset.mutate({
       id: editingPreset.id,
       name: editValues.name,
-      plantCount,
-      potSize,
-      targetRunoff,
+      waterVolume,
+      targetEC,
       phase: editingPreset.phase,
       weekNumber: editingPreset.weekNumber,
+      irrigationsPerWeek,
+      calculationMode: editValues.calculationMode,
     });
   };
 
@@ -183,7 +216,9 @@ export function WateringPresetsManager({
                 <div className="flex-1">
                   <p className="font-medium">{preset.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {preset.plantCount} plantas · {preset.potSize}L · Runoff {preset.targetRunoff}%
+                    {preset.waterVolume}L · EC {preset.targetEC}
+                    {preset.irrigationsPerWeek &&
+                      ` · ${preset.irrigationsPerWeek}x/semana`}
                     {preset.phase && ` · ${preset.phase} Sem ${preset.weekNumber}`}
                   </p>
                 </div>
@@ -225,7 +260,7 @@ export function WateringPresetsManager({
           <DialogHeader>
             <DialogTitle>Salvar Predefinição</DialogTitle>
             <DialogDescription>
-              Dê um nome para esta configuração de rega
+              Dê um nome para esta configuração de fertilização
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -233,15 +268,20 @@ export function WateringPresetsManager({
               <Label htmlFor="presetName">Nome da Predefinição</Label>
               <Input
                 id="presetName"
-                placeholder="Ex: Vega 6 plantas - Vasos 11L"
+                placeholder="Ex: Vega Semana 3 - EC 1.2"
                 value={presetName}
                 onChange={(e) => setPresetName(e.target.value)}
               />
             </div>
             <div className="text-sm text-muted-foreground space-y-1">
-              <p>🌱 {currentValues.plantCount} plantas</p>
-              <p>🪴 Vasos de {currentValues.potSize}L</p>
-              <p>💧 Runoff desejado: {currentValues.targetRunoff}%</p>
+              <p>💧 Volume: {currentValues.waterVolume}L</p>
+              <p>⚡ EC Alvo: {currentValues.targetEC}</p>
+              {currentValues.irrigationsPerWeek && (
+                <p>🔄 {currentValues.irrigationsPerWeek} irrigações/semana</p>
+              )}
+              <p>
+                📊 Modo: {currentValues.calculationMode === "per-irrigation" ? "Por irrigação" : "Por semana"}
+              </p>
               {currentValues.phase && (
                 <p>
                   📅 {currentValues.phase} Semana {currentValues.weekNumber}
@@ -266,7 +306,7 @@ export function WateringPresetsManager({
           <DialogHeader>
             <DialogTitle>Editar Predefinição</DialogTitle>
             <DialogDescription>
-              Atualize os valores da predefinição de rega
+              Atualize os valores da predefinição de fertilização
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -279,34 +319,62 @@ export function WateringPresetsManager({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="editPlantCount">Número de Plantas</Label>
+              <Label htmlFor="editWaterVolume">Volume de Água (L)</Label>
               <Input
-                id="editPlantCount"
-                type="number"
-                value={editValues.plantCount}
-                onChange={(e) => setEditValues({ ...editValues, plantCount: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="editPotSize">Tamanho do Vaso (L)</Label>
-              <Input
-                id="editPotSize"
+                id="editWaterVolume"
                 type="number"
                 step="0.1"
-                value={editValues.potSize}
-                onChange={(e) => setEditValues({ ...editValues, potSize: e.target.value })}
+                value={editValues.waterVolume}
+                onChange={(e) =>
+                  setEditValues({ ...editValues, waterVolume: e.target.value })
+                }
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="editTargetRunoff">Runoff Desejado (%)</Label>
+              <Label htmlFor="editTargetEC">EC Alvo</Label>
               <Input
-                id="editTargetRunoff"
+                id="editTargetEC"
                 type="number"
-                step="1"
-                value={editValues.targetRunoff}
-                onChange={(e) => setEditValues({ ...editValues, targetRunoff: e.target.value })}
+                step="0.1"
+                value={editValues.targetEC}
+                onChange={(e) =>
+                  setEditValues({ ...editValues, targetEC: e.target.value })
+                }
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="editCalculationMode">Modo de Cálculo</Label>
+              <Select
+                value={editValues.calculationMode}
+                onValueChange={(value: "per-irrigation" | "per-week") =>
+                  setEditValues({ ...editValues, calculationMode: value })
+                }
+              >
+                <SelectTrigger id="editCalculationMode">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="per-irrigation">Por Irrigação</SelectItem>
+                  <SelectItem value="per-week">Por Semana</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {editValues.calculationMode === "per-week" && (
+              <div className="space-y-2">
+                <Label htmlFor="editIrrigationsPerWeek">Irrigações por Semana</Label>
+                <Input
+                  id="editIrrigationsPerWeek"
+                  type="number"
+                  value={editValues.irrigationsPerWeek}
+                  onChange={(e) =>
+                    setEditValues({
+                      ...editValues,
+                      irrigationsPerWeek: e.target.value,
+                    })
+                  }
+                />
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>

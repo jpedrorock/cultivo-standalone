@@ -74,8 +74,8 @@
 ### 🟡 Funcionalidades Incompletas
 
 - [x] Integrar WateringPresetsManager no IrrigationCalculator (componente existe mas não estava conectado)
-- [ ] Botão "Editar" em predefinições de fertilização (backend update existe, falta UI)
-- [ ] Botão "Editar" em predefinições de rega (backend update existe, falta UI)
+- [x] Botão "Editar" em predefinições de fertilização (backend update existe, UI implementada)
+- [x] Botão "Editar" em predefinições de rega (backend update existe, UI implementada)
 - [x] Adicionar aba "Plantas" na página de detalhes de cada estufa (TentDetails.tsx)
 
 ### 🟢 Melhorias de UX/UI
@@ -196,3 +196,18 @@
 - [x] Integrar WateringPresetsManager no WateringRunoffCalculator
 - [x] Conectar funcionalidade de salvar/carregar presets
 - [x] Testar fluxo completo de criar, salvar e carregar presets de rega - funcionando perfeitamente
+
+## Edição de Presets
+
+- [x] Analisar procedures de update no backend (wateringPresets.update e fertilizationPresets.update)
+- [x] Criar modal de edição para presets de rega (integrado no WateringPresetsManager)
+- [x] Adicionar botão "Editar" no WateringPresetsManager (todos os campos editáveis)
+- [x] Criar modal de edição para presets de fertilização (integrado no FertilizationCalculator)
+- [x] Adicionar botão "Editar" no FertilizationCalculator (apenas nome editável)
+- [x] Testar fluxo completo de edição em ambos os tipos de presets - funcionando
+
+## Bug - Tarefas das Semanas Sumiram
+
+- [x] Investigar por que as tarefas das semanas sumiram (tabela taskTemplates estava vazia)
+- [x] Adicionar 40 templates de tarefas ao seed (VEGA sem 1-4, FLORA sem 1-8, MAINTENANCE)
+- [x] Executar seed e verificar tarefas aparecendo corretamente na página /tasks
