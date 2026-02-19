@@ -1,0 +1,60 @@
+{
+  "query": "SELECT `id`, `name`, `description`, `vegaWeeks`, `floraWeeks`, `isActive`, `createdAt`, `updatedAt` FROM `strains` WHERE `strains`.`isActive` = true LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 28MX9rHeRYrkZKS.5ffbe178d99f --database AhyBXV9CDav4cSFRqphBxc --execute SELECT `id`, `name`, `description`, `vegaWeeks`, `floraWeeks`, `isActive`, `createdAt`, `updatedAt` FROM `strains` WHERE `strains`.`isActive` = true LIMIT 5;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Estufa A - Padrão",
+      "description": "Valores ideais padrão para Estufa A (Mães e Clonagem)",
+      "vegaWeeks": "0",
+      "floraWeeks": "0",
+      "isActive": "1",
+      "createdAt": "2026-02-05 20:34:58",
+      "updatedAt": "2026-02-05 20:34:58"
+    },
+    {
+      "id": "2",
+      "name": "Estufa B - Padrão",
+      "description": "Valores ideais padrão para Estufa B (Vegetativa)",
+      "vegaWeeks": "6",
+      "floraWeeks": "0",
+      "isActive": "1",
+      "createdAt": "2026-02-05 20:34:58",
+      "updatedAt": "2026-02-05 20:34:58"
+    },
+    {
+      "id": "3",
+      "name": "Estufa C - Padrão",
+      "description": "Valores ideais padrão para Estufa C (Floração)",
+      "vegaWeeks": "0",
+      "floraWeeks": "8",
+      "isActive": "1",
+      "createdAt": "2026-02-05 20:34:58",
+      "updatedAt": "2026-02-05 20:34:58"
+    },
+    {
+      "id": "30001",
+      "name": "Blue Dream",
+      "description": "Híbrida sativa-dominante, conhecida por crescimento vigoroso e produção abundante. Ideal para iniciantes.",
+      "vegaWeeks": "6",
+      "floraWeeks": "9",
+      "isActive": "1",
+      "createdAt": "2026-02-06 05:26:50",
+      "updatedAt": "2026-02-06 05:26:50"
+    },
+    {
+      "id": "30002",
+      "name": "Northern Lights",
+      "description": "Indica pura clássica, compacta e resistente. Floração rápida com alta produção de resina.",
+      "vegaWeeks": "5",
+      "floraWeeks": "7",
+      "isActive": "1",
+      "createdAt": "2026-02-06 05:26:50",
+      "updatedAt": "2026-02-06 05:26:50"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tdescription\tvegaWeeks\tfloraWeeks\tisActive\tcreatedAt\tupdatedAt\n1\tEstufa A - Padrão\tValores ideais padrão para Estufa A (Mães e Clonagem)\t0\t0\t1\t2026-02-05 20:34:58\t2026-02-05 20:34:58\n2\tEstufa B - Padrão\tValores ideais padrão para Estufa B (Vegetativa)\t6\t0\t1\t2026-02-05 20:34:58\t2026-02-05 20:34:58\n3\tEstufa C - Padrão\tValores ideais padrão para Estufa C (Floração)\t0\t8\t1\t2026-02-05 20:34:58\t2026-02-05 20:34:58\n30001\tBlue Dream\tHíbrida sativa-dominante, conhecida por crescimento vigoroso e produção abundante. Ideal para iniciantes.\t6\t9\t1\t2026-02-06 05:26:50\t2026-02-06 05:26:50\n30002\tNorthern Lights\tIndica pura clássica, compacta e resistente. Floração rápida com alta produção de resina.\t5\t7\t1\t2026-02-06 05:26:50\t2026-02-06 05:26:50\n",
+  "stderr": "",
+  "execution_time_ms": 381
+}

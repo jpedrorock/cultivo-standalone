@@ -239,7 +239,7 @@ export async function getTentById(id: number): Promise<any> {
 export async function getAllStrains(): Promise<Strain[]> {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(strains).where(eq(strains.isActive, true));
+  return db.select().from(strains).where(sql`${strains.isActive} = 1`);
 }
 
 export async function getStrainById(id: number): Promise<Strain | undefined> {

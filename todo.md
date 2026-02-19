@@ -756,3 +756,10 @@
 - [ ] Exibir foto em tamanho completo no lightbox
 - [ ] Adicionar botão de fechar e overlay escuro
 - [ ] Testar em mobile e desktop
+
+## Correção de Tabelas Faltantes no Banco de Dados
+
+- [x] Verificar quais tabelas estão faltando (strains, tents, plants, alerts, cycles)
+- [x] Recriar tabelas faltantes no banco de dados
+- [x] Testar queries que estavam falhando
+- [x] Validar que página /plants carrega sem erros
