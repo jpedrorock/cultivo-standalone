@@ -659,4 +659,13 @@
 - [x] Adicionar ícones para todas as fases (MAINTENANCE, CLONING, VEGA, FLORA) - DRYING já tem
 - [x] Corrigir salvamento da fase DRYING - estufa não está salvando corretamente
 - [x] Revisar tarefas de secagem - tarefas de VEGA estão aparecendo quando deveria ser DRYING
-- [ ] Testar fluxo completo de mudança de fase para DRYING
+- [x] Testar fluxo completo de mudança de fase para DRYING
+
+## Templates de Tarefas de Secagem (DRYING)
+
+- [x] Criar template "Controle de Ambiente" - Monitoramento diário de temperatura/umidade
+- [x] Criar template "Inspeção de Mofo" - Verificação visual de fungos/bactérias
+- [x] Criar template "Teste de Cura (Snap Test)" - Avaliação do ponto de secagem
+- [x] Criar template "Rotação de Material" - Movimentação para secagem uniforme
+- [x] Criar template "Preparação para Armazenamento" - Limpeza e trimming final
+- [x] Testar visualização das tarefas de DRYING na UI
