@@ -211,3 +211,20 @@
 - [x] Investigar por que as tarefas das semanas sumiram (tabela taskTemplates estava vazia)
 - [x] Adicionar 40 templates de tarefas ao seed (VEGA sem 1-4, FLORA sem 1-8, MAINTENANCE)
 - [x] Executar seed e verificar tarefas aparecendo corretamente na página /tasks
+
+## Revisão de Design e Usabilidade Mobile
+
+- [x] Revisar Home (cards de estufas, navegação, badges de strain)
+- [x] Revisar página de Plantas (lista, filtros, cards)
+- [x] Revisar detalhes de Planta (abas, formulários, galeria)
+- [x] Revisar Calculadoras (inputs, resultados, presets)
+- [x] Revisar Histórico (tabela, filtros, gráficos)
+- [x] Revisar Alertas (configurações, histórico)
+- [ ] Revisar Strains (lista, detalhes)
+- [ ] Revisar Tasks (lista de tarefas, checkboxes)
+- [ ] Revisar Configurações (formulários, seções)
+- [x] Documentar todos os problemas encontrados (5 críticos + 6 melhorias)
+- [x] Implementar correções críticas (tarefas colapsadas por padrão, touch targets 44x44px, espaçamento aumentado)
+- [ ] Implementar melhorias recomendadas (tabela responsiva, feedback visual, hierarquia)
+- [x] Testar melhorias na Home (tarefas colapsáveis funcionando perfeitamente)
+- [ ] Testar em dispositivo real (iPhone) para validar touch targets e responsividade

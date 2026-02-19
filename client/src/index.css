@@ -341,3 +341,31 @@ input[type="range"]::-moz-range-track {
 .animate-bounce-slow {
   animation: bounce-slow 2s ease-in-out infinite;
 }
+
+/* Mobile Touch Targets - Minimum 44x44px for better accessibility */
+@media (max-width: 768px) {
+  /* Increase checkbox touch area */
+  input[type="checkbox"],
+  button[role="checkbox"] {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Increase icon button touch area */
+  button:has(svg:only-child),
+  a:has(svg:only-child) {
+    min-width: 44px;
+    min-height: 44px;
+    @apply flex items-center justify-center;
+  }
+
+  /* Increase card spacing for better readability */
+  .space-y-4 > * + * {
+    margin-top: 1.5rem !important; /* 24px instead of 16px */
+  }
+
+  /* Increase gap in flex/grid containers */
+  .gap-4 {
+    gap: 1.5rem !important; /* 24px instead of 16px */
+  }
+}

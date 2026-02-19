@@ -359,6 +359,8 @@ export default function Home() {
 
 // Separate component for Tent Card with Tasks
 function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlora, onInitiateCycle, onEditCycle, onFinalizeCycle, onDeleteTent }: any) {
+  const [tasksExpanded, setTasksExpanded] = useState(false);
+  
   const { data: tasks, isLoading: tasksLoading } = trpc.tasks.getTasksByTent.useQuery(
     { tentId: tent.id },
     { enabled: !!cycle } // Only fetch if there's an active cycle
@@ -526,50 +528,60 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
           {/* Weekly Tasks */}
           {cycle && (
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
+              <button
+                onClick={() => setTasksExpanded(!tasksExpanded)}
+                className="w-full flex items-center justify-between hover:bg-muted/50 rounded p-2 transition-colors"
+              >
                 <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4" />
                   Tarefas da Semana
                 </h4>
-                {totalTasks > 0 && (
-                  <Badge variant="outline" className="text-xs">
-                    {completedTasks}/{totalTasks}
-                  </Badge>
-                )}
-              </div>
+                <div className="flex items-center gap-2">
+                  {totalTasks > 0 && (
+                    <Badge variant="outline" className="text-xs">
+                      {completedTasks}/{totalTasks}
+                    </Badge>
+                  )}
+                  <span className="text-xs text-muted-foreground">
+                    {tasksExpanded ? "▲" : "▼"}
+                  </span>
+                </div>
+              </button>
 
-              {tasksLoading ? (
-                <div className="flex items-center justify-center py-4">
-                  <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
-                </div>
-              ) : tasks && tasks.length > 0 ? (
-                <div className="space-y-2 max-h-48 overflow-y-auto">
-                  {tasks.map((task) => (
-                    <div
-                      key={task.id}
-                      className="flex items-start gap-2 p-2 rounded hover:bg-muted transition-colors"
-                    >
-                      <Checkbox
-                        id={`task-${task.id}`}
-                        checked={task.isDone}
-                        onCheckedChange={() => handleToggleTask(task.id)}
-                        className="mt-0.5"
-                      />
-                      <label
-                        htmlFor={`task-${task.id}`}
-                        className={`text-sm cursor-pointer flex-1 ${
-                          task.isDone ? "line-through text-muted-foreground" : "text-foreground"
-                        }`}
+              {tasksExpanded && (
+                tasksLoading ? (
+                  <div className="flex items-center justify-center py-4">
+                    <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+                  </div>
+                ) : tasks && tasks.length > 0 ? (
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {tasks.map((task) => (
+                      <div
+                        key={task.id}
+                        className="flex items-start gap-2 p-2 rounded hover:bg-muted transition-colors"
                       >
-                        {task.title}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-xs text-muted-foreground text-center py-2">
-                  Nenhuma tarefa para esta semana
-                </p>
+                        <Checkbox
+                          id={`task-${task.id}`}
+                          checked={task.isDone}
+                          onCheckedChange={() => handleToggleTask(task.id)}
+                          className="mt-0.5"
+                        />
+                        <label
+                          htmlFor={`task-${task.id}`}
+                          className={`text-sm cursor-pointer flex-1 ${
+                            task.isDone ? "line-through text-muted-foreground" : "text-foreground"
+                          }`}
+                        >
+                          {task.title}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-foreground text-center py-2">
+                    Nenhuma tarefa para esta semana
+                  </p>
+                )
               )}
             </div>
           )}
