@@ -185,3 +185,7 @@
 - [x] Investigar erro de inserção na tabela alertSettings (foreign key constraint - estufas não existiam)
 - [x] Corrigir seed para criar alertSettings para todas as estufas
 - [x] Testar página /alerts após correção - funcionando corretamente
+
+## UX - Data da Semana Atual
+
+- [x] Substituir "Data de Início" por "Data da Semana Atual" nos cards das estufas na Home

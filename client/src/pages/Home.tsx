@@ -495,9 +495,25 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-xs text-muted-foreground">Início</span>
+                <span className="text-xs text-muted-foreground">Semana Atual</span>
                 <span className="text-xs font-medium text-foreground">
-                  {new Date(cycle.startDate).toLocaleDateString("pt-BR")}
+                  {(() => {
+                    const now = new Date();
+                    const start = new Date(cycle.startDate);
+                    const floraStart = cycle.floraStartDate ? new Date(cycle.floraStartDate) : null;
+                    
+                    // Calcular a data de início da semana atual
+                    let weekStart;
+                    if (floraStart && now >= floraStart) {
+                      const weeksSinceFlora = Math.floor((now.getTime() - floraStart.getTime()) / (7 * 24 * 60 * 60 * 1000));
+                      weekStart = new Date(floraStart.getTime() + (weeksSinceFlora * 7 * 24 * 60 * 60 * 1000));
+                    } else {
+                      const weeksSinceStart = Math.floor((now.getTime() - start.getTime()) / (7 * 24 * 60 * 60 * 1000));
+                      weekStart = new Date(start.getTime() + (weeksSinceStart * 7 * 24 * 60 * 60 * 1000));
+                    }
+                    
+                    return weekStart.toLocaleDateString("pt-BR");
+                  })()}
                 </span>
               </div>
             </div>
