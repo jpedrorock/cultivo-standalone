@@ -1,4 +1,4 @@
-import { Home, Calculator, BarChart3, Bell, Sprout, Leaf, Settings, Droplets, CheckSquare } from "lucide-react";
+import { Home, Calculator, BarChart3, Bell, Sprout, Leaf, Settings, Droplets, CheckSquare, Beaker } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +10,7 @@ export function Sidebar() {
     { href: "/plants", icon: Sprout, label: "Plantas" },
     { href: "/tarefas", icon: CheckSquare, label: "Tarefas" },
     { href: "/calculators", icon: Calculator, label: "Calculadoras" },
+    { href: "/nutrients", icon: Beaker, label: "Nutrientes" },
     { href: "/history", icon: BarChart3, label: "Histórico" },
     { href: "/alerts", icon: Bell, label: "Alertas" },
     { href: "/manage-strains", icon: Leaf, label: "Strains" },

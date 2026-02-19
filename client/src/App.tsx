@@ -30,6 +30,7 @@ import PlantsList from "./pages/PlantsList";
 import PlantDetail from "./pages/PlantDetail";
 import NewPlant from "./pages/NewPlant";
 import SkeletonDemo from "./pages/SkeletonDemo";
+import Nutrients from "./pages/Nutrients";
 
 
 
@@ -46,6 +47,7 @@ function Router() {
 
       <Route path={"/calculators/:id"} component={Calculators} />
 
+      <Route path={"/nutrients"} component={Nutrients} />
       <Route path={"/alerts"} component={Alerts} />
       <Route path={"/history"} component={HistoryTable} />
       <Route path={"/settings"} component={Settings} />

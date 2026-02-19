@@ -700,3 +700,32 @@
 - [x] Criar teste vitest para cálculos de nutrientes
 - [x] Criar teste vitest para conversões PPM↔EC
 - [x] Testar fluxo completo de seleção e aplicação de receita
+
+## UI de Receitas de Nutrientes
+
+### Componente NutrientRecipeSelector
+- [x] Criar seletor de fase (CLONING, VEGA, FLORA, MAINTENANCE, DRYING)
+- [x] Criar seletor de semana (quando aplicável)
+- [x] Listar receitas disponíveis via tRPC
+- [x] Carregar receita selecionada no editor
+
+### Componente NutrientCalculator
+- [x] Criar inputs editáveis para volume total (L)
+- [x] Criar lista de produtos com inputs de quantidade (ml)
+- [x] Adicionar/remover produtos dinamicamente
+- [x] Calcular NPK total em tempo real
+- [x] Calcular micronutrientes (Ca, Mg, Fe) em tempo real
+- [x] Calcular EC estimado e mostrar conversão PPM↔EC
+- [x] Calcular pH estimado e mostrar ajuste necessário (pH Up/Down)
+- [x] Botão para salvar aplicação (registrar no histórico)
+
+### Componente NutrientHistory
+- [x] Listar aplicações anteriores por estufa
+- [x] Filtro por estufa e ciclo
+- [x] Mostrar detalhes de cada aplicação (data, receita, EC/pH real vs target)
+- [ ] Gráfico de evolução de EC/pH ao longo do tempo (opcional para próxima iteração)
+
+### Integração
+- [x] Adicionar rota /nutrients na navegação
+- [x] Criar página Nutrients.tsx com todos os componentes
+- [x] Testar fluxo completo de seleção, ajuste e salvamento
