@@ -727,9 +727,11 @@
 
 ## Menu de Plantas no Mobile
 
-- [ ] Adicionar link para /plants no menu de navegação mobile
-- [ ] Verificar se há bottom nav ou menu hamburguer
-- [ ] Testar navegação em mobile
+- [x] Verificada estrutura atual de navegação (App.tsx com Sidebar + BottomNav)
+- [x] Identificado: BottomNav para mobile, Sidebar para desktop
+- [x] Adicionado link "/plants" com ícone Leaf no BottomNav
+- [x] Sidebar já tinha link de plantas configurado
+- [x] Menu responsivo: 4 itens principais no mobile (Home, Plantas, Calculadoras, Alertas)
 
 ## URGENTE - Tabelas Faltantes no Banco
 

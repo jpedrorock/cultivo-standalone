@@ -1,4 +1,4 @@
-import { Home, Calculator, Bell, MoreHorizontal, BarChart3, Sprout, Settings } from "lucide-react";
+import { Home, Calculator, Bell, MoreHorizontal, BarChart3, Sprout, Settings, Leaf } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -20,6 +20,7 @@ export function BottomNav() {
 
   const mainNavItems = [
     { href: "/", icon: Home, label: "Home" },
+    { href: "/plants", icon: Leaf, label: "Plantas" },
     { href: "/calculators", icon: Calculator, label: "Calculadoras" },
     { href: "/alerts", icon: Bell, label: "Alertas", badge: alertCount || 0 },
   ];
