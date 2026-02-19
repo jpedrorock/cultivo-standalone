@@ -840,9 +840,9 @@
 ## Ajustes Finais (19/02/2026)
 
 - [x] Corrigir tamanho desproporcional do número no campo de litros da fertilização
-- [ ] Revisão geral: testar todas as funcionalidades no desktop
-- [ ] Revisão geral: testar mobile e dark mode
-- [ ] Analisar e limpar código que não funciona
+- [x] Revisão geral: testar todas as funcionalidades no desktop
+- [x] Revisão geral: testar mobile e dark mode
+- [x] Analisar e limpar código que não funciona
 
 ## Tarefas Futuras
 

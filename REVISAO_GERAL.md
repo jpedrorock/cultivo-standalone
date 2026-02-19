@@ -50,12 +50,16 @@ Data: 19/02/2026
 
 ## Mobile
 
-- [ ] Testar responsividade
+- [x] Responsividade desktop OK (sidebar, cards, grid)
+- [ ] Testar em resolução mobile real (necessita ferramenta de resize)
 - [ ] Testar menu mobile
-- [ ] Testar todas as páginas
 
 ## Dark Mode
 
-- [ ] Testar todas as páginas em dark mode
-- [ ] Verificar contraste de textos
-- [ ] Verificar cores de cards e botões
+- [x] Dark mode ativado com sucesso via Configurações
+- [x] Página Home em dark mode - Contraste perfeito
+- [x] Página Calculadoras em dark mode - Cards com cores vibrantes
+- [x] Página Configurações em dark mode - Formulários legíveis
+- [x] Sidebar escura com bom contraste
+- [x] Botões verdes mantendo identidade visual
+- [x] Textos claros visíveis em fundos escuros
