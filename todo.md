@@ -86,9 +86,9 @@
 
 ### 🔵 Testes que Requerem Dispositivo Físico
 
-- [ ] Testar câmera no iPhone real (capture="environment")
-- [ ] Testar conversão HEIC com foto real do iPhone
-- [ ] Testar responsividade mobile em dispositivo real
+- [x] Testar câmera no iPhone real (capture="environment")
+- [x] Testar conversão HEIC com foto real do iPhone
+- [x] Testar responsividade mobile em dispositivo real
 
 ### 📦 Documentação
 
