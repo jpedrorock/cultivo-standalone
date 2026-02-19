@@ -348,3 +348,16 @@
 - [x] Adicionar rota no App.tsx
 - [x] Adicionar item no menu lateral (Sidebar desktop)
 - [x] Adicionar item no menu "Mais" (BottomNav mobile)
+
+
+## 🔴 Melhorias Urgentes de UX (19/02/2026)
+
+- [x] Adicionar busca em Strains (ManageStrains.tsx) - campo de busca por nome/descrição
+- [x] Adicionar busca na página Tarefas (TaskTemplatesManager) - campo de busca por título/descrição
+- [x] Implementar botão "Ocultar concluídas" na Home - toggle para minimizar tarefas já marcadas
+- [ ] Adicionar seção de Configurações de Alertas (Settings.tsx) - UI para configurar notificações
+
+## 🎯 Melhorias de Organização (19/02/2026)
+
+- [ ] Ajustar nomes de categorias de templates de tarefas para serem genéricos (sem mencionar estufas específicas)
+- [ ] Implementar tabs por estufa na página Histórico (Todas | Estufa A | Estufa B | Estufa C)

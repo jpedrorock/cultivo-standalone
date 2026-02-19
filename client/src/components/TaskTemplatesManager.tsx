@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Plus, Edit, Trash2, Loader2 } from "lucide-react";
+import { Plus, Edit, Trash2, Loader2, Search } from "lucide-react";
 import { toast } from "sonner";
 
 type Phase = "VEGA" | "FLORA" | "MAINTENANCE";
@@ -30,6 +30,7 @@ export function TaskTemplatesManager() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState<TaskTemplate | null>(null);
   const [templateToDelete, setTemplateToDelete] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   
   const [formData, setFormData] = useState({
     title: "",
@@ -156,7 +157,16 @@ export function TaskTemplatesManager() {
     return context === "TENT_A" ? "Estufa A" : "Estufas B/C";
   };
 
-  const groupedTemplates = templates?.reduce((acc: any, template: any) => {
+  // Filtrar templates por busca
+  const filteredTemplates = templates?.filter((template: TaskTemplate) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      template.title.toLowerCase().includes(query) ||
+      (template.description && template.description.toLowerCase().includes(query))
+    );
+  });
+
+  const groupedTemplates = filteredTemplates?.reduce((acc: any, template: any) => {
     const key = `${template.phase}-${template.context}`;
     if (!acc[key]) {
       acc[key] = [];
@@ -186,6 +196,18 @@ export function TaskTemplatesManager() {
           <Plus className="mr-2 h-4 w-4" />
           Nova Tarefa
         </Button>
+      </div>
+
+      {/* Campo de busca */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Input
+          type="text"
+          placeholder="Buscar por título ou descrição..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10"
+        />
       </div>
 
       <Accordion type="multiple" className="space-y-4">

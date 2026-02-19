@@ -19,7 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell, Trash2 } from "lucide-react";
+import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell, Trash2, EyeOff, Eye } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
@@ -360,6 +360,7 @@ export default function Home() {
 // Separate component for Tent Card with Tasks
 function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlora, onInitiateCycle, onEditCycle, onFinalizeCycle, onDeleteTent }: any) {
   const [tasksExpanded, setTasksExpanded] = useState(false);
+  const [hideCompleted, setHideCompleted] = useState(false);
   
   const { data: tasks, isLoading: tasksLoading } = trpc.tasks.getTasksByTent.useQuery(
     { tentId: tent.id },
@@ -536,7 +537,19 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                   <CheckCircle2 className="w-4 h-4" />
                   Tarefas da Semana
                 </h4>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
+                  {tasks && tasks.length > 0 && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setHideCompleted(!hideCompleted);
+                      }}
+                      className="text-muted-foreground hover:text-foreground transition-colors"
+                      title={hideCompleted ? "Mostrar concluídas" : "Ocultar concluídas"}
+                    >
+                      {hideCompleted ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                    </button>
+                  )}
                   {totalTasks > 0 && (
                     <Badge variant="outline" className="text-xs">
                       {completedTasks}/{totalTasks}
@@ -555,7 +568,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                   </div>
                 ) : tasks && tasks.length > 0 ? (
                   <div className="space-y-2 max-h-48 overflow-y-auto">
-                    {tasks.map((task) => (
+                    {tasks.filter((task) => !hideCompleted || !task.isDone).map((task) => (
                       <div
                         key={task.id}
                         className="flex items-start gap-2 p-2 rounded hover:bg-muted transition-colors"

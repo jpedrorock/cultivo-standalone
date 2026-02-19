@@ -2,7 +2,7 @@ import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Edit, Trash2, ArrowLeft, Copy } from "lucide-react";
+import { Plus, Edit, Trash2, ArrowLeft, Copy, Search } from "lucide-react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
 import {
@@ -24,6 +24,7 @@ export default function ManageStrains() {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isDuplicateOpen, setIsDuplicateOpen] = useState(false);
   const [selectedStrain, setSelectedStrain] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Form states
   const [name, setName] = useState("");
@@ -32,6 +33,15 @@ export default function ManageStrains() {
   const [floraWeeks, setFloraWeeks] = useState(8);
 
   const { data: strains = [], refetch } = trpc.strains.list.useQuery();
+
+  // Filtrar strains por busca
+  const filteredStrains = strains.filter((strain: any) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      strain.name.toLowerCase().includes(query) ||
+      (strain.description && strain.description.toLowerCase().includes(query))
+    );
+  });
   const createStrain = trpc.strains.create.useMutation();
   const updateStrain = trpc.strains.update.useMutation();
   const deleteStrain = trpc.strains.delete.useMutation();
@@ -176,9 +186,21 @@ export default function ManageStrains() {
           </Button>
         </div>
 
+        {/* Campo de busca */}
+        <div className="relative mb-6">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            type="text"
+            placeholder="Buscar por nome ou descrição..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+
         {/* Strains Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {strains.map((strain) => (
+          {filteredStrains.map((strain) => (
             <Card key={strain.id} className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex items-start justify-between">

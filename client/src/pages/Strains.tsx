@@ -6,13 +6,14 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Loader2, Plus, Pencil, Trash2, Sprout } from "lucide-react";
+import { Loader2, Plus, Pencil, Trash2, Sprout, Search } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "wouter";
 
 export default function Strains() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingStrain, setEditingStrain] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -106,6 +107,15 @@ export default function Strains() {
     }
   };
 
+  // Filtrar strains por busca
+  const filteredStrains = strains?.filter((strain) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      strain.name.toLowerCase().includes(query) ||
+      (strain.description && strain.description.toLowerCase().includes(query))
+    );
+  });
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -147,12 +157,24 @@ export default function Strains() {
               Gerencie as strains disponíveis para seus ciclos de cultivo
             </CardDescription>
           </CardHeader>
+          <div className="px-6 pb-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Buscar por nome ou descrição..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
           <CardContent>
-            {strains && strains.length > 0 ? (
+            {filteredStrains && filteredStrains.length > 0 ? (
               <>
                 {/* Mobile cards (< lg) */}
                 <div className="lg:hidden space-y-4">
-                  {strains.map((strain) => (
+                  {filteredStrains.map((strain) => (
                     <Card key={strain.id} className="bg-muted/50">
                       <CardHeader>
                         <div className="flex items-start justify-between">
@@ -218,7 +240,7 @@ export default function Strains() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {strains.map((strain) => (
+                      {filteredStrains.map((strain) => (
                         <TableRow key={strain.id}>
                           <TableCell className="font-medium">{strain.name}</TableCell>
                           <TableCell className="text-muted-foreground">
