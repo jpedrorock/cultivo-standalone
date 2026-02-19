@@ -313,3 +313,10 @@
 - [x] Redesenhar PlantLSTTab com layout horizontal em colunas
 - [x] Adicionar ícones à esquerda dos itens LST (emoji grande + nome + badge + descrição)
 - [x] Testar novo design no navegador - layout horizontal funcionando perfeitamente
+
+## Ajustes Calculadora PPFD e Média de Parâmetros (19/02/2026)
+
+- [x] Redesenhar calculadora PPFD com slider mais alto (h-8) e thumb maior (w-6 h-6)
+- [x] Implementar cálculo de média de parâmetros ideais para estufas com múltiplas strains (já implementado no backend - getTargetsByTent)
+- [x] Mostrar valores médios no card da estufa quando tem múltiplas strains ("📊 Parâmetros médios (2 strains)" na Estufa A)
+- [x] Testar ambas as funcionalidades no navegador - funcionando perfeitamente

@@ -587,6 +587,13 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
           )}
 
           {/* Latest Readings */}
+          {targets?._isAverage && (
+            <div className="pt-3 pb-1">
+              <p className="text-xs text-center text-muted-foreground bg-accent/30 rounded px-2 py-1">
+                📊 Parâmetros médios ({targets._strainCount} strains)
+              </p>
+            </div>
+          )}
           <div className="grid grid-cols-3 gap-2 pt-4 border-t">
             <div className="text-center">
               <ThermometerSun className="w-5 h-5 mx-auto text-orange-500 mb-1" />
