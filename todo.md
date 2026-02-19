@@ -76,13 +76,13 @@
 - [ ] Integrar WateringPresetsManager no IrrigationCalculator (componente existe mas não está conectado)
 - [ ] Botão "Editar" em predefinições de fertilização (backend update existe, falta UI)
 - [ ] Botão "Editar" em predefinições de rega (backend update existe, falta UI)
-- [ ] Adicionar aba "Plantas" na página de detalhes de cada estufa (TentDetails.tsx)
+- [x] Adicionar aba "Plantas" na página de detalhes de cada estufa (TentDetails.tsx)
 
 ### 🟢 Melhorias de UX/UI
 
 - [ ] Lightbox para zoom nas fotos dos cards da lista de plantas (PAUSADO)
 - [ ] Suporte a gestos de swipe no mobile para navegar fotos no lightbox
-- [ ] Modal de edição de registro de saúde com formulário preenchido (EditHealthLogDialog existe mas pode precisar de revisão)
+- [x] Modal de edição de registro de saúde com formulário preenchido (EditHealthLogDialog - testado e funcional)
 
 ### 🔵 Testes que Requerem Dispositivo Físico
 
@@ -92,7 +92,7 @@
 
 ### 📦 Documentação
 
-- [ ] Atualizar README com funcionalidades atuais
+- [x] Atualizar README com funcionalidades atuais
 - [ ] Criar guia do usuário
 
 ### 🗑️ Limpeza (Opcional)
@@ -119,3 +119,9 @@
 - [x] Tornar cards de estufas na Home clicáveis para navegar às plantas da estufa
 - [x] Adicionar aba "Plantas" na página de detalhes da estufa (TentDetails.tsx)
 - [x] Atualizar README com funcionalidades atuais do projeto
+
+## Modal de Edição de Registros de Saúde
+
+- [x] Implementar modal de edição para registros de saúde (data, status, sintomas, tratamento, notas)
+- [x] Conectar ao backend (procedure de update)
+- [x] Testar edição e validar que dados são atualizados corretamente
