@@ -556,3 +556,11 @@
 - [ ] Adicionar weeklyTargets para fase DRYING (temperatura, umidade ideais para secagem)
 - [ ] Pesquisar e adicionar taskTemplates para fase DRYING (2 semanas)
 - [ ] Testar criação de ciclo com fase DRYING
+
+
+## 🐛 Corrigir Estado Padrão do Botão "Ocultar Concluídas" (19/02/2026)
+
+- [ ] Analisar estado inicial do botão em Home.tsx
+- [ ] Inverter estado padrão de `hideCompleted` para `false` (mostrar todas por padrão)
+- [ ] Garantir que tarefas marcadas permaneçam visíveis até clicar em "Ocultar"
+- [ ] Testar comportamento: marcar tarefa → continua visível → clicar "Ocultar" → some
