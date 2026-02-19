@@ -228,3 +228,11 @@
 - [ ] Implementar melhorias recomendadas (tabela responsiva, feedback visual, hierarquia)
 - [x] Testar melhorias na Home (tarefas colapsáveis funcionando perfeitamente)
 - [ ] Testar em dispositivo real (iPhone) para validar touch targets e responsividade
+
+
+## Card View para Histórico Mobile
+
+- [x] Analisar componente HistoryTable atual (já tinha card view implementado)
+- [x] Melhorar card view existente com melhor hierarquia visual e espaçamento
+- [x] Ajustar breakpoint de md para lg (cards até 1024px, tabela acima)
+- [x] Testar card view - funcionando em viewports < 1024px

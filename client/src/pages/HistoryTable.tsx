@@ -339,24 +339,31 @@ export default function HistoryTable() {
             ) : (
               <>
                 {/* Mobile Card Layout */}
-                <div className="md:hidden space-y-4">
+                <div className="lg:hidden space-y-6">
                   {logsData.logs.map((log) => (
-                    <Card key={log.id} className="overflow-hidden">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Badge variant={log.turn === "AM" ? "default" : "secondary"}>
-                              {log.turn || "-"}
-                            </Badge>
-                            <span className="text-sm font-medium">
-                              {new Date(log.logDate).toLocaleDateString("pt-BR")}
-                            </span>
+                    <Card key={log.id} className="overflow-hidden shadow-sm">
+                      <CardHeader className="pb-4 bg-muted/30">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Badge variant={log.turn === "AM" ? "default" : "secondary"} className="text-xs px-2 py-0.5">
+                                {log.turn || "-"}
+                              </Badge>
+                              <span className="text-base font-semibold">
+                                {new Date(log.logDate).toLocaleDateString("pt-BR", { 
+                                  day: '2-digit', 
+                                  month: 'short',
+                                  year: 'numeric'
+                                })}
+                              </span>
+                            </div>
+                            <p className="text-sm text-muted-foreground font-medium">{log.tentName || "-"}</p>
                           </div>
-                          <div className="flex gap-1">
+                          <div className="flex gap-2">
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-8 w-8"
+                              className="touch-target"
                               onClick={() => setEditingLog(log)}
                               title="Editar registro"
                             >
@@ -365,7 +372,7 @@ export default function HistoryTable() {
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                              className="touch-target text-red-600 hover:text-red-700 hover:bg-red-50"
                               onClick={() => setDeletingLogId(log.id)}
                               title="Excluir registro"
                             >
@@ -373,35 +380,34 @@ export default function HistoryTable() {
                             </Button>
                           </div>
                         </div>
-                        <p className="text-sm text-muted-foreground mt-1">{log.tentName || "-"}</p>
                       </CardHeader>
-                      <CardContent className="pt-0">
-                        <div className="grid grid-cols-2 gap-3 text-sm">
-                          <div>
-                            <p className="text-muted-foreground">Temp (°C)</p>
-                            <p className="font-medium">{log.tempC || "-"}</p>
+                      <CardContent className="pt-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <p className="text-xs text-muted-foreground uppercase tracking-wide">Temperatura</p>
+                            <p className="text-lg font-semibold">{log.tempC ? `${log.tempC}°C` : "-"}</p>
                           </div>
-                          <div>
-                            <p className="text-muted-foreground">RH (%)</p>
-                            <p className="font-medium">{log.rhPct || "-"}</p>
+                          <div className="space-y-1">
+                            <p className="text-xs text-muted-foreground uppercase tracking-wide">Umidade</p>
+                            <p className="text-lg font-semibold">{log.rhPct ? `${log.rhPct}%` : "-"}</p>
                           </div>
-                          <div>
-                            <p className="text-muted-foreground">PPFD</p>
-                            <p className="font-medium">{log.ppfd || "-"}</p>
+                          <div className="space-y-1">
+                            <p className="text-xs text-muted-foreground uppercase tracking-wide">PPFD</p>
+                            <p className="text-lg font-semibold">{log.ppfd || "-"}</p>
                           </div>
-                          <div>
-                            <p className="text-muted-foreground">pH</p>
-                            <p className="font-medium">{log.ph || "-"}</p>
+                          <div className="space-y-1">
+                            <p className="text-xs text-muted-foreground uppercase tracking-wide">pH</p>
+                            <p className="text-lg font-semibold">{log.ph || "-"}</p>
                           </div>
-                          <div>
-                            <p className="text-muted-foreground">EC</p>
-                            <p className="font-medium">{log.ec || "-"}</p>
+                          <div className="space-y-1 col-span-2">
+                            <p className="text-xs text-muted-foreground uppercase tracking-wide">EC</p>
+                            <p className="text-lg font-semibold">{log.ec || "-"}</p>
                           </div>
                         </div>
                         {log.notes && (
-                          <div className="mt-3 pt-3 border-t">
-                            <p className="text-xs text-muted-foreground">Observações</p>
-                            <p className="text-sm mt-1">{log.notes}</p>
+                          <div className="mt-4 pt-4 border-t">
+                            <p className="text-xs text-muted-foreground uppercase tracking-wide mb-2">Observações</p>
+                            <p className="text-sm leading-relaxed">{log.notes}</p>
                           </div>
                         )}
                       </CardContent>
@@ -410,7 +416,7 @@ export default function HistoryTable() {
                 </div>
 
                 {/* Desktop Table Layout */}
-                <div className="hidden md:block overflow-x-auto">
+                <div className="hidden lg:block overflow-x-auto">
                   <Table className="min-w-full">
                     <TableHeader>
                       <TableRow>
