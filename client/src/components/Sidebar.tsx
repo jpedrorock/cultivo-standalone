@@ -9,15 +9,7 @@ export function Sidebar() {
     { href: "/", icon: Home, label: "Home" },
     { href: "/plants", icon: Sprout, label: "Plantas" },
     { href: "/tarefas", icon: CheckSquare, label: "Tarefas" },
-    { 
-      href: "/calculators", 
-      icon: Calculator, 
-      label: "Calculadoras",
-      submenu: [
-        { href: "/calculators/watering-runoff", label: "Rega e Runoff" },
-        { href: "/nutrients", label: "Fertilização" },
-      ]
-    },
+    { href: "/calculators", icon: Calculator, label: "Calculadoras" },
     { href: "/history", icon: BarChart3, label: "Histórico" },
     { href: "/alerts", icon: Bell, label: "Alertas" },
     { href: "/manage-strains", icon: Leaf, label: "Strains" },
@@ -42,44 +34,23 @@ export function Sidebar() {
       <nav className="flex-1 p-4 space-y-2">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = location === item.href || (item.submenu && item.submenu.some((sub: any) => location === sub.href));
+          const isActive = location === item.href;
           
           return (
-            <div key={item.href}>
-              <Link
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-lg transition-all",
-                  "hover:bg-sidebar-accent",
-                  isActive
-                    ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
-                    : "text-sidebar-foreground hover:text-primary"
-                )}
-              >
-                <Icon className={cn("w-5 h-5", isActive && "stroke-[2.5]")} />
-                <span>{item.label}</span>
-              </Link>
-              {item.submenu && (
-                <div className="ml-8 mt-1 space-y-1">
-                  {item.submenu.map((subItem: any) => (
-                    <Link
-                      key={subItem.href}
-                      href={subItem.href}
-                      className={cn(
-                        "flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-all",
-                        "hover:bg-sidebar-accent",
-                        location === subItem.href
-                          ? "bg-sidebar-accent/50 text-sidebar-accent-foreground font-medium"
-                          : "text-muted-foreground hover:text-primary"
-                      )}
-                    >
-                      <span>•</span>
-                      <span>{subItem.label}</span>
-                    </Link>
-                  ))}
-                </div>
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "flex items-center gap-3 px-4 py-3 rounded-lg transition-all",
+                "hover:bg-sidebar-accent",
+                isActive
+                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
+                  : "text-sidebar-foreground hover:text-primary"
               )}
-            </div>
+            >
+              <Icon className={cn("w-5 h-5", isActive && "stroke-[2.5]")} />
+              <span>{item.label}</span>
+            </Link>
           );
         })}
       </nav>

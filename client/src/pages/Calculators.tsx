@@ -129,7 +129,7 @@ function downloadTextFile(content: string, filename: string) {
   URL.revokeObjectURL(url);
 }
 
-import { useRoute, useLocation } from "wouter";
+import { useRoute, useLocation, Redirect } from "wouter";
 import { ArrowLeft } from "lucide-react";
 import { FertilizationCalculator } from "@/components/FertilizationCalculator";
 
@@ -137,6 +137,11 @@ export default function Calculators() {
   const [, params] = useRoute("/calculators/:id");
   const [, setLocation] = useLocation();
   const calculatorId = params?.id || "irrigation";
+
+  // Redirecionar /calculators/nutrients para /nutrients
+  if (calculatorId === "nutrients") {
+    return <Redirect to="/nutrients" />;
+  }
 
   const calculatorTitles: Record<string, string> = {
     "watering-runoff": "Rega e Runoff",

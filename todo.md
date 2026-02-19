@@ -831,3 +831,8 @@
 - [x] Remover "Nutrientes" do menu e mover para dentro de "Calculadoras"
 - [x] Reduzir padding das calculadoras no mobile
 - [x] Remover predefinições da calculadora de rega (deixar só histórico)
+
+## Correção de Navegação (19/02/2026)
+
+- [x] Remover submenu do sidebar (voltar menu simples)
+- [x] Adicionar card de Fertilização na página de Calculadoras

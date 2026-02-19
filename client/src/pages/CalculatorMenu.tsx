@@ -13,6 +13,15 @@ export default function CalculatorMenu() {
       bgColor: "bg-blue-500/10",
       iconColor: "text-blue-600",
     },
+    {
+      id: "nutrients",
+      title: "Fertilização",
+      description: "Calcule receitas de sais minerais por fase e semana",
+      icon: Beaker,
+      color: "from-green-500 to-emerald-500",
+      bgColor: "bg-green-500/10",
+      iconColor: "text-green-600",
+    },
 
     {
       id: "lux-ppfd",
@@ -100,6 +109,9 @@ export default function CalculatorMenu() {
           <CardContent className="space-y-2 text-sm text-foreground">
             <p>
               <strong>💧 Rega e Runoff:</strong> Calcule o volume ideal de rega e meça o runoff real com recomendações de ajuste
+            </p>
+            <p>
+              <strong>🧪 Fertilização:</strong> Calcule receitas de sais minerais (Nitrato de Cálcio, Potássio, MKP, Sulfato de Magnésio) por fase e semana
             </p>
 
             <p>
