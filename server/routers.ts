@@ -1823,6 +1823,69 @@ export const appRouter = router({
         
         return { success: true };
       }),
+
+    // Buscar fotos da planta
+    getPhotos: publicProcedure
+      .input(z.object({ plantId: z.number() }))
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        const photos = await database
+          .select()
+          .from(plantPhotos)
+          .where(eq(plantPhotos.plantId, input.plantId))
+          .orderBy(desc(plantPhotos.createdAt));
+        
+        return photos;
+      }),
+
+    // Upload foto da planta
+    uploadPhoto: publicProcedure
+      .input(z.object({
+        plantId: z.number(),
+        imageData: z.string(), // base64
+        mimeType: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Converter base64 para Buffer
+        const base64Data = input.imageData.split(',')[1] || input.imageData;
+        const buffer = Buffer.from(base64Data, 'base64');
+        
+        // Upload para S3
+        const { storagePut } = await import("./storage");
+        const fileKey = `plants/${input.plantId}/${Date.now()}.${input.mimeType.split('/')[1]}`;
+        const { url } = await storagePut(fileKey, buffer, input.mimeType);
+        
+        // Salvar no banco
+        const [photo] = await database
+          .insert(plantPhotos)
+          .values({
+            plantId: input.plantId,
+            url,
+            fileKey,
+          })
+          .returning();
+        
+        return photo;
+      }),
+
+    // Excluir foto da planta
+    deletePhoto: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        await database
+          .delete(plantPhotos)
+          .where(eq(plantPhotos.id, input.id));
+        
+        return { success: true };
+      }),
   }),
 
   // Plant Observations

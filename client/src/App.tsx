@@ -28,6 +28,7 @@ import AlertSettings from "./pages/AlertSettings";
 import PlantsList from "./pages/PlantsList";
 import PlantDetail from "./pages/PlantDetail";
 import NewPlant from "./pages/NewPlant";
+import SkeletonDemo from "./pages/SkeletonDemo";
 
 
 
@@ -52,7 +53,8 @@ function Router() {
       <Route path={"/strains/:id/targets"} component={StrainTargets} />
 
       <Route path={"/plants"} component={PlantsList} />
-      <Route path={"/plants/new"} component={NewPlant} />
+      <Route path="/plants/new" component={NewPlant} />
+      <Route path="/skeleton-demo" component={SkeletonDemo} />
       <Route path={"/plants/:id"} component={PlantDetail} />
 
       <Route path={"/tent/:id"} component={TentDetails} />

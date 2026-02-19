@@ -16,7 +16,8 @@ import {
   MoveRight,
   MoreVertical,
   Flower2,
-  CheckCircle
+  CheckCircle,
+  Camera
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -29,6 +30,7 @@ import PlantObservationsTab from "@/components/PlantObservationsTab";
 import PlantHealthTab from "@/components/PlantHealthTab";
 import PlantTrichomesTab from "@/components/PlantTrichomesTab";
 import PlantLSTTab from "@/components/PlantLSTTab";
+import PlantPhotosTab from "@/components/PlantPhotosTab";
 import MoveTentModal from "@/components/MoveTentModal";
 import { toast } from "sonner";
 
@@ -248,6 +250,10 @@ export default function PlantDetail() {
               <FileText className="w-4 h-4 mr-2" />
               Observações
             </TabsTrigger>
+            <TabsTrigger value="photos">
+              <Camera className="w-4 h-4 mr-2" />
+              Fotos
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="health">
@@ -264,6 +270,10 @@ export default function PlantDetail() {
 
           <TabsContent value="observations">
             <PlantObservationsTab plantId={plantId} />
+          </TabsContent>
+
+          <TabsContent value="photos">
+            <PlantPhotosTab plantId={plantId} />
           </TabsContent>
         </Tabs>
       </main>

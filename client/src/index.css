@@ -135,6 +135,15 @@
 }
 
 @layer base {
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
   /* Hide scrollbars globally but keep functionality */
   * {
     scrollbar-width: none; /* Firefox */

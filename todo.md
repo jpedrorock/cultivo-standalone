@@ -296,3 +296,13 @@
 - [x] Reduzir margens laterais dos cards no mobile (container padding reduzido de 16px para 12px)
 - [x] Testar salvamento de predefinições sem autenticação (predefinição "Teste Sem Autenticação" salva com sucesso)
 - [x] Gerenciador de tarefas localizado em /tasks aba "Gerenciar" (ao lado de "Tarefas da Semana")
+
+## Animação de Carregamento para Galeria (19/02/2026)
+
+- [x] Criar componente SkeletonLoader para galeria de fotos (SkeletonLoader.tsx e GallerySkeletonLoader)
+- [x] Implementar estado de loading na galeria (PlantPhotosTab com isLoading)
+- [x] Adicionar animação shimmer ao skeleton (keyframe shimmer em index.css)
+- [x] Adicionar procedures backend (getPhotos, uploadPhoto, deletePhoto)
+- [x] Adicionar tab de Fotos na página PlantDetail
+- [x] Criar página de demonstração (/skeleton-demo)
+- [x] Testar animação no navegador - funcionando perfeitamente
