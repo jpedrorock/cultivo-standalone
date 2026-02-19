@@ -29,7 +29,6 @@ import {
   plantHealthLogs,
   plantTrichomeLogs,
   plantLSTLogs,
-  wateringLogs,
   fertilizationPresets,
   wateringPresets,
 } from "../drizzle/schema";

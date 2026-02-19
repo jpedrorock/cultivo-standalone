@@ -97,9 +97,11 @@
 
 ### 🗑️ Limpeza (Opcional)
 
-- [ ] Remover tabela wateringLogs do banco (não é usada mais, mas não afeta funcionamento)
-- [ ] Remover arquivo PlantPhotosTab.tsx (não é importado em nenhum lugar)
-- [ ] Remover arquivo Calculators.tsx.backup
+- [x] Remover tabela wateringLogs do banco (não é usada mais, mas não afeta funcionamento)
+- [x] Remover arquivo PlantPhotosTab.tsx (não é importado em nenhum lugar)
+- [x] Remover arquivo PlantRunoffTab.tsx (não é importado em nenhum lugar)
+- [x] Remover arquivo Calculators.tsx.backup
+- [x] Remover import de wateringLogs do routers.ts e schema.ts
 
 ---
 
