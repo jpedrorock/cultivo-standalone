@@ -33,7 +33,7 @@ export function FertilizationCalculator() {
     weekNumber,
   });
 
-  const targetEC = useCustomEC && customEC !== null ? customEC : (weeklyTarget?.targetEC || 0);
+  const targetEC = useCustomEC && customEC !== null ? customEC : (Number(weeklyTarget?.targetEC) || 0);
 
   // Calcular automaticamente quando valores mudam
   useEffect(() => {
@@ -121,13 +121,14 @@ export function FertilizationCalculator() {
       return;
     }
 
+    const phaseValue = phase === "vega" ? "VEGA" : "FLORA";
     createPreset.mutate({
       name: presetName,
       waterVolume: volume,
       targetEC: targetEC,
-      phase,
+      phase: phaseValue as "VEGA" | "FLORA",
       weekNumber,
-      irrigationsPerWeek: null,
+      irrigationsPerWeek: undefined,
       calculationMode: "per-irrigation",
     });
   };

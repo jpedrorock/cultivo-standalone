@@ -265,3 +265,14 @@
 - [x] Criar componente TaskTemplatesManager
 - [x] Integrar na página Tasks com Tabs ("Tarefas da Semana" e "Gerenciar")
 - [x] Testar funcionalidade completa (CREATE, UPDATE, DELETE testados com sucesso)
+
+## Correção de Problemas Mobile Reportados (19/02/2026)
+
+- [x] Corrigir sobreposição de elementos na página de detalhes da planta (adicionado pb-32 ao main em PlantDetail.tsx)
+- [x] Corrigir erro "Not authenticated" ao salvar predefinições (trocado publicProcedure por protectedProcedure em wateringPresets e fertilizationPresets)
+- [x] Corrigir erro de validação ao salvar predefinições de fertilização:
+  - targetEC: Number() para garantir tipo number (linha 36 FertilizationCalculator.tsx)
+  - phase: conversão explícita "vega" → "VEGA" (linha 124)
+  - irrigationsPerWeek: undefined ao invés de null (linha 130)
+- [x] Testar salvamento de predefinições no navegador (predefinição "Teste Final Fertilização" salva com sucesso)
+- [ ] Testar em dispositivo real (iPhone) para validar correções

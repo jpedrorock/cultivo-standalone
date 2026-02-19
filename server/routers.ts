@@ -2204,7 +2204,7 @@ export const appRouter = router({
 
   // Fertilization Presets (Predefinições de Fertilização)
   fertilizationPresets: router({
-    create: publicProcedure
+    create: protectedProcedure
       .input(z.object({
         name: z.string(),
         waterVolume: z.number(),
@@ -2217,7 +2217,6 @@ export const appRouter = router({
       .mutation(async ({ input, ctx }) => {
         const database = await getDb();
         if (!database) throw new Error("Database not available");
-        if (!ctx.user) throw new Error("Not authenticated");
         
         await database.insert(fertilizationPresets).values({
           userId: ctx.user.id,
@@ -2233,11 +2232,10 @@ export const appRouter = router({
         return { success: true };
       }),
 
-    list: publicProcedure
+    list: protectedProcedure
       .query(async ({ ctx }) => {
         const database = await getDb();
         if (!database) throw new Error("Database not available");
-        if (!ctx.user) return []; // Retorna array vazio se não autenticado
         
         return await database
           .select()
@@ -2246,12 +2244,11 @@ export const appRouter = router({
           .orderBy(desc(fertilizationPresets.createdAt));
       }),
 
-    delete: publicProcedure
+    delete: protectedProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input, ctx }) => {
         const database = await getDb();
         if (!database) throw new Error("Database not available");
-        if (!ctx.user) throw new Error("Not authenticated");
         
         await database
           .delete(fertilizationPresets)
@@ -2263,7 +2260,7 @@ export const appRouter = router({
         return { success: true };
       }),
 
-    update: publicProcedure
+    update: protectedProcedure
       .input(z.object({
         id: z.number(),
         name: z.string(),
@@ -2277,7 +2274,6 @@ export const appRouter = router({
       .mutation(async ({ input, ctx }) => {
         const database = await getDb();
         if (!database) throw new Error("Database not available");
-        if (!ctx.user) throw new Error("Not authenticated");
         
         await database
           .update(fertilizationPresets)
@@ -2301,7 +2297,7 @@ export const appRouter = router({
 
   // Watering Presets (Predefinições de Rega)
   wateringPresets: router({
-    create: publicProcedure
+    create: protectedProcedure
       .input(z.object({
         name: z.string(),
         plantCount: z.number(),
@@ -2313,7 +2309,6 @@ export const appRouter = router({
       .mutation(async ({ input, ctx }) => {
         const database = await getDb();
         if (!database) throw new Error("Database not available");
-        if (!ctx.user) throw new Error("Not authenticated");
         
         await database.insert(wateringPresets).values({
           userId: ctx.user.id,
@@ -2328,11 +2323,10 @@ export const appRouter = router({
         return { success: true };
       }),
 
-    list: publicProcedure
+    list: protectedProcedure
       .query(async ({ ctx }) => {
         const database = await getDb();
         if (!database) throw new Error("Database not available");
-        if (!ctx.user) throw new Error("Not authenticated");
         
         return await database
           .select()
@@ -2341,12 +2335,11 @@ export const appRouter = router({
           .orderBy(desc(wateringPresets.createdAt));
       }),
 
-    delete: publicProcedure
+    delete: protectedProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input, ctx }) => {
         const database = await getDb();
         if (!database) throw new Error("Database not available");
-        if (!ctx.user) throw new Error("Not authenticated");
         
         await database
           .delete(wateringPresets)
@@ -2358,7 +2351,7 @@ export const appRouter = router({
         return { success: true };
       }),
 
-    update: publicProcedure
+    update: protectedProcedure
       .input(z.object({
         id: z.number(),
         name: z.string(),
@@ -2371,7 +2364,6 @@ export const appRouter = router({
       .mutation(async ({ input, ctx }) => {
         const database = await getDb();
         if (!database) throw new Error("Database not available");
-        if (!ctx.user) throw new Error("Not authenticated");
         
         await database
           .update(wateringPresets)
