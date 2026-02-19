@@ -688,6 +688,12 @@ export const appRouter = router({
         return settings[0] || null;
       }),
     
+    getIdealValues: publicProcedure
+      .input(z.object({ tentId: z.number() }))
+      .query(async ({ input }) => {
+        return db.getIdealValuesByTent(input.tentId);
+      }),
+    
     updateSettings: publicProcedure
       .input(
         z.object({
@@ -696,6 +702,11 @@ export const appRouter = router({
           tempEnabled: z.boolean().optional(),
           rhEnabled: z.boolean().optional(),
           ppfdEnabled: z.boolean().optional(),
+          phEnabled: z.boolean().optional(),
+          tempMargin: z.number().optional(),
+          rhMargin: z.number().optional(),
+          ppfdMargin: z.number().optional(),
+          phMargin: z.number().optional(),
         })
       )
       .mutation(async ({ input }) => {
@@ -720,6 +731,11 @@ export const appRouter = router({
               tempEnabled: input.tempEnabled,
               rhEnabled: input.rhEnabled,
               ppfdEnabled: input.ppfdEnabled,
+              phEnabled: input.phEnabled,
+              tempMargin: input.tempMargin !== undefined ? String(input.tempMargin) : undefined,
+              rhMargin: input.rhMargin !== undefined ? String(input.rhMargin) : undefined,
+              ppfdMargin: input.ppfdMargin !== undefined ? input.ppfdMargin : undefined,
+              phMargin: input.phMargin !== undefined ? String(input.phMargin) : undefined,
             })
             .where(eq(alertSettings.tentId, input.tentId));
         } else {
@@ -730,6 +746,11 @@ export const appRouter = router({
             tempEnabled: input.tempEnabled ?? true,
             rhEnabled: input.rhEnabled ?? true,
             ppfdEnabled: input.ppfdEnabled ?? true,
+            phEnabled: input.phEnabled ?? false,
+            tempMargin: input.tempMargin !== undefined ? String(input.tempMargin) : "2",
+            rhMargin: input.rhMargin !== undefined ? String(input.rhMargin) : "5",
+            ppfdMargin: input.ppfdMargin ?? 50,
+            phMargin: input.phMargin !== undefined ? String(input.phMargin) : "0.2",
           });
         }
         

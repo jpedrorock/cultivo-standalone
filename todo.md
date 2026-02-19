@@ -566,3 +566,18 @@
 - [x] Estado padrão já estava correto (`false` - mostrar todas)
 - [x] Remover animação CSS conflitante que ocultava tarefas concluídas (linhas 608-611)
 - [x] Testar comportamento - todas as tarefas visíveis por padrão, botão funciona corretamente
+
+
+## 🔔 Sistema de Alertas Inteligentes com Valores Ideais (19/02/2026)
+
+- [x] Analisar estrutura atual de alertas (alertSettings, procedures existentes)
+- [x] Criar função getIdealValuesByTent em db.ts (calcula fase/semana baseado em categoria e datas)
+- [x] Adicionar procedure alerts.getIdealValues no backend (routers.ts)
+- [x] Atualizar procedure alerts.updateSettings para aceitar margens (tempMargin, rhMargin, ppfdMargin, phMargin)
+- [x] Adicionar DRYING na assinatura de getWeeklyTarget
+- [x] Calcular média de valores ideais quando estufa tem múltiplas strains (lógica implementada)
+- [ ] Atualizar UI de AlertSettings para mostrar valores ideais atuais da estufa
+- [ ] Adicionar campos de margem de erro na UI (inputs numéricos com valores padrão)
+- [ ] Implementar lógica de alertas contextuais: valor real vs (ideal ± margem)
+- [ ] Testar alertas com diferentes configurações de estufas
+- [ ] Criar mensagens contextuais: "Estufa B: Temp 28°C acima do ideal 24°C (±2°C)"

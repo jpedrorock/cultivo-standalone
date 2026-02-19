@@ -332,7 +332,7 @@ export async function getActiveCloningEvent(tentId: number): Promise<CloningEven
 
 export async function getWeeklyTarget(
   strainId: number,
-  phase: "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE",
+  phase: "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE" | "DRYING",
   weekNumber: number
 ): Promise<WeeklyTarget | undefined> {
   const db = await getDb();
@@ -636,4 +636,154 @@ export async function getSafetyLimit(
     )
     .limit(1);
   return result[0];
+}
+
+
+/**
+ * Retorna os valores ideais (targets) da semana atual para uma estufa.
+ * Se a estufa tem múltiplas strains, calcula a média dos valores ideais.
+ * Retorna null se não houver ciclo ativo ou targets disponíveis.
+ */
+export async function getIdealValuesByTent(tentId: number): Promise<{
+  tempMin: number | null;
+  tempMax: number | null;
+  rhMin: number | null;
+  rhMax: number | null;
+  ppfdMin: number | null;
+  ppfdMax: number | null;
+  phMin: number | null;
+  phMax: number | null;
+} | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  // Buscar ciclo ativo da estufa
+  const cycle = await getCycleByTentId(tentId);
+  if (!cycle) return null;
+
+  // Buscar informações da estufa para determinar categoria
+  const tentResult = await db.select().from(tents).where(eq(tents.id, tentId)).limit(1);
+  if (tentResult.length === 0) return null;
+  const tent = tentResult[0];
+
+  // Calcular fase e semana atual baseado na categoria da estufa e datas do ciclo
+  const now = new Date();
+  const startDate = new Date(cycle.startDate);
+  const floraStartDate = cycle.floraStartDate ? new Date(cycle.floraStartDate) : null;
+
+  let currentPhase: "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE" | "DRYING";
+  let weekNumber: number;
+
+  // Determinar fase baseado na categoria da estufa
+  if (tent.category === "MAINTENANCE") {
+    currentPhase = "MAINTENANCE";
+    weekNumber = 1;
+  } else if (tent.category === "VEGA") {
+    currentPhase = "VEGA";
+    const weeksSinceStart = Math.floor(
+      (now.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
+    );
+    weekNumber = weeksSinceStart + 1;
+  } else if (tent.category === "FLORA") {
+    currentPhase = "FLORA";
+    const weeksSinceStart = floraStartDate
+      ? Math.floor((now.getTime() - floraStartDate.getTime()) / (7 * 24 * 60 * 60 * 1000))
+      : Math.floor((now.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000));
+    weekNumber = weeksSinceStart + 1;
+  } else if (tent.category === "DRYING") {
+    currentPhase = "DRYING";
+    const weeksSinceStart = Math.floor(
+      (now.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
+    );
+    weekNumber = Math.min(weeksSinceStart + 1, 2); // Máximo 2 semanas de secagem
+  } else {
+    // Fallback
+    currentPhase = "MAINTENANCE";
+    weekNumber = 1;
+  }
+
+  let targets: WeeklyTarget[] = [];
+
+  // Se ciclo tem strainId definida, usar targets dessa strain
+  if (cycle.strainId) {
+    const target = await getWeeklyTarget(
+      cycle.strainId,
+      currentPhase,
+      weekNumber
+    );
+    if (target) targets = [target];
+  } else {
+    // Buscar strains únicas das plantas ativas na estufa
+    const tentPlants = await db
+      .select({ strainId: plants.strainId })
+      .from(plants)
+      .where(and(
+        eq(plants.currentTentId, tentId),
+        eq(plants.status, "ACTIVE")
+      ));
+    
+    const uniqueStrainIds = Array.from(new Set(tentPlants.map((p: any) => p.strainId)));
+    
+    if (uniqueStrainIds.length === 1) {
+      // Uma única strain, usar targets diretamente
+      const target = await getWeeklyTarget(
+        uniqueStrainIds[0] as number,
+        currentPhase,
+        weekNumber
+      );
+      if (target) targets = [target];
+    } else if (uniqueStrainIds.length > 1) {
+      // Múltiplas strains: buscar targets de todas e calcular média
+      const allTargets = await Promise.all(
+        uniqueStrainIds.map((sid: any) => 
+          getWeeklyTarget(sid, currentPhase, weekNumber)
+        )
+      );
+      targets = allTargets.filter(t => t !== undefined) as WeeklyTarget[];
+    }
+  }
+
+  // Se não houver targets, retornar null
+  if (targets.length === 0) return null;
+
+  // Se houver apenas um target, retornar diretamente
+  if (targets.length === 1) {
+    const t = targets[0];
+    return {
+      tempMin: t.tempMin ? parseFloat(String(t.tempMin)) : null,
+      tempMax: t.tempMax ? parseFloat(String(t.tempMax)) : null,
+      rhMin: t.rhMin ? parseFloat(String(t.rhMin)) : null,
+      rhMax: t.rhMax ? parseFloat(String(t.rhMax)) : null,
+      ppfdMin: t.ppfdMin ? Number(t.ppfdMin) : null,
+      ppfdMax: t.ppfdMax ? Number(t.ppfdMax) : null,
+      phMin: t.phMin ? parseFloat(String(t.phMin)) : null,
+      phMax: t.phMax ? parseFloat(String(t.phMax)) : null,
+    };
+  }
+
+  // Múltiplos targets: calcular média
+  const avgDecimal = (field: keyof WeeklyTarget) => {
+    const vals = targets.map(t => t[field]).filter(v => v !== null && v !== undefined);
+    if (vals.length === 0) return null;
+    const sum = vals.reduce((a: number, b: any) => a + parseFloat(String(b)), 0);
+    return sum / vals.length;
+  };
+  
+  const avgInt = (field: keyof WeeklyTarget) => {
+    const vals = targets.map(t => t[field]).filter(v => v !== null && v !== undefined);
+    if (vals.length === 0) return null;
+    const sum = vals.reduce((a: number, b: any) => a + Number(b), 0);
+    return Math.round(sum / vals.length);
+  };
+
+  return {
+    tempMin: avgDecimal('tempMin'),
+    tempMax: avgDecimal('tempMax'),
+    rhMin: avgDecimal('rhMin'),
+    rhMax: avgDecimal('rhMax'),
+    ppfdMin: avgInt('ppfdMin'),
+    ppfdMax: avgInt('ppfdMax'),
+    phMin: avgDecimal('phMin'),
+    phMax: avgDecimal('phMax'),
+  };
 }
