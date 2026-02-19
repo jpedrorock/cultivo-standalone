@@ -547,3 +547,12 @@
 - [x] Criar novo favicon com ícone Leaf (mesmo do menu lateral)
 - [x] Substituir favicon.svg no projeto
 - [x] Testar visualização na aba do navegador - funcionando perfeitamente
+
+
+## 🍂 Implementar Fase DRYING nos Ciclos (19/02/2026)
+
+- [ ] Adicionar opção "Secagem" no modal de criar/editar ciclo
+- [ ] Atualizar lógica de StartCycleModal para incluir DRYING como fase selecionável
+- [ ] Adicionar weeklyTargets para fase DRYING (temperatura, umidade ideais para secagem)
+- [ ] Pesquisar e adicionar taskTemplates para fase DRYING (2 semanas)
+- [ ] Testar criação de ciclo com fase DRYING
