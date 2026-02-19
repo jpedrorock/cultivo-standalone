@@ -88,6 +88,12 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
   const [editingLog, setEditingLog] = useState<any | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  
+  // Swipe gesture states
+  const [touchStart, setTouchStart] = useState<number>(0);
+  const [touchEnd, setTouchEnd] = useState<number>(0);
+  const [swipeOffset, setSwipeOffset] = useState<number>(0);
+  const [isSwiping, setIsSwiping] = useState<boolean>(false);
 
   const { data: healthLogs, refetch } = trpc.plantHealth.list.useQuery({
     plantId,
@@ -613,18 +619,62 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
             }
           };
 
+          const handleTouchStart = (e: React.TouchEvent) => {
+            setTouchStart(e.targetTouches[0].clientX);
+            setTouchEnd(e.targetTouches[0].clientX);
+            setIsSwiping(true);
+          };
+
+          const handleTouchMove = (e: React.TouchEvent) => {
+            if (!isSwiping) return;
+            const currentTouch = e.targetTouches[0].clientX;
+            setTouchEnd(currentTouch);
+            const offset = currentTouch - touchStart;
+            setSwipeOffset(offset);
+          };
+
+          const handleTouchEnd = () => {
+            if (!isSwiping) return;
+            setIsSwiping(false);
+            const swipeDistance = touchEnd - touchStart;
+            const minSwipeDistance = 50;
+            if (Math.abs(swipeDistance) > minSwipeDistance) {
+              if (swipeDistance > 0 && lightboxIndex > 0) {
+                setLightboxIndex(lightboxIndex - 1);
+                setLightboxPhoto(photoLogs[lightboxIndex - 1].photoUrl!);
+              } else if (swipeDistance < 0 && lightboxIndex < totalPhotos - 1) {
+                setLightboxIndex(lightboxIndex + 1);
+                setLightboxPhoto(photoLogs[lightboxIndex + 1].photoUrl!);
+              }
+            }
+            setSwipeOffset(0);
+            setTouchStart(0);
+            setTouchEnd(0);
+          };
+
           return (
             <div
               className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
               onClick={() => setLightboxPhoto(null)}
             >
               <div className="relative max-w-5xl w-full h-full flex flex-col items-center justify-center">
-                <img
-                  src={lightboxPhoto}
-                  alt="Foto ampliada"
-                  className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
-                  onClick={(e) => e.stopPropagation()}
-                />
+                <div
+                  className="relative w-full flex items-center justify-center"
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                  style={{
+                    transform: isSwiping ? `translateX(${swipeOffset}px)` : 'translateX(0)',
+                    transition: isSwiping ? 'none' : 'transform 0.3s ease-out',
+                  }}
+                >
+                  <img
+                    src={lightboxPhoto}
+                    alt="Foto ampliada"
+                    className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </div>
 
                 <div
                   className="mt-4 text-center text-white"

@@ -429,3 +429,14 @@
 - [x] Adicionar campo de busca na página ManageStrains (filtrar por nome ou descrição) - já estava implementado
 - [x] Adicionar campo de busca no TaskTemplatesManager (filtrar por título ou descrição) - já estava implementado
 - [x] Testar funcionalidade de busca em ambas as páginas - funcionando perfeitamente
+
+
+## 📱 Swipe Gestures no Lightbox Mobile (19/02/2026)
+
+- [x] Analisar componente Lightbox atual (PlantHealthTab.tsx e PlantPhotosTab.tsx)
+- [x] Implementar touch event handlers (touchstart, touchmove, touchend)
+- [x] Adicionar feedback visual durante o swipe (transform translateX com transição suave)
+- [x] Adicionar threshold de swipe (mínimo 50px para trocar foto)
+- [x] Testar implementação no navegador - lightbox abre corretamente
+- [x] Implementar swipe gestures em PlantHealthTab.tsx (linhas 93-96, 622-653, 661-677)
+- [x] Implementar swipe gestures em PlantPhotosTab.tsx (linhas 18-21, 107-137, 250-259)

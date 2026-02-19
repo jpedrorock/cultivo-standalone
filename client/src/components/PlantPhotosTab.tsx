@@ -13,6 +13,12 @@ export default function PlantPhotosTab({ plantId }: PlantPhotosTabProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [uploading, setUploading] = useState(false);
+  
+  // Swipe gesture states
+  const [touchStart, setTouchStart] = useState<number>(0);
+  const [touchEnd, setTouchEnd] = useState<number>(0);
+  const [swipeOffset, setSwipeOffset] = useState<number>(0);
+  const [isSwiping, setIsSwiping] = useState<boolean>(false);
 
   // Query para buscar fotos da planta
   const { data: photos = [], isLoading, refetch } = trpc.plants.getPhotos.useQuery(
@@ -96,6 +102,38 @@ export default function PlantPhotosTab({ plantId }: PlantPhotosTabProps) {
     if (photoId) {
       deletePhoto.mutate({ id: photoId });
     }
+  };
+
+  // Touch event handlers for swipe gestures
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+    setTouchEnd(e.targetTouches[0].clientX);
+    setIsSwiping(true);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isSwiping) return;
+    const currentTouch = e.targetTouches[0].clientX;
+    setTouchEnd(currentTouch);
+    const offset = currentTouch - touchStart;
+    setSwipeOffset(offset);
+  };
+
+  const handleTouchEnd = () => {
+    if (!isSwiping) return;
+    setIsSwiping(false);
+    const swipeDistance = touchEnd - touchStart;
+    const minSwipeDistance = 50;
+    if (Math.abs(swipeDistance) > minSwipeDistance) {
+      if (swipeDistance > 0) {
+        prevImage();
+      } else if (swipeDistance < 0) {
+        nextImage();
+      }
+    }
+    setSwipeOffset(0);
+    setTouchStart(0);
+    setTouchEnd(0);
   };
 
   return (
@@ -209,7 +247,16 @@ export default function PlantPhotosTab({ plantId }: PlantPhotosTabProps) {
             ›
           </button>
 
-          <div className="max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center p-4">
+          <div 
+            className="max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center p-4"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            style={{
+              transform: isSwiping ? `translateX(${swipeOffset}px)` : 'translateX(0)',
+              transition: isSwiping ? 'none' : 'transform 0.3s ease-out',
+            }}
+          >
             <img
               src={photos[currentImageIndex]?.url}
               alt={`Foto ${currentImageIndex + 1}`}
