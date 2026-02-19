@@ -175,7 +175,7 @@ export function WateringPresetsManager({
             <CardTitle className="text-base">Minhas Predefinições</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            {presets.map((preset) => (
+            {presets.map((preset: any) => (
               <div
                 key={preset.id}
                 className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors"

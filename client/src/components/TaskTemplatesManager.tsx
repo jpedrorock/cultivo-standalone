@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
-type Phase = "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE";
+type Phase = "VEGA" | "FLORA" | "MAINTENANCE";
 type Context = "TENT_A" | "TENT_BC";
 
 interface TaskTemplate {
@@ -144,7 +144,6 @@ export function TaskTemplatesManager() {
 
   const getPhaseLabel = (phase: Phase) => {
     const labels: Record<Phase, string> = {
-      CLONING: "Clonagem",
       VEGA: "Vegetativo",
       FLORA: "Floração",
       MAINTENANCE: "Manutenção",
@@ -156,14 +155,14 @@ export function TaskTemplatesManager() {
     return context === "TENT_A" ? "Estufa A" : "Estufas B/C";
   };
 
-  const groupedTemplates = templates?.reduce((acc, template) => {
+  const groupedTemplates = templates?.reduce((acc: any, template: any) => {
     const key = `${template.phase}-${template.context}`;
     if (!acc[key]) {
       acc[key] = [];
     }
     acc[key].push(template);
     return acc;
-  }, {} as Record<string, TaskTemplate[]>);
+  }, {} as Record<string, TaskTemplate[]>) as Record<string, TaskTemplate[]>;
 
   if (isLoading) {
     return (
@@ -202,8 +201,8 @@ export function TaskTemplatesManager() {
               <CardContent>
                 <div className="space-y-2">
                   {templates
-                    .sort((a, b) => (a.weekNumber || 0) - (b.weekNumber || 0))
-                    .map((template) => (
+                    .sort((a: any, b: any) => (a.weekNumber || 0) - (b.weekNumber || 0))
+                    .map((template: any) => (
                       <div
                         key={template.id}
                         className="flex items-start justify-between p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors"

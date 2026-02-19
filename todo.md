@@ -276,3 +276,14 @@
   - irrigationsPerWeek: undefined ao invés de null (linha 130)
 - [x] Testar salvamento de predefinições no navegador (predefinição "Teste Final Fertilização" salva com sucesso)
 - [ ] Testar em dispositivo real (iPhone) para validar correções
+
+## Correção de Warnings TypeScript (19/02/2026)
+
+- [x] Identificar todos os 32 erros TypeScript
+- [x] Corrigir imports faltando (AlertCircle, CheckCircle2 em Calculators.tsx)
+- [x] Corrigir tipos any implícitos em todos os arquivos (17 arquivos corrigidos)
+- [x] Remover propriedades inválidas (vibrate em NotificationOptions)
+- [x] Corrigir tipos de enum (Phase em TaskTemplatesManager)
+- [x] Corrigir toast em PlantObservationsTab (sonner)
+- [x] Testar compilação - 0 erros TypeScript restantes
+- [x] Verificar servidor - rodando sem erros

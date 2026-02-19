@@ -124,7 +124,6 @@ export function NotificationSettings() {
         icon: "/icon-192.png",
         badge: "/icon-192.png",
         tag: "test-notification",
-        vibrate: [200, 100, 200], // Vibration pattern
         requireInteraction: false,
       });
     }
@@ -137,7 +136,6 @@ export function NotificationSettings() {
         icon: "/icon-192.png",
         badge: "/icon-192.png",
         tag: "daily-reminder",
-        vibrate: [200, 100, 200],
         requireInteraction: false,
         data: { url: "/" },
       });

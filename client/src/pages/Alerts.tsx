@@ -201,7 +201,7 @@ export default function Alerts() {
                 </div>
               ) : history && history.length > 0 ? (
                 <div className="space-y-3 max-h-[600px] overflow-y-auto">
-                  {history.map((alert) => (
+                  {history.map((alert: any) => (
                     <div
                       key={alert.id}
                       className="p-4 bg-muted rounded-lg border border-gray-200"

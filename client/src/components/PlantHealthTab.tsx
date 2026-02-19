@@ -383,7 +383,7 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
         </h3>
         {healthLogs && healthLogs.length > 0 ? (
           <div className="space-y-2">
-            {healthLogs.map((log) => {
+            {healthLogs.map((log: any) => {
               const status = getStatusOption(log.healthStatus);
               const hasDetails = log.symptoms || log.treatment || log.notes;
               return (

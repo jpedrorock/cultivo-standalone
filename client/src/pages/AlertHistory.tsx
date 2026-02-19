@@ -21,7 +21,7 @@ export default function AlertHistory() {
   const [filterType, setFilterType] = useState<AlertType>("all");
   const { data: alerts, isLoading } = trpc.notifications.getHistory.useQuery();
 
-  const filteredAlerts = alerts?.filter(alert => 
+  const filteredAlerts = alerts?.filter((alert: any) => 
     filterType === "all" || alert.type === filterType
   ) || [];
 
@@ -129,7 +129,7 @@ export default function AlertHistory() {
             </Card>
           )}
 
-          {!isLoading && filteredAlerts.map((alert) => (
+          {!isLoading && filteredAlerts.map((alert: any) => (
             <Card key={alert.id} className={alert.isRead ? "opacity-60" : ""}>
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between gap-4">
@@ -182,19 +182,19 @@ export default function AlertHistory() {
                   </div>
                   <div>
                     <p className="text-2xl font-bold text-blue-600">
-                      {filteredAlerts.filter(a => a.type === "daily_reminder").length}
+                      {filteredAlerts.filter((a: any) => a.type === "daily_reminder").length}
                     </p>
                     <p className="text-xs text-muted-foreground">Lembretes</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold text-orange-600">
-                      {filteredAlerts.filter(a => a.type === "environment_alert").length}
+                      {filteredAlerts.filter((a: any) => a.type === "environment_alert").length}
                     </p>
                     <p className="text-xs text-muted-foreground">Alertas</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold text-green-600">
-                      {filteredAlerts.filter(a => a.type === "task_reminder").length}
+                      {filteredAlerts.filter((a: any) => a.type === "task_reminder").length}
                     </p>
                     <p className="text-xs text-muted-foreground">Tarefas</p>
                   </div>

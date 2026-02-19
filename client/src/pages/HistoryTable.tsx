@@ -108,7 +108,7 @@ export default function HistoryTable() {
     const headers = ["Data", "Turno", "Estufa", "Temp (°C)", "RH (%)", "PPFD", "pH", "EC", "Observações"];
     
     // CSV rows
-    const rows = logsData.logs.map(log => [
+    const rows = logsData.logs.map((log: any) => [
       new Date(log.logDate).toLocaleDateString("pt-BR"),
       log.turn || "-",
       log.tentName || "-",
@@ -123,7 +123,7 @@ export default function HistoryTable() {
     // Combine headers and rows
     const csvContent = [
       headers.join(","),
-      ...rows.map(row => row.join(","))
+      ...rows.map((row: any) => row.join(","))
     ].join("\n");
 
     // Create blob and download

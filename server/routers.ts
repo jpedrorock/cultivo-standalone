@@ -133,7 +133,7 @@ export const appRouter = router({
           .from(cycles)
           .where(eq(cycles.tentId, input.id));
         
-        const cycleIds = allCycles.map(c => c.id);
+        const cycleIds = allCycles.map((c: any) => c.id);
         
         // Deletar registros relacionados em cascata
         // Deletar daily logs (usa tentId diretamente)

@@ -66,14 +66,12 @@ export async function showNotification(
       await registration.showNotification(title, {
         icon: '/icon-192.png',
         badge: '/icon-96.png',
-        vibrate: [200, 100, 200],
         ...options,
       });
     } else {
       // Fallback to basic notification
       new Notification(title, {
         icon: '/icon-192.png',
-        vibrate: [200, 100, 200],
         ...options,
       });
     }

@@ -17,7 +17,7 @@ export default function PlantObservationsTab({ plantId }: PlantObservationsTabPr
   const { data: observations, refetch } = trpc.plantObservations.list.useQuery({ plantId });
   const createObservation = trpc.plantObservations.create.useMutation({
     onSuccess: () => {
-      toast({ title: "Observação adicionada!" });
+      toast.success("Observação adicionada!");
       setNewObservation("");
       refetch();
     },
@@ -54,7 +54,7 @@ export default function PlantObservationsTab({ plantId }: PlantObservationsTabPr
       {/* Observations List */}
       <div className="space-y-4">
         {observations && observations.length > 0 ? (
-          observations.map((obs) => (
+          observations.map((obs: any) => (
             <Card key={obs.id}>
               <CardHeader>
                 <div className="flex items-center justify-between">

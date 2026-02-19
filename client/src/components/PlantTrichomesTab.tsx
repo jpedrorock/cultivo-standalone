@@ -451,7 +451,7 @@ export default function PlantTrichomesTab({
         </h3>
         {trichomeLogs && trichomeLogs.length > 0 ? (
           <div className="space-y-2">
-            {trichomeLogs.map((log) => {
+            {trichomeLogs.map((log: any) => {
               const status = getStatusOption(log.trichomeStatus);
               const recommendation = getHarvestRecommendation(
                 log.trichomeStatus,

@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calculator, Droplets, Sprout, Sun, Download } from "lucide-react";
+import { Calculator, Droplets, Sprout, Sun, Download, AlertCircle, CheckCircle2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { WateringPresetsManager } from "@/components/WateringPresetsManager";
 
