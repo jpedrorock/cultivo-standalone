@@ -763,3 +763,9 @@
 - [x] Recriar tabelas faltantes no banco de dados
 - [x] Testar queries que estavam falhando
 - [x] Validar que página /plants carrega sem erros
+
+## Correção de Botão Aninhado na Página de Detalhes da Planta
+
+- [x] Localizar botão aninhado dentro do AccordionTrigger em PlantHealthTab.tsx
+- [x] Mover botões de Editar e Excluir para fora do AccordionTrigger
+- [x] Testar que erro "button cannot contain nested button" não aparece mais no console

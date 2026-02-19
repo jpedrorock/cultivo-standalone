@@ -329,8 +329,8 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
           <Accordion type="multiple" className="space-y-2">
             {healthLogs.map((log) => (
               <AccordionItem key={log.id} value={`log-${log.id}`} className="border rounded-lg px-4">
-                <AccordionTrigger className="hover:no-underline py-4">
-                  <div className="flex items-center justify-between w-full pr-4">
+                <div className="flex items-center justify-between w-full py-4">
+                  <AccordionTrigger className="hover:no-underline flex-1">
                     <div className="flex items-center gap-3">
                       <Heart className="w-4 h-4 text-muted-foreground" />
                       <span className="text-sm text-muted-foreground">
@@ -345,33 +345,33 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
                         {getStatusLabel(log.healthStatus)}
                       </div>
                     </div>
-                    <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-8 w-8"
-                        onClick={() => {
-                          setEditingLog(log);
-                          setIsEditModalOpen(true);
-                        }}
-                      >
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
-                        onClick={() => {
-                          if (confirm("Deseja realmente excluir este registro?")) {
-                            deleteHealthLog.mutate({ id: log.id });
-                          }
-                        }}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
+                  </AccordionTrigger>
+                  <div className="flex gap-1">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-8 w-8"
+                      onClick={() => {
+                        setEditingLog(log);
+                        setIsEditModalOpen(true);
+                      }}
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
+                      onClick={() => {
+                        if (confirm("Deseja realmente excluir este registro?")) {
+                          deleteHealthLog.mutate({ id: log.id });
+                        }
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
-                </AccordionTrigger>
+                </div>
                 <AccordionContent className="pb-4">
                   <div className="flex flex-col md:flex-row gap-4 pt-2">
                     {/* Dados à esquerda */}
