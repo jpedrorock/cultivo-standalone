@@ -38,7 +38,7 @@ export function InitiateCycleModal({
   );
   const [phase, setPhase] = useState<"CLONING" | "MAINTENANCE" | "VEGA" | "FLORA">("VEGA");
   const [weekNumber, setWeekNumber] = useState(1);
-  const [strainId, setStrainId] = useState<number>(1);
+  const [strainId, setStrainId] = useState<number | null>(null);
 
   const utils = trpc.useUtils();
   const { data: strains } = trpc.strains.list.useQuery();
@@ -47,6 +47,7 @@ export function InitiateCycleModal({
       toast.success("Ciclo iniciado com sucesso!");
       utils.cycles.listActive.invalidate();
       utils.cycles.getByTent.invalidate();
+      utils.tents.list.invalidate();
       onOpenChange(false);
     },
     onError: (error) => {
@@ -58,7 +59,7 @@ export function InitiateCycleModal({
     e.preventDefault();
     initiate.mutate({
       tentId,
-      strainId,
+      strainId: strainId || null,
       startDate: new Date(startDate),
       phase,
       weekNumber,
@@ -101,21 +102,22 @@ export function InitiateCycleModal({
         <DialogHeader>
           <DialogTitle>Iniciar Novo Ciclo - {tentName}</DialogTitle>
           <DialogDescription>
-            Configure a data de início, fase e semana do novo ciclo.
+            Configure a data de início, fase e semana do novo ciclo. A strain é opcional — os targets serão calculados a partir das strains das plantas na estufa.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="strain">Strain (Variedade)</Label>
+              <Label htmlFor="strain">Strain (Opcional)</Label>
               <Select
-                value={strainId.toString()}
-                onValueChange={(value) => setStrainId(parseInt(value))}
+                value={strainId?.toString() || "none"}
+                onValueChange={(value) => setStrainId(value === "none" ? null : parseInt(value))}
               >
                 <SelectTrigger id="strain">
-                  <SelectValue placeholder="Selecione a strain" />
+                  <SelectValue placeholder="Usar strains das plantas" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="none">Usar strains das plantas</SelectItem>
                   {strains?.map((strain) => (
                     <SelectItem key={strain.id} value={strain.id.toString()}>
                       {strain.name}
@@ -123,6 +125,9 @@ export function InitiateCycleModal({
                   ))}
                 </SelectContent>
               </Select>
+              <p className="text-xs text-muted-foreground">
+                Se não selecionar, os targets serão a média das strains das plantas ativas na estufa.
+              </p>
             </div>
 
             <div className="grid gap-2">
@@ -138,14 +143,10 @@ export function InitiateCycleModal({
                   <SelectValue placeholder="Selecione a fase" />
                 </SelectTrigger>
                 <SelectContent>
-                  {tentId === 1 && (
-                    <>
-                      <SelectItem value="CLONING">Clonagem</SelectItem>
-                      <SelectItem value="MAINTENANCE">Manutenção</SelectItem>
-                    </>
-                  )}
-                  {tentId === 2 && <SelectItem value="VEGA">Vegetativa</SelectItem>}
-                  {tentId === 3 && <SelectItem value="FLORA">Floração</SelectItem>}
+                  <SelectItem value="CLONING">Clonagem</SelectItem>
+                  <SelectItem value="MAINTENANCE">Manutenção</SelectItem>
+                  <SelectItem value="VEGA">Vegetativa</SelectItem>
+                  <SelectItem value="FLORA">Floração</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -29,7 +29,7 @@ interface StartCycleModalProps {
 }
 
 export default function StartCycleModal({ tentId, tentName, open, onOpenChange }: StartCycleModalProps) {
-  const [strainId, setStrainId] = useState<string>("");
+  const [strainId, setStrainId] = useState<string>("none");
   const [startDate, setStartDate] = useState<string>(new Date().toISOString().split("T")[0]);
   const [vegaWeeks, setVegaWeeks] = useState<string>("4");
   const [floraWeeks, setFloraWeeks] = useState<string>("8");
@@ -51,7 +51,7 @@ export default function StartCycleModal({ tentId, tentName, open, onOpenChange }
   });
 
   const resetForm = () => {
-    setStrainId("");
+    setStrainId("none");
     setStartDate(new Date().toISOString().split("T")[0]);
     setVegaWeeks("4");
     setFloraWeeks("8");
@@ -59,15 +59,10 @@ export default function StartCycleModal({ tentId, tentName, open, onOpenChange }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!strainId) {
-      toast.error("Por favor, selecione uma strain");
-      return;
-    }
 
     createCycle.mutate({
       tentId,
-      strainId: parseInt(strainId),
+      strainId: strainId === "none" ? null : parseInt(strainId),
       startDate: new Date(startDate),
     });
   };
@@ -78,18 +73,19 @@ export default function StartCycleModal({ tentId, tentName, open, onOpenChange }
         <DialogHeader>
           <DialogTitle>Iniciar Ciclo - {tentName}</DialogTitle>
           <DialogDescription>
-            Configure o novo ciclo de cultivo para esta estufa. Selecione a strain e defina as durações das fases.
+            Configure o novo ciclo de cultivo. A strain é opcional — os targets serão calculados a partir das strains das plantas na estufa.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="strain">Strain *</Label>
+            <Label htmlFor="strain">Strain (Opcional)</Label>
             <Select value={strainId} onValueChange={setStrainId} disabled={strainsLoading}>
               <SelectTrigger id="strain">
-                <SelectValue placeholder={strainsLoading ? "Carregando..." : "Selecione uma strain"} />
+                <SelectValue placeholder={strainsLoading ? "Carregando..." : "Usar strains das plantas"} />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="none">Usar strains das plantas</SelectItem>
                 {strains?.map((strain) => (
                   <SelectItem key={strain.id} value={strain.id.toString()}>
                     {strain.name}
@@ -97,6 +93,9 @@ export default function StartCycleModal({ tentId, tentName, open, onOpenChange }
                 ))}
               </SelectContent>
             </Select>
+            <p className="text-xs text-muted-foreground">
+              Se não selecionar, os targets serão a média das strains das plantas ativas na estufa.
+            </p>
           </div>
 
           <div className="space-y-2">
@@ -139,12 +138,12 @@ export default function StartCycleModal({ tentId, tentName, open, onOpenChange }
           </div>
 
           <div className="bg-blue-500/100/10 border border-blue-500/20 rounded-lg p-3 text-sm text-blue-400">
-            <p className="font-medium mb-1">📅 Resumo do Ciclo</p>
+            <p className="font-medium mb-1">Resumo do Ciclo</p>
             <p>
-              • Início: {new Date(startDate).toLocaleDateString("pt-BR")}<br />
-              • Vegetativa: {vegaWeeks} semanas<br />
-              • Floração: {floraWeeks} semanas<br />
-              • Duração total: {parseInt(vegaWeeks) + parseInt(floraWeeks)} semanas
+              Inicio: {new Date(startDate).toLocaleDateString("pt-BR")}<br />
+              Vegetativa: {vegaWeeks} semanas<br />
+              Floracao: {floraWeeks} semanas<br />
+              Duracao total: {parseInt(vegaWeeks) + parseInt(floraWeeks)} semanas
             </p>
           </div>
 

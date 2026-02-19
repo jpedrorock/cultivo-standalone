@@ -28,6 +28,7 @@ interface EditCycleModalProps {
   tentName: string;
   currentStartDate: Date;
   currentFloraStartDate?: Date | null;
+  currentStrainId?: number | null;
 }
 
 export function EditCycleModal({
@@ -38,13 +39,14 @@ export function EditCycleModal({
   tentName,
   currentStartDate,
   currentFloraStartDate,
+  currentStrainId,
 }: EditCycleModalProps) {
   const [startDate, setStartDate] = useState(
     new Date().toISOString().split("T")[0]
   );
   const [phase, setPhase] = useState<"CLONING" | "MAINTENANCE" | "VEGA" | "FLORA">("VEGA");
   const [weekNumber, setWeekNumber] = useState(1);
-  const [strainId, setStrainId] = useState<number>(1);
+  const [strainId, setStrainId] = useState<number | null>(null);
 
   const utils = trpc.useUtils();
   const { data: strains } = trpc.strains.list.useQuery();
@@ -53,6 +55,7 @@ export function EditCycleModal({
       toast.success("Ciclo atualizado com sucesso!");
       utils.cycles.listActive.invalidate();
       utils.cycles.getByTent.invalidate();
+      utils.tents.list.invalidate();
       onOpenChange(false);
     },
     onError: (error) => {
@@ -63,6 +66,7 @@ export function EditCycleModal({
   useEffect(() => {
     if (open) {
       setStartDate(new Date().toISOString().split("T")[0]);
+      setStrainId(currentStrainId ?? null);
       // Determinar fase atual baseada em floraStartDate
       if (currentFloraStartDate) {
         setPhase("FLORA");
@@ -75,13 +79,13 @@ export function EditCycleModal({
       }
       setWeekNumber(1);
     }
-  }, [open, currentFloraStartDate, tentId]);
+  }, [open, currentFloraStartDate, tentId, currentStrainId]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     edit.mutate({
       cycleId,
-      strainId,
+      strainId: strainId || undefined,
       startDate: new Date(startDate),
       phase,
       weekNumber,
@@ -109,21 +113,22 @@ export function EditCycleModal({
         <DialogHeader>
           <DialogTitle>Editar Ciclo - {tentName}</DialogTitle>
           <DialogDescription>
-            Ajuste a fase e semana atual do ciclo.
+            Ajuste a fase e semana atual do ciclo. A strain é opcional.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="strain">Strain (Variedade)</Label>
+              <Label htmlFor="strain">Strain (Opcional)</Label>
               <Select
-                value={strainId.toString()}
-                onValueChange={(value) => setStrainId(parseInt(value))}
+                value={strainId?.toString() || "none"}
+                onValueChange={(value) => setStrainId(value === "none" ? null : parseInt(value))}
               >
                 <SelectTrigger id="strain">
-                  <SelectValue placeholder="Selecione a strain" />
+                  <SelectValue placeholder="Usar strains das plantas" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="none">Usar strains das plantas</SelectItem>
                   {strains?.map((strain) => (
                     <SelectItem key={strain.id} value={strain.id.toString()}>
                       {strain.name}
@@ -131,6 +136,9 @@ export function EditCycleModal({
                   ))}
                 </SelectContent>
               </Select>
+              <p className="text-xs text-muted-foreground">
+                Se não selecionar, os targets serão a média das strains das plantas ativas na estufa.
+              </p>
             </div>
 
             <div className="grid gap-2">
@@ -146,10 +154,10 @@ export function EditCycleModal({
                   <SelectValue placeholder="Selecione a fase" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="CLONING">🌱 Clonagem</SelectItem>
-                  <SelectItem value="MAINTENANCE">🔧 Manutenção</SelectItem>
-                  <SelectItem value="VEGA">🌿 Vegetativa</SelectItem>
-                  <SelectItem value="FLORA">🌸 Floração</SelectItem>
+                  <SelectItem value="CLONING">Clonagem</SelectItem>
+                  <SelectItem value="MAINTENANCE">Manutencao</SelectItem>
+                  <SelectItem value="VEGA">Vegetativa</SelectItem>
+                  <SelectItem value="FLORA">Floracao</SelectItem>
                 </SelectContent>
               </Select>
             </div>

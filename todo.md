@@ -170,3 +170,12 @@
 - [x] Criar predefinições de rega para vasos de 5L (3 presets)
 - [x] Criar receitas e templates de receitas (6 receitas, 5 templates)
 - [x] Criar weekly targets para ciclos ativos (25 targets)
+
+## Suporte a Múltiplas Strains por Estufa
+
+- [x] Analisar arquitetura atual de ciclos/estufas/strains
+- [x] Atualizar schema/backend para permitir múltiplas strains por ciclo/estufa (strainId nullable em cycles)
+- [x] Atualizar UI para exibir múltiplas strains por estufa (Home cards com badges de strain)
+- [x] Permitir criar ciclo sem strain definida (Start/Initiate/Edit modais atualizados)
+- [x] Testar funcionalidade completa
+- [x] Calcular targets semanais como média das strains quando estufa tem múltiplas strains (getTargetsByTent)

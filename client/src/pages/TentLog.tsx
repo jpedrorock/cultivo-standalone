@@ -77,19 +77,31 @@ export default function TentLog() {
     return { phase, weekNumber };
   }, [cycle, tent]);
 
-  // Buscar targets da semana atual por strainId do ciclo
-  const { data: weeklyTargets = [] } = trpc.weeklyTargets.getByStrain.useQuery(
+  // Buscar targets da semana atual - por strainId do ciclo ou média das strains das plantas
+  const hasStrainId = !!cycle?.strainId;
+  const { data: weeklyTargetsByStrain = [] } = trpc.weeklyTargets.getByStrain.useQuery(
     { strainId: cycle?.strainId || 0 },
-    { enabled: !!cycle?.strainId }
+    { enabled: hasStrainId }
+  );
+  
+  const { data: targetsByTent } = trpc.weeklyTargets.getTargetsByTent.useQuery(
+    { tentId: tentId!, phase: currentPhaseInfo?.phase as any, weekNumber: currentPhaseInfo?.weekNumber || 1 },
+    { enabled: !hasStrainId && !!cycle && !!currentPhaseInfo }
   );
 
   const currentTargets = useMemo(() => {
-    if (!currentPhaseInfo || weeklyTargets.length === 0) return null;
-
-    return weeklyTargets.find(
-      (t: any) => t.phase === currentPhaseInfo.phase && t.weekNumber === currentPhaseInfo.weekNumber
-    );
-  }, [weeklyTargets, currentPhaseInfo]);
+    if (!currentPhaseInfo) return null;
+    
+    // Se ciclo tem strainId, buscar dos targets por strain
+    if (hasStrainId && weeklyTargetsByStrain.length > 0) {
+      return weeklyTargetsByStrain.find(
+        (t: any) => t.phase === currentPhaseInfo.phase && t.weekNumber === currentPhaseInfo.weekNumber
+      ) || null;
+    }
+    
+    // Senão, usar targets calculados por tent (média das strains)
+    return targetsByTent || null;
+  }, [weeklyTargetsByStrain, targetsByTent, currentPhaseInfo, hasStrainId]);
 
   // Estados de validação
   const ppfdValidation = getValidationState(ppfd, currentTargets?.ppfdMin, currentTargets?.ppfdMax);

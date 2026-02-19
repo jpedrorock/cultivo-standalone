@@ -82,8 +82,7 @@ export const cycles = mysqlTable(
       .notNull()
       .references(() => tents.id),
     strainId: int("strainId")
-      .notNull()
-      .references(() => strains.id),
+      .references(() => strains.id), // Opcional: ciclo pode ter múltiplas strains via plantas individuais
     startDate: timestamp("startDate").notNull(),
     floraStartDate: timestamp("floraStartDate"),
     status: mysqlEnum("status", ["ACTIVE", "FINISHED"]).default("ACTIVE").notNull(),

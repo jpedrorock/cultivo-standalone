@@ -290,7 +290,7 @@ export const appRouter = router({
       .input(
         z.object({
           tentId: z.number(),
-          strainId: z.number(),
+          strainId: z.number().optional().nullable(),
           startDate: z.date(),
         })
       )
@@ -337,7 +337,7 @@ export const appRouter = router({
       .input(
         z.object({
           tentId: z.number(),
-          strainId: z.number(),
+          strainId: z.number().optional().nullable(),
           startDate: z.date(),
           phase: z.enum(["CLONING", "MAINTENANCE", "VEGA", "FLORA"]),
           weekNumber: z.number().min(1),
@@ -431,9 +431,25 @@ export const appRouter = router({
         if (!cycleData || cycleData.length === 0) throw new Error("Cycle not found");
         const cycle = cycleData[0];
         
-        // Buscar tent e strain
+        // Buscar tent
         const tent = await database.select().from(tents).where(eq(tents.id, cycle.tentId)).limit(1);
-        const strain = await database.select().from(strains).where(eq(strains.id, cycle.strainId)).limit(1);
+        
+        // Buscar strain (pode ser null se ciclo tem múltiplas strains)
+        let strain: any[] = [];
+        if (cycle.strainId) {
+          strain = await database.select().from(strains).where(eq(strains.id, cycle.strainId)).limit(1);
+        }
+        
+        // Buscar strains das plantas ativas na estufa
+        const tentPlants = await database
+          .select({ strainId: plants.strainId })
+          .from(plants)
+          .where(and(eq(plants.currentTentId, cycle.tentId), eq(plants.status, "ACTIVE")));
+        const uniqueStrainIds = Array.from(new Set(tentPlants.map((p: any) => p.strainId)));
+        let tentStrains: any[] = [];
+        if (uniqueStrainIds.length > 0) {
+          tentStrains = await database.select().from(strains).where(sql`${strains.id} IN (${sql.join(uniqueStrainIds.map(id => sql`${id}`), sql`, `)})`);
+        }
         
         // Buscar logs diários do tent durante o período do ciclo
         const logs = await database
@@ -451,7 +467,8 @@ export const appRouter = router({
         return {
           cycle,
           tent: tent[0],
-          strain: strain[0],
+          strain: strain[0] || null,
+          tentStrains,
           logs,
           tasks,
         };
@@ -855,6 +872,91 @@ export const appRouter = router({
         
         return targets[0] || null;
       }),
+    // Busca targets por estufa - calcula média das strains das plantas ativas
+    getTargetsByTent: publicProcedure
+      .input(
+        z.object({
+          tentId: z.number(),
+          phase: z.enum(["CLONING", "VEGA", "FLORA", "MAINTENANCE"]),
+          weekNumber: z.number(),
+        })
+      )
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) return null;
+        
+        // Buscar strains únicas das plantas ativas na estufa
+        const tentPlants = await database
+          .select({ strainId: plants.strainId })
+          .from(plants)
+          .where(and(
+            eq(plants.currentTentId, input.tentId),
+            eq(plants.status, "ACTIVE")
+          ));
+        
+        const uniqueStrainIds = Array.from(new Set(tentPlants.map((p: any) => p.strainId))) as number[];
+        if (uniqueStrainIds.length === 0) return null;
+        
+        if (uniqueStrainIds.length === 1) {
+          // Uma única strain: retornar targets direto
+          const targets = await database
+            .select()
+            .from(weeklyTargets)
+            .where(
+              and(
+                eq(weeklyTargets.strainId, uniqueStrainIds[0]),
+                eq(weeklyTargets.phase, input.phase),
+                eq(weeklyTargets.weekNumber, input.weekNumber)
+              )
+            )
+            .limit(1);
+          return targets[0] || null;
+        }
+        
+        // Múltiplas strains: calcular média
+        const allTargets = await database
+          .select()
+          .from(weeklyTargets)
+          .where(
+            and(
+              sql`${weeklyTargets.strainId} IN (${sql.join(uniqueStrainIds.map((id: number) => sql`${id}`), sql`, `)})`,
+              eq(weeklyTargets.phase, input.phase),
+              eq(weeklyTargets.weekNumber, input.weekNumber)
+            )
+          );
+        
+        if (allTargets.length === 0) return null;
+        
+        // Calcular média
+        const avgDecimal = (field: string) => {
+          const vals = allTargets.map((t: any) => t[field]).filter((v: any) => v !== null && v !== undefined);
+          if (vals.length === 0) return null;
+          const sum = vals.reduce((a: number, b: any) => a + parseFloat(String(b)), 0);
+          return (sum / vals.length).toFixed(1);
+        };
+        const avgInt = (field: string) => {
+          const vals = allTargets.map((t: any) => t[field]).filter((v: any) => v !== null && v !== undefined);
+          if (vals.length === 0) return null;
+          const sum = vals.reduce((a: number, b: any) => a + Number(b), 0);
+          return Math.round(sum / vals.length);
+        };
+        
+        return {
+          ...allTargets[0],
+          tempMin: avgDecimal('tempMin'),
+          tempMax: avgDecimal('tempMax'),
+          rhMin: avgDecimal('rhMin'),
+          rhMax: avgDecimal('rhMax'),
+          ppfdMin: avgInt('ppfdMin'),
+          ppfdMax: avgInt('ppfdMax'),
+          phMin: avgDecimal('phMin'),
+          phMax: avgDecimal('phMax'),
+          ecMin: avgDecimal('ecMin'),
+          ecMax: avgDecimal('ecMax'),
+          _isAverage: true,
+          _strainCount: uniqueStrainIds.length,
+        };
+      }),
     getCurrentWeekTargets: publicProcedure.query(async () => {
       // Busca os targets da semana atual de todos os ciclos ativos
       const database = await getDb();
@@ -887,20 +989,65 @@ export const appRouter = router({
         weekNumber = Math.min(weeksSinceStart + 1, 6);
       }
       
-      // Busca os targets da semana atual por strainId do ciclo
-      const targets = await database
-        .select()
-        .from(weeklyTargets)
-        .where(
-          and(
-            eq(weeklyTargets.strainId, cycle.strainId),
-            eq(weeklyTargets.phase, phase),
-            eq(weeklyTargets.weekNumber, weekNumber)
+      // Busca os targets da semana atual
+      if (cycle.strainId) {
+        // Ciclo com strain definida
+        const targets = await database
+          .select()
+          .from(weeklyTargets)
+          .where(
+            and(
+              eq(weeklyTargets.strainId, cycle.strainId),
+              eq(weeklyTargets.phase, phase),
+              eq(weeklyTargets.weekNumber, weekNumber)
+            )
           )
-        )
-        .limit(1);
-      
-      return targets;
+          .limit(1);
+        return targets;
+      } else {
+        // Ciclo sem strain: buscar strains das plantas ativas
+        const tentPlants = await database
+          .select({ strainId: plants.strainId })
+          .from(plants)
+          .where(and(
+            eq(plants.currentTentId, cycle.tentId),
+            eq(plants.status, "ACTIVE")
+          ));
+        const uniqueStrainIds = Array.from(new Set(tentPlants.map((p: any) => p.strainId))) as number[];
+        if (uniqueStrainIds.length === 0) return [];
+        
+        const allTargets = await database
+          .select()
+          .from(weeklyTargets)
+          .where(
+            and(
+              sql`${weeklyTargets.strainId} IN (${sql.join(uniqueStrainIds.map((id: number) => sql`${id}`), sql`, `)})`,
+              eq(weeklyTargets.phase, phase),
+              eq(weeklyTargets.weekNumber, weekNumber)
+            )
+          );
+        
+        if (allTargets.length === 0) return [];
+        if (uniqueStrainIds.length === 1) return [allTargets[0]];
+        
+        // Média
+        const avgDec = (f: string) => {
+          const v = allTargets.map((t: any) => t[f]).filter((x: any) => x != null);
+          return v.length ? (v.reduce((a: number, b: any) => a + parseFloat(String(b)), 0) / v.length).toFixed(1) : null;
+        };
+        const avgI = (f: string) => {
+          const v = allTargets.map((t: any) => t[f]).filter((x: any) => x != null);
+          return v.length ? Math.round(v.reduce((a: number, b: any) => a + Number(b), 0) / v.length) : null;
+        };
+        return [{
+          ...allTargets[0],
+          tempMin: avgDec('tempMin'), tempMax: avgDec('tempMax'),
+          rhMin: avgDec('rhMin'), rhMax: avgDec('rhMax'),
+          ppfdMin: avgI('ppfdMin'), ppfdMax: avgI('ppfdMax'),
+          phMin: avgDec('phMin'), phMax: avgDec('phMax'),
+          ecMin: avgDec('ecMin'), ecMax: avgDec('ecMax'),
+        }];
+      }
     }),
     getByStrain: publicProcedure.input(z.object({ strainId: z.number() })).query(async ({ input }) => {
       return db.getWeeklyTargetsByStrain(input.strainId);

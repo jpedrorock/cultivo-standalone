@@ -322,6 +322,7 @@ export default function Home() {
           tentName={selectedTent.name}
           currentStartDate={selectedCycle.startDate}
           currentFloraStartDate={selectedCycle.floraStartDate}
+          currentStrainId={selectedCycle.strainId}
         />
       )}
 
@@ -367,7 +368,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
     { tentId: tent.id }
   );
   
-  // Buscar targets ideais da strain do ciclo ativo
+  // Buscar targets ideais - usa média das strains das plantas na estufa
   const currentWeek = cycle ? (() => {
     const now = new Date();
     const start = new Date(cycle.startDate);
@@ -381,8 +382,8 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
   
   const currentPhase = cycle ? (cycle.floraStartDate ? "FLORA" : "VEGA") : null;
   
-  const { data: targets } = trpc.weeklyTargets.getTargetsByWeek.useQuery(
-    { strainId: cycle?.strainId!, phase: currentPhase!, weekNumber: currentWeek! },
+  const { data: targets } = trpc.weeklyTargets.getTargetsByTent.useQuery(
+    { tentId: tent.id, phase: currentPhase! as any, weekNumber: currentWeek! },
     { enabled: !!cycle && !!currentPhase && !!currentWeek }
   );
   
@@ -444,15 +445,29 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                 {phaseInfo.phase}
               </Badge>
             </CardTitle>
-            <CardDescription className="mt-2 flex items-center gap-3">
-              <span>Tipo {tent.tentType} • {tent.width}×{tent.depth}×{tent.height}cm</span>
-              {tent.plantCount !== undefined && (
-                <Link href={`/plants?tent=${tent.id}`}>
-                  <Badge variant="outline" className="gap-1 cursor-pointer hover:bg-primary/10 hover:border-primary/50 transition-colors">
-                    <Sprout className="w-3 h-3" />
-                    {tent.plantCount} {tent.plantCount === 1 ? 'planta' : 'plantas'}
-                  </Badge>
-                </Link>
+            <CardDescription className="mt-2 space-y-1">
+              <div className="flex items-center gap-3">
+                <span>Tipo {tent.tentType} • {tent.width}×{tent.depth}×{tent.height}cm</span>
+                {tent.plantCount !== undefined && (
+                  <Link href={`/plants?tent=${tent.id}`}>
+                    <Badge variant="outline" className="gap-1 cursor-pointer hover:bg-primary/10 hover:border-primary/50 transition-colors">
+                      <Sprout className="w-3 h-3" />
+                      {tent.plantCount} {tent.plantCount === 1 ? 'planta' : 'plantas'}
+                    </Badge>
+                  </Link>
+                )}
+              </div>
+              {tent.tentStrains && tent.tentStrains.length > 0 && (
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {tent.tentStrains.map((s: any) => (
+                    <Badge key={s.id} variant="secondary" className="text-xs px-2 py-0">
+                      {s.name}
+                    </Badge>
+                  ))}
+                  {tent.tentStrains.length > 1 && (
+                    <span className="text-xs text-muted-foreground italic">(média)</span>
+                  )}
+                </div>
               )}
             </CardDescription>
           </div>

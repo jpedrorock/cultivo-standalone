@@ -152,9 +152,9 @@ export async function getAllTents(): Promise<(Tent & { plantCount?: number })[]>
   // Buscar estufas
   const allTents = await db.select().from(tents);
   
-  // Para cada estufa, contar plantas ativas
+  // Para cada estufa, contar plantas ativas e buscar strains
   const tentsWithPlantCount = await Promise.all(
-    allTents.map(async (tent) => {
+    allTents.map(async (tent: any) => {
       try {
         const plantCountResult = await db
           .select({ count: sql<number>`count(*)` })
@@ -165,10 +165,25 @@ export async function getAllTents(): Promise<(Tent & { plantCount?: number })[]>
           ));
         
         const plantCount = plantCountResult[0]?.count || 0;
-        return { ...tent, plantCount };
+        
+        // Buscar strains únicas das plantas ativas na estufa
+        const tentPlants = await db
+          .select({ strainId: plants.strainId })
+          .from(plants)
+          .where(and(
+            eq(plants.currentTentId, tent.id),
+            eq(plants.status, "ACTIVE")
+          ));
+        const uniqueStrainIds = Array.from(new Set(tentPlants.map((p: any) => p.strainId)));
+        let tentStrains: any[] = [];
+        if (uniqueStrainIds.length > 0) {
+          tentStrains = await db.select().from(strains).where(sql`${strains.id} IN (${sql.join(uniqueStrainIds.map((id: any) => sql`${id}`), sql`, `)})`);
+        }
+        
+        return { ...tent, plantCount, tentStrains };
       } catch (error) {
         // Se a tabela plants não existir ainda, retornar 0
-        return { ...tent, plantCount: 0 };
+        return { ...tent, plantCount: 0, tentStrains: [] };
       }
     })
   );
@@ -208,6 +223,20 @@ export async function getTentById(id: number): Promise<any> {
   const tent = result[0];
   if (!tent) return undefined;
   
+  // Buscar strains únicas das plantas ativas na estufa
+  const tentPlants = await db
+    .select({ strainId: plants.strainId })
+    .from(plants)
+    .where(and(
+      eq(plants.currentTentId, id),
+      eq(plants.status, "ACTIVE")
+    ));
+  const uniqueStrainIds = Array.from(new Set(tentPlants.map((p: any) => p.strainId)));
+  let tentStrains: any[] = [];
+  if (uniqueStrainIds.length > 0) {
+    tentStrains = await db.select().from(strains).where(sql`${strains.id} IN (${sql.join(uniqueStrainIds.map((sid: any) => sql`${sid}`), sql`, `)})`);
+  }
+  
   // Calcular fase e semana atual se houver ciclo ativo
   if (tent.cycleStartDate) {
     const now = new Date();
@@ -235,10 +264,11 @@ export async function getTentById(id: number): Promise<any> {
       ...tent,
       currentPhase,
       currentWeek,
+      tentStrains,
     };
   }
   
-  return tent;
+  return { ...tent, tentStrains };
 }
 
 // ============ STRAIN FUNCTIONS ============
@@ -353,6 +383,53 @@ export async function getDailyLogs(
     .orderBy(desc(dailyLogs.logDate), desc(dailyLogs.turn));
 }
 
+/**
+ * Calcula a média dos weekly targets de múltiplas strains.
+ * Agrupa por phase+weekNumber e calcula a média de cada métrica.
+ */
+function averageWeeklyTargets(allTargets: WeeklyTarget[], strainCount: number): WeeklyTarget[] {
+  const grouped = new Map<string, WeeklyTarget[]>();
+  
+  for (const t of allTargets) {
+    const key = `${t.phase}-${t.weekNumber}`;
+    if (!grouped.has(key)) grouped.set(key, []);
+    grouped.get(key)!.push(t);
+  }
+  
+  const averaged: WeeklyTarget[] = [];
+  grouped.forEach((targets, _key) => {
+    const count = targets.length;
+    const avgDecimal = (field: keyof WeeklyTarget) => {
+      const vals = targets.map(t => t[field]).filter(v => v !== null && v !== undefined);
+      if (vals.length === 0) return null;
+      const sum = vals.reduce((a: number, b: any) => a + parseFloat(String(b)), 0);
+      return (sum / vals.length).toFixed(1);
+    };
+    const avgInt = (field: keyof WeeklyTarget) => {
+      const vals = targets.map(t => t[field]).filter(v => v !== null && v !== undefined);
+      if (vals.length === 0) return null;
+      const sum = vals.reduce((a: number, b: any) => a + Number(b), 0);
+      return Math.round(sum / vals.length);
+    };
+    
+    averaged.push({
+      ...targets[0], // base (id, strainId, phase, weekNumber, etc.)
+      tempMin: avgDecimal('tempMin') as any,
+      tempMax: avgDecimal('tempMax') as any,
+      rhMin: avgDecimal('rhMin') as any,
+      rhMax: avgDecimal('rhMax') as any,
+      ppfdMin: avgInt('ppfdMin') as any,
+      ppfdMax: avgInt('ppfdMax') as any,
+      phMin: avgDecimal('phMin') as any,
+      phMax: avgDecimal('phMax') as any,
+      ecMin: avgDecimal('ecMin') as any,
+      ecMax: avgDecimal('ecMax') as any,
+    });
+  });
+  
+  return averaged;
+}
+
 export async function getHistoricalDataWithTargets(tentId: number, days: number = 30) {
   const db = await getDb();
   if (!db) return { logs: [], targets: [], cycle: null };
@@ -366,8 +443,32 @@ export async function getHistoricalDataWithTargets(tentId: number, days: number 
   startDate.setDate(startDate.getDate() - days);
   const logs = await getDailyLogs(tentId, startDate);
 
-  // Get all targets for this strain (if cycle has strainId)
-  const targets = cycle?.strainId ? await getWeeklyTargetsByStrain(cycle.strainId) : [];
+  // Get targets: se ciclo tem strainId, usar essa strain; senão, calcular média das strains das plantas
+  let targets: WeeklyTarget[] = [];
+  if (cycle?.strainId) {
+    targets = await getWeeklyTargetsByStrain(cycle.strainId);
+  } else {
+    // Buscar strains únicas das plantas ativas na estufa
+    const tentPlants = await db
+      .select({ strainId: plants.strainId })
+      .from(plants)
+      .where(and(
+        eq(plants.currentTentId, tentId),
+        eq(plants.status, "ACTIVE")
+      ));
+    const uniqueStrainIds = Array.from(new Set(tentPlants.map((p: any) => p.strainId)));
+    
+    if (uniqueStrainIds.length === 1) {
+      // Uma única strain, usar targets diretamente
+      targets = await getWeeklyTargetsByStrain(uniqueStrainIds[0] as number);
+    } else if (uniqueStrainIds.length > 1) {
+      // Múltiplas strains: calcular média dos targets
+      const allTargets = await Promise.all(
+        uniqueStrainIds.map((sid: any) => getWeeklyTargetsByStrain(sid))
+      );
+      targets = averageWeeklyTargets(allTargets.flat(), uniqueStrainIds.length);
+    }
+  }
 
   return { logs, targets, cycle };
 }
