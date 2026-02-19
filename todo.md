@@ -142,3 +142,8 @@
 - [x] Redesenhar aba Tricomas - formulário colapsável, status visual com botões, barra de proporção
 - [x] Testar todas as abas redesenhadas - sem erros no console
 - [x] Corrigir bug NaN dias (germDate → createdAt)
+
+## Correção de Conexão MySQL
+
+- [x] Trocar createConnection por createPool com reconexão automática (enableKeepAlive, idleTimeout)
+- [x] Testar queries após restart - todas OK

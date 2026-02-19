@@ -52,10 +52,17 @@ export async function getDb() {
         _db = drizzleSqlite(sqlite);
         console.log(`[Database] Connected to SQLite: ${dbPath}`);
       } else {
-        // MySQL connection (production)
-        const connection = await mysql.createConnection(connectionString);
-        _db = drizzleMysql(connection);
-        console.log(`[Database] Connected to MySQL`);
+        // MySQL connection (production) - using pool for auto-reconnection
+        const pool = mysql.createPool({
+          uri: connectionString,
+          waitForConnections: true,
+          connectionLimit: 10,
+          idleTimeout: 60000,
+          enableKeepAlive: true,
+          keepAliveInitialDelay: 30000,
+        });
+        _db = drizzleMysql(pool);
+        console.log(`[Database] Connected to MySQL (pool)`);
       }
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
