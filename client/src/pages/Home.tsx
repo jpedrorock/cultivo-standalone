@@ -166,13 +166,12 @@ export default function Home() {
     return activeCycles?.find((c) => c.tentId === tentId);
   };
 
-  const getPhaseInfo = (tentType: string, cycle: any) => {
+  const getPhaseInfo = (category: string, cycle: any) => {
     if (!cycle) {
       return { phase: "Inativo", color: "bg-muted0", icon: Wind };
     }
 
-    if (tentType === "A") {
-      // Estufa A: Clonagem ou Manutenção
+    if (category === "MAINTENANCE") {
       return {
         phase: "Manutenção",
         color: "bg-blue-500/100",
@@ -180,8 +179,15 @@ export default function Home() {
       };
     }
 
-    // Estufas B/C: Vega ou Flora
-    if (cycle.floraStartDate) {
+    if (category === "VEGA") {
+      return {
+        phase: "Vegetativa",
+        color: "bg-primary/100",
+        icon: Sprout,
+      };
+    }
+
+    if (category === "FLORA") {
       return {
         phase: "Floração",
         color: "bg-purple-500",
@@ -189,10 +195,18 @@ export default function Home() {
       };
     }
 
+    if (category === "DRYING") {
+      return {
+        phase: "Secagem",
+        color: "bg-amber-500",
+        icon: Wind,
+      };
+    }
+
     return {
-      phase: "Vegetativa",
-      color: "bg-primary/100",
-      icon: Sprout,
+      phase: "Inativo",
+      color: "bg-muted0",
+      icon: Wind,
     };
   };
 
@@ -233,7 +247,7 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {tents?.map((tent) => {
             const cycle = getTentCycle(tent.id);
-            const phaseInfo = getPhaseInfo(tent.tentType, cycle);
+            const phaseInfo = getPhaseInfo(tent.category, cycle);
             const PhaseIcon = phaseInfo.icon;
 
             return (
@@ -544,14 +558,16 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
           {/* Weekly Tasks */}
           {cycle && (
             <div className="space-y-2">
-              <button
-                onClick={() => setTasksExpanded(!tasksExpanded)}
-                className="w-full flex items-center justify-between hover:bg-muted/50 rounded p-2 transition-colors"
-              >
-                <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <div className="w-full flex items-center justify-between hover:bg-muted/50 rounded p-2 transition-colors">
+                <button
+                  onClick={() => setTasksExpanded(!tasksExpanded)}
+                  className="flex-1 flex items-center gap-2 text-left"
+                >
                   <CheckCircle2 className="w-4 h-4" />
-                  Tarefas da Semana
-                </h4>
+                  <h4 className="text-sm font-semibold text-foreground">
+                    Tarefas da Semana
+                  </h4>
+                </button>
                 <div className="flex items-center gap-3">
                   {tasks && tasks.length > 0 && (
                     <button
@@ -570,11 +586,14 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                       {completedTasks}/{totalTasks}
                     </Badge>
                   )}
-                  <span className="text-xs text-muted-foreground">
+                  <button
+                    onClick={() => setTasksExpanded(!tasksExpanded)}
+                    className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     {tasksExpanded ? "▲" : "▼"}
-                  </span>
+                  </button>
                 </div>
-              </button>
+              </div>
 
               {tasksExpanded && (
                 tasksLoading ? (

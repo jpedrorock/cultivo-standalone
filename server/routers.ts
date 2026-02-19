@@ -82,12 +82,11 @@ export const appRouter = router({
       .input(
         z.object({
           name: z.string().min(1).max(50),
-          tentType: z.enum(["A", "B", "C"]),
+          category: z.enum(["MAINTENANCE", "VEGA", "FLORA", "DRYING"]),
           width: z.number().int().positive(),
           depth: z.number().int().positive(),
           height: z.number().int().positive(),
           powerW: z.number().int().positive().optional(),
-          initialPhase: z.enum(["Manutenção", "Vegetativa", "Floração"]).optional(),
         })
       )
       .mutation(async ({ input }) => {
@@ -1117,29 +1116,30 @@ export const appRouter = router({
         let currentPhase: "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE";
         let weekNumber: number;
 
-        // Determine phase based on tent type
-        if (tent.tentType === "A") {
-          // Estufa A: CLONING or MAINTENANCE
-          currentPhase = "MAINTENANCE"; // Default, could be CLONING based on state
+        // Determine phase based on tent category
+        if (tent.category === "MAINTENANCE") {
+          currentPhase = "MAINTENANCE";
           weekNumber = 1;
-        } else if (tent.tentType === "B") {
-          // Estufa B: only VEGA
+        } else if (tent.category === "VEGA") {
           currentPhase = "VEGA";
           const weeksSinceStart = Math.floor(
             (now.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
           );
           weekNumber = weeksSinceStart + 1;
-        } else {
-          // Estufa C: FLORA
+        } else if (tent.category === "FLORA") {
           currentPhase = "FLORA";
           const weeksSinceStart = floraStartDate
             ? Math.floor((now.getTime() - floraStartDate.getTime()) / (7 * 24 * 60 * 60 * 1000))
             : Math.floor((now.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000));
           weekNumber = weeksSinceStart + 1;
+        } else {
+          // DRYING
+          currentPhase = "MAINTENANCE"; // Fallback
+          weekNumber = 1;
         }
 
         // Get templates for this phase/week
-        const context = tent.tentType === "A" ? "TENT_A" : "TENT_BC";
+        const context = tent.category === "MAINTENANCE" ? "TENT_A" : "TENT_BC";
         let templates;
         if (currentPhase === "MAINTENANCE") {
           // For maintenance, don't filter by week number

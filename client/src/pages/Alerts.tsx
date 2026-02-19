@@ -72,7 +72,7 @@ export default function Alerts() {
                 >
                   <div className="text-left">
                     <div className="font-semibold">{tent.name}</div>
-                    <div className="text-xs opacity-80">Tipo {tent.tentType}</div>
+                    <div className="text-xs opacity-80">{tent.category}</div>
                   </div>
                 </Button>
               ))}

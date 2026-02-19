@@ -495,3 +495,37 @@
 - [ ] Atualizar UI de AlertSettings para mostrar configuração por estufa
 - [ ] Mostrar valores ideais atuais da estufa na UI como referência
 - [ ] Testar alertas contextuais: "Estufa B: Temp 28°C acima do ideal 24°C (±2°C)"
+
+
+## 🏗️ Implementar Modal "Criar Nova Estufa" (19/02/2026)
+
+- [x] Corrigir erros TypeScript (tentType → category) em Alerts.tsx, Home.tsx, db.ts, routers.ts
+- [x] Aplicar migration do schema (script customizado apply-migration.mjs)
+- [x] Criar backend procedure tents.create com validação (já existia, atualizado para category)
+- [x] Implementar modal com formulário (nome, category select, dimensões, potência)
+- [x] Adicionar validação de campos obrigatórios (HTML5 + Zod backend)
+- [x] Atualizar Home.tsx para renderizar estufas dinamicamente do banco
+- [x] Corrigir erro de botão aninhado em "Tarefas da Semana"
+- [x] Testar criação de múltiplas estufas - "Estufa Teste 4" criada com sucesso
+- [ ] Implementar edição de estufas (modal de edição)
+- [ ] Implementar exclusão de estufas (confirmação + cascade delete)
+
+
+## 📊 Filtro por Estufa no Histórico (19/02/2026)
+
+- [ ] Adicionar tabs/filtros no topo da página Histórico
+- [ ] Permitir filtrar registros por estufa específica
+- [ ] Mostrar "Todas as Estufas" como opção padrão
+- [ ] Atualizar contadores e estatísticas baseado no filtro selecionado
+
+## 🍂 Tarefas de Secagem (19/02/2026)
+
+- [ ] Pesquisar na web tarefas típicas durante secagem (2 semanas)
+- [ ] Adicionar taskTemplates para fase DRYING
+- [ ] Incluir tarefas como: controle temperatura/umidade, verificação de mofo, teste de secagem
+- [ ] Adicionar weeklyTargets para DRYING (temperatura ideal, umidade ideal)
+
+## 🐛 Correção de Botão Aninhado na Home (19/02/2026)
+
+- [x] Corrigir erro de botão aninhado em "Tarefas da Semana" (transformado em div com botões separados)
+- [x] Testar criação de estufa após correção - funcionando perfeitamente

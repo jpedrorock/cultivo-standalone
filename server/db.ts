@@ -200,13 +200,14 @@ export async function getTentById(id: number): Promise<any> {
     .select({
       id: tents.id,
       name: tents.name,
-      tentType: tents.tentType,
+      category: tents.category,
       width: tents.width,
       depth: tents.depth,
       height: tents.height,
       volume: tents.volume,
       powerW: tents.powerW,
       createdAt: tents.createdAt,
+      updatedAt: tents.updatedAt,
       // Dados do ciclo ativo
       cycleId: cycles.id,
       cycleStartDate: cycles.startDate,
