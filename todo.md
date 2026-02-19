@@ -179,3 +179,9 @@
 - [x] Permitir criar ciclo sem strain definida (Start/Initiate/Edit modais atualizados)
 - [x] Testar funcionalidade completa
 - [x] Calcular targets semanais como média das strains quando estufa tem múltiplas strains (getTargetsByTent)
+
+## Correção de Erro em AlertSettings
+
+- [x] Investigar erro de inserção na tabela alertSettings (foreign key constraint - estufas não existiam)
+- [x] Corrigir seed para criar alertSettings para todas as estufas
+- [x] Testar página /alerts após correção - funcionando corretamente

@@ -704,6 +704,19 @@ for (const rt of recipeTemplatesData) {
 console.log(`  ✓ ${recipeTemplatesData.length} templates de receitas criados`);
 
 // ============================================================
+// 16. ALERT SETTINGS
+// ============================================================
+console.log('🔔 Criando configurações de alertas...');
+
+for (const tentName of Object.keys(tentMap)) {
+  await conn.execute(
+    'INSERT INTO alertSettings (tentId, alertsEnabled, tempEnabled, rhEnabled, ppfdEnabled) VALUES (?, ?, ?, ?, ?)',
+    [tentMap[tentName], true, true, true, true]
+  );
+}
+console.log(`  ✓ Alertas configurados para ${Object.keys(tentMap).length} estufas`);
+  
+// ============================================================
 // RESUMO FINAL
 // ============================================================
 console.log('');
