@@ -562,7 +562,7 @@
 
 ## 🐛 Corrigir Estado Padrão do Botão "Ocultar Concluídas" (19/02/2026)
 
-- [ ] Analisar estado inicial do botão em Home.tsx
-- [ ] Inverter estado padrão de `hideCompleted` para `false` (mostrar todas por padrão)
-- [ ] Garantir que tarefas marcadas permaneçam visíveis até clicar em "Ocultar"
-- [ ] Testar comportamento: marcar tarefa → continua visível → clicar "Ocultar" → some
+- [x] Localizar estado hideCompleted em Home.tsx (linha 377)
+- [x] Estado padrão já estava correto (`false` - mostrar todas)
+- [x] Remover animação CSS conflitante que ocultava tarefas concluídas (linhas 608-611)
+- [x] Testar comportamento - todas as tarefas visíveis por padrão, botão funciona corretamente

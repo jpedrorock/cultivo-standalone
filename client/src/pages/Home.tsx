@@ -605,11 +605,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                     {tasks.filter((task) => hideCompleted ? !task.isDone : true).map((task) => (
                       <div
                         key={task.id}
-                        className={`flex items-start gap-2 p-2 rounded hover:bg-muted transition-all duration-500 ease-in-out ${
-                          task.isDone && !expandedTasks.has(task.id)
-                            ? "opacity-0 max-h-0 overflow-hidden py-0"
-                            : "opacity-100 max-h-20"
-                        }`}
+                        className="flex items-start gap-2 p-2 rounded hover:bg-muted"
                       >
                         <Checkbox
                           id={`task-${task.id}`}
