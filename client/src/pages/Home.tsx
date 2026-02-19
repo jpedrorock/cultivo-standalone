@@ -361,6 +361,7 @@ export default function Home() {
 function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlora, onInitiateCycle, onEditCycle, onFinalizeCycle, onDeleteTent }: any) {
   const [tasksExpanded, setTasksExpanded] = useState(false);
   const [hideCompleted, setHideCompleted] = useState(false);
+  const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set());
   
   const { data: tasks, isLoading: tasksLoading } = trpc.tasks.getTasksByTent.useQuery(
     { tentId: tent.id },
@@ -429,8 +430,22 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
     },
   });
 
-  const handleToggleTask = (taskId: number) => {
+  const handleToggleTask = (taskId: number, currentIsDone: boolean) => {
     toggleTask.mutate({ taskId });
+    
+    // Se a tarefa está sendo marcada como concluída, colapsa automaticamente após 500ms
+    if (!currentIsDone) {
+      setTimeout(() => {
+        setExpandedTasks(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(taskId);
+          return newSet;
+        });
+      }, 500);
+    } else {
+      // Se está sendo desmarcada, expande automaticamente
+      setExpandedTasks(prev => new Set(prev).add(taskId));
+    }
   };
 
   const completedTasks = tasks?.filter((t) => t.isDone).length || 0;
@@ -571,12 +586,16 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                     {tasks.filter((task) => !hideCompleted || !task.isDone).map((task) => (
                       <div
                         key={task.id}
-                        className="flex items-start gap-2 p-2 rounded hover:bg-muted transition-colors"
+                        className={`flex items-start gap-2 p-2 rounded hover:bg-muted transition-all duration-500 ease-in-out ${
+                          task.isDone && !expandedTasks.has(task.id)
+                            ? "opacity-0 max-h-0 overflow-hidden py-0"
+                            : "opacity-100 max-h-20"
+                        }`}
                       >
                         <Checkbox
                           id={`task-${task.id}`}
                           checked={task.isDone}
-                          onCheckedChange={() => handleToggleTask(task.id)}
+                          onCheckedChange={() => handleToggleTask(task.id, task.isDone)}
                           className="mt-0.5"
                         />
                         <label

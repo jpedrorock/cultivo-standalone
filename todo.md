@@ -402,3 +402,17 @@
 - [ ] Implementar tRPC procedures para carregar preferências
 - [ ] Integrar backend com componente AlertSettings
 - [ ] Testar salvamento e carregamento de preferências
+
+
+## 🎯 Colapso Automático de Tarefas (19/02/2026)
+
+- [ ] Implementar lógica de colapso automático ao marcar tarefa como concluída
+- [ ] Adicionar animação suave de colapso
+- [ ] Testar funcionalidade em todas as estufas
+
+
+## 🎯 Colapso Automático de Tarefas (19/02/2026)
+
+- [x] Implementar lógica de colapso automático ao marcar tarefa como concluída
+- [x] Adicionar animação suave de colapso (transição CSS)
+- [x] Testar funcionalidade em diferentes estufas
