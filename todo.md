@@ -849,3 +849,15 @@
 - [ ] Revisar README
 - [ ] Criar guia de usuário
 - [ ] Criar guia de instalação
+
+## Correção Home
+- [x] Reduzir padding dos cards de calculadoras no mobile
+
+- [x] Restaurar exibição do número de plantas na home
+
+## Revisão de Documentação e Código
+
+- [ ] Listar e analisar todos os arquivos de código e documentação
+- [ ] Identificar e remover arquivos não utilizados
+- [ ] Revisar e atualizar README.md com funcionalidades atuais
+- [ ] Revisar e atualizar manual de instalação

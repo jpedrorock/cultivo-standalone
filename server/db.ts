@@ -142,10 +142,28 @@ export async function getUserByOpenId(openId: string) {
   }
 }
 
-export async function getAllTents(): Promise<Tent[]> {
+export async function getAllTents(): Promise<(Tent & { plantCount: number })[]> {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(tents).orderBy(tents.id);
+  
+  const allTents = await db.select().from(tents).orderBy(tents.id);
+  
+  // Para cada estufa, contar plantas ativas
+  const tentsWithPlantCount = await Promise.all(
+    allTents.map(async (tent: Tent) => {
+      const plantsList = await db
+        .select()
+        .from(plants)
+        .where(and(eq(plants.currentTentId, tent.id), eq(plants.status, 'ACTIVE')));
+      
+      return {
+        ...tent,
+        plantCount: plantsList.length,
+      };
+    })
+  );
+  
+  return tentsWithPlantCount;
 }
 
 export async function getTentById(id: number): Promise<Tent | undefined> {
