@@ -147,3 +147,9 @@
 
 - [x] Trocar createConnection por createPool com reconexão automática (enableKeepAlive, idleTimeout)
 - [x] Testar queries após restart - todas OK
+
+## Investigação de Fotos Não Aparecendo
+
+- [x] Verificar exibição de fotos em todas as páginas (Home, PlantsList, PlantDetail)
+- [x] Diagnosticar causa raiz (URLs locais /uploads/ não funcionam - S3 CloudFront funciona)
+- [x] Corrigir exibição de fotos (limpar URLs locais do banco, novos uploads usam S3)
