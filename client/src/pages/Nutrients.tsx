@@ -17,62 +17,49 @@ import { Beaker, Download } from "lucide-react";
 
 type Phase = "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE" | "DRYING";
 
-// Produtos pré-definidos por fase/semana com quantidades em ml/L
+// Produtos (sais minerais) pré-definidos por fase/semana com quantidades em g/L
 const getProductsByPhaseWeek = (phase: Phase, week: number) => {
   if (phase === "CLONING") {
     return [
-      { name: "Enraizador", mlPerLiter: 2, npk: "1-2-1", ca: 0, mg: 0, fe: 0 },
-      { name: "CalMag", mlPerLiter: 1, npk: "0-0-0", ca: 3, mg: 1, fe: 0 },
+      { name: "Nitrato de Cálcio", gPerLiter: 0.3, npk: "15.5-0-0", ca: 19, mg: 0, fe: 0, s: 0 },
+      { name: "Nitrato de Potássio", gPerLiter: 0.2, npk: "13-0-38", ca: 0, mg: 0, fe: 0, s: 0 },
+      { name: "MKP (Fosfato Monopotássico)", gPerLiter: 0.1, npk: "0-22-28", ca: 0, mg: 0, fe: 0, s: 0 },
+      { name: "Sulfato de Magnésio", gPerLiter: 0.2, npk: "0-0-0", ca: 0, mg: 10, fe: 0, s: 13 },
     ];
   }
   
   if (phase === "VEGA") {
-    if (week <= 2) {
-      return [
-        { name: "Grow (Vega)", mlPerLiter: 3, npk: "7-4-10", ca: 0, mg: 0, fe: 0 },
-        { name: "CalMag", mlPerLiter: 2, npk: "0-0-0", ca: 3, mg: 1, fe: 0 },
-        { name: "Micronutrientes", mlPerLiter: 1, npk: "0-0-0", ca: 0, mg: 0, fe: 0.5 },
-      ];
-    } else {
-      return [
-        { name: "Grow (Vega)", mlPerLiter: 4, npk: "7-4-10", ca: 0, mg: 0, fe: 0 },
-        { name: "CalMag", mlPerLiter: 3, npk: "0-0-0", ca: 3, mg: 1, fe: 0 },
-        { name: "Micronutrientes", mlPerLiter: 1.5, npk: "0-0-0", ca: 0, mg: 0, fe: 0.5 },
-      ];
-    }
+    const vegaWeek = Math.min(week, 4);
+    const multiplier = 0.7 + (vegaWeek / 4) * 0.3; // 0.7 a 1.0
+    
+    return [
+      { name: "Nitrato de Cálcio", gPerLiter: 0.9 * multiplier, npk: "15.5-0-0", ca: 19, mg: 0, fe: 0, s: 0 },
+      { name: "Nitrato de Potássio", gPerLiter: 0.4 * multiplier, npk: "13-0-38", ca: 0, mg: 0, fe: 0, s: 0 },
+      { name: "MKP (Fosfato Monopotássico)", gPerLiter: 0.19 * multiplier, npk: "0-22-28", ca: 0, mg: 0, fe: 0, s: 0 },
+      { name: "Sulfato de Magnésio", gPerLiter: 0.64 * multiplier, npk: "0-0-0", ca: 0, mg: 10, fe: 0, s: 13 },
+      { name: "Micronutrientes", gPerLiter: 0.05 * multiplier, npk: "0-0-0", ca: 0, mg: 0, fe: 6, s: 0 },
+    ];
   }
   
   if (phase === "FLORA") {
-    if (week <= 2) {
-      return [
-        { name: "Bloom (Flora)", mlPerLiter: 3, npk: "2-8-12", ca: 0, mg: 0, fe: 0 },
-        { name: "CalMag", mlPerLiter: 2.5, npk: "0-0-0", ca: 3, mg: 1, fe: 0 },
-        { name: "Micronutrientes", mlPerLiter: 1, npk: "0-0-0", ca: 0, mg: 0, fe: 0.5 },
-      ];
-    } else if (week <= 5) {
-      return [
-        { name: "Bloom (Flora)", mlPerLiter: 4, npk: "2-8-12", ca: 0, mg: 0, fe: 0 },
-        { name: "PK Booster", mlPerLiter: 2, npk: "0-13-14", ca: 0, mg: 0, fe: 0 },
-        { name: "CalMag", mlPerLiter: 3, npk: "0-0-0", ca: 3, mg: 1, fe: 0 },
-        { name: "Micronutrientes", mlPerLiter: 1.5, npk: "0-0-0", ca: 0, mg: 0, fe: 0.5 },
-      ];
-    } else if (week <= 7) {
-      return [
-        { name: "Bloom (Flora)", mlPerLiter: 3, npk: "2-8-12", ca: 0, mg: 0, fe: 0 },
-        { name: "PK Booster", mlPerLiter: 1.5, npk: "0-13-14", ca: 0, mg: 0, fe: 0 },
-        { name: "CalMag", mlPerLiter: 2, npk: "0-0-0", ca: 3, mg: 1, fe: 0 },
-        { name: "Micronutrientes", mlPerLiter: 1, npk: "0-0-0", ca: 0, mg: 0, fe: 0.5 },
-      ];
-    } else {
-      // Flush (semana 8+)
-      return [];
-    }
+    const floraWeek = Math.min(week, 8);
+    const multiplier = 0.8 + (floraWeek / 8) * 0.4; // 0.8 a 1.2
+    
+    return [
+      { name: "Nitrato de Cálcio", gPerLiter: 0.6 * multiplier, npk: "15.5-0-0", ca: 19, mg: 0, fe: 0, s: 0 },
+      { name: "Nitrato de Potássio", gPerLiter: 0.6 * multiplier, npk: "13-0-38", ca: 0, mg: 0, fe: 0, s: 0 },
+      { name: "MKP (Fosfato Monopotássico)", gPerLiter: 0.4 * multiplier, npk: "0-22-28", ca: 0, mg: 0, fe: 0, s: 0 },
+      { name: "Sulfato de Magnésio", gPerLiter: 0.5 * multiplier, npk: "0-0-0", ca: 0, mg: 10, fe: 0, s: 13 },
+      { name: "Micronutrientes", gPerLiter: 0.05 * multiplier, npk: "0-0-0", ca: 0, mg: 0, fe: 6, s: 0 },
+    ];
   }
   
   if (phase === "MAINTENANCE") {
     return [
-      { name: "Manutenção", mlPerLiter: 2.5, npk: "5-5-5", ca: 0, mg: 0, fe: 0 },
-      { name: "CalMag", mlPerLiter: 1.5, npk: "0-0-0", ca: 3, mg: 1, fe: 0 },
+      { name: "Nitrato de Cálcio", gPerLiter: 0.5, npk: "15.5-0-0", ca: 19, mg: 0, fe: 0, s: 0 },
+      { name: "Nitrato de Potássio", gPerLiter: 0.3, npk: "13-0-38", ca: 0, mg: 0, fe: 0, s: 0 },
+      { name: "MKP (Fosfato Monopotássico)", gPerLiter: 0.15, npk: "0-22-28", ca: 0, mg: 0, fe: 0, s: 0 },
+      { name: "Sulfato de Magnésio", gPerLiter: 0.3, npk: "0-0-0", ca: 0, mg: 10, fe: 0, s: 13 },
     ];
   }
   
@@ -87,10 +74,10 @@ export default function Nutrients() {
   
   const products = getProductsByPhaseWeek(phase, week);
   
-  // Calcular quantidades totais
+  // Calcular quantidades totais em gramas
   const calculatedProducts = products.map(p => ({
     ...p,
-    totalMl: p.mlPerLiter * volumeL,
+    totalG: p.gPerLiter * volumeL,
   }));
   
   // Calcular NPK total
@@ -98,124 +85,155 @@ export default function Nutrients() {
     let n = 0, p = 0, k = 0;
     calculatedProducts.forEach(prod => {
       const [nVal, pVal, kVal] = prod.npk.split("-").map(Number);
-      n += (nVal * prod.totalMl) / volumeL;
-      p += (pVal * prod.totalMl) / volumeL;
-      k += (kVal * prod.totalMl) / volumeL;
+      const gPerLiter = prod.gPerLiter;
+      
+      // Converter % para ppm: (% / 100) * g/L * 1000
+      n += (nVal / 100) * gPerLiter * 1000;
+      p += (pVal / 100) * gPerLiter * 1000;
+      k += (kVal / 100) * gPerLiter * 1000;
     });
-    return { n: Math.round(n * 100), p: Math.round(p * 100), k: Math.round(k * 100) };
+    
+    return {
+      n: Math.round(n),
+      p: Math.round(p),
+      k: Math.round(k),
+    };
   };
   
   // Calcular micronutrientes
   const calculateMicros = () => {
-    let ca = 0, mg = 0, fe = 0;
+    let ca = 0, mg = 0, fe = 0, s = 0;
     calculatedProducts.forEach(prod => {
-      ca += (prod.ca * prod.totalMl) / volumeL;
-      mg += (prod.mg * prod.totalMl) / volumeL;
-      fe += (prod.fe * prod.totalMl) / volumeL;
+      const gPerLiter = prod.gPerLiter;
+      
+      ca += (prod.ca / 100) * gPerLiter * 1000;
+      mg += (prod.mg / 100) * gPerLiter * 1000;
+      fe += (prod.fe / 100) * gPerLiter * 1000;
+      s += (prod.s / 100) * gPerLiter * 1000;
     });
-    return { 
-      ca: Math.round(ca * 100), 
-      mg: Math.round(mg * 100), 
-      fe: Math.round(fe * 100) 
+    
+    return {
+      ca: Math.round(ca),
+      mg: Math.round(mg),
+      fe: Math.round(fe),
+      s: Math.round(s),
     };
   };
   
   // Calcular EC estimado
   const calculateEC = () => {
     const npk = calculateNPK();
-    const totalPPM = npk.n + npk.p + npk.k;
-    return (totalPPM / 640).toFixed(2);
+    const micros = calculateMicros();
+    const totalPPM = npk.n + npk.p + npk.k + micros.ca + micros.mg;
+    const ec = Math.round((totalPPM / 700) * 100) / 100;
+    return ec;
   };
   
-  const npk = calculateNPK();
-  const micros = calculateMicros();
-  const ec = calculateEC();
+  const npkTotal = calculateNPK();
+  const microsTotal = calculateMicros();
+  const ecEstimated = calculateEC();
+  const ppmApprox = Math.round(ecEstimated * 640);
   
-  const createApplication = trpc.nutrients.recordApplication.useMutation({
+  // Mutation para salvar receita
+  const recordApplication = trpc.nutrients.recordApplication.useMutation({
     onSuccess: () => {
-      showToast.success("✅ Receita salva no histórico!");
+      showToast.success("Receita salva com sucesso!");
     },
-    onError: (error: any) => {
-      showToast.error(`❌ Erro ao salvar: ${error.message}`);
+    onError: (error) => {
+      showToast.error(`Erro ao salvar receita: ${error.message}`);
     },
   });
   
-  const handleSave = () => {
-    createApplication.mutate({
-      tentId: 0,
+  // Exportar receita para TXT
+  const exportRecipe = () => {
+    const phaseNames = {
+      CLONING: "Clonagem",
+      VEGA: "Vegetativa",
+      FLORA: "Floração",
+      MAINTENANCE: "Manutenção",
+      DRYING: "Secagem",
+    };
+    
+    let txt = `Receita de Fertilização - ${phaseNames[phase]} Semana ${week}\n`;
+    txt += `Volume Total: ${volumeL}L\n`;
+    txt += `EC Estimado: ${ecEstimated} mS/cm (${ppmApprox} ppm)\n\n`;
+    txt += `Produtos:\n`;
+    calculatedProducts.forEach(p => {
+      txt += `- ${p.name}: ${p.totalG.toFixed(2)}g (${p.gPerLiter.toFixed(2)} g/L)\n`;
+      txt += `  NPK: ${p.npk}`;
+      if (p.ca > 0) txt += ` | Ca: ${p.ca}%`;
+      if (p.mg > 0) txt += ` | Mg: ${p.mg}%`;
+      if (p.fe > 0) txt += ` | Fe: ${p.fe}%`;
+      if (p.s > 0) txt += ` | S: ${p.s}%`;
+      txt += `\n`;
+    });
+    txt += `\nNPK Total:\n`;
+    txt += `- Nitrogênio (N): ${npkTotal.n} ppm\n`;
+    txt += `- Fósforo (P): ${npkTotal.p} ppm\n`;
+    txt += `- Potássio (K): ${npkTotal.k} ppm\n`;
+    txt += `\nMicronutrientes:\n`;
+    txt += `- Cálcio (Ca): ${microsTotal.ca} ppm\n`;
+    txt += `- Magnésio (Mg): ${microsTotal.mg} ppm\n`;
+    txt += `- Ferro (Fe): ${microsTotal.fe} ppm\n`;
+    txt += `- Enxofre (S): ${microsTotal.s} ppm\n`;
+    
+    const blob = new Blob([txt], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `receita_${phase.toLowerCase()}_sem${week}_${volumeL}L.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    showToast.success("Receita exportada!");
+  };
+  
+  // Salvar receita
+  const saveRecipe = () => {
+    const phaseNames = {
+      CLONING: "Clonagem",
+      VEGA: "Vegetativa",
+      FLORA: "Floração",
+      MAINTENANCE: "Manutenção",
+      DRYING: "Secagem",
+    };
+    
+    recordApplication.mutate({
+      tentId: 1, // ID fixo da estufa padrão
       cycleId: null,
       recipeTemplateId: null,
-      recipeName: `${phase} Semana ${week}`,
-      phase,
+      recipeName: `${phaseNames[phase]} Semana ${week}`,
+      phase: phase,
       weekNumber: week,
       volumeTotalL: volumeL,
-      ecTarget: parseFloat(ec),
+      ecTarget: ecEstimated,
       ecActual: null,
       phTarget: 6.0,
       phActual: null,
       products: calculatedProducts.map(p => ({
         name: p.name,
-        amountMl: p.totalMl,
+        amountMl: p.totalG, // Usando campo amountMl para gramas temporariamente
         npk: p.npk,
         ca: p.ca,
         mg: p.mg,
         fe: p.fe,
       })),
-      notes: undefined,
+      notes: `Receita gerada automaticamente para ${phaseNames[phase]} Semana ${week}`,
     });
   };
   
-  const exportRecipe = () => {
-    const text = `
-RECEITA DE FERTILIZAÇÃO
-========================
-Fase: ${phase}
-Semana: ${week}
-Volume Total: ${volumeL}L
-
-PRODUTOS:
-${calculatedProducts.map(p => `- ${p.name}: ${p.totalMl.toFixed(1)}ml (${p.mlPerLiter}ml/L)`).join("\n")}
-
-NPK TOTAL:
-- Nitrogênio (N): ${npk.n} ppm
-- Fósforo (P): ${npk.p} ppm
-- Potássio (K): ${npk.k} ppm
-
-MICRONUTRIENTES:
-- Cálcio (Ca): ${micros.ca} ppm
-- Magnésio (Mg): ${micros.mg} ppm
-- Ferro (Fe): ${micros.fe} ppm
-
-EC ESTIMADO: ${ec} mS/cm (${Math.round(parseFloat(ec) * 640)} ppm)
-    `.trim();
-    
-    const blob = new Blob([text], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `receita_${phase}_semana${week}_${volumeL}L.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
-    
-    showToast.success("📥 Receita exportada!");
-  };
-  
-  const applicationsQuery = trpc.nutrients.listApplications.useQuery();
-  
   return (
-    <div className="container py-8">
+    <div className="container py-6 max-w-5xl">
       <div className="flex items-center gap-3 mb-6">
         <Beaker className="w-8 h-8 text-green-600" />
         <div>
           <h1 className="text-3xl font-bold">Calculadora de Fertilização</h1>
-          <p className="text-muted-foreground">
-            Calcule automaticamente as quantidades de nutrientes baseado em fase e semana
-          </p>
+          <p className="text-muted-foreground">Calcule automaticamente as quantidades de nutrientes baseado em fase e semana</p>
         </div>
       </div>
       
       <Tabs defaultValue="calculator" className="space-y-6">
-        <TabsList className="grid w-full max-w-md grid-cols-2">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="calculator">🧪 Calculadora</TabsTrigger>
           <TabsTrigger value="history">📋 Histórico</TabsTrigger>
         </TabsList>
@@ -225,11 +243,9 @@ EC ESTIMADO: ${ec} mS/cm (${Math.round(parseFloat(ec) * 640)} ppm)
           <Card>
             <CardHeader>
               <CardTitle>1. Selecione a Fase e Semana</CardTitle>
-              <CardDescription>
-                O sistema calculará automaticamente os produtos e quantidades
-              </CardDescription>
+              <CardDescription>O sistema calculará automaticamente os produtos e quantidades</CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-4 md:grid-cols-2">
+            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Fase</Label>
                 <Select value={phase} onValueChange={(v) => setPhase(v as Phase)}>
@@ -239,16 +255,16 @@ EC ESTIMADO: ${ec} mS/cm (${Math.round(parseFloat(ec) * 640)} ppm)
                   <SelectContent>
                     <SelectItem value="CLONING">🌱 Clonagem</SelectItem>
                     <SelectItem value="VEGA">🌿 Vegetativa</SelectItem>
-                    <SelectItem value="FLORA">🌺 Floração</SelectItem>
+                    <SelectItem value="FLORA">🌸 Floração</SelectItem>
                     <SelectItem value="MAINTENANCE">🔧 Manutenção</SelectItem>
-                    <SelectItem value="DRYING">💨 Secagem (Flush)</SelectItem>
+                    <SelectItem value="DRYING">💨 Secagem</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               
               <div className="space-y-2">
                 <Label>Semana</Label>
-                <Select value={week.toString()} onValueChange={(v) => setWeek(parseInt(v))}>
+                <Select value={week.toString()} onValueChange={(v) => setWeek(Number(v))}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -266,19 +282,17 @@ EC ESTIMADO: ${ec} mS/cm (${Math.round(parseFloat(ec) * 640)} ppm)
           <Card className="border-green-200 shadow-lg">
             <CardHeader>
               <CardTitle className="text-2xl">2. Quantos litros você vai preparar?</CardTitle>
-              <CardDescription>
-                Digite o volume total da solução nutritiva
-              </CardDescription>
+              <CardDescription>Digite o volume total da solução nutritiva</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-4">
                 <Input
                   type="number"
                   value={volumeL}
-                  onChange={(e) => setVolumeL(parseFloat(e.target.value) || 0)}
+                  onChange={(e) => setVolumeL(Number(e.target.value))}
                   className="text-6xl h-24 text-center font-bold"
-                  min={0}
-                  step={0.5}
+                  min={1}
+                  max={1000}
                 />
                 <span className="text-4xl font-bold text-muted-foreground">Litros</span>
               </div>
@@ -286,108 +300,118 @@ EC ESTIMADO: ${ec} mS/cm (${Math.round(parseFloat(ec) * 640)} ppm)
           </Card>
           
           {/* Receita Calculada */}
-          <Card className="border-cyan-200">
+          <Card className="border-green-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 🧪 Receita de Fertilização para {volumeL}L
               </CardTitle>
-              <CardDescription>
-                Quantidades calculadas automaticamente baseadas no volume total
-              </CardDescription>
+              <CardDescription>Quantidades calculadas automaticamente baseadas no volume total</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              {calculatedProducts.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <p className="text-lg">💧 Flush (apenas água)</p>
-                  <p className="text-sm">Não adicione nutrientes nesta fase</p>
-                </div>
-              ) : (
-                <>
-                  <div className="space-y-3">
-                    <h3 className="font-semibold text-sm text-muted-foreground">Produtos</h3>
+            <CardContent className="space-y-6">
+              {/* Produtos */}
+              <div className="space-y-3">
+                <h3 className="font-semibold text-lg">Produtos</h3>
+                {calculatedProducts.length === 0 ? (
+                  <p className="text-muted-foreground">Flush (apenas água)</p>
+                ) : (
+                  <div className="grid gap-3">
                     {calculatedProducts.map((prod, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center justify-between p-4 rounded-lg border bg-card"
-                      >
+                      <div key={idx} className="flex items-center justify-between p-4 bg-muted rounded-lg">
                         <div>
-                          <p className="font-semibold">{prod.name}</p>
+                          <p className="font-medium">{prod.name}</p>
                           <p className="text-sm text-muted-foreground">
-                            {prod.mlPerLiter}ml/L × {volumeL}L
+                            {prod.gPerLiter.toFixed(2)}g/L × {volumeL}L
                           </p>
-                          <p className="text-xs text-muted-foreground">
-                            NPK: {prod.npk} | Ca: {prod.ca}% | Mg: {prod.mg}% | Fe: {prod.fe}%
+                          <p className="text-xs text-muted-foreground mt-1">
+                            NPK: {prod.npk}
+                            {prod.ca > 0 && ` | Ca: ${prod.ca}%`}
+                            {prod.mg > 0 && ` | Mg: ${prod.mg}%`}
+                            {prod.fe > 0 && ` | Fe: ${prod.fe}%`}
+                            {prod.s > 0 && ` | S: ${prod.s}%`}
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="text-2xl font-bold text-green-600">
-                            {prod.totalMl.toFixed(1)} ml
-                          </p>
+                          <p className="text-2xl font-bold text-green-600">{prod.totalG.toFixed(1)} g</p>
                         </div>
                       </div>
                     ))}
                   </div>
-                  
-                  {/* NPK Total */}
-                  <div className="space-y-2">
-                    <h3 className="font-semibold text-sm text-muted-foreground">NPK Total</h3>
-                    <div className="grid gap-2 md:grid-cols-3">
-                      <div className="p-4 rounded-lg bg-purple-50 border border-purple-200">
-                        <p className="text-sm text-purple-700 font-medium">Nitrogênio (N):</p>
-                        <p className="text-2xl font-bold text-purple-900">{npk.n} ppm</p>
-                      </div>
-                      <div className="p-4 rounded-lg bg-blue-50 border border-blue-200">
-                        <p className="text-sm text-blue-700 font-medium">Fósforo (P):</p>
-                        <p className="text-2xl font-bold text-blue-900">{npk.p} ppm</p>
-                      </div>
-                      <div className="p-4 rounded-lg bg-green-50 border border-green-200">
-                        <p className="text-sm text-green-700 font-medium">Potássio (K):</p>
-                        <p className="text-2xl font-bold text-green-900">{npk.k} ppm</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Micronutrientes */}
-                  <div className="space-y-2">
-                    <h3 className="font-semibold text-sm text-muted-foreground">Micronutrientes</h3>
-                    <div className="grid gap-2 md:grid-cols-3">
-                      <div className="p-4 rounded-lg bg-orange-50 border border-orange-200">
-                        <p className="text-sm text-orange-700 font-medium">Cálcio (Ca):</p>
-                        <p className="text-2xl font-bold text-orange-900">{micros.ca} ppm</p>
-                      </div>
-                      <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-200">
-                        <p className="text-sm text-emerald-700 font-medium">Magnésio (Mg):</p>
-                        <p className="text-2xl font-bold text-emerald-900">{micros.mg} ppm</p>
-                      </div>
-                      <div className="p-4 rounded-lg bg-yellow-50 border border-yellow-200">
-                        <p className="text-sm text-yellow-700 font-medium">Ferro (Fe):</p>
-                        <p className="text-2xl font-bold text-yellow-900">{micros.fe} ppm</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* EC Estimado */}
-                  <div className="p-4 rounded-lg bg-blue-50 border border-blue-200">
-                    <p className="text-sm text-blue-700 font-medium">EC Estimado:</p>
-                    <p className="text-3xl font-bold text-blue-900">{ec} mS/cm</p>
-                    <p className="text-sm text-blue-600">
-                      PPM Aproximado: {Math.round(parseFloat(ec) * 640)} ppm
-                    </p>
-                  </div>
-                </>
-              )}
+                )}
+              </div>
               
-              <div className="flex gap-3 pt-4">
+              {/* NPK Total */}
+              <div className="space-y-3">
+                <h3 className="font-semibold text-lg">NPK Total</h3>
+                <div className="grid grid-cols-3 gap-3">
+                  <Card className="bg-purple-50 border-purple-200">
+                    <CardContent className="pt-4">
+                      <p className="text-sm text-muted-foreground">Nitrogênio (N):</p>
+                      <p className="text-2xl font-bold text-purple-700">{npkTotal.n} ppm</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-blue-50 border-blue-200">
+                    <CardContent className="pt-4">
+                      <p className="text-sm text-muted-foreground">Fósforo (P):</p>
+                      <p className="text-2xl font-bold text-blue-700">{npkTotal.p} ppm</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-green-50 border-green-200">
+                    <CardContent className="pt-4">
+                      <p className="text-sm text-muted-foreground">Potássio (K):</p>
+                      <p className="text-2xl font-bold text-green-700">{npkTotal.k} ppm</p>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+              
+              {/* Micronutrientes */}
+              <div className="space-y-3">
+                <h3 className="font-semibold text-lg">Micronutrientes</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <Card className="bg-orange-50 border-orange-200">
+                    <CardContent className="pt-4">
+                      <p className="text-sm text-muted-foreground">Cálcio (Ca):</p>
+                      <p className="text-xl font-bold text-orange-700">{microsTotal.ca} ppm</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-emerald-50 border-emerald-200">
+                    <CardContent className="pt-4">
+                      <p className="text-sm text-muted-foreground">Magnésio (Mg):</p>
+                      <p className="text-xl font-bold text-emerald-700">{microsTotal.mg} ppm</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-yellow-50 border-yellow-200">
+                    <CardContent className="pt-4">
+                      <p className="text-sm text-muted-foreground">Ferro (Fe):</p>
+                      <p className="text-xl font-bold text-yellow-700">{microsTotal.fe} ppm</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-amber-50 border-amber-200">
+                    <CardContent className="pt-4">
+                      <p className="text-sm text-muted-foreground">Enxofre (S):</p>
+                      <p className="text-xl font-bold text-amber-700">{microsTotal.s} ppm</p>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+              
+              {/* EC */}
+              <Card className="bg-blue-50 border-blue-200">
+                <CardContent className="pt-4">
+                  <p className="text-sm text-muted-foreground">EC Estimado:</p>
+                  <p className="text-3xl font-bold text-blue-700">{ecEstimated} mS/cm</p>
+                  <p className="text-sm text-muted-foreground mt-1">PPM Aproximado: {ppmApprox} ppm</p>
+                </CardContent>
+              </Card>
+              
+              {/* Ações */}
+              <div className="flex gap-3">
                 <Button onClick={exportRecipe} variant="outline" className="flex-1">
                   <Download className="w-4 h-4 mr-2" />
                   Exportar Receita (TXT)
                 </Button>
-                <Button 
-                  onClick={handleSave} 
-                  className="flex-1"
-                  disabled={createApplication.isPending}
-                >
-                  {createApplication.isPending ? "Salvando..." : "Salvar Receita"}
+                <Button onClick={saveRecipe} className="flex-1 bg-green-600 hover:bg-green-700">
+                  Salvar Receita
                 </Button>
               </div>
             </CardContent>
@@ -398,39 +422,10 @@ EC ESTIMADO: ${ec} mS/cm (${Math.round(parseFloat(ec) * 640)} ppm)
           <Card>
             <CardHeader>
               <CardTitle>Histórico de Receitas</CardTitle>
-              <CardDescription>
-                Receitas salvas anteriormente para consulta
-              </CardDescription>
+              <CardDescription>Receitas salvas anteriormente</CardDescription>
             </CardHeader>
             <CardContent>
-              {applicationsQuery.isLoading ? (
-                <p className="text-center text-muted-foreground py-8">Carregando...</p>
-              ) : applicationsQuery.data && applicationsQuery.data.length > 0 ? (
-                <div className="space-y-3">
-                  {applicationsQuery.data.map((app: any) => (
-                    <div
-                      key={app.id}
-                      className="p-4 rounded-lg border bg-card hover:bg-accent transition-colors"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <p className="font-semibold">{app.recipeName}</p>
-                          <p className="text-sm text-muted-foreground">
-                            Volume: {app.volumeL}L | EC: {app.ecTarget} mS/cm
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {new Date(app.appliedAt).toLocaleDateString("pt-BR")}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-center text-muted-foreground py-8">
-                  Nenhuma receita salva ainda
-                </p>
-              )}
+              <p className="text-muted-foreground">Em desenvolvimento...</p>
             </CardContent>
           </Card>
         </TabsContent>

@@ -799,3 +799,12 @@
 - [ ] Manter apenas: Fase + Semana + Volume → Receita calculada
 - [ ] Implementar salvamento de receita apenas para histórico (não como predefinição)
 - [ ] Testar fluxo completo: selecionar fase/semana, digitar volume, ver receita, salvar
+
+## Adaptação para Sais Minerais Sólidos
+
+- [ ] Atualizar função `getRecommendedRecipe()` para usar sais minerais em gramas
+- [ ] Criar produtos: Nitrato de Cálcio, Nitrato de Potássio, MKP, Sulfato de Magnésio, Micronutrientes
+- [ ] Ajustar cálculos de NPK baseados em composição química dos sais
+- [ ] Atualizar página Nutrients.tsx para mostrar quantidades em gramas (g) ao invés de ml
+- [ ] Corrigir fórmula de EC para valores realistas (1.2-1.6 mS/cm para Vega)
+- [ ] Testar cálculos com diferentes volumes e fases

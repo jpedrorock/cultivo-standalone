@@ -1,14 +1,15 @@
 /**
- * Funções auxiliares para cálculos de nutrientes
+ * Funções auxiliares para cálculos de nutrientes (Sais Minerais Sólidos)
  */
 
 export interface NutrientProduct {
   name: string;
-  amountMl: number; // Quantidade em ml
-  npk?: string; // Ex: "5-10-5"
+  amountG: number; // Quantidade em gramas
+  npk?: string; // Ex: "15-0-0" (composição química do sal)
   ca?: number; // Cálcio %
   mg?: number; // Magnésio %
   fe?: number; // Ferro %
+  s?: number; // Enxofre %
 }
 
 export interface NutrientMix {
@@ -25,6 +26,7 @@ export interface NutrientMix {
     ca: number; // Cálcio (ppm)
     mg: number; // Magnésio (ppm)
     fe: number; // Ferro (ppm)
+    s: number; // Enxofre (ppm)
   };
 }
 
@@ -75,9 +77,9 @@ export function calculatepHAdjustment(
 }
 
 /**
- * Calcula NPK total e micronutrientes de uma mistura
+ * Calcula NPK total e micronutrientes de uma mistura de sais minerais
  * 
- * @param products Lista de produtos com quantidades
+ * @param products Lista de produtos (sais) com quantidades em gramas
  * @param volumeTotalL Volume total da solução em litros
  * @returns Mistura calculada com NPK e micronutrientes
  */
@@ -91,46 +93,50 @@ export function calculateNutrientMix(
   let caTotal = 0;
   let mgTotal = 0;
   let feTotal = 0;
+  let sTotal = 0;
   
   // Calcular contribuição de cada produto
   for (const product of products) {
     if (product.npk) {
       const [n, p, k] = product.npk.split('-').map(Number);
       
-      // Converter % para ppm baseado na quantidade de produto
-      // Assumindo densidade ~1g/ml para fertilizantes líquidos
-      // 1% em 1ml = 10mg = 10ppm em 1L
-      const mlPerLiter = product.amountMl / volumeTotalL;
+      // Converter % para ppm baseado na quantidade de produto em gramas
+      // 1g de produto com X% de nutriente em 1L = (X/100) * 1000 ppm
+      const gPerLiter = product.amountG / volumeTotalL;
       
-      nTotal += (n / 100) * mlPerLiter * 10000; // Converte % para ppm
-      pTotal += (p / 100) * mlPerLiter * 10000;
-      kTotal += (k / 100) * mlPerLiter * 10000;
+      nTotal += (n / 100) * gPerLiter * 1000; // Converte % para ppm
+      pTotal += (p / 100) * gPerLiter * 1000;
+      kTotal += (k / 100) * gPerLiter * 1000;
     }
     
     if (product.ca) {
-      const mlPerLiter = product.amountMl / volumeTotalL;
-      caTotal += (product.ca / 100) * mlPerLiter * 10000;
+      const gPerLiter = product.amountG / volumeTotalL;
+      caTotal += (product.ca / 100) * gPerLiter * 1000;
     }
     
     if (product.mg) {
-      const mlPerLiter = product.amountMl / volumeTotalL;
-      mgTotal += (product.mg / 100) * mlPerLiter * 10000;
+      const gPerLiter = product.mg / volumeTotalL;
+      mgTotal += (product.mg / 100) * gPerLiter * 1000;
     }
     
     if (product.fe) {
-      const mlPerLiter = product.amountMl / volumeTotalL;
-      feTotal += (product.fe / 100) * mlPerLiter * 10000;
+      const gPerLiter = product.amountG / volumeTotalL;
+      feTotal += (product.fe / 100) * gPerLiter * 1000;
+    }
+    
+    if (product.s) {
+      const gPerLiter = product.amountG / volumeTotalL;
+      sTotal += (product.s / 100) * gPerLiter * 1000;
     }
   }
   
-  // Estimar EC baseado no total de nutrientes
-  // Regra geral: 1000 ppm ≈ 1.5-2.0 mS/cm (ajustado para 1.5)
-  // Dividir por 10 para compensar cálculo superestimado
-  const totalPPM = (nTotal + pTotal + kTotal + caTotal + mgTotal + feTotal) / 10;
-  const ecEstimated = convertPPMtoEC(totalPPM);
+  // Estimar EC baseado no total de sais dissolvidos
+  // Para sais minerais: EC ≈ (total de sais em g/L) × fator de conversão
+  // Baseado em dados empíricos: ~2.2g/L de sais → 2.0 mS/cm (fator ≈ 0.91)
+  const totalSaltsGPerL = products.reduce((sum, p) => sum + (p.amountG / volumeTotalL), 0);
+  const ecEstimated = Math.round(totalSaltsGPerL * 0.91 * 100) / 100;
   
-  // pH estimado (simplificado - depende muito dos produtos)
-  // Fertilizantes geralmente baixam o pH para 5.5-6.5
+  // pH estimado (simplificado - sais minerais geralmente baixam o pH para 5.5-6.5)
   const phEstimated = 6.0;
   
   return {
@@ -147,12 +153,20 @@ export function calculateNutrientMix(
       ca: Math.round(caTotal),
       mg: Math.round(mgTotal),
       fe: Math.round(feTotal),
+      s: Math.round(sTotal),
     },
   };
 }
 
 /**
- * Gera receita recomendada para uma fase específica
+ * Gera receita recomendada para uma fase específica usando sais minerais
+ * 
+ * Composição química dos sais:
+ * - Nitrato de Cálcio: Ca(NO₃)₂ → 15.5% N, 19% Ca
+ * - Nitrato de Potássio: KNO₃ → 13% N, 38% K
+ * - MKP (Fosfato Monopotássico): KH₂PO₄ → 22% P, 28% K
+ * - Sulfato de Magnésio: MgSO₄ → 10% Mg, 13% S
+ * - Micronutrientes: Mix comercial → 6% Fe
  */
 export function getRecommendedRecipe(
   phase: 'CLONING' | 'VEGA' | 'FLORA' | 'MAINTENANCE' | 'DRYING',
@@ -163,38 +177,50 @@ export function getRecommendedRecipe(
   
   switch (phase) {
     case 'CLONING':
-      // Clonagem: baixo NPK, foco em enraizamento
+      // Clonagem: baixo NPK, EC ~0.8 mS/cm
       products = [
-        { name: 'Enraizador', amountMl: 2 * volumeL, npk: '1-2-1' },
-        { name: 'CalMag', amountMl: 1 * volumeL, ca: 3, mg: 1 },
+        { name: 'Nitrato de Cálcio', amountG: 0.3 * volumeL, npk: '15.5-0-0', ca: 19 },
+        { name: 'Nitrato de Potássio', amountG: 0.2 * volumeL, npk: '13-0-38' },
+        { name: 'MKP (Fosfato Monopotássico)', amountG: 0.1 * volumeL, npk: '0-22-28' },
+        { name: 'Sulfato de Magnésio', amountG: 0.2 * volumeL, mg: 10, s: 13 },
       ];
       break;
       
     case 'VEGA':
-      // Vegetativa: alto N, médio P-K
-      const vegaIntensity = Math.min(weekNumber / 4, 1); // Intensidade cresce até semana 4
+      // Vegetativa: alto N, EC ~1.2-1.6 mS/cm
+      const vegaWeek = Math.min(weekNumber, 4);
+      const vegaMultiplier = 0.7 + (vegaWeek / 4) * 0.3; // 0.7 a 1.0
+      
       products = [
-        { name: 'Grow (Vega)', amountMl: (3 + vegaIntensity * 2) * volumeL, npk: '7-4-10' },
-        { name: 'CalMag', amountMl: 2 * volumeL, ca: 3, mg: 1 },
-        { name: 'Micronutrientes', amountMl: 1 * volumeL, fe: 0.5 },
+        { name: 'Nitrato de Cálcio', amountG: 0.9 * vegaMultiplier * volumeL, npk: '15.5-0-0', ca: 19 },
+        { name: 'Nitrato de Potássio', amountG: 0.4 * vegaMultiplier * volumeL, npk: '13-0-38' },
+        { name: 'MKP (Fosfato Monopotássico)', amountG: 0.19 * vegaMultiplier * volumeL, npk: '0-22-28' },
+        { name: 'Sulfato de Magnésio', amountG: 0.64 * vegaMultiplier * volumeL, mg: 10, s: 13 },
+        { name: 'Micronutrientes', amountG: 0.05 * vegaMultiplier * volumeL, fe: 6 },
       ];
       break;
       
     case 'FLORA':
-      // Floração: baixo N, alto P-K
-      const floraIntensity = Math.min(weekNumber / 8, 1); // Intensidade cresce até semana 8
+      // Floração: baixo N, alto P-K, EC ~1.4-1.8 mS/cm
+      const floraWeek = Math.min(weekNumber, 8);
+      const floraMultiplier = 0.8 + (floraWeek / 8) * 0.4; // 0.8 a 1.2
+      
       products = [
-        { name: 'Bloom (Flora)', amountMl: (4 + floraIntensity * 3) * volumeL, npk: '2-8-12' },
-        { name: 'PK Booster', amountMl: floraIntensity * 2 * volumeL, npk: '0-13-14' },
-        { name: 'CalMag', amountMl: 2 * volumeL, ca: 3, mg: 1 },
+        { name: 'Nitrato de Cálcio', amountG: 0.4 * floraMultiplier * volumeL, npk: '15.5-0-0', ca: 19 },
+        { name: 'Nitrato de Potássio', amountG: 0.7 * floraMultiplier * volumeL, npk: '13-0-38' },
+        { name: 'MKP (Fosfato Monopotássico)', amountG: 0.6 * floraMultiplier * volumeL, npk: '0-22-28' },
+        { name: 'Sulfato de Magnésio', amountG: 0.5 * floraMultiplier * volumeL, mg: 10, s: 13 },
+        { name: 'Micronutrientes', amountG: 0.05 * floraMultiplier * volumeL, fe: 6 },
       ];
       break;
       
     case 'MAINTENANCE':
-      // Manutenção: NPK balanceado, baixa concentração
+      // Manutenção: NPK balanceado, EC ~1.0 mS/cm
       products = [
-        { name: 'Manutenção Básica', amountMl: 2 * volumeL, npk: '5-5-5' },
-        { name: 'CalMag', amountMl: 1 * volumeL, ca: 3, mg: 1 },
+        { name: 'Nitrato de Cálcio', amountG: 0.5 * volumeL, npk: '15.5-0-0', ca: 19 },
+        { name: 'Nitrato de Potássio', amountG: 0.3 * volumeL, npk: '13-0-38' },
+        { name: 'MKP (Fosfato Monopotássico)', amountG: 0.15 * volumeL, npk: '0-22-28' },
+        { name: 'Sulfato de Magnésio', amountG: 0.3 * volumeL, mg: 10, s: 13 },
       ];
       break;
       
