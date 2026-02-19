@@ -836,3 +836,16 @@
 
 - [x] Remover submenu do sidebar (voltar menu simples)
 - [x] Adicionar card de Fertilização na página de Calculadoras
+
+## Ajustes Finais (19/02/2026)
+
+- [x] Corrigir tamanho desproporcional do número no campo de litros da fertilização
+- [ ] Revisão geral: testar todas as funcionalidades no desktop
+- [ ] Revisão geral: testar mobile e dark mode
+- [ ] Analisar e limpar código que não funciona
+
+## Tarefas Futuras
+
+- [ ] Revisar README
+- [ ] Criar guia de usuário
+- [ ] Criar guia de instalação

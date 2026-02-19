@@ -308,7 +308,7 @@ export default function Nutrients() {
                   type="number"
                   value={volumeL}
                   onChange={(e) => setVolumeL(Number(e.target.value))}
-                  className="text-6xl h-24 text-center font-bold"
+                  className="text-4xl h-20 text-center font-bold"
                   min={1}
                   max={1000}
                 />
