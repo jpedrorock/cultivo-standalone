@@ -19,7 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell, Trash2, EyeOff, Eye } from "lucide-react";
+import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell, Trash2, EyeOff, Eye, Wrench, Scissors, Flower2 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
@@ -175,7 +175,7 @@ export default function Home() {
       return {
         phase: "Manutenção",
         color: "bg-blue-500/100",
-        icon: Sprout,
+        icon: Wrench,
       };
     }
 
@@ -191,7 +191,7 @@ export default function Home() {
       return {
         phase: "Floração",
         color: "bg-purple-500",
-        icon: Sprout,
+        icon: Flower2,
       };
     }
 

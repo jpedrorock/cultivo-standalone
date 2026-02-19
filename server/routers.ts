@@ -363,6 +363,24 @@ export const appRouter = router({
           startDate,
           floraStartDate,
         });
+        
+        // Atualizar categoria da estufa baseado na fase
+        let category: "MAINTENANCE" | "VEGA" | "FLORA" | "DRYING" = "MAINTENANCE";
+        if (input.phase === "CLONING" || input.phase === "MAINTENANCE") {
+          category = "MAINTENANCE";
+        } else if (input.phase === "VEGA") {
+          category = "VEGA";
+        } else if (input.phase === "FLORA") {
+          category = "FLORA";
+        } else if (input.phase === "DRYING") {
+          category = "DRYING";
+        }
+        
+        await database
+          .update(tents)
+          .set({ category })
+          .where(eq(tents.id, input.tentId));
+        
         return { success: true };
       }),
     edit: publicProcedure
@@ -413,6 +431,39 @@ export const appRouter = router({
           .update(cycles)
           .set(updates)
           .where(eq(cycles.id, input.cycleId));
+        
+        // Atualizar categoria da estufa se fase foi especificada
+        if (input.phase) {
+          // Buscar tentId do ciclo
+          const cycleData = await database
+            .select()
+            .from(cycles)
+            .where(eq(cycles.id, input.cycleId))
+            .limit(1);
+          
+          if (cycleData.length > 0) {
+            const tentId = cycleData[0].tentId;
+            
+            // Mapear fase para categoria da estufa
+            let category: "MAINTENANCE" | "VEGA" | "FLORA" | "DRYING" = "MAINTENANCE";
+            if (input.phase === "CLONING" || input.phase === "MAINTENANCE") {
+              category = "MAINTENANCE";
+            } else if (input.phase === "VEGA") {
+              category = "VEGA";
+            } else if (input.phase === "FLORA") {
+              category = "FLORA";
+            } else if (input.phase === "DRYING") {
+              category = "DRYING";
+            }
+            
+            // Atualizar categoria da estufa
+            await database
+              .update(tents)
+              .set({ category })
+              .where(eq(tents.id, tentId));
+          }
+        }
+        
         return { success: true };
       }),
     getReportData: publicProcedure
@@ -854,21 +905,22 @@ export const appRouter = router({
       }),
     
     // Notification Settings (Configurações de Notificações)
-    getNotificationSettings: protectedProcedure.query(async ({ ctx }) => {
+    getNotificationSettings: publicProcedure.query(async () => {
       const database = await getDb();
       if (!database) return null;
       const { notificationSettings } = await import("../drizzle/schema");
       
+      // Usar userId fixo 1 (sem autenticação)
       const settings = await database
         .select()
         .from(notificationSettings)
-        .where(eq(notificationSettings.userId, ctx.user.id))
+        .where(eq(notificationSettings.userId, 1))
         .limit(1);
       
       return settings[0] || null;
     }),
     
-    updateNotificationSettings: protectedProcedure
+    updateNotificationSettings: publicProcedure
       .input(
         z.object({
           tempAlertsEnabled: z.boolean().optional(),
@@ -880,7 +932,7 @@ export const appRouter = router({
           dailySummaryTime: z.string().optional(),
         })
       )
-      .mutation(async ({ ctx, input }) => {
+      .mutation(async ({ input }) => {
         const database = await getDb();
         if (!database) {
           throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
@@ -888,11 +940,14 @@ export const appRouter = router({
         
         const { notificationSettings } = await import("../drizzle/schema");
         
+        // Usar userId fixo 1 (sem autenticação)
+        const userId = 1;
+        
         // Verificar se já existe configuração
         const existing = await database
           .select()
           .from(notificationSettings)
-          .where(eq(notificationSettings.userId, ctx.user.id))
+          .where(eq(notificationSettings.userId, userId))
           .limit(1);
         
         if (existing.length > 0) {
@@ -900,11 +955,11 @@ export const appRouter = router({
           await database
             .update(notificationSettings)
             .set(input)
-            .where(eq(notificationSettings.userId, ctx.user.id));
+            .where(eq(notificationSettings.userId, userId));
         } else {
           // Criar nova
           await database.insert(notificationSettings).values({
-            userId: ctx.user.id,
+            userId,
             ...input,
           });
         }
@@ -1233,7 +1288,7 @@ export const appRouter = router({
         const startDate = new Date(cycle.startDate);
         const floraStartDate = cycle.floraStartDate ? new Date(cycle.floraStartDate) : null;
 
-        let currentPhase: "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE";
+        let currentPhase: "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE" | "DRYING";
         let weekNumber: number;
 
         // Determine phase based on tent category
@@ -1252,17 +1307,23 @@ export const appRouter = router({
             ? Math.floor((now.getTime() - floraStartDate.getTime()) / (7 * 24 * 60 * 60 * 1000))
             : Math.floor((now.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000));
           weekNumber = weeksSinceStart + 1;
+        } else if (tent.category === "DRYING") {
+          currentPhase = "DRYING";
+          const weeksSinceStart = Math.floor(
+            (now.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
+          );
+          weekNumber = Math.min(weeksSinceStart + 1, 2); // Máximo 2 semanas de secagem
         } else {
-          // DRYING
-          currentPhase = "MAINTENANCE"; // Fallback
+          // Fallback
+          currentPhase = "MAINTENANCE";
           weekNumber = 1;
         }
 
         // Get templates for this phase/week
         const context = tent.category === "MAINTENANCE" ? "TENT_A" : "TENT_BC";
         let templates;
-        if (currentPhase === "MAINTENANCE") {
-          // For maintenance, don't filter by week number
+        if (currentPhase === "MAINTENANCE" || currentPhase === "DRYING") {
+          // For maintenance and drying, don't filter by week number
           templates = await database
             .select()
             .from(taskTemplates)
@@ -1400,39 +1461,48 @@ export const appRouter = router({
         const startDate = new Date(cycle.startDate);
         const floraStartDate = cycle.floraStartDate ? new Date(cycle.floraStartDate) : null;
 
-        let currentPhase: "VEGA" | "FLORA" | "MAINTENANCE";
+        let currentPhase: "VEGA" | "FLORA" | "MAINTENANCE" | "DRYING";
         let weekNumber: number | null;
         let context: "TENT_BC" | "TENT_A";
 
-        // Get tent info to check if it's maintenance
+        // Get tent info to check category
         const tent = await database.select().from(tents).where(eq(tents.id, cycle.tentId)).limit(1);
-        const tentName = tent[0]?.name || "";
+        const tentCategory = tent[0]?.category;
         
-        // Check if this is a maintenance tent (Estufa A or no flora start date)
-        if (tentName.includes("A") || !floraStartDate) {
+        // Determine phase based on tent category
+        if (tentCategory === "MAINTENANCE") {
           currentPhase = "MAINTENANCE";
           weekNumber = null;
           context = "TENT_A";
-        } else if (floraStartDate && now >= floraStartDate) {
+        } else if (tentCategory === "DRYING") {
+          currentPhase = "DRYING";
+          weekNumber = null;
+          context = "TENT_BC";
+        } else if (tentCategory === "FLORA") {
           currentPhase = "FLORA";
-          const weeksSinceFlora = Math.floor(
-            (now.getTime() - floraStartDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
-          );
+          const weeksSinceFlora = floraStartDate
+            ? Math.floor((now.getTime() - floraStartDate.getTime()) / (7 * 24 * 60 * 60 * 1000))
+            : Math.floor((now.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000));
           weekNumber = weeksSinceFlora + 1;
           context = "TENT_BC";
-        } else {
+        } else if (tentCategory === "VEGA") {
           currentPhase = "VEGA";
           const weeksSinceStart = Math.floor(
             (now.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
           );
           weekNumber = weeksSinceStart + 1;
           context = "TENT_BC";
+        } else {
+          // Fallback
+          currentPhase = "MAINTENANCE";
+          weekNumber = null;
+          context = "TENT_A";
         }
 
         // Get templates for this phase/week
         let templates;
-        if (currentPhase === "MAINTENANCE") {
-          // For maintenance, get tasks without week number filter
+        if (currentPhase === "MAINTENANCE" || currentPhase === "DRYING") {
+          // For maintenance and drying, get tasks without week number filter
           templates = await database
             .select()
             .from(taskTemplates)

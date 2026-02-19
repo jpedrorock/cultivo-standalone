@@ -652,3 +652,11 @@
 - [x] Implementar UI de configurações de notificações (habilitar/desabilitar por tipo de alerta)
 - [x] Adicionar toggle para notificações na página de Alertas
 - [x] Testar fluxo completo de notificações push
+
+## Correções Urgentes
+
+- [x] Remover autenticação de notificationSettings (mudar de protectedProcedure para publicProcedure)
+- [x] Adicionar ícones para todas as fases (MAINTENANCE, CLONING, VEGA, FLORA) - DRYING já tem
+- [x] Corrigir salvamento da fase DRYING - estufa não está salvando corretamente
+- [x] Revisar tarefas de secagem - tarefas de VEGA estão aparecendo quando deveria ser DRYING
+- [ ] Testar fluxo completo de mudança de fase para DRYING
