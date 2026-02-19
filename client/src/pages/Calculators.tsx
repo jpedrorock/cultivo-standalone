@@ -184,13 +184,29 @@ export default function Calculators() {
 
 // Rega e Runoff (Integrado)
 function WateringRunoffCalculator() {
+  // Estados para tabs
+  const [activeTab, setActiveTab] = useState<"calculator" | "history">("calculator");
+  
   // Calculadora de Rega
   const [numPlants, setNumPlants] = useState<number>(4);
   const [potSize, setPotSize] = useState<number>(11);
   const [desiredRunoff, setDesiredRunoff] = useState<number>(20);
   const [lastRunoff, setLastRunoff] = useState<string>("");
   
-  // Removido seletor de fase/semana - não é necessário para rega
+  // Estados para salvar receita
+  const [selectedTent, setSelectedTent] = useState<number | null>(null);
+  const [notes, setNotes] = useState<string>("");
+  
+  // Filtros do histórico
+  const [historyTentFilter, setHistoryTentFilter] = useState<string>("all");
+  
+  // Queries
+  const tents = trpc.tents.list.useQuery();
+  const applications = trpc.watering.listApplications.useQuery({
+    tentId: historyTentFilter !== "all" ? Number(historyTentFilter) : undefined,
+    limit: 50,
+  });
+  const saveApplication = trpc.watering.recordApplication.useMutation();
   
   // Calculadora de Runoff
   const [volumeIn, setVolumeIn] = useState<string>("");
@@ -275,12 +291,49 @@ function WateringRunoffCalculator() {
 
   const wateringResult = calculateWatering();
   const runoffResult = calculateRunoff();
+  
+  const handleSaveRecipe = async () => {
+    if (!selectedTent) {
+      alert("Selecione uma estufa antes de salvar");
+      return;
+    }
+    
+    try {
+      await saveApplication.mutateAsync({
+        tentId: selectedTent,
+        cycleId: null,
+        recipeName: `Rega ${new Date().toLocaleDateString('pt-BR')}`,
+        potSizeL: potSize,
+        numberOfPots: numPlants,
+        waterPerPotL: parseFloat(wateringResult.adjustedVolume),
+        totalWaterL: parseFloat(wateringResult.totalVolume),
+        targetRunoffPercent: desiredRunoff,
+        expectedRunoffL: (parseFloat(wateringResult.totalVolume) * desiredRunoff / 100),
+        actualRunoffL: volumeOut ? parseFloat(volumeOut) : null,
+        actualRunoffPercent: runoffResult ? parseFloat(runoffResult.runoffPercent) : null,
+        notes: notes || undefined,
+      });
+      
+      alert("✅ Receita de rega salva com sucesso!");
+      setNotes("");
+      applications.refetch();
+    } catch (error) {
+      console.error("Erro ao salvar receita:", error);
+      alert("❌ Erro ao salvar receita");
+    }
+  };
 
   return (
-    <div className="space-y-8">
-      <div className="grid gap-8 md:grid-cols-2">
-        {/* Calculadora de Rega */}
-        <Card>
+    <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="space-y-6">
+      <TabsList className="grid w-full grid-cols-2">
+        <TabsTrigger value="calculator">🧪 Calculadora</TabsTrigger>
+        <TabsTrigger value="history">📋 Histórico</TabsTrigger>
+      </TabsList>
+      
+      <TabsContent value="calculator" className="space-y-8">
+        <div className="grid gap-8 md:grid-cols-2">
+          {/* Calculadora de Rega */}
+          <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Calculator className="w-5 h-5" />
@@ -488,49 +541,196 @@ function WateringRunoffCalculator() {
             )}
           </CardContent>
         </Card>
+        </div>
+
+        {/* Dicas */}
+        <Card>
+          <CardHeader>
+            <CardTitle>💡 Dicas de Uso</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm text-muted-foreground">
+            <p>
+              <strong className="text-foreground">Calculadora de Rega:</strong> Use para calcular quanto regar. 
+              Se informar o runoff da última rega, o sistema ajusta automaticamente o volume para atingir o ideal.
+            </p>
+            <p>
+              <strong className="text-foreground">Calculadora de Runoff:</strong> Após regar, meça o volume 
+              coletado no copo e calcule o runoff real. Use esse valor na próxima rega para ajuste automático.
+            </p>
+            <p>
+              <strong className="text-foreground">Runoff Ideal:</strong> Geralmente entre 15-25%. 
+              Runoff muito baixo pode causar acúmulo de sais, muito alto desperdiça água e nutrientes.
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Gerência de Predefinições */}
+        <Card>
+          <CardHeader>
+            <CardTitle>💾 Predefinições de Rega</CardTitle>
+            <CardDescription>
+              Salve e carregue configurações de rega personalizadas
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <WateringPresetsManager
+              currentValues={{
+                plantCount: numPlants.toString(),
+                potSize: potSize.toString(),
+                targetRunoff: desiredRunoff.toString(),
+              }}
+              onLoadPreset={handleLoadPreset}
+            />
+          </CardContent>
+        </Card>
+    
+        {/* Botão Salvar Receita */}
+        <Card>
+          <CardHeader>
+            <CardTitle>💾 Salvar Receita de Rega</CardTitle>
+            <CardDescription>Registre esta receita para consulta futura</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="tent-select">Estufa</Label>
+              <select
+                id="tent-select"
+                className="w-full px-3 py-2 border rounded-md"
+                value={selectedTent || ""}
+                onChange={(e) => setSelectedTent(e.target.value ? Number(e.target.value) : null)}
+              >
+                <option value="">Selecione uma estufa</option>
+                {tents.data?.map((tent) => (
+                  <option key={tent.id} value={tent.id}>
+                    {tent.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="notes-input">Observações (opcional)</Label>
+              <textarea
+                id="notes-input"
+                className="w-full px-3 py-2 border rounded-md min-h-[80px]"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Ex: Ajustado volume devido ao runoff baixo..."
+              />
+            </div>
+            
+            <Button 
+              onClick={handleSaveRecipe}
+              disabled={!selectedTent || saveApplication.isPending}
+              className="w-full"
+            >
+              {saveApplication.isPending ? "Salvando..." : "Salvar Receita"}
+            </Button>
+          </CardContent>
+        </Card>
+      </TabsContent>
+    
+      <TabsContent value="history" className="space-y-6">
+      {/* Filtros */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Filtros</CardTitle>
+        </CardHeader>
+        <CardContent className="flex gap-4">
+          <div className="flex-1 space-y-2">
+            <Label htmlFor="history-tent-filter">Estufa</Label>
+            <select
+              id="history-tent-filter"
+              className="w-full px-3 py-2 border rounded-md"
+              value={historyTentFilter}
+              onChange={(e) => setHistoryTentFilter(e.target.value)}
+            >
+              <option value="all">Todas as Estufas</option>
+              {tents.data?.map((tent) => (
+                <option key={tent.id} value={tent.id}>
+                  {tent.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <Button 
+            variant="outline"
+            onClick={() => setHistoryTentFilter("all")}
+            className="self-end"
+          >
+            Limpar Filtros
+          </Button>
+        </CardContent>
+      </Card>
+      
+      {/* Histórico de Receitas */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">
+          Histórico de Receitas ({applications.data?.length || 0})
+        </h3>
+        <p className="text-sm text-muted-foreground">Receitas salvas anteriormente</p>
+        
+        {applications.isLoading ? (
+          <p className="text-center py-8 text-muted-foreground">Carregando...</p>
+        ) : applications.data && applications.data.length > 0 ? (
+          <div className="space-y-4">
+            {applications.data.map((app: any) => (
+              <Card key={app.id} className="border-l-4 border-l-blue-500">
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle className="text-lg">
+                        💧 {app.recipeName}
+                      </CardTitle>
+                      <CardDescription>
+                        {new Date(app.applicationDate).toLocaleDateString('pt-BR')}
+                      </CardDescription>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold text-blue-600">{Number(app.totalWaterL).toFixed(2)}L</p>
+                      <p className="text-sm text-muted-foreground">Total</p>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="text-muted-foreground">Vasos:</span>
+                      <span className="ml-2 font-medium">{app.numberOfPots} x {Number(app.potSizeL).toFixed(0)}L</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Água/vaso:</span>
+                      <span className="ml-2 font-medium">{Number(app.waterPerPotL).toFixed(2)}L</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Runoff target:</span>
+                      <span className="ml-2 font-medium">{app.targetRunoffPercent ? Number(app.targetRunoffPercent).toFixed(1) : "N/A"}%</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Runoff real:</span>
+                      <span className="ml-2 font-medium">{app.actualRunoffPercent ? Number(app.actualRunoffPercent).toFixed(1) : "N/A"}%</span>
+                    </div>
+                  </div>
+                  
+                  {app.notes && (
+                    <div className="pt-3 border-t">
+                      <p className="text-sm font-semibold text-foreground">Notas:</p>
+                      <p className="text-sm text-muted-foreground mt-1">{app.notes}</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center py-8 text-muted-foreground">
+            Nenhuma receita encontrada. Salve sua primeira receita na aba Calculadora!
+          </p>
+        )}
       </div>
-
-      {/* Dicas */}
-      <Card>
-        <CardHeader>
-          <CardTitle>💡 Dicas de Uso</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3 text-sm text-muted-foreground">
-          <p>
-            <strong className="text-foreground">Calculadora de Rega:</strong> Use para calcular quanto regar. 
-            Se informar o runoff da última rega, o sistema ajusta automaticamente o volume para atingir o ideal.
-          </p>
-          <p>
-            <strong className="text-foreground">Calculadora de Runoff:</strong> Após regar, meça o volume 
-            coletado no copo e calcule o runoff real. Use esse valor na próxima rega para ajuste automático.
-          </p>
-          <p>
-            <strong className="text-foreground">Runoff Ideal:</strong> Geralmente entre 15-25%. 
-            Runoff muito baixo pode causar acúmulo de sais, muito alto desperdíça água e nutrientes.
-          </p>
-        </CardContent>
-      </Card>
-
-      {/* Gerência de Predefinições */}
-      <Card>
-        <CardHeader>
-          <CardTitle>💾 Predefinições de Rega</CardTitle>
-          <CardDescription>
-            Salve e carregue configurações de rega personalizadas
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <WateringPresetsManager
-            currentValues={{
-              plantCount: numPlants.toString(),
-              potSize: potSize.toString(),
-              targetRunoff: desiredRunoff.toString(),
-            }}
-            onLoadPreset={handleLoadPreset}
-          />
-        </CardContent>
-      </Card>
-    </div>
+    </TabsContent>
+    </Tabs>
   );
 }
 

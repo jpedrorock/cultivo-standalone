@@ -832,3 +832,42 @@ export const nutrientApplications = mysqlTable("nutrientApplications", {
 
 export type NutrientApplication = typeof nutrientApplications.$inferSelect;
 export type InsertNutrientApplication = typeof nutrientApplications.$inferInsert;
+
+/**
+ * Histórico de Aplicações de Rega
+ */
+export const wateringApplications = mysqlTable("wateringApplications", {
+  id: int("id").autoincrement().primaryKey(),
+  tentId: int("tentId").notNull(),
+  cycleId: int("cycleId"),
+  
+  // Data da aplicação
+  applicationDate: timestamp("applicationDate").defaultNow().notNull(),
+  
+  // Dados da receita aplicada (snapshot)
+  recipeName: varchar("recipeName", { length: 100 }).notNull(),
+  
+  // Dados da rega
+  potSizeL: decimal("potSizeL", { precision: 5, scale: 2 }).notNull(),
+  numberOfPots: int("numberOfPots").notNull(),
+  waterPerPotL: decimal("waterPerPotL", { precision: 5, scale: 2 }).notNull(),
+  totalWaterL: decimal("totalWaterL", { precision: 7, scale: 2 }).notNull(),
+  
+  // Runoff
+  targetRunoffPercent: decimal("targetRunoffPercent", { precision: 4, scale: 1 }),
+  expectedRunoffL: decimal("expectedRunoffL", { precision: 6, scale: 2 }),
+  actualRunoffL: decimal("actualRunoffL", { precision: 6, scale: 2 }),
+  actualRunoffPercent: decimal("actualRunoffPercent", { precision: 4, scale: 1 }),
+  
+  // Observações
+  notes: text("notes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  tentIdIdx: index("tentId_idx").on(table.tentId),
+  cycleIdIdx: index("cycleId_idx").on(table.cycleId),
+  applicationDateIdx: index("applicationDate_idx").on(table.applicationDate),
+}));
+
+export type WateringApplication = typeof wateringApplications.$inferSelect;
+export type InsertWateringApplication = typeof wateringApplications.$inferInsert;

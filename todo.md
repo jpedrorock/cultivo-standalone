@@ -816,3 +816,11 @@
 - [x] Adicionar filtros por estufa e fase
 - [ ] Implementar botão "Reutilizar Receita" para carregar receita salva
 - [ ] Testar fluxo completo de salvar e reutilizar receitas
+
+## Histórico de Rega (19/02/2026)
+
+- [x] Criar tabela wateringApplications no banco de dados
+- [x] Criar procedures backend para salvar e listar aplicações de rega
+- [x] Implementar botão Salvar Receita na calculadora de rega
+- [x] Implementar aba Histórico na calculadora de rega
+- [ ] Testar funcionalidade completa

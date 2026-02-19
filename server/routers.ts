@@ -33,6 +33,7 @@ import {
   wateringPresets,
   recipeTemplates,
   nutrientApplications,
+  wateringApplications,
 } from "../drizzle/schema";
 
 export const appRouter = router({
@@ -2862,6 +2863,77 @@ export const appRouter = router({
 
         return query
           .orderBy(desc(nutrientApplications.applicationDate))
+          .limit(input?.limit || 50);
+      }),
+  }),
+
+  // Watering Applications (Aplicações de Rega)
+  watering: router({
+    // Registrar aplicação de rega
+    recordApplication: publicProcedure
+      .input(
+        z.object({
+          tentId: z.number(),
+          cycleId: z.number().nullable(),
+          recipeName: z.string(),
+          potSizeL: z.number().positive(),
+          numberOfPots: z.number().int().positive(),
+          waterPerPotL: z.number().positive(),
+          totalWaterL: z.number().positive(),
+          targetRunoffPercent: z.number().nullable(),
+          expectedRunoffL: z.number().nullable(),
+          actualRunoffL: z.number().nullable(),
+          actualRunoffPercent: z.number().nullable(),
+          notes: z.string().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+
+        const [newApplication] = await database.insert(wateringApplications).values({
+          tentId: input.tentId,
+          cycleId: input.cycleId,
+          recipeName: input.recipeName,
+          potSizeL: input.potSizeL.toString(),
+          numberOfPots: input.numberOfPots,
+          waterPerPotL: input.waterPerPotL.toString(),
+          totalWaterL: input.totalWaterL.toString(),
+          targetRunoffPercent: input.targetRunoffPercent?.toString() || null,
+          expectedRunoffL: input.expectedRunoffL?.toString() || null,
+          actualRunoffL: input.actualRunoffL?.toString() || null,
+          actualRunoffPercent: input.actualRunoffPercent?.toString() || null,
+          notes: input.notes || null,
+        });
+
+        return { success: true, id: newApplication.insertId };
+      }),
+
+    // Listar histórico de aplicações
+    listApplications: publicProcedure
+      .input(
+        z.object({
+          tentId: z.number().optional(),
+          cycleId: z.number().optional(),
+          limit: z.number().int().positive().default(50),
+        }).optional()
+      )
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+
+        let query = database.select().from(wateringApplications);
+
+        const conditions = [];
+        if (input?.tentId) conditions.push(eq(wateringApplications.tentId, input.tentId));
+        if (input?.cycleId) conditions.push(eq(wateringApplications.cycleId, input.cycleId));
+
+        if (conditions.length > 0) {
+          query = query.where(and(...conditions)) as any;
+        }
+
+        return query
+          .orderBy(desc(wateringApplications.applicationDate))
           .limit(input?.limit || 50);
       }),
   }),
