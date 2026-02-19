@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Plus, Edit, Trash2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -187,18 +188,18 @@ export function TaskTemplatesManager() {
         </Button>
       </div>
 
-      <div className="grid gap-6">
+      <Accordion type="multiple" className="space-y-4">
         {groupedTemplates && Object.entries(groupedTemplates).map(([key, templates]) => {
           const [phase, context] = key.split("-") as [Phase, Context];
           return (
-            <Card key={key}>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  {getPhaseLabel(phase)} - {getContextLabel(context)}
+            <AccordionItem key={key} value={key} className="border rounded-lg">
+              <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                <div className="flex items-center gap-2 text-left">
+                  <span className="font-semibold">{getPhaseLabel(phase)} - {getContextLabel(context)}</span>
                   <Badge variant="outline">{templates.length} tarefas</Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pb-4">
                 <div className="space-y-2">
                   {templates
                     .sort((a: any, b: any) => (a.weekNumber || 0) - (b.weekNumber || 0))
@@ -241,11 +242,11 @@ export function TaskTemplatesManager() {
                       </div>
                     ))}
                 </div>
-              </CardContent>
-            </Card>
+              </AccordionContent>
+            </AccordionItem>
           );
         })}
-      </div>
+      </Accordion>
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

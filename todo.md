@@ -334,3 +334,8 @@
 - [x] Ocultar atalhos de teclado em mobile (Configurações) - usuários mobile não usam teclado físico
 - [x] Adicionar filtros na página Tasks - por estufa específica (Todas/A/B/C) e toggle "Apenas pendentes"
 - [x] Converter tabela de Strains para cards em mobile - layout responsivo com cards ao invés de tabela horizontal
+
+
+### 🎯 Melhorias de UX em Andamento (19/02/2026)
+
+- [x] Implementar acordeão na aba "Gerenciar" (Tasks) - agrupar 40 templates por categoria (Manutenção, Vegetativa, Floração) com seções colasáveis para reduzir scroll de 2809px
