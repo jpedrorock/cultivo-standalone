@@ -320,3 +320,10 @@
 - [x] Implementar cálculo de média de parâmetros ideais para estufas com múltiplas strains (já implementado no backend - getTargetsByTent)
 - [x] Mostrar valores médios no card da estufa quando tem múltiplas strains ("📊 Parâmetros médios (2 strains)" na Estufa A)
 - [x] Testar ambas as funcionalidades no navegador - funcionando perfeitamente
+
+
+## 🔴 Bugs Críticos Identificados na Revisão (19/02/2026)
+
+- [x] Bug: Semana inconsistente na página Tasks - Estufas A e B mostram "Semana do ciclo" sem número (Estufa C mostra corretamente)
+- [x] Bug: Input de arquivo oculto na página Configurações - campo de seleção não está visível, impedindo importação de backup
+- [x] Adicionar feedback de sucesso/erro em operações de backup (toasts de confirmação)

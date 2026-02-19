@@ -123,7 +123,8 @@ export default function Tasks() {
                       <div>
                         <CardTitle className="text-lg">{tentName}</CardTitle>
                         <CardDescription>
-                          {firstTask?.phase === "VEGA" ? "Vegetativa" : "Floração"} • Semana {firstTask?.weekNumber} do ciclo
+                          {firstTask?.phase === "VEGA" ? "Vegetativa" : firstTask?.phase === "FLORA" ? "Floração" : "Manutenção"}
+                          {firstTask?.weekNumber ? ` • Semana ${firstTask.weekNumber} do ciclo` : ""}
                         </CardDescription>
                       </div>
                       <Badge

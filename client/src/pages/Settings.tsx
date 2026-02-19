@@ -179,6 +179,7 @@ function DatabaseImport() {
         return;
       }
       setSelectedFile(file);
+      toast.success(`Arquivo "${file.name}" selecionado com sucesso!`);
     }
   };
 
@@ -213,12 +214,16 @@ function DatabaseImport() {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-3">
+          <div className="space-y-2">
+            <label htmlFor="file-input" className="text-sm font-medium text-foreground">
+              Selecione o arquivo SQL de backup:
+            </label>
             <input
+              id="file-input"
               type="file"
               accept=".sql"
               onChange={handleFileSelect}
-              className="flex-1 text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-green-100"
+              className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-green-600 file:cursor-pointer"
               disabled={isImporting}
             />
           </div>
