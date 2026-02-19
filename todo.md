@@ -543,7 +543,7 @@
 
 ## 🎨 Atualizar Favicon para Símbolo do App (19/02/2026)
 
-- [ ] Localizar favicon atual
-- [ ] Criar novo favicon com símbolo de plantinha (mesmo do ícone do app)
-- [ ] Substituir favicon.ico/favicon.svg no projeto
-- [ ] Testar visualização na aba do navegador
+- [x] Localizar favicon atual (client/public/favicon.svg)
+- [x] Criar novo favicon com ícone Leaf (mesmo do menu lateral)
+- [x] Substituir favicon.svg no projeto
+- [x] Testar visualização na aba do navegador - funcionando perfeitamente
