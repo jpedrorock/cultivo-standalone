@@ -861,3 +861,11 @@
 - [ ] Identificar e remover arquivos não utilizados
 - [ ] Revisar e atualizar README.md com funcionalidades atuais
 - [ ] Revisar e atualizar manual de instalação
+
+## Consolidação de Documentação
+
+- [x] Criar README.md consolidado com visão geral do projeto
+- [x] Criar INSTALACAO.md unificado com todas as plataformas
+- [x] Criar DEPLOY.md com guias de deploy
+- [x] Criar GUIA-USUARIO.md atualizado com todas as funcionalidades
+- [x] Remover arquivos markdown duplicados
