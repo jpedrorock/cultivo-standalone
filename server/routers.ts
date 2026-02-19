@@ -280,7 +280,8 @@ export const appRouter = router({
   // Cycles (Ciclos)
   cycles: router({
     listActive: publicProcedure.query(async () => {
-      return db.getActiveCycles();
+      const allCycles = await db.getAllCycles();
+      return allCycles.filter(c => c.status === "ACTIVE");
     }),
     getByTent: publicProcedure.input(z.object({ tentId: z.number() })).query(async ({ input }) => {
       return db.getCycleByTentId(input.tentId);
@@ -480,23 +481,13 @@ export const appRouter = router({
       .input(
         z.object({
           tentId: z.number(),
-          startDate: z.date().optional(),
-          endDate: z.date().optional(),
+          limit: z.number().optional(),
         })
       )
       .query(async ({ input }) => {
-        return db.getDailyLogs(input.tentId, input.startDate, input.endDate);
+        return db.getDailyLogs(input.tentId, input.limit);
       }),
-    getHistoricalData: publicProcedure
-      .input(
-        z.object({
-          tentId: z.number(),
-          days: z.number().default(30),
-        })
-      )
-      .query(async ({ input }) => {
-        return db.getHistoricalDataWithTargets(input.tentId, input.days);
-      }),
+    // getHistoricalWithTargets removido - usar getDailyLogs diretamente
     create: publicProcedure
       .input(
         z.object({
@@ -810,6 +801,12 @@ export const appRouter = router({
         await database.update(alerts).set({ status: "SEEN" }).where(eq(alerts.id, input.alertId));
         return { success: true };
       }),
+    
+    checkAlerts: publicProcedure
+      .input(z.object({ tentId: z.number() }))
+      .mutation(async ({ input }) => {
+        return db.checkAlertsForTent(input.tentId);
+      }),
   }),
 
   // Weekly Targets (Padrões Semanais)
@@ -1108,12 +1105,10 @@ export const appRouter = router({
       .input(
         z.object({
           tentId: z.number(),
-          startDate: z.date().optional(),
-          endDate: z.date().optional(),
         })
       )
       .query(async ({ input }) => {
-        return db.getTaskInstances(input.tentId, input.startDate, input.endDate);
+        return db.getTaskInstances(input.tentId);
       }),
     getTasksByTent: publicProcedure
       .input(z.object({ tentId: z.number() }))
@@ -1245,7 +1240,8 @@ export const appRouter = router({
       if (!database) throw new Error("Database not available");
 
       // Get all active cycles
-      const activeCycles = await db.getActiveCycles();
+      const allCycles = await db.getAllCycles();
+      const activeCycles = allCycles.filter((c: any) => c.status === "ACTIVE");
       const pendingTasks: any[] = [];
 
       for (const cycle of activeCycles) {
@@ -1290,7 +1286,8 @@ export const appRouter = router({
       if (!database) throw new Error("Database not available");
 
       // Get all active cycles
-      const activeCycles = await db.getActiveCycles();
+      const allCycles = await db.getAllCycles();
+      const activeCycles = allCycles.filter((c: any) => c.status === "ACTIVE");
       const allTasks: any[] = [];
 
       for (const cycle of activeCycles) {

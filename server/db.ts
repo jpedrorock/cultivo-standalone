@@ -1,4 +1,4 @@
-import { eq, and, desc, gte, lte, sql } from "drizzle-orm";
+import { eq, and, desc, sql, isNotNull, or } from "drizzle-orm";
 import { drizzle as drizzleMysql } from "drizzle-orm/mysql2";
 import { drizzle as drizzleSqlite } from "drizzle-orm/better-sqlite3";
 import Database from "better-sqlite3";
@@ -20,6 +20,8 @@ import {
   alerts,
   safetyLimits,
   plants,
+  phaseAlertMargins,
+  alertHistory,
   type Tent,
   type Strain,
   type Cycle,
@@ -33,6 +35,7 @@ import {
   type TaskInstance,
   type Alert,
   type SafetyLimit,
+  type PhaseAlertMargins,
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -102,31 +105,22 @@ export async function upsertUser(user: InsertUser): Promise<void> {
 
     textFields.forEach(assignNullable);
 
+    if (user.role !== undefined) {
+      values.role = user.role;
+      updateSet.role = user.role;
+    }
+
     if (user.lastSignedIn !== undefined) {
       values.lastSignedIn = user.lastSignedIn;
       updateSet.lastSignedIn = user.lastSignedIn;
     }
-    if (user.role !== undefined) {
-      values.role = user.role;
-      updateSet.role = user.role;
-    } else if (user.openId === ENV.ownerOpenId) {
-      values.role = 'admin';
-      updateSet.role = 'admin';
-    }
 
-    if (!values.lastSignedIn) {
-      values.lastSignedIn = new Date();
-    }
-
-    if (Object.keys(updateSet).length === 0) {
-      updateSet.lastSignedIn = new Date();
-    }
-
-    await db.insert(users).values(values).onDuplicateKeyUpdate({
-      set: updateSet,
-    });
+    await db
+      .insert(users)
+      .values(values)
+      .onDuplicateKeyUpdate({ set: updateSet });
   } catch (error) {
-    console.error("[Database] Failed to upsert user:", error);
+    console.error("[Database] Error upserting user:", error);
     throw error;
   }
 }
@@ -135,149 +129,35 @@ export async function getUserByOpenId(openId: string) {
   const db = await getDb();
   if (!db) {
     console.warn("[Database] Cannot get user: database not available");
-    return undefined;
+    return null;
   }
 
-  const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
-
-  return result.length > 0 ? result[0] : undefined;
+  try {
+    const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
+    return result[0] ?? null;
+  } catch (error) {
+    console.error("[Database] Error getting user by openId:", error);
+    return null;
+  }
 }
 
-// ============ TENT FUNCTIONS ============
-
-export async function getAllTents(): Promise<(Tent & { plantCount?: number })[]> {
+export async function getAllTents(): Promise<Tent[]> {
   const db = await getDb();
   if (!db) return [];
-  
-  // Buscar estufas
-  const allTents = await db.select().from(tents);
-  
-  // Para cada estufa, contar plantas ativas e buscar strains
-  const tentsWithPlantCount = await Promise.all(
-    allTents.map(async (tent: any) => {
-      try {
-        const plantCountResult = await db
-          .select({ count: sql<number>`count(*)` })
-          .from(plants)
-          .where(and(
-            eq(plants.currentTentId, tent.id),
-            eq(plants.status, "ACTIVE")
-          ));
-        
-        const plantCount = plantCountResult[0]?.count || 0;
-        
-        // Buscar strains únicas das plantas ativas na estufa
-        const tentPlants = await db
-          .select({ strainId: plants.strainId })
-          .from(plants)
-          .where(and(
-            eq(plants.currentTentId, tent.id),
-            eq(plants.status, "ACTIVE")
-          ));
-        const uniqueStrainIds = Array.from(new Set(tentPlants.map((p: any) => p.strainId)));
-        let tentStrains: any[] = [];
-        if (uniqueStrainIds.length > 0) {
-          tentStrains = await db.select().from(strains).where(sql`${strains.id} IN (${sql.join(uniqueStrainIds.map((id: any) => sql`${id}`), sql`, `)})`);
-        }
-        
-        return { ...tent, plantCount, tentStrains };
-      } catch (error) {
-        // Se a tabela plants não existir ainda, retornar 0
-        return { ...tent, plantCount: 0, tentStrains: [] };
-      }
-    })
-  );
-  
-  return tentsWithPlantCount;
+  return db.select().from(tents).orderBy(tents.id);
 }
 
-export async function getTentById(id: number): Promise<any> {
+export async function getTentById(id: number): Promise<Tent | undefined> {
   const db = await getDb();
   if (!db) return undefined;
-  
-  // Buscar estufa com ciclo ativo
-  const result = await db
-    .select({
-      id: tents.id,
-      name: tents.name,
-      category: tents.category,
-      width: tents.width,
-      depth: tents.depth,
-      height: tents.height,
-      volume: tents.volume,
-      powerW: tents.powerW,
-      createdAt: tents.createdAt,
-      updatedAt: tents.updatedAt,
-      // Dados do ciclo ativo
-      cycleId: cycles.id,
-      cycleStartDate: cycles.startDate,
-      cycleFloraStartDate: cycles.floraStartDate,
-    })
-    .from(tents)
-    .leftJoin(cycles, and(
-      eq(cycles.tentId, tents.id),
-      eq(cycles.status, "ACTIVE")
-    ))
-    .where(eq(tents.id, id))
-    .limit(1);
-  
-  const tent = result[0];
-  if (!tent) return undefined;
-  
-  // Buscar strains únicas das plantas ativas na estufa
-  const tentPlants = await db
-    .select({ strainId: plants.strainId })
-    .from(plants)
-    .where(and(
-      eq(plants.currentTentId, id),
-      eq(plants.status, "ACTIVE")
-    ));
-  const uniqueStrainIds = Array.from(new Set(tentPlants.map((p: any) => p.strainId)));
-  let tentStrains: any[] = [];
-  if (uniqueStrainIds.length > 0) {
-    tentStrains = await db.select().from(strains).where(sql`${strains.id} IN (${sql.join(uniqueStrainIds.map((sid: any) => sql`${sid}`), sql`, `)})`);
-  }
-  
-  // Calcular fase e semana atual se houver ciclo ativo
-  if (tent.cycleStartDate) {
-    const now = new Date();
-    const startDate = new Date(tent.cycleStartDate);
-    const floraStartDate = tent.cycleFloraStartDate ? new Date(tent.cycleFloraStartDate) : null;
-    
-    let currentPhase: "VEGA" | "FLORA";
-    let currentWeek: number;
-    
-    if (floraStartDate && now >= floraStartDate) {
-      currentPhase = "FLORA";
-      const weeksSinceFlora = Math.floor(
-        (now.getTime() - floraStartDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
-      );
-      currentWeek = weeksSinceFlora + 1;
-    } else {
-      currentPhase = "VEGA";
-      const weeksSinceStart = Math.floor(
-        (now.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
-      );
-      currentWeek = weeksSinceStart + 1;
-    }
-    
-    return {
-      ...tent,
-      currentPhase,
-      currentWeek,
-      tentStrains,
-    };
-  }
-  
-  return { ...tent, tentStrains };
+  const result = await db.select().from(tents).where(eq(tents.id, id)).limit(1);
+  return result[0];
 }
-
-// ============ STRAIN FUNCTIONS ============
 
 export async function getAllStrains(): Promise<Strain[]> {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(strains).where(sql`${strains.isActive} = 1`);
+  return db.select().from(strains).orderBy(strains.name);
 }
 
 export async function getStrainById(id: number): Promise<Strain | undefined> {
@@ -287,26 +167,30 @@ export async function getStrainById(id: number): Promise<Strain | undefined> {
   return result[0];
 }
 
-// ============ CYCLE FUNCTIONS ============
-
-export async function getActiveCycles(): Promise<Cycle[]> {
+export async function getAllCycles(): Promise<Cycle[]> {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(cycles).where(eq(cycles.status, "ACTIVE"));
+  return db.select().from(cycles).orderBy(desc(cycles.startDate));
 }
 
-export async function getCycleByTentId(tentId: number): Promise<Cycle | null> {
+export async function getCycleById(id: number): Promise<Cycle | undefined> {
   const db = await getDb();
-  if (!db) return null;
+  if (!db) return undefined;
+  const result = await db.select().from(cycles).where(eq(cycles.id, id)).limit(1);
+  return result[0];
+}
+
+export async function getCycleByTentId(tentId: number): Promise<Cycle | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
   const result = await db
     .select()
     .from(cycles)
     .where(and(eq(cycles.tentId, tentId), eq(cycles.status, "ACTIVE")))
+    .orderBy(desc(cycles.startDate))
     .limit(1);
-  return result[0] ?? null;
+  return result[0];
 }
-
-// ============ TENT A STATE FUNCTIONS ============
 
 export async function getTentAState(tentId: number): Promise<TentAState | undefined> {
   const db = await getDb();
@@ -315,20 +199,20 @@ export async function getTentAState(tentId: number): Promise<TentAState | undefi
   return result[0];
 }
 
-// ============ CLONING EVENT FUNCTIONS ============
-
-export async function getActiveCloningEvent(tentId: number): Promise<CloningEvent | undefined> {
+export async function getCloningEvents(tentId?: number): Promise<CloningEvent[]> {
   const db = await getDb();
-  if (!db) return undefined;
-  const result = await db
-    .select()
-    .from(cloningEvents)
-    .where(and(eq(cloningEvents.tentId, tentId), eq(cloningEvents.status, "ACTIVE")))
-    .limit(1);
-  return result[0];
+  if (!db) return [];
+  if (tentId) {
+    return db.select().from(cloningEvents).where(eq(cloningEvents.tentId, tentId)).orderBy(desc(cloningEvents.startDate));
+  }
+  return db.select().from(cloningEvents).orderBy(desc(cloningEvents.startDate));
 }
 
-// ============ WEEKLY TARGET FUNCTIONS ============
+export async function getWeeklyTargetsByStrain(strainId: number): Promise<WeeklyTarget[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(weeklyTargets).where(eq(weeklyTargets.strainId, strainId)).orderBy(weeklyTargets.phase, weeklyTargets.weekNumber);
+}
 
 export async function getWeeklyTarget(
   strainId: number,
@@ -351,298 +235,111 @@ export async function getWeeklyTarget(
   return result[0];
 }
 
-export async function getWeeklyTargetsByStrain(strainId: number): Promise<WeeklyTarget[]> {
+export async function getDailyLogs(tentId?: number, limit?: number): Promise<DailyLog[]> {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(weeklyTargets).where(eq(weeklyTargets.strainId, strainId));
+  
+  let query = db.select().from(dailyLogs);
+  
+  if (tentId) {
+    query = query.where(eq(dailyLogs.tentId, tentId)) as any;
+  }
+  
+  query = query.orderBy(desc(dailyLogs.logDate), desc(dailyLogs.turn)) as any;
+  
+  if (limit) {
+    query = query.limit(limit) as any;
+  }
+  
+  return query;
 }
 
-// ============ DAILY LOG FUNCTIONS ============
-
-export async function getDailyLogs(
-  tentId: number,
-  startDate?: Date,
-  endDate?: Date
-): Promise<DailyLog[]> {
+export async function getLatestDailyLog(tentId: number): Promise<DailyLog | undefined> {
   const db = await getDb();
-  if (!db) return [];
-
-  if (startDate && endDate) {
-    return db
-      .select()
-      .from(dailyLogs)
-      .where(
-        and(eq(dailyLogs.tentId, tentId), gte(dailyLogs.logDate, startDate), lte(dailyLogs.logDate, endDate))
-      )
-      .orderBy(desc(dailyLogs.logDate), desc(dailyLogs.turn));
-  }
-
-  return db
+  if (!db) return undefined;
+  const result = await db
     .select()
     .from(dailyLogs)
     .where(eq(dailyLogs.tentId, tentId))
-    .orderBy(desc(dailyLogs.logDate), desc(dailyLogs.turn));
-}
-
-/**
- * Calcula a média dos weekly targets de múltiplas strains.
- * Agrupa por phase+weekNumber e calcula a média de cada métrica.
- */
-function averageWeeklyTargets(allTargets: WeeklyTarget[], strainCount: number): WeeklyTarget[] {
-  const grouped = new Map<string, WeeklyTarget[]>();
-  
-  for (const t of allTargets) {
-    const key = `${t.phase}-${t.weekNumber}`;
-    if (!grouped.has(key)) grouped.set(key, []);
-    grouped.get(key)!.push(t);
-  }
-  
-  const averaged: WeeklyTarget[] = [];
-  grouped.forEach((targets, _key) => {
-    const count = targets.length;
-    const avgDecimal = (field: keyof WeeklyTarget) => {
-      const vals = targets.map(t => t[field]).filter(v => v !== null && v !== undefined);
-      if (vals.length === 0) return null;
-      const sum = vals.reduce((a: number, b: any) => a + parseFloat(String(b)), 0);
-      return (sum / vals.length).toFixed(1);
-    };
-    const avgInt = (field: keyof WeeklyTarget) => {
-      const vals = targets.map(t => t[field]).filter(v => v !== null && v !== undefined);
-      if (vals.length === 0) return null;
-      const sum = vals.reduce((a: number, b: any) => a + Number(b), 0);
-      return Math.round(sum / vals.length);
-    };
-    
-    averaged.push({
-      ...targets[0], // base (id, strainId, phase, weekNumber, etc.)
-      tempMin: avgDecimal('tempMin') as any,
-      tempMax: avgDecimal('tempMax') as any,
-      rhMin: avgDecimal('rhMin') as any,
-      rhMax: avgDecimal('rhMax') as any,
-      ppfdMin: avgInt('ppfdMin') as any,
-      ppfdMax: avgInt('ppfdMax') as any,
-      phMin: avgDecimal('phMin') as any,
-      phMax: avgDecimal('phMax') as any,
-      ecMin: avgDecimal('ecMin') as any,
-      ecMax: avgDecimal('ecMax') as any,
-    });
-  });
-  
-  return averaged;
-}
-
-export async function getHistoricalDataWithTargets(tentId: number, days: number = 30) {
-  const db = await getDb();
-  if (!db) return { logs: [], targets: [], cycle: null };
-
-  // Get current active cycle
-  const cycle = await getCycleByTentId(tentId);
-  if (!cycle) return { logs: [], targets: [], cycle: null };
-
-  // Get logs from last N days
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - days);
-  const logs = await getDailyLogs(tentId, startDate);
-
-  // Get targets: se ciclo tem strainId, usar essa strain; senão, calcular média das strains das plantas
-  let targets: WeeklyTarget[] = [];
-  if (cycle?.strainId) {
-    targets = await getWeeklyTargetsByStrain(cycle.strainId);
-  } else {
-    // Buscar strains únicas das plantas ativas na estufa
-    const tentPlants = await db
-      .select({ strainId: plants.strainId })
-      .from(plants)
-      .where(and(
-        eq(plants.currentTentId, tentId),
-        eq(plants.status, "ACTIVE")
-      ));
-    const uniqueStrainIds = Array.from(new Set(tentPlants.map((p: any) => p.strainId)));
-    
-    if (uniqueStrainIds.length === 1) {
-      // Uma única strain, usar targets diretamente
-      targets = await getWeeklyTargetsByStrain(uniqueStrainIds[0] as number);
-    } else if (uniqueStrainIds.length > 1) {
-      // Múltiplas strains: calcular média dos targets
-      const allTargets = await Promise.all(
-        uniqueStrainIds.map((sid: any) => getWeeklyTargetsByStrain(sid))
-      );
-      targets = averageWeeklyTargets(allTargets.flat(), uniqueStrainIds.length);
-    }
-  }
-
-  return { logs, targets, cycle };
-}
-
-export async function getDailyLog(
-  tentId: number,
-  logDate: Date,
-  turn: "AM" | "PM"
-): Promise<DailyLog | undefined> {
-  const db = await getDb();
-  if (!db) return undefined;
-  const result = await db
-    .select()
-    .from(dailyLogs)
-    .where(and(eq(dailyLogs.tentId, tentId), eq(dailyLogs.logDate, logDate), eq(dailyLogs.turn, turn)))
+    .orderBy(desc(dailyLogs.logDate), desc(dailyLogs.turn))
     .limit(1);
   return result[0];
 }
 
-// ============ RECIPE FUNCTIONS ============
-
-export async function getRecipe(
-  tentId: number,
-  logDate: Date,
-  turn: "AM" | "PM"
-): Promise<Recipe | undefined> {
-  const db = await getDb();
-  if (!db) return undefined;
-  const result = await db
-    .select()
-    .from(recipes)
-    .where(and(eq(recipes.tentId, tentId), eq(recipes.logDate, logDate), eq(recipes.turn, turn)))
-    .limit(1);
-  return result[0];
-}
-
-export async function getAllRecipeTemplates(): Promise<RecipeTemplate[]> {
+export async function getRecipes(tentId?: number): Promise<Recipe[]> {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(recipeTemplates);
-}
-
-// ============ TASK FUNCTIONS ============
-
-export async function getTaskTemplates(
-  context: "TENT_A" | "TENT_BC",
-  phase: "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE",
-  weekNumber?: number
-): Promise<TaskTemplate[]> {
-  const db = await getDb();
-  if (!db) return [];
-
-  if (weekNumber !== undefined) {
-    return db
-      .select()
-      .from(taskTemplates)
-      .where(
-        and(
-          eq(taskTemplates.context, context),
-          eq(taskTemplates.phase, phase),
-          eq(taskTemplates.weekNumber, weekNumber)
-        )
-      );
+  if (tentId) {
+    return db.select().from(recipes).where(eq(recipes.tentId, tentId)).orderBy(desc(recipes.createdAt));
   }
-
-  return db
-    .select()
-    .from(taskTemplates)
-    .where(and(eq(taskTemplates.context, context), eq(taskTemplates.phase, phase)));
+  return db.select().from(recipes).orderBy(desc(recipes.createdAt));
 }
 
-export async function getTaskInstances(
-  tentId: number,
-  startDate?: Date,
-  endDate?: Date
-): Promise<TaskInstance[]> {
+export async function getRecipeTemplates(): Promise<RecipeTemplate[]> {
   const db = await getDb();
   if (!db) return [];
+  return db.select().from(recipeTemplates).orderBy(recipeTemplates.name);
+}
 
-  if (startDate && endDate) {
-    return db
-      .select()
-      .from(taskInstances)
-      .where(
-        and(
-          eq(taskInstances.tentId, tentId),
-          gte(taskInstances.occurrenceDate, startDate),
-          lte(taskInstances.occurrenceDate, endDate)
-        )
-      )
-      .orderBy(desc(taskInstances.occurrenceDate));
+export async function getTaskTemplates(phase?: "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE" | "DRYING"): Promise<TaskTemplate[]> {
+  const db = await getDb();
+  if (!db) return [];
+  if (phase) {
+    return db.select().from(taskTemplates).where(eq(taskTemplates.phase, phase)).orderBy(taskTemplates.weekNumber, taskTemplates.title);
   }
-
-  return db
-    .select()
-    .from(taskInstances)
-    .where(eq(taskInstances.tentId, tentId))
-    .orderBy(desc(taskInstances.occurrenceDate));
+  return db.select().from(taskTemplates).orderBy(taskTemplates.phase, taskTemplates.weekNumber, taskTemplates.title);
 }
 
-// ============ ALERT FUNCTIONS ============
-
-export async function getAlerts(
-  tentId?: number,
-  status?: "NEW" | "SEEN"
-): Promise<Alert[]> {
+export async function getTaskInstances(tentId?: number): Promise<TaskInstance[]> {
   const db = await getDb();
   if (!db) return [];
+  if (tentId) {
+    return db.select().from(taskInstances).where(eq(taskInstances.tentId, tentId)).orderBy(taskInstances.occurrenceDate);
+  }
+  return db.select().from(taskInstances).orderBy(taskInstances.occurrenceDate);
+}
 
+export async function getAlerts(tentId?: number, status?: "NEW" | "SEEN"): Promise<Alert[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
   let conditions = [];
-  if (tentId !== undefined) {
-    conditions.push(eq(alerts.tentId, tentId));
-  }
-  if (status !== undefined) {
-    conditions.push(eq(alerts.status, status));
-  }
-
+  if (tentId) conditions.push(eq(alerts.tentId, tentId));
+  if (status) conditions.push(eq(alerts.status, status));
+  
   if (conditions.length === 0) {
     return db.select().from(alerts).orderBy(desc(alerts.createdAt));
   }
-
-  return db
-    .select()
-    .from(alerts)
-    .where(and(...conditions))
-    .orderBy(desc(alerts.createdAt));
+  
+  return db.select().from(alerts).where(and(...conditions)).orderBy(desc(alerts.createdAt));
 }
 
 export async function getNewAlertsCount(tentId?: number): Promise<number> {
   const db = await getDb();
   if (!db) return 0;
-
-  let conditions = [eq(alerts.status, "NEW")];
-  if (tentId !== undefined) {
-    conditions.push(eq(alerts.tentId, tentId));
+  
+  let query = db.select({ count: sql<number>`count(*)` }).from(alerts).where(eq(alerts.status, "NEW"));
+  
+  if (tentId) {
+    query = query.where(and(eq(alerts.status, "NEW"), eq(alerts.tentId, tentId))) as any;
   }
-
-  const result = await db
-    .select({ count: sql<number>`count(*)` })
-    .from(alerts)
-    .where(and(...conditions));
-
+  
+  const result = await query;
   return result[0]?.count ?? 0;
 }
 
-// ============ SAFETY LIMIT FUNCTIONS ============
-
-export async function getSafetyLimit(
-  context: "TENT_A" | "TENT_BC",
-  phase: "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE",
-  metric: "TEMP" | "RH" | "PPFD"
-): Promise<SafetyLimit | undefined> {
+export async function getSafetyLimits(phase?: "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE" | "DRYING"): Promise<SafetyLimit[]> {
   const db = await getDb();
-  if (!db) return undefined;
-  const result = await db
-    .select()
-    .from(safetyLimits)
-    .where(
-      and(
-        eq(safetyLimits.context, context),
-        eq(safetyLimits.phase, phase),
-        eq(safetyLimits.metric, metric)
-      )
-    )
-    .limit(1);
-  return result[0];
+  if (!db) return [];
+  if (phase) {
+    return db.select().from(safetyLimits).where(eq(safetyLimits.phase, phase));
+  }
+  return db.select().from(safetyLimits);
 }
 
-
 /**
- * Retorna os valores ideais (targets) da semana atual para uma estufa.
- * Se a estufa tem múltiplas strains, calcula a média dos valores ideais.
- * Retorna null se não houver ciclo ativo ou targets disponíveis.
+ * Calcula valores ideais para uma estufa baseado na strain/semana ativa
+ * Retorna média quando há múltiplas strains na mesma estufa
  */
 export async function getIdealValuesByTent(tentId: number): Promise<{
   tempMin: number | null;
@@ -785,5 +482,214 @@ export async function getIdealValuesByTent(tentId: number): Promise<{
     ppfdMax: avgInt('ppfdMax'),
     phMin: avgDecimal('phMin'),
     phMax: avgDecimal('phMax'),
+  };
+}
+
+/**
+ * Verifica alertas para uma estufa comparando valores reais vs ideais com margens da fase
+ * Gera alertas contextuais e salva no banco
+ */
+export async function checkAlertsForTent(tentId: number): Promise<{
+  alertsGenerated: number;
+  messages: string[];
+}> {
+  const db = await getDb();
+  if (!db) return { alertsGenerated: 0, messages: [] };
+
+  // Buscar última leitura da estufa
+  const latestLog = await getLatestDailyLog(tentId);
+  if (!latestLog) return { alertsGenerated: 0, messages: [] };
+
+  // Buscar valores ideais
+  const idealValues = await getIdealValuesByTent(tentId);
+  if (!idealValues) return { alertsGenerated: 0, messages: [] };
+
+  // Buscar estufa para pegar categoria e nome
+  const tent = await getTentById(tentId);
+  if (!tent) return { alertsGenerated: 0, messages: [] };
+
+  // Buscar margens da fase
+  const marginsResult = await db
+    .select()
+    .from(phaseAlertMargins)
+    .where(eq(phaseAlertMargins.phase, tent.category))
+    .limit(1);
+  
+  if (marginsResult.length === 0) return { alertsGenerated: 0, messages: [] };
+  const margins = marginsResult[0];
+
+  // Buscar strain name para mensagem contextual
+  const cycle = await getCycleByTentId(tentId);
+  let strainName = "strain desconhecida";
+  if (cycle?.strainId) {
+    const strain = await getStrainById(cycle.strainId);
+    if (strain) strainName = strain.name;
+  }
+
+  const alertsToInsert: any[] = [];
+  const messages: string[] = [];
+
+  // Verificar temperatura
+  if (latestLog.tempC !== null && idealValues.tempMin !== null && idealValues.tempMax !== null) {
+    const temp = parseFloat(String(latestLog.tempC));
+    const idealMin = idealValues.tempMin - parseFloat(String(margins.tempMargin));
+    const idealMax = idealValues.tempMax + parseFloat(String(margins.tempMargin));
+    
+    if (temp < idealMin) {
+      const message = `${tent.name}: Temp ${temp.toFixed(1)}°C abaixo do ideal ${idealValues.tempMin.toFixed(1)}°C (±${margins.tempMargin}°C) para ${strainName}`;
+      messages.push(message);
+      alertsToInsert.push({
+        tentId,
+        alertType: "OUT_OF_RANGE",
+        metric: "TEMP",
+        logDate: latestLog.logDate,
+        turn: latestLog.turn,
+        value: String(temp),
+        message,
+        status: "NEW",
+      });
+    } else if (temp > idealMax) {
+      const message = `${tent.name}: Temp ${temp.toFixed(1)}°C acima do ideal ${idealValues.tempMax.toFixed(1)}°C (±${margins.tempMargin}°C) para ${strainName}`;
+      messages.push(message);
+      alertsToInsert.push({
+        tentId,
+        alertType: "OUT_OF_RANGE",
+        metric: "TEMP",
+        logDate: latestLog.logDate,
+        turn: latestLog.turn,
+        value: String(temp),
+        message,
+        status: "NEW",
+      });
+    }
+  }
+
+  // Verificar umidade
+  if (latestLog.rhPct !== null && idealValues.rhMin !== null && idealValues.rhMax !== null) {
+    const rh = parseFloat(String(latestLog.rhPct));
+    const idealMin = idealValues.rhMin - parseFloat(String(margins.rhMargin));
+    const idealMax = idealValues.rhMax + parseFloat(String(margins.rhMargin));
+    
+    if (rh < idealMin) {
+      const message = `${tent.name}: RH ${rh.toFixed(1)}% abaixo do ideal ${idealValues.rhMin.toFixed(1)}% (±${margins.rhMargin}%) para ${strainName}`;
+      messages.push(message);
+      alertsToInsert.push({
+        tentId,
+        alertType: "OUT_OF_RANGE",
+        metric: "RH",
+        logDate: latestLog.logDate,
+        turn: latestLog.turn,
+        value: String(rh),
+        message,
+        status: "NEW",
+      });
+    } else if (rh > idealMax) {
+      const message = `${tent.name}: RH ${rh.toFixed(1)}% acima do ideal ${idealValues.rhMax.toFixed(1)}% (±${margins.rhMargin}%) para ${strainName}`;
+      messages.push(message);
+      alertsToInsert.push({
+        tentId,
+        alertType: "OUT_OF_RANGE",
+        metric: "RH",
+        logDate: latestLog.logDate,
+        turn: latestLog.turn,
+        value: String(rh),
+        message,
+        status: "NEW",
+      });
+    }
+  }
+
+  // Verificar PPFD
+  if (latestLog.ppfd !== null && idealValues.ppfdMin !== null && idealValues.ppfdMax !== null) {
+    const ppfd = Number(latestLog.ppfd);
+    const idealMin = idealValues.ppfdMin - margins.ppfdMargin;
+    const idealMax = idealValues.ppfdMax + margins.ppfdMargin;
+    
+    if (ppfd < idealMin) {
+      const message = `${tent.name}: PPFD ${ppfd} abaixo do ideal ${idealValues.ppfdMin} (±${margins.ppfdMargin}) para ${strainName}`;
+      messages.push(message);
+      alertsToInsert.push({
+        tentId,
+        alertType: "OUT_OF_RANGE",
+        metric: "PPFD",
+        logDate: latestLog.logDate,
+        turn: latestLog.turn,
+        value: String(ppfd),
+        message,
+        status: "NEW",
+      });
+    } else if (ppfd > idealMax) {
+      const message = `${tent.name}: PPFD ${ppfd} acima do ideal ${idealValues.ppfdMax} (±${margins.ppfdMargin}) para ${strainName}`;
+      messages.push(message);
+      alertsToInsert.push({
+        tentId,
+        alertType: "OUT_OF_RANGE",
+        metric: "PPFD",
+        logDate: latestLog.logDate,
+        turn: latestLog.turn,
+        value: String(ppfd),
+        message,
+        status: "NEW",
+      });
+    }
+  }
+
+  // Verificar pH (se houver margem definida para a fase)
+  if (margins.phMargin !== null && latestLog.ph !== null && idealValues.phMin !== null && idealValues.phMax !== null) {
+    const ph = parseFloat(String(latestLog.ph));
+    const idealMin = idealValues.phMin - parseFloat(String(margins.phMargin));
+    const idealMax = idealValues.phMax + parseFloat(String(margins.phMargin));
+    
+    if (ph < idealMin) {
+      const message = `${tent.name}: pH ${ph.toFixed(1)} abaixo do ideal ${idealValues.phMin.toFixed(1)} (±${margins.phMargin}) para ${strainName}`;
+      messages.push(message);
+      alertsToInsert.push({
+        tentId,
+        alertType: "OUT_OF_RANGE",
+        metric: "PH",
+        logDate: latestLog.logDate,
+        turn: latestLog.turn,
+        value: String(ph),
+        message,
+        status: "NEW",
+      });
+    } else if (ph > idealMax) {
+      const message = `${tent.name}: pH ${ph.toFixed(1)} acima do ideal ${idealValues.phMax.toFixed(1)} (±${margins.phMargin}) para ${strainName}`;
+      messages.push(message);
+      alertsToInsert.push({
+        tentId,
+        alertType: "OUT_OF_RANGE",
+        metric: "PH",
+        logDate: latestLog.logDate,
+        turn: latestLog.turn,
+        value: String(ph),
+        message,
+        status: "NEW",
+      });
+    }
+  }
+
+  // Inserir alertas no banco e no histórico
+  if (alertsToInsert.length > 0) {
+    for (const alert of alertsToInsert) {
+      // Inserir em alerts (tabela de alertas ativos)
+      await db.insert(alerts).values(alert);
+      
+      // Inserir em alertHistory (histórico permanente)
+      await db.insert(alertHistory).values({
+        tentId: alert.tentId,
+        alertType: alert.alertType,
+        metric: alert.metric,
+        logDate: alert.logDate,
+        turn: alert.turn,
+        value: alert.value,
+        message: alert.message,
+      });
+    }
+  }
+
+  return {
+    alertsGenerated: alertsToInsert.length,
+    messages,
   };
 }

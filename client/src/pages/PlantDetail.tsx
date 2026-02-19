@@ -157,7 +157,7 @@ export default function PlantDetail() {
               {/* Badge de fase/semana da estufa */}
               {tent && (
                 <div className="px-3 py-1 rounded-md text-sm font-medium border bg-primary/10 text-primary border-primary/30">
-                  {tent.currentPhase === "VEGA" ? "🌱" : "🌺"} {tent.currentPhase === "VEGA" ? "Vega" : "Flora"} Semana {tent.currentWeek}
+                  {tent.category === "VEGA" ? "🌱" : tent.category === "FLORA" ? "🌺" : "🔧"} {tent.category}
                 </div>
               )}
             </div>
@@ -176,7 +176,7 @@ export default function PlantDetail() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  {tent?.currentPhase === "VEGA" && (
+                  {tent?.category === "VEGA" && (
                     <DropdownMenuItem onClick={handleTransplantToFlora}>
                       <Flower2 className="w-4 h-4 mr-2" />
                       Transplantar para Flora

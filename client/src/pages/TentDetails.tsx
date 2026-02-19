@@ -62,7 +62,7 @@ export default function TentDetails() {
       return { phase: "Inativo", color: "bg-muted0" };
     }
 
-    if (tent.tentType === "A") {
+    if (tent.category === "MAINTENANCE") {
       return { phase: "Manutenção", color: "bg-blue-500/100" };
     }
 
@@ -118,7 +118,7 @@ export default function TentDetails() {
                   {tent.name}
                 </h1>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Tipo {tent.tentType} • {tent.width}×{tent.depth}×{tent.height}cm
+                  Tipo {tent.category} • {tent.width}×{tent.depth}×{tent.height}cm
                 </p>
               </div>
               <Badge className={`${phaseInfo.color} text-white border-0 text-xs md:text-sm`}>{phaseInfo.phase}</Badge>

@@ -60,7 +60,7 @@ export default function TentLog() {
     let phase: "VEGA" | "FLORA" | "MAINTENANCE" | "CLONING" = "VEGA";
     let weekNumber = 1;
 
-    if (tent.tentType === "A") {
+    if (tent.category === "MAINTENANCE") {
       // Estufa A: Manutenção ou Clonagem (simplificado para MAINTENANCE)
       phase = "MAINTENANCE";
       weekNumber = 1;
@@ -204,7 +204,7 @@ export default function TentLog() {
       return { phase: "Inativo", color: "bg-muted0" };
     }
 
-    if (tent.tentType === "A") {
+    if (tent.category === "MAINTENANCE") {
       return { phase: "Manutenção", color: "bg-blue-500/100" };
     }
 
@@ -234,7 +234,7 @@ export default function TentLog() {
                 Registro - {tent.name}
               </h1>
               <p className="text-muted-foreground mt-1">
-                Tipo {tent.tentType} • {tent.width}×{tent.depth}×{tent.height}cm
+                Tipo {tent.category} • {tent.width}×{tent.depth}×{tent.height}cm
               </p>
             </div>
             <Badge className={`${phaseInfo.color} text-white border-0`}>{phaseInfo.phase}</Badge>

@@ -568,16 +568,60 @@
 - [x] Testar comportamento - todas as tarefas visíveis por padrão, botão funciona corretamente
 
 
-## 🔔 Sistema de Alertas Inteligentes com Valores Ideais (19/02/2026)
+## 🔔 Sistema de Alertas Inteligentes com Margens Automáticas (19/02/2026)
 
 - [x] Analisar estrutura atual de alertas (alertSettings, procedures existentes)
 - [x] Criar função getIdealValuesByTent em db.ts (calcula fase/semana baseado em categoria e datas)
 - [x] Adicionar procedure alerts.getIdealValues no backend (routers.ts)
-- [x] Atualizar procedure alerts.updateSettings para aceitar margens (tempMargin, rhMargin, ppfdMargin, phMargin)
 - [x] Adicionar DRYING na assinatura de getWeeklyTarget
 - [x] Calcular média de valores ideais quando estufa tem múltiplas strains (lógica implementada)
-- [ ] Atualizar UI de AlertSettings para mostrar valores ideais atuais da estufa
-- [ ] Adicionar campos de margem de erro na UI (inputs numéricos com valores padrão)
-- [ ] Implementar lógica de alertas contextuais: valor real vs (ideal ± margem)
-- [ ] Testar alertas com diferentes configurações de estufas
-- [ ] Criar mensagens contextuais: "Estufa B: Temp 28°C acima do ideal 24°C (±2°C)"
+- [x] Adicionar pH ao enum metric da tabela alerts
+- [ ] REFATORAÇÃO: Criar tabela phaseAlertMargins (phase, tempMargin, rhMargin, ppfdMargin, phMargin)
+- [ ] Seed com valores padrão por fase:
+  - MAINTENANCE: ±3°C, ±10%, ±100, ±0.3
+  - CLONING: ±2°C, ±5%, ±50, ±0.2
+  - VEGA: ±2°C, ±5%, ±50, ±0.2
+  - FLORA: ±2°C, ±5%, ±50, ±0.2
+  - DRYING: ±1°C, ±3%, 0, N/A (controle rigoroso!)
+- [ ] Implementar checkAlertsForTent usando margens da fase atual da estufa
+- [ ] Criar procedures backend para CRUD de margens por fase
+- [ ] Atualizar UI de AlertSettings para mostrar/editar margens por fase (5 seções)
+- [ ] Testar sistema completo com diferentes fases
+- [ ] Criar mensagens contextuais: "Estufa B (Flora S4): Temp 28°C acima do ideal 24°C (±2°C) - Candy Kush"
+
+
+## 🚨 L\u00f3gica de Alertas Contextuais (19/02/2026)
+
+- [ ] Analisar schema da tabela `alerts` (campos, tipos, severidade)
+- [ ] Criar fun\u00e7\u00e3o checkAlertsForTent que:
+  - Busca \u00faltimo dailyLog da estufa
+  - Busca valores ideais via getIdealValuesByTent
+  - Busca margens configuradas em alertSettings
+  - Compara cada par\u00e2metro (temp, RH, PPFD, pH) com ideal \u00b1 margem
+  - Gera alertas quando valor sai da faixa aceit\u00e1vel
+- [ ] Criar procedure alerts.checkAll para verificar todas as estufas
+- [ ] Implementar gera\u00e7\u00e3o de mensagens contextuais:
+  - "Estufa B: Temp 28\u00b0C acima do ideal 24\u00b0C (\u00b12\u00b0C) para Candy Kush S4"
+  - "Estufa A: Umidade 45% abaixo do ideal 60% (\u00b15%) - M\u00e9dia de 2 strains"
+- [ ] Salvar alertas no banco com timestamp, severidade (warning/critical)
+- [ ] Criar job autom\u00e1tico para executar checkAll a cada 1 hora
+- [ ] Testar sistema completo com diferentes cen\u00e1rios
+
+## Sistema de Alertas Inteligentes com Margens por Fase
+
+- [x] Criar tabela phaseAlertMargins no schema (margens configuráveis por fase: MAINTENANCE, CLONING, VEGA, FLORA, DRYING)
+- [x] Aplicar migration SQL para criar tabela phaseAlertMargins
+- [x] Popular tabela com valores padrão (MAINTENANCE: ±3°C/±10%RH, CLONING: ±2°C/±5%RH, VEGA: ±2°C/±5%RH, FLORA: ±2°C/±5%RH, DRYING: ±1°C/±3%RH)
+- [x] Implementar função getIdealValuesByTent no backend (calcula valores ideais baseados na strain/semana ativa, com média para múltiplas strains)
+- [x] Criar procedure tRPC alerts.getIdealValues
+- [x] Implementar função checkAlertsForTent no backend (compara valores reais vs ideais com margens da fase, gera mensagens contextuais)
+- [x] Criar procedure tRPC alerts.checkAlerts
+- [x] Adicionar DRYING ao enum de phase em taskTemplates e recipeTemplates
+- [x] Aplicar migration SQL para adicionar DRYING ao enum
+- [x] Corrigir referências de tentType para category no frontend (TentLog.tsx, TentDetails.tsx, PlantDetail.tsx)
+- [x] Corrigir referências de dailyLogs.date para dailyLogs.logDate
+- [x] Corrigir referências de cloningEvents.date para cloningEvents.startDate
+- [x] Corrigir referências de taskInstances.dueDate para taskInstances.occurrenceDate
+- [x] Corrigir chamadas de funções antigas (getActiveCycles, getHistoricalDataWithTargets)
+- [ ] Atualizar UI de AlertSettings para mostrar margens por fase (5 seções: MAINTENANCE, CLONING, VEGA, FLORA, DRYING)
+- [ ] Testar sistema completo de alertas com margens por fase

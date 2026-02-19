@@ -244,7 +244,7 @@ export type InsertRecipe = typeof recipes.$inferInsert;
 export const recipeTemplates = mysqlTable("recipeTemplates", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 100 }).notNull(),
-  phase: mysqlEnum("phase", ["CLONING", "VEGA", "FLORA", "MAINTENANCE"]).notNull(),
+  phase: mysqlEnum("phase", ["CLONING", "VEGA", "FLORA", "MAINTENANCE", "DRYING"]).notNull(),
   weekNumber: int("weekNumber"),
   volumeTotalL: decimal("volumeTotalL", { precision: 6, scale: 2 }),
   ecTarget: decimal("ecTarget", { precision: 4, scale: 2 }),
@@ -264,7 +264,7 @@ export type InsertRecipeTemplate = typeof recipeTemplates.$inferInsert;
 export const taskTemplates = mysqlTable("taskTemplates", {
   id: int("id").autoincrement().primaryKey(),
   context: mysqlEnum("context", ["TENT_A", "TENT_BC"]).notNull(),
-  phase: mysqlEnum("phase", ["CLONING", "VEGA", "FLORA", "MAINTENANCE"]).notNull(),
+  phase: mysqlEnum("phase", ["CLONING", "VEGA", "FLORA", "MAINTENANCE", "DRYING"]).notNull(),
   weekNumber: int("weekNumber"),
   title: varchar("title", { length: 200 }).notNull(),
   description: text("description"),
@@ -319,7 +319,7 @@ export const alerts = mysqlTable(
       .notNull()
       .references(() => tents.id),
     alertType: mysqlEnum("alertType", ["OUT_OF_RANGE", "SAFETY_LIMIT", "TREND"]).notNull(),
-    metric: mysqlEnum("metric", ["TEMP", "RH", "PPFD"]).notNull(),
+    metric: mysqlEnum("metric", ["TEMP", "RH", "PPFD", "PH"]).notNull(),
     logDate: timestamp("logDate").notNull(),
     turn: mysqlEnum("turn", ["AM", "PM"]),
     value: decimal("value", { precision: 10, scale: 2 }),
@@ -346,7 +346,7 @@ export const safetyLimits = mysqlTable(
     id: int("id").autoincrement().primaryKey(),
     context: mysqlEnum("context", ["TENT_A", "TENT_BC"]).notNull(),
     phase: mysqlEnum("phase", ["CLONING", "VEGA", "FLORA", "MAINTENANCE", "DRYING"]).notNull(),
-    metric: mysqlEnum("metric", ["TEMP", "RH", "PPFD"]).notNull(),
+    metric: mysqlEnum("metric", ["TEMP", "RH", "PPFD", "PH"]).notNull(),
     minValue: decimal("minValue", { precision: 10, scale: 2 }),
     maxValue: decimal("maxValue", { precision: 10, scale: 2 }),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -405,7 +405,7 @@ export const alertHistory = mysqlTable(
     tentId: int("tentId")
       .notNull()
       .references(() => tents.id),
-    metric: mysqlEnum("metric", ["TEMP", "RH", "PPFD"]).notNull(),
+    metric: mysqlEnum("metric", ["TEMP", "RH", "PPFD", "PH"]).notNull(),
     value: decimal("value", { precision: 10, scale: 2 }).notNull(),
     targetMin: decimal("targetMin", { precision: 10, scale: 2 }),
     targetMax: decimal("targetMax", { precision: 10, scale: 2 }),
@@ -422,6 +422,23 @@ export const alertHistory = mysqlTable(
 
 export type AlertHistory = typeof alertHistory.$inferSelect;
 export type InsertAlertHistory = typeof alertHistory.$inferInsert;
+
+/**
+ * Margens de Alerta por Fase (configuráveis)
+ */
+export const phaseAlertMargins = mysqlTable("phaseAlertMargins", {
+  id: int("id").autoincrement().primaryKey(),
+  phase: mysqlEnum("phase", ["MAINTENANCE", "CLONING", "VEGA", "FLORA", "DRYING"]).notNull().unique(),
+  tempMargin: decimal("tempMargin", { precision: 3, scale: 1 }).notNull(), // ±°C
+  rhMargin: decimal("rhMargin", { precision: 3, scale: 1 }).notNull(), // ±%
+  ppfdMargin: int("ppfdMargin").notNull(), // ±PPFD
+  phMargin: decimal("phMargin", { precision: 2, scale: 1 }), // ±pH (nullable para DRYING)
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PhaseAlertMargins = typeof phaseAlertMargins.$inferSelect;
+export type InsertPhaseAlertMargins = typeof phaseAlertMargins.$inferInsert;
 
 /**
  * Histórico de Notificações Enviadas
