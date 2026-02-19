@@ -19,7 +19,12 @@ import { toast } from "sonner";
 export default function PlantsList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<"ACTIVE" | "HARVESTED" | "DEAD" | undefined>();
-  const [expandedTents, setExpandedTents] = useState<Set<number>>(new Set());
+  
+  // Ler query param ?tent=ID para auto-expandir estufa
+  const tentParam = new URLSearchParams(window.location.search).get('tent');
+  const [expandedTents, setExpandedTents] = useState<Set<number>>(
+    tentParam ? new Set([parseInt(tentParam)]) : new Set()
+  );
   const [movePlantDialog, setMovePlantDialog] = useState<{
     open: boolean;
     plant?: any;

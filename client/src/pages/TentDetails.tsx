@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Sprout, ThermometerSun, Droplets, Sun, ArrowLeft, Calendar, FileDown } from "lucide-react";
+import { Loader2, Sprout, ThermometerSun, Droplets, Sun, ArrowLeft, Calendar, FileDown, Plus, Leaf, Heart } from "lucide-react";
 import { Link, useParams } from "wouter";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { format, subDays } from "date-fns";
@@ -265,6 +265,7 @@ export default function TentDetails() {
           <TabsList className="bg-card/90 backdrop-blur-sm">
             <TabsTrigger value="charts">Gráficos</TabsTrigger>
             <TabsTrigger value="history">Histórico</TabsTrigger>
+            <TabsTrigger value="plants">Plantas</TabsTrigger>
           </TabsList>
 
           <TabsContent value="charts" className="space-y-6">
@@ -471,8 +472,140 @@ export default function TentDetails() {
               </Card>
             )}
           </TabsContent>
+          <TabsContent value="plants">
+            <TentPlantsTab tentId={tentId} tentName={tent.name} />
+          </TabsContent>
         </Tabs>
       </main>
+    </div>
+  );
+}
+
+// Componente para aba de plantas da estufa
+function TentPlantsTab({ tentId, tentName }: { tentId: number; tentName: string }) {
+  const { data: plants, isLoading } = trpc.plants.list.useQuery({ tentId });
+  const { data: strains } = trpc.strains.list.useQuery();
+
+  const getStrainName = (strainId: number) => {
+    return strains?.find((s) => s.id === strainId)?.name || "--";
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "ACTIVE": return "bg-green-500/10 text-green-600 border-green-500/30";
+      case "HARVESTED": return "bg-blue-500/10 text-blue-600 border-blue-500/30";
+      case "DEAD": return "bg-red-500/10 text-red-600 border-red-500/30";
+      default: return "bg-gray-500/10 text-gray-600 border-gray-500/30";
+    }
+  };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case "ACTIVE": return "Ativa";
+      case "HARVESTED": return "Colhida";
+      case "DEAD": return "Morta";
+      default: return status;
+    }
+  };
+
+  const getHealthIcon = (status?: string) => {
+    switch (status) {
+      case "HEALTHY": return "🟢";
+      case "STRESSED": return "🟡";
+      case "SICK": return "🔴";
+      case "RECOVERING": return "🟠";
+      default: return "⚪";
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!plants || plants.length === 0) {
+    return (
+      <Card className="bg-card/90 backdrop-blur-sm">
+        <CardContent className="p-12 text-center">
+          <Leaf className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+          <p className="text-lg font-medium text-foreground mb-2">Nenhuma planta nesta estufa</p>
+          <p className="text-muted-foreground mb-4">Adicione plantas para acompanhar o crescimento</p>
+          <Button asChild>
+            <Link href="/plants/new">
+              <Plus className="w-4 h-4 mr-2" />
+              Nova Planta
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          {plants.length} {plants.length === 1 ? "planta" : "plantas"} em {tentName}
+        </p>
+        <Button asChild size="sm">
+          <Link href="/plants/new">
+            <Plus className="w-4 h-4 mr-2" />
+            Nova Planta
+          </Link>
+        </Button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {plants.map((plant: any) => (
+          <Link key={plant.id} href={`/plants/${plant.id}`}>
+            <Card className="bg-card/90 backdrop-blur-sm hover:shadow-lg hover:border-primary/50 transition-all duration-300 cursor-pointer h-full">
+              {/* Foto da planta */}
+              {plant.lastHealthPhoto && (
+                <div className="aspect-[4/3] overflow-hidden rounded-t-lg">
+                  <img
+                    src={plant.lastHealthPhoto}
+                    alt={plant.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <CardHeader className={plant.lastHealthPhoto ? "pt-3" : ""}>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <CardTitle className="text-lg">{plant.name}</CardTitle>
+                    {plant.code && (
+                      <CardDescription className="text-sm font-mono">{plant.code}</CardDescription>
+                    )}
+                  </div>
+                  <div className={`px-2 py-1 rounded-md text-xs font-medium border ${getStatusColor(plant.status)}`}>
+                    {getStatusLabel(plant.status)}
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-2 pt-0">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Sprout className="w-4 h-4" />
+                  <span>{getStrainName(plant.strainId)}</span>
+                </div>
+                {plant.lastHealthStatus && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <span>{getHealthIcon(plant.lastHealthStatus)}</span>
+                    <span>Saúde: {plant.lastHealthStatus === "HEALTHY" ? "Saudável" : plant.lastHealthStatus === "STRESSED" ? "Estressada" : plant.lastHealthStatus === "SICK" ? "Doente" : plant.lastHealthStatus === "RECOVERING" ? "Recuperando" : "--"}</span>
+                  </div>
+                )}
+                {plant.cyclePhase && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <Leaf className="w-4 h-4 text-primary" />
+                    <span className="text-primary font-medium">{plant.cyclePhase}</span>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

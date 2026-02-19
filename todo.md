@@ -113,3 +113,9 @@
 - [x] Corrigir erro "Not authenticated" na calculadora de fertilização
 - [x] Corrigir sinalizações duplicadas de fase no menu da planta
 - [x] Criar tabelas faltantes no banco (strains, tents, plants, alerts, cycles, plantHealthLogs)
+
+## Cards de Estufas Clicáveis + Aba Plantas na Estufa + README
+
+- [x] Tornar cards de estufas na Home clicáveis para navegar às plantas da estufa
+- [x] Adicionar aba "Plantas" na página de detalhes da estufa (TentDetails.tsx)
+- [x] Atualizar README com funcionalidades atuais do projeto
