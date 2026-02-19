@@ -387,3 +387,18 @@
 - [x] Remover seção de configurações da página Alertas
 - [x] Manter Configurações de Alertas apenas em Settings
 - [x] Testar nova organização
+
+
+## 🐛 Correção de Bug (19/02/2026)
+
+- [x] Corrigir erro de botão aninhado na página Home
+- [x] Corrigir padding excessivo no preview das calculadoras em mobile
+
+## 💾 Backend de Preferências de Alertas (19/02/2026)
+
+- [x] Criar schema de preferências de alertas no banco de dados
+- [ ] Aplicar migration com pnpm db:push (pendente - requer confirmações manuais)
+- [ ] Implementar tRPC procedures para salvar preferências
+- [ ] Implementar tRPC procedures para carregar preferências
+- [ ] Integrar backend com componente AlertSettings
+- [ ] Testar salvamento e carregamento de preferências

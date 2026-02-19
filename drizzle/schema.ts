@@ -702,3 +702,39 @@ export const wateringPresets = mysqlTable("wateringPresets", {
 
 export type WateringPreset = typeof wateringPresets.$inferSelect;
 export type InsertWateringPreset = typeof wateringPresets.$inferInsert;
+
+
+/**
+ * Preferências de alertas do usuário
+ */
+export const alertPreferences = mysqlTable("alertPreferences", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  
+  // Temperatura
+  temperatureEnabled: boolean("temperatureEnabled").default(true).notNull(),
+  temperatureMin: decimal("temperatureMin", { precision: 5, scale: 2 }).default("18.00"),
+  temperatureMax: decimal("temperatureMax", { precision: 5, scale: 2 }).default("28.00"),
+  
+  // Umidade Relativa
+  humidityEnabled: boolean("humidityEnabled").default(true).notNull(),
+  humidityMin: decimal("humidityMin", { precision: 5, scale: 2 }).default("40.00"),
+  humidityMax: decimal("humidityMax", { precision: 5, scale: 2 }).default("70.00"),
+  
+  // pH
+  phEnabled: boolean("phEnabled").default(true).notNull(),
+  phMin: decimal("phMin", { precision: 4, scale: 2 }).default("5.50"),
+  phMax: decimal("phMax", { precision: 4, scale: 2 }).default("6.50"),
+  
+  // PPFD (Luz)
+  ppfdEnabled: boolean("ppfdEnabled").default(true).notNull(),
+  ppfdMin: decimal("ppfdMin", { precision: 6, scale: 2 }).default("400.00"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  userIdIdx: index("userId_idx").on(table.userId),
+}));
+
+export type AlertPreference = typeof alertPreferences.$inferSelect;
+export type InsertAlertPreference = typeof alertPreferences.$inferInsert;

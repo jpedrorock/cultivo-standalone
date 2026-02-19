@@ -646,9 +646,12 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
           {/* Actions */}
           <div className="flex flex-col gap-2 pt-4">
             <div key={`actions-primary-${tent.id}`} className="flex gap-2">
-              <Button asChild className="flex-1">
-                <Link href={`/tent/${tent.id}`}>Ver Detalhes</Link>
-              </Button>
+              <Link 
+                href={`/tent/${tent.id}`}
+                className="flex-1 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+              >
+                Ver Detalhes
+              </Link>
               {!cycle ? (
                 <Button
                   onClick={() => onInitiateCycle(tent.id, tent.name)}
@@ -658,9 +661,12 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                   Novo Ciclo
                 </Button>
               ) : (
-                <Button asChild variant="outline" className="flex-1">
-                  <Link href={`/tent/${tent.id}/log`}>Registrar</Link>
-                </Button>
+                <Link 
+                  href={`/tent/${tent.id}/log`}
+                  className="flex-1 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                >
+                  Registrar
+                </Link>
               )}
             </div>
             {cycle && (
