@@ -316,139 +316,70 @@ Gerado por App Cultivo em ${now.toLocaleString('pt-BR')}
             </CardContent>
           </Card>
           
-          {/* Editor de Receita */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Editor de Receita</CardTitle>
-              <CardDescription>Ajuste os produtos e quantidades conforme necessário</CardDescription>
+          {/* Input Principal: Volume Total */}
+          <Card className="border-4 border-primary/30 shadow-2xl bg-gradient-to-br from-primary/5 to-primary/10">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-3xl font-bold flex items-center gap-3">
+                <Droplets className="w-10 h-10 text-primary" />
+                Quantos litros você vai preparar?
+              </CardTitle>
+              <CardDescription className="text-base">
+                Digite o volume total da solução nutritiva que deseja preparar
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <Label htmlFor="recipeName">Nome da Receita</Label>
-                  <Input
-                    id="recipeName"
-                    value={recipeName}
-                    onChange={(e) => setRecipeName(e.target.value)}
-                    placeholder="Ex: Vega Semana 3 Custom"
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="volume">Volume Total (L)</Label>
-                  <Input
-                    id="volume"
-                    type="number"
-                    value={volumeTotalL}
-                    onChange={(e) => setVolumeTotalL(parseFloat(e.target.value) || 0)}
-                    placeholder="10"
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <Label>Produtos</Label>
-                  <Button onClick={addProduct} size="sm" variant="outline">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Adicionar Produto
-                  </Button>
-                </div>
-                
-                {products.map((product, index) => (
-                  <div key={index} className="grid gap-3 md:grid-cols-6 items-end p-3 bg-muted/50 rounded-lg">
-                    <div className="md:col-span-2">
-                      <Label className="text-xs">Nome</Label>
-                      <Input
-                        value={product.name}
-                        onChange={(e) => updateProduct(index, "name", e.target.value)}
-                        placeholder="Ex: Grow (Vega)"
-                        size={1}
-                      />
-                    </div>
-                    
-                    <div>
-                      <Label className="text-xs">Quantidade (ml)</Label>
-                      <Input
-                        type="number"
-                        value={product.amountMl}
-                        onChange={(e) => updateProduct(index, "amountMl", parseFloat(e.target.value) || 0)}
-                        placeholder="30"
-                        size={1}
-                      />
-                    </div>
-                    
-                    <div>
-                      <Label className="text-xs">NPK</Label>
-                      <Input
-                        value={product.npk || ""}
-                        onChange={(e) => updateProduct(index, "npk", e.target.value)}
-                        placeholder="7-4-10"
-                        size={1}
-                      />
-                    </div>
-                    
-                    <div>
-                      <Label className="text-xs">Ca/Mg/Fe (%)</Label>
-                      <div className="flex gap-1">
-                        <Input
-                          type="number"
-                          step="0.1"
-                          value={product.ca || ""}
-                          onChange={(e) => updateProduct(index, "ca", parseFloat(e.target.value) || undefined)}
-                          placeholder="Ca"
-                          size={1}
-                          className="w-full"
-                        />
-                        <Input
-                          type="number"
-                          step="0.1"
-                          value={product.mg || ""}
-                          onChange={(e) => updateProduct(index, "mg", parseFloat(e.target.value) || undefined)}
-                          placeholder="Mg"
-                          size={1}
-                          className="w-full"
-                        />
-                        <Input
-                          type="number"
-                          step="0.1"
-                          value={product.fe || ""}
-                          onChange={(e) => updateProduct(index, "fe", parseFloat(e.target.value) || undefined)}
-                          placeholder="Fe"
-                          size={1}
-                          className="w-full"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <Button
-                        onClick={() => removeProduct(index)}
-                        variant="destructive"
-                        size="sm"
-                        className="w-full"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
+            <CardContent>
+              <div className="flex items-center gap-6">
+                <Input
+                  id="volume"
+                  type="number"
+                  value={volumeTotalL}
+                  onChange={(e) => setVolumeTotalL(parseFloat(e.target.value) || 0)}
+                  placeholder="10"
+                  className="text-6xl font-bold h-32 text-center border-4 border-primary/50 focus:border-primary"
+                />
+                <div className="text-5xl font-bold text-muted-foreground">Litros</div>
               </div>
             </CardContent>
           </Card>
+
           
-          {/* Resultados dos Cálculos - Design da Calculadora */}
+          {/* Resultados: Receita Gerada */}
           {products.length > 0 && (
             <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-2 border-green-200 dark:border-green-800">
               <CardHeader>
-                <CardTitle className="text-xl flex items-center gap-2">
+                <CardTitle className="text-2xl flex items-center gap-2">
                   🧪 Receita de Fertilização para {volumeTotalL}L
                 </CardTitle>
                 <CardDescription className="text-foreground/80">
-                  Cálculos automáticos de NPK, micronutrientes, EC e pH
+                  Quantidades calculadas automaticamente baseadas no volume total
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-4">
+                {/* Produtos com Quantidades Totais */}
+                <div>
+                  <h4 className="font-semibold text-lg mb-3">Produtos</h4>
+                  <div className="grid gap-3">
+                    {products.map((product, idx) => (
+                      <div key={idx} className="p-4 bg-white dark:bg-gray-900 rounded-lg border-2 border-green-200 dark:border-green-800">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-semibold text-lg">{product.name}</span>
+                          <span className="text-3xl font-bold text-primary">
+                            {(product.amountMl / volumeTotalL * volumeTotalL).toFixed(1)} ml
+                          </span>
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          {(product.amountMl / volumeTotalL).toFixed(2)} ml/L × {volumeTotalL}L
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          NPK: {product.npk || "N/A"} | Ca: {product.ca || 0}% | Mg: {product.mg || 0}% | Fe: {product.fe || 0}%
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <hr className="border-green-300 dark:border-green-700" />
+                
                 {/* NPK Total */}
                 <div className="space-y-2">
                   <h4 className="font-semibold text-sm text-muted-foreground">NPK Total</h4>
@@ -561,48 +492,158 @@ Gerado por App Cultivo em ${now.toLocaleString('pt-BR')}
             </Card>
           )}
           
-          {/* Ajuste de pH */}
+          {/* Ajustes Avançados (Accordion Colapsado) */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TestTube className="w-5 h-5" />
-                Ajuste de pH
-              </CardTitle>
+              <CardTitle>⚙️ Ajustes Avançados</CardTitle>
+              <CardDescription>Edite produtos, NPK, micronutrientes e ajuste de pH (opcional)</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-3">
+            <CardContent>
+              <div className="space-y-4">
+                {/* Nome da Receita */}
                 <div>
-                  <Label htmlFor="phTarget">pH Target</Label>
+                  <Label htmlFor="recipeName">Nome da Receita</Label>
                   <Input
-                    id="phTarget"
-                    type="number"
-                    step="0.1"
-                    value={phTarget}
-                    onChange={(e) => setPhTarget(parseFloat(e.target.value) || 6.0)}
+                    id="recipeName"
+                    value={recipeName}
+                    onChange={(e) => setRecipeName(e.target.value)}
+                    placeholder="Ex: Vega Semana 3 Custom"
                   />
                 </div>
                 
-                <div>
-                  <Label htmlFor="phActual">pH Atual</Label>
-                  <Input
-                    id="phActual"
-                    type="number"
-                    step="0.1"
-                    value={phActual}
-                    onChange={(e) => setPhActual(parseFloat(e.target.value) || 6.0)}
-                  />
+                {/* Editor de Produtos */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label>Produtos</Label>
+                    <Button onClick={addProduct} size="sm" variant="outline">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Adicionar Produto
+                    </Button>
+                  </div>
+                  
+                  {products.map((product, index) => (
+                    <div key={index} className="grid gap-3 md:grid-cols-6 items-end p-3 bg-muted/50 rounded-lg border">
+                      <div className="md:col-span-2">
+                        <Label className="text-xs">Nome</Label>
+                        <Input
+                          value={product.name}
+                          onChange={(e) => updateProduct(index, "name", e.target.value)}
+                          placeholder="Ex: Grow (Vega)"
+                          size={1}
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-xs">ml/L</Label>
+                        <Input
+                          type="number"
+                          value={product.amountMl / volumeTotalL}
+                          onChange={(e) => updateProduct(index, "amountMl", (parseFloat(e.target.value) || 0) * volumeTotalL)}
+                          placeholder="30"
+                          size={1}
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-xs">NPK</Label>
+                        <Input
+                          value={product.npk || ""}
+                          onChange={(e) => updateProduct(index, "npk", e.target.value)}
+                          placeholder="7-4-10"
+                          size={1}
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-xs">Ca/Mg/Fe (%)</Label>
+                        <div className="flex gap-1">
+                          <Input
+                            type="number"
+                            step="0.1"
+                            value={product.ca || ""}
+                            onChange={(e) => updateProduct(index, "ca", parseFloat(e.target.value) || undefined)}
+                            placeholder="Ca"
+                            size={1}
+                            className="w-full"
+                          />
+                          <Input
+                            type="number"
+                            step="0.1"
+                            value={product.mg || ""}
+                            onChange={(e) => updateProduct(index, "mg", parseFloat(e.target.value) || undefined)}
+                            placeholder="Mg"
+                            size={1}
+                            className="w-full"
+                          />
+                          <Input
+                            type="number"
+                            step="0.1"
+                            value={product.fe || ""}
+                            onChange={(e) => updateProduct(index, "fe", parseFloat(e.target.value) || undefined)}
+                            placeholder="Fe"
+                            size={1}
+                            className="w-full"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Button
+                          onClick={() => removeProduct(index)}
+                          variant="destructive"
+                          size="sm"
+                          className="w-full"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
                 
+                <hr className="my-4" />
+                
+                {/* Ajuste de pH */}
                 <div>
-                  <Label>Ajuste Necessário</Label>
-                  <div className="p-2 bg-muted rounded-md text-center font-medium">
-                    {Math.abs(phDiff) < 0.1 ? (
-                      <span className="text-green-600">✓ pH OK</span>
-                    ) : (
-                      <span className={phDirection === "up" ? "text-blue-600" : "text-orange-600"}>
-                        {phAdjustmentMl.toFixed(1)} ml pH {phDirection === "up" ? "Up" : "Down"}
-                      </span>
-                    )}
+                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                    <TestTube className="w-5 h-5" />
+                    Ajuste de pH
+                  </h4>
+                  <div className="grid gap-4 md:grid-cols-3">
+                    <div>
+                      <Label htmlFor="phTarget">pH Target</Label>
+                      <Input
+                        id="phTarget"
+                        type="number"
+                        step="0.1"
+                        value={phTarget}
+                        onChange={(e) => setPhTarget(parseFloat(e.target.value) || 6.0)}
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="phActual">pH Atual</Label>
+                      <Input
+                        id="phActual"
+                        type="number"
+                        step="0.1"
+                        value={phActual}
+                        onChange={(e) => setPhActual(parseFloat(e.target.value) || 6.0)}
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label>Ajuste Necessário</Label>
+                      <div className="p-2 bg-muted rounded-md text-center font-medium">
+                        {Math.abs(phDiff) < 0.1 ? (
+                          <span className="text-green-600">✓ pH OK</span>
+                        ) : (
+                          <span className={phDirection === "up" ? "text-blue-600" : "text-orange-600"}>
+                            {phAdjustmentMl.toFixed(1)} ml pH {phDirection === "up" ? "Up" : "Down"}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

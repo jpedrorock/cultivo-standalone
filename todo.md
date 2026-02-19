@@ -631,8 +631,7 @@
 - [x] Criar procedures tRPC para gerenciar phaseAlertMargins (getAll, update)
 - [x] Atualizar componente AlertSettings para mostrar 5 seções (MAINTENANCE, CLONING, VEGA, FLORA, DRYING)
 - [x] Adicionar inputs editáveis para margens (tempMargin, rhMargin, ppfdMargin, phMargin)
-- [x] Implementar salvamento de configurações por fase
-- [ ] Testar fluxo completo de edição de margens
+- [x] Implementar salvamento de configurações por fas- [x] Testar fluxo completo de geração de receitas
 
 ## Verificação Automática de Alertas (Cron Job)
 
@@ -780,3 +779,14 @@
 - [x] Adicionar link para página de alertas ao clicar no card
 - [x] Integrar AlertsWidget na página Home
 - [x] Testar widget com diferentes cenários de alertas
+
+## Refatoração da Página de Nutrientes
+
+- [ ] Redesenhar UI com foco em volume como input principal
+- [ ] Criar campo gigante "Quantos litros você vai preparar?" no topo
+- [ ] Adicionar botão "Gerar Receita" grande e verde
+- [ ] Implementar cálculo automático de quantidades (ml/g) baseado em volume
+- [ ] Mostrar resultado com cards coloridos de produtos e quantidades
+- [ ] Adicionar seção "Ajustes Avançados" colapsada (Accordion)
+- [ ] Mover edição de produtos/NPK para seção avançada
+- [ ] Testar fluxo completo: selecionar fase → inserir volume → gerar receita
