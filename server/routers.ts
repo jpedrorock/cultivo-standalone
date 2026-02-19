@@ -2841,6 +2841,7 @@ export const appRouter = router({
         z.object({
           tentId: z.number().optional(),
           cycleId: z.number().optional(),
+          phase: z.enum(["CLONING", "VEGA", "FLORA", "MAINTENANCE", "DRYING"]).optional(),
           limit: z.number().int().positive().default(50),
         }).optional()
       )
@@ -2853,6 +2854,7 @@ export const appRouter = router({
         const conditions = [];
         if (input?.tentId) conditions.push(eq(nutrientApplications.tentId, input.tentId));
         if (input?.cycleId) conditions.push(eq(nutrientApplications.cycleId, input.cycleId));
+        if (input?.phase) conditions.push(eq(nutrientApplications.phase, input.phase));
 
         if (conditions.length > 0) {
           query = query.where(and(...conditions)) as any;

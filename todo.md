@@ -808,3 +808,11 @@
 - [ ] Atualizar página Nutrients.tsx para mostrar quantidades em gramas (g) ao invés de ml
 - [ ] Corrigir fórmula de EC para valores realistas (1.2-1.6 mS/cm para Vega)
 - [ ] Testar cálculos com diferentes volumes e fases
+
+## Histórico de Nutrientes (19/02/2026)
+
+- [x] Criar procedure tRPC para listar aplicações de nutrientes com filtros
+- [x] Implementar UI da aba Histórico com cards de receitas
+- [x] Adicionar filtros por estufa e fase
+- [ ] Implementar botão "Reutilizar Receita" para carregar receita salva
+- [ ] Testar fluxo completo de salvar e reutilizar receitas

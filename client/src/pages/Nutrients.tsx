@@ -72,6 +72,18 @@ export default function Nutrients() {
   const [week, setWeek] = useState(1);
   const [volumeL, setVolumeL] = useState(10);
   
+  // Estados para filtros do histórico
+  const [historyTentFilter, setHistoryTentFilter] = useState<string>("all");
+  const [historyPhaseFilter, setHistoryPhaseFilter] = useState<Phase | "all">("all");
+  
+  // Queries
+  const tents = trpc.tents.list.useQuery();
+  const applications = trpc.nutrients.listApplications.useQuery({
+    tentId: historyTentFilter !== "all" ? Number(historyTentFilter) : undefined,
+    phase: historyPhaseFilter !== "all" ? historyPhaseFilter : undefined,
+    limit: 50,
+  });
+  
   const products = getProductsByPhaseWeek(phase, week);
   
   // Calcular quantidades totais em gramas
@@ -418,14 +430,144 @@ export default function Nutrients() {
           </Card>
         </TabsContent>
         
-        <TabsContent value="history">
+        <TabsContent value="history" className="space-y-4">
+          {/* Filtros */}
           <Card>
             <CardHeader>
-              <CardTitle>Histórico de Receitas</CardTitle>
+              <CardTitle>Filtros</CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label>Estufa</Label>
+                <Select value={historyTentFilter} onValueChange={setHistoryTentFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Todas" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas as Estufas</SelectItem>
+                    {tents.data?.map((tent: any) => (
+                      <SelectItem key={tent.id} value={tent.id.toString()}>
+                        Estufa {tent.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label>Fase</Label>
+                <Select value={historyPhaseFilter} onValueChange={(v) => setHistoryPhaseFilter(v as Phase | "all")}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Todas" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas as Fases</SelectItem>
+                    <SelectItem value="CLONING">🌱 Clonagem</SelectItem>
+                    <SelectItem value="VEGA">🌿 Vegetativa</SelectItem>
+                    <SelectItem value="FLORA">🌸 Floração</SelectItem>
+                    <SelectItem value="MAINTENANCE">🔧 Manutenção</SelectItem>
+                    <SelectItem value="DRYING">💨 Secagem</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="flex items-end">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    setHistoryTentFilter("all");
+                    setHistoryPhaseFilter("all");
+                  }}
+                  className="w-full"
+                >
+                  Limpar Filtros
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+          
+          {/* Lista de Receitas */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Histórico de Receitas ({applications.data?.length || 0})</CardTitle>
               <CardDescription>Receitas salvas anteriormente</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">Em desenvolvimento...</p>
+              {applications.isLoading ? (
+                <p className="text-muted-foreground text-center py-8">Carregando...</p>
+              ) : applications.data && applications.data.length > 0 ? (
+                <div className="grid gap-4">
+                  {applications.data.map((app: any) => {
+                    const products = JSON.parse(app.productsJson || '[]');
+                    const phaseNames = {
+                      CLONING: "Clonagem",
+                      VEGA: "Vegetativa",
+                      FLORA: "Floração",
+                      MAINTENANCE: "Manutenção",
+                      DRYING: "Secagem",
+                    };
+                    const phaseIcons = {
+                      CLONING: "🌱",
+                      VEGA: "🌿",
+                      FLORA: "🌸",
+                      MAINTENANCE: "🔧",
+                      DRYING: "💨",
+                    };
+                    
+                    return (
+                      <Card key={app.id} className="border-l-4 border-l-green-500">
+                        <CardHeader>
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <CardTitle className="text-lg">
+                                {phaseIcons[app.phase as Phase]} {app.recipeName}
+                              </CardTitle>
+                              <CardDescription>
+                                {phaseNames[app.phase as Phase]} • Semana {app.weekNumber || "N/A"} • {new Date(app.applicationDate).toLocaleDateString('pt-BR')}
+                              </CardDescription>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-2xl font-bold text-green-600">{app.volumeTotalL}L</p>
+                              <p className="text-sm text-muted-foreground">EC: {app.ecTarget ? Number(app.ecTarget).toFixed(2) : "N/A"} mS/cm</p>
+                            </div>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          {/* Produtos */}
+                          <div>
+                            <h4 className="font-semibold mb-2">Produtos:</h4>
+                            <div className="grid gap-2">
+                              {products.map((prod: any, idx: number) => (
+                                <div key={idx} className="flex items-center justify-between p-2 bg-muted rounded">
+                                  <div>
+                                    <p className="font-medium text-sm">{prod.name}</p>
+                                    <p className="text-xs text-muted-foreground">
+                                      {prod.gPerLiter?.toFixed(2) || (prod.totalG / app.volumeTotalL).toFixed(2)} g/L
+                                    </p>
+                                  </div>
+                                  <p className="font-bold text-green-600">{prod.totalG?.toFixed(1) || prod.amountMl?.toFixed(1)}g</p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          
+                          {/* Notas */}
+                          {app.notes && (
+                            <div>
+                              <h4 className="font-semibold mb-1">Notas:</h4>
+                              <p className="text-sm text-muted-foreground">{app.notes}</p>
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="text-muted-foreground text-center py-8">
+                  Nenhuma receita encontrada. Salve uma receita na aba Calculadora para vê-la aqui.
+                </p>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
