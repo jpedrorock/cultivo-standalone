@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { trpc } from "@/lib/trpc";
-import { Bell, BellOff, ThermometerSun, Droplets, Sun, History, Loader2 } from "lucide-react";
+import { Bell, ThermometerSun, Droplets, Sun, Loader2, Settings, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Alerts() {
@@ -14,32 +13,14 @@ export default function Alerts() {
   // Buscar estufas
   const { data: tents, isLoading: loadingTents } = trpc.tents.list.useQuery();
 
-  // Buscar configurações de alertas
-  const { data: settings, isLoading: loadingSettings, refetch: refetchSettings } = 
-    trpc.alerts.getSettings.useQuery({ tentId: selectedTentId });
-
   // Buscar histórico de alertas
   const { data: history, isLoading: loadingHistory } = 
-    trpc.alerts.getHistory.useQuery({ tentId: selectedTentId, limit: 20 });
-
-  // Mutation para atualizar configurações
-  const updateSettings = trpc.alerts.updateSettings.useMutation({
-    onSuccess: () => {
-      refetchSettings();
-    },
-  });
-
-  const handleToggle = async (field: "alertsEnabled" | "tempEnabled" | "rhEnabled" | "ppfdEnabled", value: boolean) => {
-    await updateSettings.mutateAsync({
-      tentId: selectedTentId,
-      [field]: value,
-    });
-  };
+    trpc.alerts.getHistory.useQuery({ tentId: selectedTentId, limit: 50 });
 
   if (loadingTents) {
     return (
-      <div className="min-h-screen bg-background p-6 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-green-600" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -47,179 +28,114 @@ export default function Alerts() {
   const currentTent = tents?.find(t => t.id === selectedTentId);
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-foreground mb-2">Alertas Automáticos</h1>
-            <p className="text-muted-foreground">Configure notificações quando valores saem da faixa ideal</p>
-          </div>
-          <Link href="/">
-            <Button variant="outline">← Voltar</Button>
-          </Link>
-        </div>
-
-        {/* Seletor de Estufa */}
-        <div className="mb-6">
-          <Label>Selecionar Estufa</Label>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-            {tents?.map((tent) => (
-              <Button
-                key={tent.id}
-                variant={selectedTentId === tent.id ? "default" : "outline"}
-                onClick={() => setSelectedTentId(tent.id)}
-                className="h-auto py-4"
-              >
-                <div className="text-left">
-                  <div className="font-semibold">{tent.name}</div>
-                  <div className="text-xs opacity-80">Tipo {tent.tentType}</div>
-                </div>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button asChild variant="ghost" size="icon">
+                <Link href="/">
+                  <ArrowLeft className="w-5 h-5" />
+                </Link>
               </Button>
-            ))}
+              <div>
+                <h1 className="text-2xl font-bold text-foreground">Histórico de Alertas</h1>
+                <p className="text-sm text-muted-foreground">
+                  Visualize todos os alertas disparados pelo sistema
+                </p>
+              </div>
+            </div>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/settings">
+                <Settings className="w-4 h-4 mr-2" />
+                Configurar Alertas
+              </Link>
+            </Button>
           </div>
         </div>
+      </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Configurações de Alertas */}
-          <Card className="bg-card/90 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                {settings?.alertsEnabled ? (
-                  <Bell className="w-5 h-5 text-green-500" />
-                ) : (
-                  <BellOff className="w-5 h-5 text-gray-400" />
-                )}
-                Configurações - {currentTent?.name}
-              </CardTitle>
-              <CardDescription>
-                Ative ou desative alertas por métrica
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {loadingSettings ? (
-                <div className="flex justify-center py-8">
-                  <Loader2 className="w-6 h-6 animate-spin text-green-600" />
-                </div>
-              ) : (
-                <>
-                  {/* Alertas Gerais */}
-                  <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <Bell className="w-5 h-5 text-foreground" />
-                      <div>
-                        <Label htmlFor="alertsEnabled" className="text-base font-semibold">
-                          Alertas Automáticos
-                        </Label>
-                        <p className="text-sm text-muted-foreground">Ativar/desativar todos os alertas</p>
-                      </div>
-                    </div>
-                    <Switch
-                      id="alertsEnabled"
-                      checked={settings?.alertsEnabled ?? true}
-                      onCheckedChange={(value) => handleToggle("alertsEnabled", value)}
-                      disabled={updateSettings.isPending}
-                    />
+      {/* Content */}
+      <main className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto space-y-6">
+          {/* Seletor de Estufa */}
+          <div>
+            <Label className="text-base font-medium mb-3 block">Filtrar por Estufa</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {tents?.map((tent) => (
+                <Button
+                  key={tent.id}
+                  variant={selectedTentId === tent.id ? "default" : "outline"}
+                  onClick={() => setSelectedTentId(tent.id)}
+                  className="h-auto py-3 justify-start"
+                >
+                  <div className="text-left">
+                    <div className="font-semibold">{tent.name}</div>
+                    <div className="text-xs opacity-80">Tipo {tent.tentType}</div>
                   </div>
-
-                  {/* Temperatura */}
-                  <div className="flex items-center justify-between p-4 bg-orange-500/10 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <ThermometerSun className="w-5 h-5 text-orange-600" />
-                      <div>
-                        <Label htmlFor="tempEnabled" className="text-base font-semibold">
-                          Temperatura
-                        </Label>
-                        <p className="text-sm text-muted-foreground">Alerta quando temp. sai da faixa</p>
-                      </div>
-                    </div>
-                    <Switch
-                      id="tempEnabled"
-                      checked={settings?.tempEnabled ?? true}
-                      onCheckedChange={(value) => handleToggle("tempEnabled", value)}
-                      disabled={updateSettings.isPending || !settings?.alertsEnabled}
-                    />
-                  </div>
-
-                  {/* Umidade */}
-                  <div className="flex items-center justify-between p-4 bg-blue-500/10 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <Droplets className="w-5 h-5 text-blue-600" />
-                      <div>
-                        <Label htmlFor="rhEnabled" className="text-base font-semibold">
-                          Umidade (RH)
-                        </Label>
-                        <p className="text-sm text-muted-foreground">Alerta quando RH sai da faixa</p>
-                      </div>
-                    </div>
-                    <Switch
-                      id="rhEnabled"
-                      checked={settings?.rhEnabled ?? true}
-                      onCheckedChange={(value) => handleToggle("rhEnabled", value)}
-                      disabled={updateSettings.isPending || !settings?.alertsEnabled}
-                    />
-                  </div>
-
-                  {/* PPFD */}
-                  <div className="flex items-center justify-between p-4 bg-yellow-500/10 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <Sun className="w-5 h-5 text-yellow-600" />
-                      <div>
-                        <Label htmlFor="ppfdEnabled" className="text-base font-semibold">
-                          Luz (PPFD)
-                        </Label>
-                        <p className="text-sm text-muted-foreground">Alerta quando PPFD sai da faixa</p>
-                      </div>
-                    </div>
-                    <Switch
-                      id="ppfdEnabled"
-                      checked={settings?.ppfdEnabled ?? true}
-                      onCheckedChange={(value) => handleToggle("ppfdEnabled", value)}
-                      disabled={updateSettings.isPending || !settings?.alertsEnabled}
-                    />
-                  </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
+                </Button>
+              ))}
+            </div>
+          </div>
 
           {/* Histórico de Alertas */}
-          <Card className="bg-card/90 backdrop-blur-sm">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <History className="w-5 h-5 text-purple-500" />
-                Histórico de Alertas
+                <Bell className="w-5 h-5 text-primary" />
+                Alertas - {currentTent?.name}
               </CardTitle>
               <CardDescription>
-                Últimos 20 alertas disparados para {currentTent?.name}
+                Últimos 50 alertas disparados para esta estufa
               </CardDescription>
             </CardHeader>
             <CardContent>
               {loadingHistory ? (
-                <div className="flex justify-center py-8">
-                  <Loader2 className="w-6 h-6 animate-spin text-green-600" />
+                <div className="flex justify-center py-12">
+                  <Loader2 className="w-6 h-6 animate-spin text-primary" />
                 </div>
               ) : history && history.length > 0 ? (
-                <div className="space-y-3 max-h-[600px] overflow-y-auto">
+                <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
                   {history.map((alert: any) => (
                     <div
                       key={alert.id}
-                      className="p-4 bg-muted rounded-lg border border-gray-200"
+                      className="p-4 bg-muted/50 rounded-lg border border-border hover:bg-muted transition-colors"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-start gap-3 flex-1">
-                          {alert.metric === "TEMP" && <ThermometerSun className="w-5 h-5 text-orange-600 mt-0.5" />}
-                          {alert.metric === "RH" && <Droplets className="w-5 h-5 text-blue-600 mt-0.5" />}
-                          {alert.metric === "PPFD" && <Sun className="w-5 h-5 text-yellow-600 mt-0.5" />}
+                          {alert.metric === "TEMP" && (
+                            <div className="p-2 bg-orange-500/10 rounded-lg">
+                              <ThermometerSun className="w-5 h-5 text-orange-600" />
+                            </div>
+                          )}
+                          {alert.metric === "RH" && (
+                            <div className="p-2 bg-blue-500/10 rounded-lg">
+                              <Droplets className="w-5 h-5 text-blue-600" />
+                            </div>
+                          )}
+                          {alert.metric === "PPFD" && (
+                            <div className="p-2 bg-yellow-500/10 rounded-lg">
+                              <Sun className="w-5 h-5 text-yellow-600" />
+                            </div>
+                          )}
                           <div className="flex-1">
-                            <p className="text-sm font-medium text-foreground">{alert.message}</p>
-                            <p className="text-xs text-muted-foreground mt-1">
-                              {new Date(alert.createdAt).toLocaleString("pt-BR")}
+                            <p className="text-sm font-medium text-foreground leading-relaxed">
+                              {alert.message}
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-2">
+                              {new Date(alert.createdAt).toLocaleString("pt-BR", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit"
+                              })}
                             </p>
                           </div>
                         </div>
                         {alert.notificationSent && (
-                          <Badge variant="outline" className="text-xs">
+                          <Badge variant="outline" className="text-xs shrink-0">
                             ✉️ Enviado
                           </Badge>
                         )}
@@ -228,16 +144,26 @@ export default function Alerts() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12 text-muted-foreground">
-                  <Bell className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                  <p>Nenhum alerta disparado ainda</p>
-                  <p className="text-sm mt-1">Os alertas aparecerão aqui quando valores saírem da faixa ideal</p>
+                <div className="text-center py-16 text-muted-foreground">
+                  <div className="inline-flex p-4 bg-muted/50 rounded-full mb-4">
+                    <Bell className="w-12 h-12 opacity-30" />
+                  </div>
+                  <p className="text-lg font-medium">Nenhum alerta disparado ainda</p>
+                  <p className="text-sm mt-2">
+                    Os alertas aparecerão aqui quando valores ambientais saírem da faixa ideal
+                  </p>
+                  <Button asChild variant="outline" size="sm" className="mt-6">
+                    <Link href="/settings">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Configurar Thresholds
+                    </Link>
+                  </Button>
                 </div>
               )}
             </CardContent>
           </Card>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

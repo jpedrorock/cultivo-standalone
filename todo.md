@@ -379,3 +379,11 @@
 - [x] Integrar AlertSettings na página Settings
 - [ ] Implementar salvamento de preferências de alertas no backend (TODO: tRPC procedure)
 - [x] Testar configurações e validação de inputs
+
+
+## 🔄 Reorganização de Alertas (19/02/2026)
+
+- [x] Transformar página Alertas em histórico de notificações (últimos 50 alertas)
+- [x] Remover seção de configurações da página Alertas
+- [x] Manter Configurações de Alertas apenas em Settings
+- [x] Testar nova organização
