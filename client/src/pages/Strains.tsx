@@ -149,52 +149,111 @@ export default function Strains() {
           </CardHeader>
           <CardContent>
             {strains && strains.length > 0 ? (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nome</TableHead>
-                    <TableHead>Descrição</TableHead>
-                    <TableHead className="text-center">Vega (semanas)</TableHead>
-                    <TableHead className="text-center">Flora (semanas)</TableHead>
-                    <TableHead className="text-center">Total</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
+              <>
+                {/* Mobile cards (< lg) */}
+                <div className="lg:hidden space-y-4">
                   {strains.map((strain) => (
-                    <TableRow key={strain.id}>
-                      <TableCell className="font-medium">{strain.name}</TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {strain.description || "-"}
-                      </TableCell>
-                      <TableCell className="text-center">{strain.vegaWeeks}</TableCell>
-                      <TableCell className="text-center">{strain.floraWeeks}</TableCell>
-                      <TableCell className="text-center font-medium">
-                        {strain.vegaWeeks + strain.floraWeeks} semanas
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex gap-2 justify-end">
+                    <Card key={strain.id} className="bg-muted/50">
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <CardTitle className="text-lg">{strain.name}</CardTitle>
+                            <CardDescription className="mt-1">
+                              {strain.description || "Sem descrição"}
+                            </CardDescription>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        <div className="grid grid-cols-3 gap-2 text-sm">
+                          <div className="bg-background rounded-lg p-3 text-center">
+                            <div className="text-xs text-muted-foreground mb-1">🌱 Vega</div>
+                            <div className="font-semibold text-foreground">{strain.vegaWeeks} sem</div>
+                          </div>
+                          <div className="bg-background rounded-lg p-3 text-center">
+                            <div className="text-xs text-muted-foreground mb-1">🌸 Flora</div>
+                            <div className="font-semibold text-foreground">{strain.floraWeeks} sem</div>
+                          </div>
+                          <div className="bg-primary/10 rounded-lg p-3 text-center">
+                            <div className="text-xs text-muted-foreground mb-1">⏱️ Total</div>
+                            <div className="font-bold text-green-600">{strain.vegaWeeks + strain.floraWeeks} sem</div>
+                          </div>
+                        </div>
+                        <div className="flex gap-2 pt-2">
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handleOpenDialog(strain)}
+                            className="flex-1"
                           >
-                            <Pencil className="w-4 h-4" />
+                            <Pencil className="w-4 h-4 mr-2" />
+                            Editar
                           </Button>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handleDelete(strain.id, strain.name)}
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            className="flex-1 text-red-600 hover:text-red-700 hover:bg-red-50"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Excluir
                           </Button>
                         </div>
-                      </TableCell>
-                    </TableRow>
+                      </CardContent>
+                    </Card>
                   ))}
-                </TableBody>
-              </Table>
+                </div>
+
+                {/* Desktop table (>= lg) */}
+                <div className="hidden lg:block">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Nome</TableHead>
+                        <TableHead>Descrição</TableHead>
+                        <TableHead className="text-center">Vega (semanas)</TableHead>
+                        <TableHead className="text-center">Flora (semanas)</TableHead>
+                        <TableHead className="text-center">Total</TableHead>
+                        <TableHead className="text-right">Ações</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {strains.map((strain) => (
+                        <TableRow key={strain.id}>
+                          <TableCell className="font-medium">{strain.name}</TableCell>
+                          <TableCell className="text-muted-foreground">
+                            {strain.description || "-"}
+                          </TableCell>
+                          <TableCell className="text-center">{strain.vegaWeeks}</TableCell>
+                          <TableCell className="text-center">{strain.floraWeeks}</TableCell>
+                          <TableCell className="text-center font-medium">
+                            {strain.vegaWeeks + strain.floraWeeks} semanas
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex gap-2 justify-end">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleOpenDialog(strain)}
+                              >
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleDelete(strain.id, strain.name)}
+                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </>
             ) : (
               <div className="text-center py-12">
                 <Sprout className="w-16 h-16 mx-auto text-gray-300 mb-4" />

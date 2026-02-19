@@ -4,14 +4,17 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, CheckCircle2, Circle, Sprout } from "lucide-react";
+import { Loader2, CheckCircle2, Circle, Sprout, Filter } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { TaskTemplatesManager } from "@/components/TaskTemplatesManager";
+import { useState } from "react";
 
 export default function Tasks() {
   const { data: tasks, isLoading } = trpc.tasks.getCurrentWeekTasks.useQuery();
   const utils = trpc.useUtils();
+  const [selectedTent, setSelectedTent] = useState<string>("all");
+  const [showOnlyPending, setShowOnlyPending] = useState(false);
 
   const markAsDone = trpc.tasks.markAsDone.useMutation({
     onSuccess: () => {
@@ -37,8 +40,21 @@ export default function Tasks() {
     );
   }
 
+  // Filter tasks
+  const filteredTasks = tasks?.filter((task) => {
+    // Filter by tent
+    if (selectedTent !== "all" && !task.tentName.includes(selectedTent)) {
+      return false;
+    }
+    // Filter by pending status
+    if (showOnlyPending && task.isDone) {
+      return false;
+    }
+    return true;
+  }) || [];
+
   // Group tasks by tent
-  const tasksByTent = tasks?.reduce((acc: Record<string, any[]>, task) => {
+  const tasksByTent = filteredTasks.reduce((acc: Record<string, any[]>, task) => {
     const key = `${task.tentName}`;
     if (!acc[key]) {
       acc[key] = [];
@@ -47,9 +63,12 @@ export default function Tasks() {
     return acc;
   }, {}) || {};
 
-  const totalTasks = tasks?.length || 0;
-  const completedTasks = tasks?.filter((t) => t.isDone).length || 0;
+  const totalTasks = filteredTasks.length || 0;
+  const completedTasks = filteredTasks.filter((t) => t.isDone).length || 0;
   const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+  // Get unique tent names for filter buttons
+  const tentNames = Array.from(new Set(tasks?.map((t) => t.tentName) || []));
 
   return (
     <div className="min-h-screen bg-background">
@@ -82,6 +101,58 @@ export default function Tasks() {
           </TabsList>
 
           <TabsContent value="tasks" className="space-y-6">
+        {/* Filters */}
+        <Card className="bg-card/80 backdrop-blur-sm">
+          <CardContent className="pt-6">
+            <div className="flex flex-col gap-4">
+              {/* Tent filter */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                  <Filter className="w-4 h-4" />
+                  <span>Filtrar por estufa:</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    variant={selectedTent === "all" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSelectedTent("all")}
+                  >
+                    Todas
+                  </Button>
+                  {tentNames.map((tentName) => {
+                    const tentLetter = tentName.includes("A") ? "A" : tentName.includes("B") ? "B" : "C";
+                    return (
+                      <Button
+                        key={tentName}
+                        variant={selectedTent === tentLetter ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setSelectedTent(tentLetter)}
+                      >
+                        Estufa {tentLetter}
+                      </Button>
+                    );
+                  })}
+                </div>
+              </div>
+              
+              {/* Pending filter */}
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="pending-only"
+                  checked={showOnlyPending}
+                  onCheckedChange={(checked) => setShowOnlyPending(checked as boolean)}
+                />
+                <label
+                  htmlFor="pending-only"
+                  className="text-sm font-medium text-foreground cursor-pointer"
+                >
+                  Mostrar apenas tarefas pendentes
+                </label>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Progress Card */}
         <Card className="mb-6 bg-card/80 backdrop-blur-sm">
           <CardHeader>

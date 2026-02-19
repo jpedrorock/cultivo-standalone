@@ -327,3 +327,10 @@
 - [x] Bug: Semana inconsistente na página Tasks - Estufas A e B mostram "Semana do ciclo" sem número (Estufa C mostra corretamente)
 - [x] Bug: Input de arquivo oculto na página Configurações - campo de seleção não está visível, impedindo importação de backup
 - [x] Adicionar feedback de sucesso/erro em operações de backup (toasts de confirmação)
+
+
+## 🟠 Melhorias de Alta Prioridade (19/02/2026)
+
+- [x] Ocultar atalhos de teclado em mobile (Configurações) - usuários mobile não usam teclado físico
+- [x] Adicionar filtros na página Tasks - por estufa específica (Todas/A/B/C) e toggle "Apenas pendentes"
+- [x] Converter tabela de Strains para cards em mobile - layout responsivo com cards ao invés de tabela horizontal

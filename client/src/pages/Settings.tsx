@@ -52,7 +52,7 @@ function KeyboardShortcuts() {
   ];
 
   return (
-    <Card>
+    <Card className="max-lg:hidden">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Keyboard className="w-5 h-5" />
