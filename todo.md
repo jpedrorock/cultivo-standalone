@@ -306,3 +306,10 @@
 - [x] Adicionar tab de Fotos na página PlantDetail
 - [x] Criar página de demonstração (/skeleton-demo)
 - [x] Testar animação no navegador - funcionando perfeitamente
+
+## Ajustes de Design (19/02/2026)
+
+- [x] Remover aba de Fotos da página PlantDetail (removida - desnecessária)
+- [x] Redesenhar PlantLSTTab com layout horizontal em colunas
+- [x] Adicionar ícones à esquerda dos itens LST (emoji grande + nome + badge + descrição)
+- [x] Testar novo design no navegador - layout horizontal funcionando perfeitamente

@@ -56,7 +56,7 @@ const TECHNIQUES = [
     shortDesc: "Dobrar e amarrar galhos",
     description:
       "Técnica de baixo estresse: dobrar e amarrar galhos horizontalmente para expor mais área à luz. Use arames macios ou cordas. Comece cedo na vegetação (2-3 semanas). Ajuste diariamente conforme crescimento. Aumenta penetração de luz e cria canopy uniforme sem cortes.",
-    icon: "🩢",
+    icon: "🩹",
     phase: "vega",
     recovery: "Sem pausa",
     color: "bg-green-500/10 border-green-500/30",
@@ -204,10 +204,10 @@ export default function PlantLSTTab({ plantId }: PlantLSTTabProps) {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Compact Technique Selector */}
+          {/* Horizontal Layout with Icons on Left */}
           <div className="space-y-2">
             <Label className="text-sm">Selecione as técnicas aplicadas</Label>
-            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2">
+            <div className="space-y-2">
               {TECHNIQUES.map((technique) => {
                 const isSelected = selectedTechniques.includes(technique.id);
                 return (
@@ -215,265 +215,178 @@ export default function PlantLSTTab({ plantId }: PlantLSTTabProps) {
                     <button
                       type="button"
                       onClick={() => toggleTechnique(technique.id)}
-                      className={`w-full flex flex-col items-center gap-1 p-3 border rounded-xl text-center transition-all duration-200 ${
+                      className={`w-full flex items-center gap-3 p-3 border rounded-lg text-left transition-all duration-200 ${
                         isSelected
                           ? technique.selectedColor
-                          : `${technique.color} hover:scale-[1.03]`
+                          : `${technique.color} hover:scale-[1.01]`
                       }`}
                     >
+                      {/* Icon on Left */}
+                      <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center text-2xl">
+                        {technique.icon}
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-semibold text-sm">
+                            {technique.name}
+                          </span>
+                          <span className={`text-xs px-2 py-0.5 rounded-full ${technique.badgeColor}`}>
+                            {technique.phase}
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {technique.shortDesc} • {technique.recovery}
+                        </p>
+                      </div>
+
+                      {/* Check Mark */}
                       {isSelected && (
-                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center shadow-sm">
-                          <Check className="w-3 h-3 text-primary-foreground" />
+                        <div className="flex-shrink-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                          <Check className="w-4 h-4 text-primary-foreground" />
                         </div>
                       )}
-                      <span className="text-2xl leading-none">
-                        {technique.icon}
-                      </span>
-                      <span className="text-xs font-medium leading-tight">
-                        {technique.name}
-                      </span>
-                    </button>
-                    {/* Info popover */}
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <button
-                          type="button"
-                          className="absolute -top-1 -left-1 w-5 h-5 bg-muted hover:bg-muted-foreground/20 rounded-full flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity"
-                          onClick={(e) => e.stopPropagation()}
+
+                      {/* Info Button */}
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <button
+                            type="button"
+                            className="flex-shrink-0 w-6 h-6 bg-muted hover:bg-muted-foreground/20 rounded-full flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                          >
+                            <Info className="w-3.5 h-3.5" />
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          side="left"
+                          className="w-72 text-sm"
+                          align="center"
                         >
-                          <Info className="w-3 h-3" />
-                        </button>
-                      </PopoverTrigger>
-                      <PopoverContent
-                        side="top"
-                        className="w-72 text-sm"
-                        align="start"
-                      >
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2">
-                            <span className="text-lg">{technique.icon}</span>
-                            <h4 className="font-semibold">{technique.name}</h4>
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg">{technique.icon}</span>
+                              <span className="font-semibold">
+                                {technique.name}
+                              </span>
+                            </div>
+                            <p className="text-muted-foreground text-xs leading-relaxed">
+                              {technique.description}
+                            </p>
+                            <div className="flex gap-2 text-xs">
+                              <span className={`px-2 py-1 rounded ${technique.badgeColor}`}>
+                                {technique.phase}
+                              </span>
+                              <span className="px-2 py-1 rounded bg-muted">
+                                {technique.recovery}
+                              </span>
+                            </div>
                           </div>
-                          <p className="text-muted-foreground text-xs leading-relaxed">
-                            {technique.description}
-                          </p>
-                          <div className="flex gap-2 pt-1">
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted font-medium">
-                              ⏱ {technique.recovery}
-                            </span>
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted font-medium">
-                              🌱{" "}
-                              {technique.phase === "vega"
-                                ? "Vegetação"
-                                : technique.phase === "flora"
-                                  ? "Floração"
-                                  : "Vega/Flora"}
-                            </span>
-                          </div>
-                        </div>
-                      </PopoverContent>
-                    </Popover>
+                        </PopoverContent>
+                      </Popover>
+                    </button>
                   </div>
                 );
               })}
             </div>
-            {selectedTechniques.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 pt-1">
-                {selectedTechniques.map((id) => {
-                  const tech = TECHNIQUES.find((t) => t.id === id);
-                  if (!tech) return null;
-                  return (
-                    <span
-                      key={id}
-                      className={`inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium ${tech.badgeColor}`}
-                    >
-                      {tech.icon} {tech.name}
-                      <button
-                        type="button"
-                        onClick={() => toggleTechnique(id)}
-                        className="ml-0.5 hover:opacity-70"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  );
-                })}
-              </div>
-            )}
           </div>
 
-          {/* Response & Notes - collapsible for cleaner look */}
-          <div className="space-y-3">
-            <div className="space-y-2">
-              <Label htmlFor="response" className="text-sm">
-                Resposta da Planta
-              </Label>
-              <Textarea
-                id="response"
-                placeholder="Como a planta respondeu à técnica..."
-                value={response}
-                onChange={(e) => setResponse(e.target.value)}
-                rows={2}
-                className="resize-none"
-              />
-            </div>
+          {/* Response */}
+          <div className="space-y-2">
+            <Label htmlFor="response" className="text-sm">
+              Resposta da planta (opcional)
+            </Label>
+            <select
+              id="response"
+              value={response}
+              onChange={(e) => setResponse(e.target.value)}
+              className="w-full px-3 py-2 border rounded-md bg-background text-sm"
+            >
+              <option value="">Selecione...</option>
+              <option value="Excelente">✅ Excelente</option>
+              <option value="Boa">👍 Boa</option>
+              <option value="Normal">😐 Normal</option>
+              <option value="Estressada">😰 Estressada</option>
+              <option value="Ruim">❌ Ruim</option>
+            </select>
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="notes" className="text-sm">
-                Notas Adicionais
-              </Label>
-              <Textarea
-                id="notes"
-                placeholder="Observações, dificuldades, resultados..."
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                rows={2}
-                className="resize-none"
-              />
-            </div>
+          {/* Notes */}
+          <div className="space-y-2">
+            <Label htmlFor="notes" className="text-sm">
+              Observações (opcional)
+            </Label>
+            <Textarea
+              id="notes"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Ex: Aplicado topping no 5º nó, planta respondeu bem..."
+              className="min-h-[80px] text-sm"
+            />
           </div>
 
           <Button
             onClick={handleSubmit}
             disabled={selectedTechniques.length === 0 || createLSTLog.isPending}
-            className="w-full sm:w-auto"
+            className="w-full"
           >
-            {createLSTLog.isPending ? "Salvando..." : "Registrar"}
+            <Scissors className="w-4 h-4 mr-2" />
+            {createLSTLog.isPending ? "Salvando..." : "Registrar Técnica"}
           </Button>
         </CardContent>
       </Card>
 
-      {/* LST Logs List */}
-      <div className="space-y-3">
-        <h3 className="text-base font-semibold flex items-center gap-2">
-          <Scissors className="w-4 h-4" />
-          Histórico de Treinamento
-        </h3>
-        {lstLogs && lstLogs.length > 0 ? (
-          <Accordion type="multiple" className="space-y-2">
-            {lstLogs.map((log: any) => (
-              <AccordionItem
-                key={log.id}
-                value={String(log.id)}
-                className="border rounded-lg px-4 bg-card"
-              >
-                <AccordionTrigger className="hover:no-underline py-3">
-                  <div className="flex items-center gap-3 text-left">
-                    <span className="text-xs text-muted-foreground whitespace-nowrap">
-                      {new Date(log.logDate).toLocaleString("pt-BR", {
-                        dateStyle: "short",
-                        timeStyle: "short",
-                      })}
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {log.technique.split(",").map((tech: string, idx: number) => {
-                        const techData = TECHNIQUES.find(
-                          (t) =>
-                            t.name.toLowerCase() ===
-                            tech.trim().toLowerCase()
-                        );
-                        return (
-                          <span
-                            key={idx}
-                            className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium ${
-                              techData?.badgeColor ||
-                              "bg-purple-500/15 text-purple-700 dark:text-purple-400"
-                            }`}
-                          >
-                            {techData?.icon || "✂️"} {tech.trim()}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="pb-4 space-y-3">
-                  {log.response && (
-                    <div className="bg-muted/50 rounded-lg p-3">
-                      <p className="text-xs font-medium text-muted-foreground mb-1">
-                        Resposta da Planta
-                      </p>
-                      <p className="text-sm">{log.response}</p>
-                    </div>
-                  )}
-                  {log.notes && (
-                    <div className="bg-muted/50 rounded-lg p-3">
-                      <p className="text-xs font-medium text-muted-foreground mb-1">
-                        Notas
-                      </p>
-                      <p className="text-sm">{log.notes}</p>
-                    </div>
-                  )}
-                  {!log.response && !log.notes && (
-                    <p className="text-sm text-muted-foreground italic">
-                      Nenhuma observação registrada
-                    </p>
-                  )}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        ) : (
-          <Card>
-            <CardContent className="py-8 text-center">
-              <Scissors className="w-10 h-10 mx-auto text-muted-foreground/40 mb-3" />
-              <p className="text-sm text-muted-foreground">
-                Nenhum registro de treinamento ainda
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                Selecione técnicas acima e registre a resposta da planta
-              </p>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-
-      {/* Compact Technique Guide */}
-      <Accordion type="single" collapsible>
-        <AccordionItem value="guide" className="border rounded-lg bg-muted/20">
-          <AccordionTrigger className="px-4 py-3 hover:no-underline">
-            <span className="text-sm font-medium flex items-center gap-2">
-              📚 Guia Rápido de Técnicas
-            </span>
-          </AccordionTrigger>
-          <AccordionContent className="px-4 pb-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-              <div className="bg-green-500/5 rounded-lg p-3 border border-green-500/20">
-                <p className="font-medium text-green-700 dark:text-green-400 text-xs mb-1">
-                  🌱 Vegetação (Semana 2-6)
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Topping, FIM, LST, Super Cropping, Mainlining, ScrOG
-                </p>
-              </div>
-              <div className="bg-yellow-500/5 rounded-lg p-3 border border-yellow-500/20">
-                <p className="font-medium text-yellow-700 dark:text-yellow-400 text-xs mb-1">
-                  🌸 Transição para Floração
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Última chance para LST agressivo e defoliação pré-flora
-                </p>
-              </div>
-              <div className="bg-purple-500/5 rounded-lg p-3 border border-purple-500/20">
-                <p className="font-medium text-purple-700 dark:text-purple-400 text-xs mb-1">
-                  🌺 Floração (Semana 1-5)
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Lollipopping (sem 3-4), Defoliação seletiva (cuidado!)
-                </p>
-              </div>
-              <div className="bg-red-500/5 rounded-lg p-3 border border-red-500/20">
-                <p className="font-medium text-red-700 dark:text-red-400 text-xs mb-1">
-                  ⚠️ Após Semana 6 de Flora
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Apenas suporte, sem manipulação para não estressar
-                </p>
-              </div>
+      {/* LST History */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Histórico de Técnicas</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {!lstLogs || lstLogs.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground text-sm">
+              <Scissors className="w-8 h-8 mx-auto mb-2 opacity-30" />
+              <p>Nenhuma técnica registrada ainda</p>
             </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+          ) : (
+            <Accordion type="single" collapsible className="space-y-2">
+              {lstLogs.map((log: any) => (
+                <AccordionItem
+                  key={log.id}
+                  value={`log-${log.id}`}
+                  className="border rounded-lg px-4"
+                >
+                  <AccordionTrigger className="hover:no-underline py-3">
+                    <div className="flex items-center gap-3 text-left">
+                      <Scissors className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm">{log.technique}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {new Date(log.appliedAt).toLocaleDateString("pt-BR")}
+                        </div>
+                      </div>
+                      {log.response && (
+                        <span className="text-xs px-2 py-1 rounded bg-muted flex-shrink-0">
+                          {log.response}
+                        </span>
+                      )}
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-3 pt-1">
+                    {log.notes && (
+                      <p className="text-sm text-muted-foreground">
+                        {log.notes}
+                      </p>
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
