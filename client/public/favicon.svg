@@ -1,8 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <rect width="100" height="100" fill="#ffffff"/>
-  <path d="M30 60 Q30 40, 50 40 Q70 40, 70 60" fill="none" stroke="#7cb342" stroke-width="4"/>
-  <path d="M50 40 L50 80" stroke="#7cb342" stroke-width="4"/>
-  <ellipse cx="35" cy="50" rx="12" ry="18" fill="#9ccc65"/>
-  <ellipse cx="65" cy="50" rx="12" ry="18" fill="#9ccc65"/>
-  <rect x="45" y="75" width="10" height="8" fill="#8d6e63"/>
+  <circle cx="50" cy="50" r="50" fill="#10b981"/>
+  <g transform="translate(50, 50)">
+    <!-- Stem -->
+    <rect x="-3" y="5" width="6" height="20" fill="#059669" rx="2"/>
+    
+    <!-- Left leaf -->
+    <ellipse cx="-12" cy="0" rx="12" ry="8" fill="#34d399" transform="rotate(-30 -12 0)"/>
+    
+    <!-- Right leaf -->
+    <ellipse cx="12" cy="0" rx="12" ry="8" fill="#34d399" transform="rotate(30 12 0)"/>
+    
+    <!-- Center sprout -->
+    <ellipse cx="0" cy="-8" rx="8" ry="10" fill="#6ee7b7"/>
+  </g>
 </svg>

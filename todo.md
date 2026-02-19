@@ -513,10 +513,12 @@
 
 ## 📊 Filtro por Estufa no Histórico (19/02/2026)
 
-- [ ] Adicionar tabs/filtros no topo da página Histórico
-- [ ] Permitir filtrar registros por estufa específica
-- [ ] Mostrar "Todas as Estufas" como opção padrão
-- [ ] Atualizar contadores e estatísticas baseado no filtro selecionado
+- [x] Analisar componente HistoryTable - filtro já estava implementado
+- [x] Tabs no topo da página (Todas + estufas dinâmicas) - já implementado
+- [x] Estado de filtro selecionado (selectedTentId) - já implementado
+- [x] Query dailyLogs.listAll filtra por tentId - já implementado
+- [x] Gráficos de análise aparecem quando estufa específica é selecionada
+- [x] Testar filtro com Estufa B - funcionando perfeitamente (14 registros filtrados)
 
 ## 🍂 Tarefas de Secagem (19/02/2026)
 
@@ -529,3 +531,19 @@
 
 - [x] Corrigir erro de botão aninhado em "Tarefas da Semana" (transformado em div com botões separados)
 - [x] Testar criação de estufa após correção - funcionando perfeitamente
+
+
+## 📱 Reduzir Padding dos Cards de Calculadoras Mobile (19/02/2026)
+
+- [ ] Analisar componente Calculators.tsx para identificar padding excessivo
+- [ ] Reduzir padding interno dos cards de calculadoras para mobile
+- [ ] Otimizar espaçamento para aproveitar melhor a tela
+- [ ] Testar visualização em mobile
+
+
+## 🎨 Atualizar Favicon para Símbolo do App (19/02/2026)
+
+- [ ] Localizar favicon atual
+- [ ] Criar novo favicon com símbolo de plantinha (mesmo do ícone do app)
+- [ ] Substituir favicon.ico/favicon.svg no projeto
+- [ ] Testar visualização na aba do navegador
