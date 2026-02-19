@@ -69,23 +69,23 @@ export default function CalculatorMenu() {
       </header>
 
       {/* Content */}
-      <main className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <main className="container mx-auto px-3 py-4 md:px-4 md:py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           {calculators.map((calc) => {
             const Icon = calc.icon;
             return (
               <Link key={calc.id} href={`/calculators/${calc.id}`}>
                 <Card className={`cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 ${calc.bgColor} hover:border-primary/50`}>
-                  <CardHeader className="pb-2 md:pb-4">
-                    <div className={`w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br ${calc.color} flex items-center justify-center mb-3 md:mb-4 shadow-lg`}>
-                      <Icon className="w-6 h-6 md:w-8 md:h-8 text-white" />
+                  <CardHeader className="p-4 md:p-6 pb-2 md:pb-4">
+                    <div className={`w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br ${calc.color} flex items-center justify-center mb-2 md:mb-4 shadow-lg`}>
+                      <Icon className="w-5 h-5 md:w-8 md:h-8 text-white" />
                     </div>
-                    <CardTitle className="text-xl">{calc.title}</CardTitle>
-                    <CardDescription className="text-base">
+                    <CardTitle className="text-lg md:text-xl">{calc.title}</CardTitle>
+                    <CardDescription className="text-sm md:text-base">
                       {calc.description}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="p-4 md:p-6 pt-0">
                     <div className="flex items-center justify-between text-sm text-muted-foreground">
                       <span>Abrir calculadora</span>
                       <span className="text-2xl">→</span>
@@ -98,7 +98,7 @@ export default function CalculatorMenu() {
         </div>
 
         {/* Info Card */}
-        <Card className="mt-8 bg-primary/10 border-primary/20">
+        <Card className="mt-4 md:mt-8 bg-primary/10 border-primary/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Beaker className="w-5 h-5 text-green-600" />

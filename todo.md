@@ -535,10 +535,12 @@
 
 ## 📱 Reduzir Padding dos Cards de Calculadoras Mobile (19/02/2026)
 
-- [ ] Analisar componente Calculators.tsx para identificar padding excessivo
-- [ ] Reduzir padding interno dos cards de calculadoras para mobile
-- [ ] Otimizar espaçamento para aproveitar melhor a tela
-- [ ] Testar visualização em mobile
+- [x] Analisar componente CalculatorMenu.tsx para identificar padding excessivo
+- [x] Reduzir padding interno dos cards (p-4 md:p-6 ao invés de p-6)
+- [x] Ajustar espaçamentos entre cards (gap-3 md:gap-4)
+- [x] Otimizar tamanho de ícones (w-10 h-10 md:w-16 md:h-16) e texto (text-lg md:text-xl)
+- [x] Reduzir margens do container (px-3 py-4 md:px-4 md:py-8)
+- [x] Testar visualização - layout muito mais otimizado para mobile
 
 
 ## 🎨 Atualizar Favicon para Símbolo do App (19/02/2026)
