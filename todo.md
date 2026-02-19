@@ -359,5 +359,14 @@
 
 ## 🎯 Melhorias de Organização (19/02/2026)
 
-- [ ] Ajustar nomes de categorias de templates de tarefas para serem genéricos (sem mencionar estufas específicas)
+- [x] Ajustar nomes de categorias de templates de tarefas para serem genéricos (sem mencionar estufas específicas)
 - [x] Implementar tabs por estufa na página Histórico (Todas | Estufa A | Estufa B | Estufa C)
+
+
+## 🔧 Ajuste de Nomenclatura (19/02/2026)
+
+- [x] Identificar onde templates de tarefas são criados (seed data/migrations)
+- [x] Ajustar nomes de categorias: "Vegetativo - Estufas B/C" → "Tarefas de Vegetação"
+- [x] Ajustar nomes de categorias: "Floração - Estufas B/C" → "Tarefas de Floração"
+- [x] Ajustar nomes de categorias: "Manutenção - Estufa A" → "Tarefas de Manutenção"
+- [x] Atualizar frontend (TaskTemplatesManager) para exibir novos nomes

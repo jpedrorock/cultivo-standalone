@@ -167,7 +167,7 @@ export function TaskTemplatesManager() {
   });
 
   const groupedTemplates = filteredTemplates?.reduce((acc: any, template: any) => {
-    const key = `${template.phase}-${template.context}`;
+    const key = template.phase; // Agrupar apenas por fase, sem contexto de estufa
     if (!acc[key]) {
       acc[key] = [];
     }
@@ -212,12 +212,12 @@ export function TaskTemplatesManager() {
 
       <Accordion type="multiple" className="space-y-4">
         {groupedTemplates && Object.entries(groupedTemplates).map(([key, templates]) => {
-          const [phase, context] = key.split("-") as [Phase, Context];
+          const phase = key as Phase; // key agora é apenas a fase
           return (
             <AccordionItem key={key} value={key} className="border rounded-lg">
               <AccordionTrigger className="px-6 py-4 hover:no-underline">
                 <div className="flex items-center gap-2 text-left">
-                  <span className="font-semibold">{getPhaseLabel(phase)} - {getContextLabel(context)}</span>
+                  <span className="font-semibold">Tarefas de {getPhaseLabel(phase)}</span>
                   <Badge variant="outline">{templates.length} tarefas</Badge>
                 </div>
               </AccordionTrigger>
