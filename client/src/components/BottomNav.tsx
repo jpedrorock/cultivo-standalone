@@ -11,6 +11,13 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
+type NavItem = {
+  href: string;
+  icon: React.ComponentType<any>;
+  label: string;
+  badge?: number;
+};
+
 export function BottomNav() {
   const [location] = useLocation();
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
@@ -18,15 +25,15 @@ export function BottomNav() {
   // Buscar contagem de alertas não lidos
   const { data: alertCount } = trpc.alerts.getNewCount.useQuery({});
 
-  const mainNavItems = [
+  const mainNavItems: NavItem[] = [
     { href: "/", icon: Home, label: "Home" },
     { href: "/plants", icon: Leaf, label: "Plantas" },
-    { href: "/tarefas", icon: CheckSquare, label: "Tarefas" },
     { href: "/calculators", icon: Calculator, label: "Calculadoras" },
-    { href: "/alerts", icon: Bell, label: "Alertas", badge: alertCount || 0 },
   ];
 
-  const moreMenuItems = [
+  const moreMenuItems: NavItem[] = [
+    { href: "/tarefas", icon: CheckSquare, label: "Tarefas" },
+    { href: "/alerts", icon: Bell, label: "Alertas", badge: alertCount || 0 },
     { href: "/history", icon: BarChart3, label: "Histórico" },
     { href: "/manage-strains", icon: Sprout, label: "Strains" },
     { href: "/settings", icon: Settings, label: "Configurações" },
@@ -96,7 +103,7 @@ export function BottomNav() {
                       href={item.href}
                       onClick={() => setMoreMenuOpen(false)}
                       className={cn(
-                        "flex items-center gap-4 px-4 py-4 rounded-lg transition-colors",
+                        "flex items-center gap-4 px-4 py-4 rounded-lg transition-colors relative",
                         "hover:bg-primary/10",
                         isActive
                           ? "bg-primary/10 text-primary font-semibold"
@@ -105,6 +112,11 @@ export function BottomNav() {
                     >
                       <Icon className={cn("w-5 h-5", isActive && "stroke-[2.5]")} />
                       <span className="text-base">{item.label}</span>
+                      {item.badge !== undefined && item.badge > 0 && (
+                        <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
+                          {item.badge > 9 ? '9+' : item.badge}
+                        </span>
+                      )}
                     </Link>
                   );
                 })}

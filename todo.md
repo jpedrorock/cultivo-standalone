@@ -346,4 +346,5 @@
 - [x] Criar nova página "Tarefas" no menu lateral
 - [x] Integrar TaskTemplatesManager na nova página
 - [x] Adicionar rota no App.tsx
-- [x] Adicionar item no menu lateral (DashboardLayout)
+- [x] Adicionar item no menu lateral (Sidebar desktop)
+- [x] Adicionar item no menu "Mais" (BottomNav mobile)
