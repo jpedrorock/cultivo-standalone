@@ -583,7 +583,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                   </div>
                 ) : tasks && tasks.length > 0 ? (
                   <div className="space-y-2 max-h-48 overflow-y-auto">
-                    {tasks.filter((task) => !hideCompleted || !task.isDone).map((task) => (
+                    {tasks.filter((task) => hideCompleted ? !task.isDone : true).map((task) => (
                       <div
                         key={task.id}
                         className={`flex items-start gap-2 p-2 rounded hover:bg-muted transition-all duration-500 ease-in-out ${

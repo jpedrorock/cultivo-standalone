@@ -416,3 +416,16 @@
 - [x] Implementar lógica de colapso automático ao marcar tarefa como concluída
 - [x] Adicionar animação suave de colapso (transição CSS)
 - [x] Testar funcionalidade em diferentes estufas
+
+
+## 🐛 Bug - Botão "Ocultar concluídas" não funciona (19/02/2026)
+
+- [x] Investigar por que botão "Ocultar concluídas" não mostra/oculta tarefas marcadas
+- [x] Corrigir lógica de filtragem de tarefas concluídas (linha 586 Home.tsx)
+- [x] Testar funcionalidade do botão - funcionando perfeitamente
+
+## 🔍 Busca em Strains e Tarefas (19/02/2026)
+
+- [x] Adicionar campo de busca na página ManageStrains (filtrar por nome ou descrição) - já estava implementado
+- [x] Adicionar campo de busca no TaskTemplatesManager (filtrar por título ou descrição) - já estava implementado
+- [x] Testar funcionalidade de busca em ambas as páginas - funcionando perfeitamente
