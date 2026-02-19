@@ -141,7 +141,7 @@ export default function Calculators() {
 
   const calculatorTitles: Record<string, string> = {
     "watering-runoff": "Rega e Runoff",
-    fertilization: "Calculadora de Fertilização",
+
     "lux-ppfd": "Conversor Lux → PPFD",
     "ppm-ec": "Conversor PPM ↔ EC",
     "ph-adjust": "Calculadora de pH",
@@ -173,7 +173,7 @@ export default function Calculators() {
       {/* Main Content */}
       <main className="container py-8">
         {calculatorId === "watering-runoff" && <WateringRunoffCalculator />}
-        {calculatorId === "fertilization" && <FertilizationCalculator />}
+
         {calculatorId === "lux-ppfd" && <LuxPPFDCalculator />}
         {calculatorId === "ppm-ec" && <PPMECConverter />}
         {calculatorId === "ph-adjust" && <PHAdjustCalculator />}

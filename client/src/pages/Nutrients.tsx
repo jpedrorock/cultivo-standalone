@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Trash2, Beaker, Droplets, TestTube } from "lucide-react";
+import { Plus, Trash2, Beaker, Droplets, TestTube, Download } from "lucide-react";
 import { toast as showToast } from "sonner";
 
 interface NutrientProduct {
@@ -27,8 +27,6 @@ interface CalculatedResults {
 }
 
 export default function Nutrients() {
-  // Toast notifications
-  
   // State para seleção de receita
   const [selectedPhase, setSelectedPhase] = useState<"CLONING" | "VEGA" | "FLORA" | "MAINTENANCE" | "DRYING">("VEGA");
   const [selectedWeek, setSelectedWeek] = useState<number>(1);
@@ -179,6 +177,62 @@ export default function Nutrients() {
     });
   };
   
+  // Exportar receita como TXT
+  const handleExportRecipe = () => {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('pt-BR');
+    
+    const txtContent = `RECEITA DE FERTILIZAÇÃO - APP CULTIVO
+================================================
+
+DATA: ${dateStr}
+
+PARÂMETROS:
+- Nome da receita: ${recipeName}
+- Volume de preparo: ${volumeTotalL}L
+- EC estimado: ${calculated.ecEstimated} mS/cm
+- PPM aproximado: ${calculated.ppmEstimated} ppm
+- Fase: ${selectedPhase}
+- Semana: ${selectedWeek}
+
+PRODUTOS:
+${products.map((p, i) => `${i + 1}. ${p.name}: ${p.amountMl} ml (${(p.amountMl / volumeTotalL).toFixed(2)} ml/L)`).join('\n')}
+
+NPK TOTAL:
+- Nitrogênio (N): ${calculated.npkTotal.n} ppm
+- Fósforo (P): ${calculated.npkTotal.p} ppm
+- Potássio (K): ${calculated.npkTotal.k} ppm
+
+MICRONUTRIENTES:
+- Cálcio (Ca): ${calculated.micronutrients.ca} ppm
+- Magnésio (Mg): ${calculated.micronutrients.mg} ppm
+- Ferro (Fe): ${calculated.micronutrients.fe} ppm
+
+pH:
+- pH Target: ${phTarget}
+- pH Atual: ${phActual}
+
+DICA:
+Dissolva cada produto separadamente e misture gradualmente.
+Aguarde cada produto dissolver completamente antes de adicionar o próximo.
+
+---
+Gerado por App Cultivo em ${now.toLocaleString('pt-BR')}
+`;
+    
+    const blob = new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `receita-${recipeName.replace(/\s+/g, '-').toLowerCase()}-${volumeTotalL}L.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    showToast.success('✅ Receita exportada para TXT!');
+  };
+  
   // Calcular ajuste de pH
   const phDiff = phTarget - phActual;
   const phAdjustmentMl = Math.abs(phDiff) * volumeTotalL;
@@ -187,72 +241,72 @@ export default function Nutrients() {
   return (
     <div className="container mx-auto py-6 space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Receitas de Nutrientes</h1>
-        <p className="text-muted-foreground">
-          Calculadora avançada de fertilização com NPK, micronutrientes, EC/PPM e ajuste de pH
+        <h1 className="text-3xl font-bold flex items-center gap-2">
+          <Beaker className="w-8 h-8 text-primary" />
+          Receitas de Nutrientes
+        </h1>
+        <p className="text-muted-foreground mt-2">
+          Sistema completo de fertilização com NPK, micronutrientes, EC/PPM e ajuste de pH
         </p>
       </div>
       
       <Tabs defaultValue="calculator" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="calculator">Calculadora</TabsTrigger>
-          <TabsTrigger value="history">Histórico</TabsTrigger>
+          <TabsTrigger value="calculator">🧪 Calculadora</TabsTrigger>
+          <TabsTrigger value="history">📋 Histórico</TabsTrigger>
         </TabsList>
         
         <TabsContent value="calculator" className="space-y-6">
           {/* Seletor de Receita Base */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Beaker className="w-5 h-5" />
-                Seletor de Receita Base
-              </CardTitle>
-              <CardDescription>Escolha uma receita pré-configurada para começar</CardDescription>
+              <CardTitle>Selecionar Receita Base</CardTitle>
+              <CardDescription>Escolha uma receita pré-configurada por fase e semana</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label>Fase</Label>
+              <div className="grid gap-4 md:grid-cols-3">
+                <div>
+                  <Label htmlFor="phase">Fase</Label>
                   <Select value={selectedPhase} onValueChange={(v: any) => setSelectedPhase(v)}>
-                    <SelectTrigger>
+                    <SelectTrigger id="phase">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="CLONING">🌱 Clonagem</SelectItem>
                       <SelectItem value="VEGA">🌿 Vegetativa</SelectItem>
-                      <SelectItem value="FLORA">🌸 Floração</SelectItem>
+                      <SelectItem value="FLORA">🌺 Floração</SelectItem>
                       <SelectItem value="MAINTENANCE">🔧 Manutenção</SelectItem>
-                      <SelectItem value="DRYING">💨 Secagem</SelectItem>
+                      <SelectItem value="DRYING">🍂 Secagem</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 
-                {(selectedPhase === "VEGA" || selectedPhase === "FLORA") && (
-                  <div className="space-y-2">
-                    <Label>Semana</Label>
-                    <Select value={selectedWeek.toString()} onValueChange={(v) => setSelectedWeek(Number(v))}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Array.from({ length: selectedPhase === "VEGA" ? 4 : 8 }, (_, i) => i + 1).map((week: number) => (
-                          <SelectItem key={week} value={week.toString()}>Semana {week}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
+                <div>
+                  <Label htmlFor="week">Semana</Label>
+                  <Select value={selectedWeek.toString()} onValueChange={(v) => setSelectedWeek(parseInt(v))}>
+                    <SelectTrigger id="week">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[1, 2, 3, 4, 5, 6, 7, 8].map((w) => (
+                        <SelectItem key={w} value={w.toString()}>
+                          Semana {w}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 
-                <div className="space-y-2">
-                  <Label>Receita</Label>
-                  <Select onValueChange={(v) => loadTemplate(Number(v))}>
-                    <SelectTrigger>
+                <div>
+                  <Label htmlFor="template">Receita</Label>
+                  <Select onValueChange={(v) => loadTemplate(parseInt(v))}>
+                    <SelectTrigger id="template">
                       <SelectValue placeholder="Selecione uma receita" />
                     </SelectTrigger>
                     <SelectContent>
-                      {templates?.map((template: any) => (
-                        <SelectItem key={template.id} value={template.id.toString()}>
-                          {template.name}
+                      {templates?.map((t: any) => (
+                        <SelectItem key={t.id} value={t.id.toString()}>
+                          {t.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -265,30 +319,29 @@ export default function Nutrients() {
           {/* Editor de Receita */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TestTube className="w-5 h-5" />
-                Editor de Receita
-              </CardTitle>
-              <CardDescription>Ajuste quantidades e produtos em tempo real</CardDescription>
+              <CardTitle>Editor de Receita</CardTitle>
+              <CardDescription>Ajuste os produtos e quantidades conforme necessário</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Nome da Receita</Label>
-                  <Input 
-                    value={recipeName} 
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <Label htmlFor="recipeName">Nome da Receita</Label>
+                  <Input
+                    id="recipeName"
+                    value={recipeName}
                     onChange={(e) => setRecipeName(e.target.value)}
-                    placeholder="Ex: Vega Semana 2 Custom"
+                    placeholder="Ex: Vega Semana 3 Custom"
                   />
                 </div>
                 
-                <div className="space-y-2">
-                  <Label>Volume Total (L)</Label>
-                  <Input 
-                    type="number" 
-                    value={volumeTotalL} 
-                    onChange={(e) => setVolumeTotalL(Number(e.target.value))}
-                    min={1}
+                <div>
+                  <Label htmlFor="volume">Volume Total (L)</Label>
+                  <Input
+                    id="volume"
+                    type="number"
+                    value={volumeTotalL}
+                    onChange={(e) => setVolumeTotalL(parseFloat(e.target.value) || 0)}
+                    placeholder="10"
                   />
                 </div>
               </div>
@@ -296,65 +349,83 @@ export default function Nutrients() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <Label>Produtos</Label>
-                  <Button size="sm" variant="outline" onClick={addProduct}>
+                  <Button onClick={addProduct} size="sm" variant="outline">
                     <Plus className="w-4 h-4 mr-2" />
                     Adicionar Produto
                   </Button>
                 </div>
                 
-                {products.map((product: NutrientProduct, index: number) => (
-                  <div key={index} className="grid grid-cols-12 gap-2 items-end">
-                    <div className="col-span-3">
-                      <Input 
-                        placeholder="Nome do produto"
+                {products.map((product, index) => (
+                  <div key={index} className="grid gap-3 md:grid-cols-6 items-end p-3 bg-muted/50 rounded-lg">
+                    <div className="md:col-span-2">
+                      <Label className="text-xs">Nome</Label>
+                      <Input
                         value={product.name}
                         onChange={(e) => updateProduct(index, "name", e.target.value)}
+                        placeholder="Ex: Grow (Vega)"
+                        size={1}
                       />
                     </div>
-                    <div className="col-span-2">
-                      <Input 
+                    
+                    <div>
+                      <Label className="text-xs">Quantidade (ml)</Label>
+                      <Input
                         type="number"
-                        placeholder="ml"
                         value={product.amountMl}
-                        onChange={(e) => updateProduct(index, "amountMl", Number(e.target.value))}
+                        onChange={(e) => updateProduct(index, "amountMl", parseFloat(e.target.value) || 0)}
+                        placeholder="30"
+                        size={1}
                       />
                     </div>
-                    <div className="col-span-2">
-                      <Input 
-                        placeholder="NPK (7-4-10)"
+                    
+                    <div>
+                      <Label className="text-xs">NPK</Label>
+                      <Input
                         value={product.npk || ""}
                         onChange={(e) => updateProduct(index, "npk", e.target.value)}
+                        placeholder="7-4-10"
+                        size={1}
                       />
                     </div>
-                    <div className="col-span-1">
-                      <Input 
-                        type="number"
-                        placeholder="Ca%"
-                        value={product.ca || ""}
-                        onChange={(e) => updateProduct(index, "ca", e.target.value ? Number(e.target.value) : undefined)}
-                      />
+                    
+                    <div>
+                      <Label className="text-xs">Ca/Mg/Fe (%)</Label>
+                      <div className="flex gap-1">
+                        <Input
+                          type="number"
+                          step="0.1"
+                          value={product.ca || ""}
+                          onChange={(e) => updateProduct(index, "ca", parseFloat(e.target.value) || undefined)}
+                          placeholder="Ca"
+                          size={1}
+                          className="w-full"
+                        />
+                        <Input
+                          type="number"
+                          step="0.1"
+                          value={product.mg || ""}
+                          onChange={(e) => updateProduct(index, "mg", parseFloat(e.target.value) || undefined)}
+                          placeholder="Mg"
+                          size={1}
+                          className="w-full"
+                        />
+                        <Input
+                          type="number"
+                          step="0.1"
+                          value={product.fe || ""}
+                          onChange={(e) => updateProduct(index, "fe", parseFloat(e.target.value) || undefined)}
+                          placeholder="Fe"
+                          size={1}
+                          className="w-full"
+                        />
+                      </div>
                     </div>
-                    <div className="col-span-1">
-                      <Input 
-                        type="number"
-                        placeholder="Mg%"
-                        value={product.mg || ""}
-                        onChange={(e) => updateProduct(index, "mg", e.target.value ? Number(e.target.value) : undefined)}
-                      />
-                    </div>
-                    <div className="col-span-1">
-                      <Input 
-                        type="number"
-                        placeholder="Fe%"
-                        value={product.fe || ""}
-                        onChange={(e) => updateProduct(index, "fe", e.target.value ? Number(e.target.value) : undefined)}
-                      />
-                    </div>
-                    <div className="col-span-2">
-                      <Button 
-                        size="sm" 
-                        variant="destructive" 
+                    
+                    <div>
+                      <Button
                         onClick={() => removeProduct(index)}
+                        variant="destructive"
+                        size="sm"
                         className="w-full"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -366,150 +437,222 @@ export default function Nutrients() {
             </CardContent>
           </Card>
           
-          {/* Painel de Cálculos */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
+          {/* Resultados dos Cálculos - Design da Calculadora */}
+          {products.length > 0 && (
+            <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-2 border-green-200 dark:border-green-800">
               <CardHeader>
-                <CardTitle className="text-lg">NPK Total (ppm)</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Nitrogênio (N):</span>
-                  <span className="font-bold">{calculated.npkTotal.n} ppm</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Fósforo (P):</span>
-                  <span className="font-bold">{calculated.npkTotal.p} ppm</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Potássio (K):</span>
-                  <span className="font-bold">{calculated.npkTotal.k} ppm</span>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Micronutrientes (ppm)</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Cálcio (Ca):</span>
-                  <span className="font-bold">{calculated.micronutrients.ca} ppm</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Magnésio (Mg):</span>
-                  <span className="font-bold">{calculated.micronutrients.mg} ppm</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Ferro (Fe):</span>
-                  <span className="font-bold">{calculated.micronutrients.fe} ppm</span>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Droplets className="w-5 h-5" />
-                  EC / pH
+                <CardTitle className="text-xl flex items-center gap-2">
+                  🧪 Receita de Fertilização para {volumeTotalL}L
                 </CardTitle>
+                <CardDescription className="text-foreground/80">
+                  Cálculos automáticos de NPK, micronutrientes, EC e pH
+                </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">EC Estimado:</span>
-                  <span className="font-bold">{calculated.ecEstimated} mS/cm</span>
+              <CardContent className="space-y-3">
+                {/* NPK Total */}
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-sm text-muted-foreground">NPK Total</h4>
+                  
+                  {/* Nitrogênio (N) - Roxo */}
+                  <div className="p-4 bg-purple-100 dark:bg-purple-900/30 rounded-lg border-2 border-purple-300 dark:border-purple-700">
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium text-gray-700 dark:text-gray-200">Nitrogênio (N):</span>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                          {calculated.npkTotal.n} ppm
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Fósforo (P) - Azul */}
+                  <div className="p-4 bg-blue-100 dark:bg-blue-900/30 rounded-lg border-2 border-blue-300 dark:border-blue-700">
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium text-gray-700 dark:text-gray-200">Fósforo (P):</span>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                          {calculated.npkTotal.p} ppm
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Potássio (K) - Verde */}
+                  <div className="p-4 bg-green-100 dark:bg-green-900/30 rounded-lg border-2 border-green-300 dark:border-green-700">
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium text-gray-700 dark:text-gray-200">Potássio (K):</span>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                          {calculated.npkTotal.k} ppm
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">PPM Estimado:</span>
-                  <span className="font-bold">{calculated.ppmEstimated} ppm</span>
+                
+                {/* Micronutrientes */}
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-sm text-muted-foreground">Micronutrientes</h4>
+                  
+                  {/* Cálcio (Ca) - Laranja */}
+                  <div className="p-4 bg-orange-100 dark:bg-orange-900/30 rounded-lg border-2 border-orange-300 dark:border-orange-700">
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium text-gray-700 dark:text-gray-200">Cálcio (Ca):</span>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                          {calculated.micronutrients.ca} ppm
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Magnésio (Mg) - Verde Escuro */}
+                  <div className="p-4 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg border-2 border-emerald-300 dark:border-emerald-700">
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium text-gray-700 dark:text-gray-200">Magnésio (Mg):</span>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                          {calculated.micronutrients.mg} ppm
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Ferro (Fe) - Amarelo */}
+                  <div className="p-4 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg border-2 border-yellow-300 dark:border-yellow-700">
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium text-gray-700 dark:text-gray-200">Ferro (Fe):</span>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+                          {calculated.micronutrients.fe} ppm
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">pH Estimado:</span>
-                  <span className="font-bold">{calculated.phEstimated}</span>
+                
+                {/* EC e PPM */}
+                <div className="p-4 bg-blue-100 dark:bg-blue-900/30 rounded-lg border-2 border-blue-300 dark:border-blue-700 mt-4">
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium text-gray-700 dark:text-gray-200">EC Estimado:</span>
+                    <div className="text-right">
+                      <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                        {calculated.ecEstimated} mS/cm
+                      </div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
+                        PPM Aproximado: {calculated.ppmEstimated} ppm
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Botões de Ação */}
+                <div className="flex gap-2 mt-4">
+                  <Button
+                    onClick={handleExportRecipe}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                    size="lg"
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    Exportar Receita (TXT)
+                  </Button>
                 </div>
               </CardContent>
             </Card>
-          </div>
+          )}
           
-          {/* Ajuste de pH e Salvamento */}
+          {/* Ajuste de pH */}
           <Card>
             <CardHeader>
-              <CardTitle>Ajuste de pH e Registro</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <TestTube className="w-5 h-5" />
+                Ajuste de pH
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="space-y-2">
-                  <Label>pH Target</Label>
-                  <Input 
-                    type="number" 
+              <div className="grid gap-4 md:grid-cols-3">
+                <div>
+                  <Label htmlFor="phTarget">pH Target</Label>
+                  <Input
+                    id="phTarget"
+                    type="number"
                     step="0.1"
-                    value={phTarget} 
-                    onChange={(e) => setPhTarget(Number(e.target.value))}
+                    value={phTarget}
+                    onChange={(e) => setPhTarget(parseFloat(e.target.value) || 6.0)}
                   />
                 </div>
                 
-                <div className="space-y-2">
-                  <Label>pH Atual</Label>
-                  <Input 
-                    type="number" 
+                <div>
+                  <Label htmlFor="phActual">pH Atual</Label>
+                  <Input
+                    id="phActual"
+                    type="number"
                     step="0.1"
-                    value={phActual} 
-                    onChange={(e) => setPhActual(Number(e.target.value))}
+                    value={phActual}
+                    onChange={(e) => setPhActual(parseFloat(e.target.value) || 6.0)}
                   />
                 </div>
                 
-                <div className="space-y-2">
+                <div>
                   <Label>Ajuste Necessário</Label>
-                  <div className="h-10 flex items-center px-3 border rounded-md bg-muted">
+                  <div className="p-2 bg-muted rounded-md text-center font-medium">
                     {Math.abs(phDiff) < 0.1 ? (
-                      <span className="text-green-600 font-medium">✓ pH OK</span>
+                      <span className="text-green-600">✓ pH OK</span>
                     ) : (
-                      <span className="font-medium">
-                        {phAdjustmentMl.toFixed(1)} ml pH {phDirection === "up" ? "Up ↑" : "Down ↓"}
+                      <span className={phDirection === "up" ? "text-blue-600" : "text-orange-600"}>
+                        {phAdjustmentMl.toFixed(1)} ml pH {phDirection === "up" ? "Up" : "Down"}
                       </span>
                     )}
                   </div>
                 </div>
-                
-                <div className="space-y-2">
-                  <Label>EC Atual</Label>
-                  <Input 
-                    type="number" 
-                    step="0.1"
-                    value={ecActual} 
-                    onChange={(e) => setEcActual(Number(e.target.value))}
-                  />
-                </div>
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Estufa</Label>
-                  <Select value={selectedTentId.toString()} onValueChange={(v) => setSelectedTentId(Number(v))}>
-                    <SelectTrigger>
+            </CardContent>
+          </Card>
+          
+          {/* Salvar Aplicação */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Registrar Aplicação</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <Label htmlFor="tent">Estufa</Label>
+                  <Select value={selectedTentId.toString()} onValueChange={(v) => setSelectedTentId(parseInt(v))}>
+                    <SelectTrigger id="tent">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {tents?.map(tent => (
-                        <SelectItem key={tent.id} value={tent.id.toString()}>
-                          {tent.name}
+                      {tents?.map((t: any) => (
+                        <SelectItem key={t.id} value={t.id.toString()}>
+                          {t.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
                 
-                <div className="flex items-end">
-                  <Button 
-                    className="w-full" 
-                    onClick={handleSaveApplication}
-                    disabled={!recipeName || products.length === 0}
-                  >
-                    Salvar Aplicação
-                  </Button>
+                <div>
+                  <Label htmlFor="ecActual">EC Medido (mS/cm)</Label>
+                  <Input
+                    id="ecActual"
+                    type="number"
+                    step="0.1"
+                    value={ecActual}
+                    onChange={(e) => setEcActual(parseFloat(e.target.value) || 0)}
+                    placeholder="Ex: 1.2"
+                  />
                 </div>
               </div>
+              
+              <Button
+                onClick={handleSaveApplication}
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold text-lg py-6"
+                size="lg"
+              >
+                <Droplets className="mr-2 h-5 w-5" />
+                Salvar Aplicação
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>
@@ -518,48 +661,32 @@ export default function Nutrients() {
           <Card>
             <CardHeader>
               <CardTitle>Histórico de Aplicações</CardTitle>
-              <CardDescription>Registro de fertilizações anteriores</CardDescription>
+              <CardDescription>Registro de todas as fertilizações realizadas</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {applications?.map((app: any) => (
-                  <div key={app.id} className="border rounded-lg p-4 space-y-2">
+                  <div key={app.id} className="p-4 bg-muted/50 rounded-lg border">
                     <div className="flex justify-between items-start">
                       <div>
                         <h4 className="font-semibold">{app.recipeName}</h4>
                         <p className="text-sm text-muted-foreground">
-                          {app.phase} {app.weekNumber && `- Semana ${app.weekNumber}`}
+                          {new Date(app.appliedAt).toLocaleDateString('pt-BR')} - {app.volumeTotalL}L
                         </p>
                       </div>
-                      <span className="text-sm text-muted-foreground">
-                        {new Date(app.applicationDate).toLocaleDateString('pt-BR')}
-                      </span>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
-                      <div>
-                        <span className="text-muted-foreground">Volume:</span>
-                        <span className="ml-2 font-medium">{app.volumeTotalL} L</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">EC Target:</span>
-                        <span className="ml-2 font-medium">{app.ecTarget || "N/A"}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">EC Atual:</span>
-                        <span className="ml-2 font-medium">{app.ecActual || "N/A"}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">pH:</span>
-                        <span className="ml-2 font-medium">
-                          {app.phTarget} → {app.phActual || "N/A"}
-                        </span>
+                      <div className="text-right">
+                        <div className="text-sm font-medium">
+                          EC: {app.ecActual} mS/cm
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          pH: {app.phActual}
+                        </div>
                       </div>
                     </div>
                   </div>
                 ))}
                 
-                {(!applications || applications.length === 0) && (
+                {!applications || applications.length === 0 && (
                   <div className="text-center py-8 text-muted-foreground">
                     Nenhuma aplicação registrada ainda
                   </div>

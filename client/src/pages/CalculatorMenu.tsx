@@ -13,15 +13,7 @@ export default function CalculatorMenu() {
       bgColor: "bg-blue-500/10",
       iconColor: "text-blue-600",
     },
-    {
-      id: "fertilization",
-      title: "Calculadora de Fertilização",
-      description: "Micronutrientes (Ca, Mg, Fe) por fase do ciclo",
-      icon: Beaker,
-      color: "from-green-500 to-emerald-500",
-      bgColor: "bg-primary/10",
-      iconColor: "text-green-600",
-    },
+
     {
       id: "lux-ppfd",
       title: "Conversor Lux → PPFD",
@@ -109,9 +101,7 @@ export default function CalculatorMenu() {
             <p>
               <strong>💧 Rega e Runoff:</strong> Calcule o volume ideal de rega e meça o runoff real com recomendações de ajuste
             </p>
-            <p>
-              <strong>🌱 Fertilização:</strong> Determine a dosagem correta de nutrientes para atingir o EC desejado
-            </p>
+
             <p>
               <strong>☀️ Lux → PPFD:</strong> Converta leituras de luxímetro para PPFD (medida usada em cultivo)
             </p>

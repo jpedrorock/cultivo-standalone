@@ -12,8 +12,8 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import TentLog from "./pages/TentLog";
 import TentDetails from "./pages/TentDetails";
-import Strains from "./pages/Strains";
-import Tasks from "./pages/Tasks";
+
+
 import Tarefas from "./pages/Tarefas";
 import ManageStrains from "./pages/ManageStrains";
 import Calculators from "./pages/Calculators";
@@ -29,7 +29,7 @@ import AlertSettings from "./pages/AlertSettings";
 import PlantsList from "./pages/PlantsList";
 import PlantDetail from "./pages/PlantDetail";
 import NewPlant from "./pages/NewPlant";
-import SkeletonDemo from "./pages/SkeletonDemo";
+
 import Nutrients from "./pages/Nutrients";
 
 
@@ -39,9 +39,10 @@ function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
-      <Route path={"/strains"} component={Strains} />
+
+      <Route path={"/strains"} component={ManageStrains} />
       <Route path={"/manage-strains"} component={ManageStrains} />
-      <Route path={"/tasks"} component={Tasks} />
+      <Route path={"/tasks"} component={Tarefas} />
       <Route path={"/tarefas"} component={Tarefas} />
       <Route path={"/calculators"} component={CalculatorMenu} />
 
@@ -58,7 +59,7 @@ function Router() {
 
       <Route path={"/plants"} component={PlantsList} />
       <Route path="/plants/new" component={NewPlant} />
-      <Route path="/skeleton-demo" component={SkeletonDemo} />
+
       <Route path={"/plants/:id"} component={PlantDetail} />
 
       <Route path={"/tent/:id"} component={TentDetails} />

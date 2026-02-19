@@ -729,3 +729,44 @@
 - [x] Adicionar rota /nutrients na navegação
 - [x] Criar página Nutrients.tsx com todos os componentes
 - [x] Testar fluxo completo de seleção, ajuste e salvamento
+
+## Revisão Completa do App
+
+### Mapeamento de Páginas e Funcionalidades
+- [ ] Listar todas as rotas existentes no App.tsx
+- [ ] Mapear componentes de página em client/src/pages/
+- [ ] Identificar procedures tRPC no backend (server/routers.ts)
+- [ ] Documentar fluxo de navegação atual
+
+### Revisão de Páginas Específicas
+- [ ] Revisar Strains (lista, detalhes, formulários)
+- [ ] Revisar Tasks (lista de tarefas, checkboxes, filtros)
+- [ ] Revisar Configurações (formulários, seções, organização)
+
+### Identificação de Código Não Utilizado
+- [ ] Identificar páginas/rotas não acessíveis pela navegação
+- [ ] Identificar procedures tRPC não utilizados no frontend
+- [ ] Identificar componentes duplicados ou redundantes
+- [ ] Identificar imports não utilizados
+
+### Melhorias de UX/UI
+- [ ] Revisar consistência visual entre páginas
+- [ ] Identificar fluxos de navegação confusos
+- [ ] Sugerir melhorias de responsividade mobile
+- [ ] Propor simplificações de formulários complexos
+- [ ] Revisar feedback visual (loading states, toasts, erros)
+
+### Implementação de Melhorias
+- [ ] Remover código não utilizado
+- [ ] Implementar melhorias de UX/UI aprovadas
+- [ ] Atualizar navegação e rotas
+- [ ] Testar fluxos principais após mudanças
+
+## Unificação de Design - Nutrientes + Calculadora de Fertilização
+
+- [x] Analisar design da calculadora de fertilização (cores, layout, apresentação)
+- [x] Analisar design atual da página Nutrientes
+- [x] Criar design unificado combinando melhores elementos de ambos
+- [x] Implementar novo design na página Nutrientes
+- [x] Remover calculadora de fertilização do menu de calculadoras
+- [x] Testar design unificado em diferentes viewports
