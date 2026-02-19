@@ -73,7 +73,7 @@
 
 ### 🟡 Funcionalidades Incompletas
 
-- [ ] Integrar WateringPresetsManager no IrrigationCalculator (componente existe mas não está conectado)
+- [x] Integrar WateringPresetsManager no IrrigationCalculator (componente existe mas não estava conectado)
 - [ ] Botão "Editar" em predefinições de fertilização (backend update existe, falta UI)
 - [ ] Botão "Editar" em predefinições de rega (backend update existe, falta UI)
 - [x] Adicionar aba "Plantas" na página de detalhes de cada estufa (TentDetails.tsx)
@@ -189,3 +189,10 @@
 ## UX - Data da Semana Atual
 
 - [x] Substituir "Data de Início" por "Data da Semana Atual" nos cards das estufas na Home
+
+## Integração WateringPresetsManager
+
+- [x] Analisar componente WateringPresetsManager existente
+- [x] Integrar WateringPresetsManager no WateringRunoffCalculator
+- [x] Conectar funcionalidade de salvar/carregar presets
+- [x] Testar fluxo completo de criar, salvar e carregar presets de rega - funcionando perfeitamente

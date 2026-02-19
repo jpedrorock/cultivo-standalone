@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calculator, Droplets, Sprout, Sun, Download } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { WateringPresetsManager } from "@/components/WateringPresetsManager";
 
 // Funções de exportação de receitas
 function exportIrrigationRecipe(potVolume: string, substrate: string, result: { volume: number; frequency: string }) {
@@ -194,6 +195,12 @@ function WateringRunoffCalculator() {
   // Calculadora de Runoff
   const [volumeIn, setVolumeIn] = useState<string>("");
   const [volumeOut, setVolumeOut] = useState<string>("");
+
+  const handleLoadPreset = (preset: any) => {
+    setPotSize(preset.potSize);
+    setNumPlants(preset.plantCount);
+    setDesiredRunoff(preset.targetRunoff);
+  };
 
   // Cálculos da Calculadora de Rega
   const calculateWatering = () => {
@@ -503,6 +510,26 @@ function WateringRunoffCalculator() {
           </p>
         </CardContent>
       </Card>
+
+      {/* Gerência de Predefinições */}
+      <Card>
+        <CardHeader>
+          <CardTitle>💾 Predefinições de Rega</CardTitle>
+          <CardDescription>
+            Salve e carregue configurações de rega personalizadas
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <WateringPresetsManager
+            currentValues={{
+              plantCount: numPlants.toString(),
+              potSize: potSize.toString(),
+              targetRunoff: desiredRunoff.toString(),
+            }}
+            onLoadPreset={handleLoadPreset}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }
@@ -683,6 +710,13 @@ function IrrigationCalculator() {
   const [runoffPercent, setRunoffPercent] = useState<string>("20");
   const [runoffReal, setRunoffReal] = useState<string>("");
   const [result, setResult] = useState<{ volume: number; frequency: string; weeklyTotal?: number; irrigationsPerWeek?: number; tankSize?: number; adjustment?: string; adjustmentPercent?: number } | null>(null);
+
+  const handleLoadPreset = (preset: any) => {
+    setPotVolume(preset.potSize.toString());
+    setNumPlants(preset.plantCount.toString());
+    setRunoffPercent(preset.targetRunoff.toString());
+    // Se o preset tem phase/weekNumber, podemos manter mas não são usados no cálculo
+  };
 
   const calculateIrrigation = () => {
     const volume = parseFloat(potVolume);
@@ -950,6 +984,18 @@ function IrrigationCalculator() {
             </Button>
           </div>
         )}
+
+        {/* Gerência de Predefinições */}
+        <div className="border-t border-border pt-6 mt-6">
+          <WateringPresetsManager
+            currentValues={{
+              plantCount: numPlants,
+              potSize: potVolume,
+              targetRunoff: runoffPercent,
+            }}
+            onLoadPreset={handleLoadPreset}
+          />
+        </div>
       </CardContent>
     </Card>
   );
