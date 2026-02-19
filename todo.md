@@ -633,3 +633,12 @@
 - [x] Adicionar inputs editáveis para margens (tempMargin, rhMargin, ppfdMargin, phMargin)
 - [x] Implementar salvamento de configurações por fase
 - [ ] Testar fluxo completo de edição de margens
+
+## Verificação Automática de Alertas (Cron Job)
+
+- [x] Criar arquivo `server/cron/alertsChecker.ts` com lógica de verificação automática
+- [x] Implementar função `checkAllTentsAlerts()` que busca todas as estufas ativas e executa `checkAlertsForTent()`
+- [x] Configurar cron job para executar a cada 1 hora
+- [x] Adicionar procedure tRPC `alerts.checkAllTents` para verificação manual
+- [x] Adicionar logs de execução do cron job
+- [x] Testar execução automática e manual do cron job

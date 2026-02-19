@@ -31,6 +31,10 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
+  
+  // Inicializar cron job de verificação de alertas
+  const { startAlertsCheckerCron } = await import("../cron/alertsChecker");
+  startAlertsCheckerCron();
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
@@ -63,6 +67,7 @@ async function startServer() {
 
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
+    console.log(`[AlertsChecker] Cron job ativo: verificação automática a cada 1 hora`);
   });
 }
 

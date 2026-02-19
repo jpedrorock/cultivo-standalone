@@ -808,6 +808,12 @@ export const appRouter = router({
         return db.checkAlertsForTent(input.tentId);
       }),
     
+    checkAllTents: publicProcedure
+      .mutation(async () => {
+        const { checkAllTentsAlerts } = await import("./cron/alertsChecker");
+        return checkAllTentsAlerts();
+      }),
+    
     // Phase Alert Margins (Margens de Alertas por Fase)
     getPhaseMargins: publicProcedure.query(async () => {
       const database = await getDb();
