@@ -1120,14 +1120,14 @@ function LuxPPFDCalculator() {
                     step="1000"
                     value={lux || 0}
                     onChange={(e) => setLux(e.target.value)}
-                    className="w-full h-10 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-14 [&::-webkit-slider-thumb]:h-14 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-[6px] [&::-webkit-slider-thumb]:border-gray-300 [&::-webkit-slider-thumb]:shadow-[0_0_0_4px_rgba(255,255,255,0.8)] [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:-mt-[18px] [&::-moz-range-thumb]:w-14 [&::-moz-range-thumb]:h-14 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-[6px] [&::-moz-range-thumb]:border-gray-300 [&::-moz-range-thumb]:shadow-[0_0_0_4px_rgba(255,255,255,0.8)] [&::-moz-range-thumb]:cursor-pointer"
+                    className="w-full h-10 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [[&::-webkit-slider-thumb]:w-14 [&::-webkit-slider-thumb]:h-14::-webkit-slider-thumb]:w-[4.5rem] [[&::-webkit-slider-thumb]:w-14 [&::-webkit-slider-thumb]:h-14::-webkit-slider-thumb]:h-[4.5rem] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-[6px] [&::-webkit-slider-thumb]:border-gray-300 [&::-webkit-slider-thumb]:shadow-[0_0_0_4px_rgba(255,255,255,0.8)] [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:-mt-[18px] [[&::-moz-range-thumb]:w-14 [&::-moz-range-thumb]:h-14::-moz-range-thumb]:w-[4.5rem] [[&::-moz-range-thumb]:w-14 [&::-moz-range-thumb]:h-14::-moz-range-thumb]:h-[4.5rem] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-[6px] [&::-moz-range-thumb]:border-gray-300 [&::-moz-range-thumb]:shadow-[0_0_0_4px_rgba(255,255,255,0.8)] [&::-moz-range-thumb]:cursor-pointer"
                     style={{
                       background: `linear-gradient(to right, 
                         #3b82f6 0%, #3b82f6 16.67%,
                         #10b981 16.67%, #10b981 50%,
                         #eab308 50%, #eab308 75%,
                         #ef4444 75%, #ef4444 100%
-                      )`
+                      )`, paddingTop: '35px', paddingBottom: '15px'
                     }}
                   />
                   <div className="flex justify-between text-xs text-muted-foreground">
@@ -1180,14 +1180,14 @@ function LuxPPFDCalculator() {
                     step="10"
                     value={ppfd || 0}
                     onChange={(e) => setPpfd(e.target.value)}
-                    className="w-full h-10 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-14 [&::-webkit-slider-thumb]:h-14 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-[6px] [&::-webkit-slider-thumb]:border-gray-300 [&::-webkit-slider-thumb]:shadow-[0_0_0_4px_rgba(255,255,255,0.8)] [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:-mt-[18px] [&::-moz-range-thumb]:w-14 [&::-moz-range-thumb]:h-14 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-[6px] [&::-moz-range-thumb]:border-gray-300 [&::-moz-range-thumb]:shadow-[0_0_0_4px_rgba(255,255,255,0.8)] [&::-moz-range-thumb]:cursor-pointer"
+                    className="w-full h-10 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [[&::-webkit-slider-thumb]:w-14 [&::-webkit-slider-thumb]:h-14::-webkit-slider-thumb]:w-[4.5rem] [[&::-webkit-slider-thumb]:w-14 [&::-webkit-slider-thumb]:h-14::-webkit-slider-thumb]:h-[4.5rem] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-[6px] [&::-webkit-slider-thumb]:border-gray-300 [&::-webkit-slider-thumb]:shadow-[0_0_0_4px_rgba(255,255,255,0.8)] [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:-mt-[18px] [[&::-moz-range-thumb]:w-14 [&::-moz-range-thumb]:h-14::-moz-range-thumb]:w-[4.5rem] [[&::-moz-range-thumb]:w-14 [&::-moz-range-thumb]:h-14::-moz-range-thumb]:h-[4.5rem] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-[6px] [&::-moz-range-thumb]:border-gray-300 [&::-moz-range-thumb]:shadow-[0_0_0_4px_rgba(255,255,255,0.8)] [&::-moz-range-thumb]:cursor-pointer"
                     style={{
                       background: `linear-gradient(to right, 
                         #3b82f6 0%, #3b82f6 16.67%,
                         #10b981 16.67%, #10b981 50%,
                         #eab308 50%, #eab308 75%,
                         #ef4444 75%, #ef4444 100%
-                      )`
+                      )`, paddingTop: '35px', paddingBottom: '15px'
                     }}
                   />
                   <div className="flex justify-between text-xs text-muted-foreground">
