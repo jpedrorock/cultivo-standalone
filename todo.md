@@ -153,3 +153,20 @@
 - [x] Verificar exibição de fotos em todas as páginas (Home, PlantsList, PlantDetail)
 - [x] Diagnosticar causa raiz (URLs locais /uploads/ não funcionam - S3 CloudFront funciona)
 - [x] Corrigir exibição de fotos (limpar URLs locais do banco, novos uploads usam S3)
+
+## Dados de Demonstração (Seed)
+
+- [x] Limpar todos os dados existentes do banco
+- [x] Criar 6 strains principais (24K Gold, Candy Kush, Northern Lights, White Widow, Gorilla Glue, Amnesia Haze)
+- [x] Criar 3 estufas (A Manutenção 45x75x90 65W, B Vega 60x60x120 240W, C Floração 60x120x150 320W)
+- [x] Criar ciclos ativos para estufas B e C
+- [x] Criar 8 plantas (2 em A, 3 em B, 3 em C)
+- [x] Gerar registros diários (dailyLogs) de 1 semana (12-18/fev) para estufas B e C (28 registros)
+- [x] Gerar registros de saúde (plantHealthLogs) de 1 semana para todas as plantas (30 registros)
+- [x] Gerar registros de tricomas para plantas em floração (6 registros)
+- [x] Gerar registros de LST para plantas em vega (5 registros)
+- [x] Gerar observações para plantas (8 registros)
+- [x] Criar predefinições de fertilização para vasos de 5L (5 presets)
+- [x] Criar predefinições de rega para vasos de 5L (3 presets)
+- [x] Criar receitas e templates de receitas (6 receitas, 5 templates)
+- [x] Criar weekly targets para ciclos ativos (25 targets)
