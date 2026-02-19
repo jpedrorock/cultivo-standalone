@@ -852,6 +852,65 @@ export const appRouter = router({
         
         return { success: true };
       }),
+    
+    // Notification Settings (Configurações de Notificações)
+    getNotificationSettings: protectedProcedure.query(async ({ ctx }) => {
+      const database = await getDb();
+      if (!database) return null;
+      const { notificationSettings } = await import("../drizzle/schema");
+      
+      const settings = await database
+        .select()
+        .from(notificationSettings)
+        .where(eq(notificationSettings.userId, ctx.user.id))
+        .limit(1);
+      
+      return settings[0] || null;
+    }),
+    
+    updateNotificationSettings: protectedProcedure
+      .input(
+        z.object({
+          tempAlertsEnabled: z.boolean().optional(),
+          rhAlertsEnabled: z.boolean().optional(),
+          ppfdAlertsEnabled: z.boolean().optional(),
+          phAlertsEnabled: z.boolean().optional(),
+          taskRemindersEnabled: z.boolean().optional(),
+          dailySummaryEnabled: z.boolean().optional(),
+          dailySummaryTime: z.string().optional(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const database = await getDb();
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
+        
+        const { notificationSettings } = await import("../drizzle/schema");
+        
+        // Verificar se já existe configuração
+        const existing = await database
+          .select()
+          .from(notificationSettings)
+          .where(eq(notificationSettings.userId, ctx.user.id))
+          .limit(1);
+        
+        if (existing.length > 0) {
+          // Atualizar existente
+          await database
+            .update(notificationSettings)
+            .set(input)
+            .where(eq(notificationSettings.userId, ctx.user.id));
+        } else {
+          // Criar nova
+          await database.insert(notificationSettings).values({
+            userId: ctx.user.id,
+            ...input,
+          });
+        }
+        
+        return { success: true };
+      }),
   }),
 
   // Weekly Targets (Padrões Semanais)

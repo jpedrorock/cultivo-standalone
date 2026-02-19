@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Bell, BellOff, Clock, AlertTriangle, Volume2 } from "lucide-react";
 import { testSound, saveSoundConfig } from "@/lib/notificationSounds";
+import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -18,6 +19,11 @@ interface NotificationConfig {
 }
 
 export function NotificationSettings() {
+  // Backend state
+  const { data: backendSettings } = trpc.alerts.getNotificationSettings.useQuery();
+  const updateBackendSettings = trpc.alerts.updateNotificationSettings.useMutation();
+  
+  // Local state
   const [config, setConfig] = useState<NotificationConfig>({
     dailyReminderEnabled: false,
     reminderTime: "18:00",
@@ -45,6 +51,19 @@ export function NotificationSettings() {
       setPermission(Notification.permission);
     }
   }, []);
+  
+  // Sync with backend settings
+  useEffect(() => {
+    if (backendSettings) {
+      setConfig(prev => ({
+        ...prev,
+        alertsEnabled: backendSettings.tempAlertsEnabled || backendSettings.rhAlertsEnabled || backendSettings.ppfdAlertsEnabled || backendSettings.phAlertsEnabled,
+        taskRemindersEnabled: backendSettings.taskRemindersEnabled,
+        dailyReminderEnabled: backendSettings.dailySummaryEnabled,
+        reminderTime: backendSettings.dailySummaryTime || "18:00",
+      }));
+    }
+  }, [backendSettings]);
 
   useEffect(() => {
     // Save config to localStorage whenever it changes
@@ -57,6 +76,21 @@ export function NotificationSettings() {
     if (config.dailyReminderEnabled && permission === "granted") {
       setupDailyReminder(config.reminderTime);
     }
+    
+    // Sync to backend (debounced)
+    const timeoutId = setTimeout(() => {
+      updateBackendSettings.mutate({
+        tempAlertsEnabled: config.alertsEnabled,
+        rhAlertsEnabled: config.alertsEnabled,
+        ppfdAlertsEnabled: config.alertsEnabled,
+        phAlertsEnabled: config.alertsEnabled,
+        taskRemindersEnabled: config.taskRemindersEnabled,
+        dailySummaryEnabled: config.dailyReminderEnabled,
+        dailySummaryTime: config.reminderTime,
+      });
+    }, 1000);
+    
+    return () => clearTimeout(timeoutId);
   }, [config, permission]);
 
   const requestPermission = async () => {

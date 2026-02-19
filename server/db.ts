@@ -22,6 +22,7 @@ import {
   plants,
   phaseAlertMargins,
   alertHistory,
+  notificationHistory,
   type Tent,
   type Strain,
   type Cycle,
@@ -685,6 +686,35 @@ export async function checkAlertsForTent(tentId: number): Promise<{
         value: alert.value,
         message: alert.message,
       });
+    }
+    
+    // Enviar notificação push para o owner
+    try {
+      const { notifyOwner } = await import("./_core/notification");
+      const notificationTitle = `⚠️ Alerta de Estufa: ${tent.name}`;
+      const notificationContent = messages.join("\n");
+      
+      const sent = await notifyOwner({
+        title: notificationTitle,
+        content: notificationContent,
+      });
+      
+      if (sent) {
+        console.log(`[Notifications] Notificação enviada: ${alertsToInsert.length} alertas para ${tent.name}`);
+      } else {
+        console.warn(`[Notifications] Falha ao enviar notificação para ${tent.name}`);
+      }
+      
+      // Registrar notificação no histórico
+      await db.insert(notificationHistory).values({
+        type: "environment_alert",
+        title: notificationTitle,
+        message: notificationContent,
+        metadata: JSON.stringify({ tentId, alertsCount: alertsToInsert.length }),
+        isRead: false,
+      });
+    } catch (error) {
+      console.error(`[Notifications] Erro ao enviar notificação:`, error);
     }
   }
 

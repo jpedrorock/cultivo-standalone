@@ -763,3 +763,32 @@ export const alertPreferences = mysqlTable("alertPreferences", {
 
 export type AlertPreference = typeof alertPreferences.$inferSelect;
 export type InsertAlertPreference = typeof alertPreferences.$inferInsert;
+
+/**
+ * Configurações de notificações push do usuário
+ */
+export const notificationSettings = mysqlTable("notificationSettings", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  
+  // Habilitar/desabilitar notificações por tipo de alerta
+  tempAlertsEnabled: boolean("tempAlertsEnabled").default(true).notNull(),
+  rhAlertsEnabled: boolean("rhAlertsEnabled").default(true).notNull(),
+  ppfdAlertsEnabled: boolean("ppfdAlertsEnabled").default(true).notNull(),
+  phAlertsEnabled: boolean("phAlertsEnabled").default(true).notNull(),
+  
+  // Habilitar notificações para lembretes de tarefas
+  taskRemindersEnabled: boolean("taskRemindersEnabled").default(true).notNull(),
+  
+  // Habilitar resumo diário
+  dailySummaryEnabled: boolean("dailySummaryEnabled").default(false).notNull(),
+  dailySummaryTime: varchar("dailySummaryTime", { length: 5 }).default("09:00"), // HH:MM format
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  userIdIdx: index("userId_idx").on(table.userId),
+}));
+
+export type NotificationSettings = typeof notificationSettings.$inferSelect;
+export type InsertNotificationSettings = typeof notificationSettings.$inferInsert;

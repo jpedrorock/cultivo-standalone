@@ -642,3 +642,13 @@
 - [x] Adicionar procedure tRPC `alerts.checkAllTents` para verificação manual
 - [x] Adicionar logs de execução do cron job
 - [x] Testar execução automática e manual do cron job
+
+## Sistema de Notificações Push
+
+- [x] Criar tabela `notificationSettings` para configurações de notificações do usuário
+- [x] Implementar função `sendPushNotification()` usando helper do Manus
+- [x] Integrar envio de notificações no `checkAlertsForTent()` quando alertas críticos forem detectados
+- [x] Criar procedures tRPC para gerenciar configurações de notificações (get, update)
+- [x] Implementar UI de configurações de notificações (habilitar/desabilitar por tipo de alerta)
+- [x] Adicionar toggle para notificações na página de Alertas
+- [x] Testar fluxo completo de notificações push
