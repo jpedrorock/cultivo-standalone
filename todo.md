@@ -869,3 +869,14 @@
 - [x] Criar DEPLOY.md com guias de deploy
 - [x] Criar GUIA-USUARIO.md atualizado com todas as funcionalidades
 - [x] Remover arquivos markdown duplicados
+
+## Bateria Completa de Testes
+
+- [x] Testar sistema de alertas (criação automática e visualização)
+- [x] Testar configurações de alertas por estufa
+- [x] Testar gerenciamento de strains
+- [ ] Testar tarefas semanais
+- [ ] Testar fluxo completo: estufa → ciclo → logs → gráficos
+- [ ] Testar fluxo completo: planta → fotos → saúde → mover
+- [ ] Testar edge cases e validações
+- [x] Documentar resultados dos testes
