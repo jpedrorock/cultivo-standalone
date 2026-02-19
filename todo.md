@@ -625,3 +625,11 @@
 - [x] Corrigir chamadas de funções antigas (getActiveCycles, getHistoricalDataWithTargets)
 - [ ] Atualizar UI de AlertSettings para mostrar margens por fase (5 seções: MAINTENANCE, CLONING, VEGA, FLORA, DRYING)
 - [ ] Testar sistema completo de alertas com margens por fase
+
+## UI de Configuração de Alertas por Fase
+
+- [x] Criar procedures tRPC para gerenciar phaseAlertMargins (getAll, update)
+- [x] Atualizar componente AlertSettings para mostrar 5 seções (MAINTENANCE, CLONING, VEGA, FLORA, DRYING)
+- [x] Adicionar inputs editáveis para margens (tempMargin, rhMargin, ppfdMargin, phMargin)
+- [x] Implementar salvamento de configurações por fase
+- [ ] Testar fluxo completo de edição de margens

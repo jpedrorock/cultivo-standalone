@@ -807,6 +807,45 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         return db.checkAlertsForTent(input.tentId);
       }),
+    
+    // Phase Alert Margins (Margens de Alertas por Fase)
+    getPhaseMargins: publicProcedure.query(async () => {
+      const database = await getDb();
+      if (!database) return [];
+      const { phaseAlertMargins } = await import("../drizzle/schema");
+      return database.select().from(phaseAlertMargins).orderBy(phaseAlertMargins.phase);
+    }),
+    
+    updatePhaseMargin: publicProcedure
+      .input(
+        z.object({
+          phase: z.enum(["MAINTENANCE", "CLONING", "VEGA", "FLORA", "DRYING"]),
+          tempMargin: z.number().optional(),
+          rhMargin: z.number().optional(),
+          ppfdMargin: z.number().optional(),
+          phMargin: z.number().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
+        
+        const { phaseAlertMargins } = await import("../drizzle/schema");
+        
+        await database
+          .update(phaseAlertMargins)
+          .set({
+            tempMargin: input.tempMargin !== undefined ? String(input.tempMargin) : undefined,
+            rhMargin: input.rhMargin !== undefined ? String(input.rhMargin) : undefined,
+            ppfdMargin: input.ppfdMargin !== undefined ? input.ppfdMargin : undefined,
+            phMargin: input.phMargin !== undefined ? String(input.phMargin) : undefined,
+          })
+          .where(eq(phaseAlertMargins.phase, input.phase));
+        
+        return { success: true };
+      }),
   }),
 
   // Weekly Targets (Padrões Semanais)
