@@ -253,3 +253,15 @@
 - [x] Implementar listagem de taskTemplates por fase/contexto (40 templates listados)
 - [x] Implementar botões de editar e excluir em cada taskTemplate
 - [x] Testar modal de criar taskTemplate - funcionando perfeitamente
+- [x] Testar modal de editar taskTemplate - funcionando perfeitamente
+- [x] Testar exclusão de taskTemplate - funcionando perfeitamente
+- [x] Verificar integração com aba "Tarefas da Semana" - funcionando
+
+
+## Reimplementação Gerenciador de Tarefas (Pós-Reset)
+
+- [x] Corrigir erros TypeScript existentes (protectedProcedure não importado)
+- [x] Implementar procedures backend CRUD taskTemplates (create, update, delete, list)
+- [x] Criar componente TaskTemplatesManager
+- [x] Integrar na página Tasks com Tabs ("Tarefas da Semana" e "Gerenciar")
+- [x] Testar funcionalidade completa (CREATE, UPDATE, DELETE testados com sucesso)

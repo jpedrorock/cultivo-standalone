@@ -1,7 +1,7 @@
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { eq, and, desc, sql, isNotNull } from "drizzle-orm";
 import * as db from "./db";
@@ -254,7 +254,7 @@ export const appRouter = router({
           .where(eq(weeklyTargets.strainId, input.sourceStrainId));
         
         if (sourceTargets.length > 0) {
-          const newTargets = sourceTargets.map((target) => ({
+          const newTargets = sourceTargets.map((target: any) => ({
             strainId: newStrain.id,
             phase: target.phase,
             weekNumber: target.weekNumber,
@@ -1453,93 +1453,6 @@ export const appRouter = router({
       }),
   }),
 
-  // Task Templates (Modelos de Tarefas)
-  taskTemplates: router({
-    list: publicProcedure.query(async () => {
-      const database = await getDb();
-      if (!database) return [];
-      
-      const templates = await database
-        .select()
-        .from(taskTemplates)
-        .orderBy(taskTemplates.phase, taskTemplates.weekNumber, taskTemplates.context);
-      
-      return templates;
-    }),
-    
-    create: publicProcedure
-      .input(
-        z.object({
-          title: z.string().min(1),
-          description: z.string().optional(),
-          phase: z.enum(["CLONING", "VEGA", "FLORA", "MAINTENANCE"]),
-          weekNumber: z.number().nullable(),
-          context: z.enum(["TENT_A", "TENT_BC"]),
-        })
-      )
-      .mutation(async ({ input }) => {
-        const database = await getDb();
-        if (!database) throw new Error("Database not available");
-        
-        await database.insert(taskTemplates).values({
-          title: input.title,
-          description: input.description || null,
-          phase: input.phase,
-          weekNumber: input.weekNumber,
-          context: input.context,
-        });
-        
-        return { success: true };
-      }),
-    
-    update: publicProcedure
-      .input(
-        z.object({
-          id: z.number(),
-          title: z.string().min(1),
-          description: z.string().optional(),
-          phase: z.enum(["CLONING", "VEGA", "FLORA", "MAINTENANCE"]),
-          weekNumber: z.number().nullable(),
-          context: z.enum(["TENT_A", "TENT_BC"]),
-        })
-      )
-      .mutation(async ({ input }) => {
-        const database = await getDb();
-        if (!database) throw new Error("Database not available");
-        
-        await database
-          .update(taskTemplates)
-          .set({
-            title: input.title,
-            description: input.description || null,
-            phase: input.phase,
-            weekNumber: input.weekNumber,
-            context: input.context,
-          })
-          .where(eq(taskTemplates.id, input.id));
-        
-        return { success: true };
-      }),
-    
-    delete: publicProcedure
-      .input(z.object({ id: z.number() }))
-      .mutation(async ({ input }) => {
-        const database = await getDb();
-        if (!database) throw new Error("Database not available");
-        
-        // Delete all task instances associated with this template
-        await database
-          .delete(taskInstances)
-          .where(eq(taskInstances.taskTemplateId, input.id));
-        
-        // Delete the template
-        await database
-          .delete(taskTemplates)
-          .where(eq(taskTemplates.id, input.id));
-        
-        return { success: true };
-      }),
-  }),
 
   // Tent A (Estufa A - Clonagem)
   tentA: router({
@@ -2475,6 +2388,85 @@ export const appRouter = router({
             eq(wateringPresets.userId, ctx.user.id)
           ));
         
+        return { success: true };
+      }),
+  }),
+
+  taskTemplates: router({
+    list: publicProcedure.query(async () => {
+      const database = await getDb();
+      if (!database) throw new Error("Database not available");
+
+      const templates = await database
+        .select()
+        .from(taskTemplates)
+        .orderBy(taskTemplates.phase, taskTemplates.weekNumber, taskTemplates.title);
+
+      return templates;
+    }),
+
+    create: protectedProcedure
+      .input(
+        z.object({
+          title: z.string().min(1),
+          description: z.string().optional(),
+          phase: z.enum(["VEGA", "FLORA", "MAINTENANCE"]),
+          context: z.enum(["TENT_A", "TENT_BC"]),
+          weekNumber: z.number().int().min(1).max(12).nullable(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+
+        const [newTemplate] = await database.insert(taskTemplates).values({
+          title: input.title,
+          description: input.description || null,
+          phase: input.phase,
+          context: input.context,
+          weekNumber: input.weekNumber,
+        });
+
+        return { success: true, id: newTemplate.insertId };
+      }),
+
+    update: protectedProcedure
+      .input(
+        z.object({
+          id: z.number(),
+          title: z.string().min(1),
+          description: z.string().optional(),
+          phase: z.enum(["VEGA", "FLORA", "MAINTENANCE"]),
+          context: z.enum(["TENT_A", "TENT_BC"]),
+          weekNumber: z.number().int().min(1).max(12).nullable(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+
+        await database
+          .update(taskTemplates)
+          .set({
+            title: input.title,
+            description: input.description || null,
+            phase: input.phase,
+            context: input.context,
+            weekNumber: input.weekNumber,
+          })
+          .where(eq(taskTemplates.id, input.id));
+
+        return { success: true };
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+
+        await database.delete(taskTemplates).where(eq(taskTemplates.id, input.id));
+
         return { success: true };
       }),
   }),

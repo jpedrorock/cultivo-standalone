@@ -234,7 +234,7 @@ export default function PlantsList() {
                   {isExpanded && (
                     <CardContent className="pt-0">
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {tentPlants.map((plant) => (
+                        {tentPlants.map((plant: any) => (
                           <Card key={plant.id} className="border-2 hover:border-primary/50 transition-all">
                             <CardHeader>
                               <div className="flex items-start justify-between">

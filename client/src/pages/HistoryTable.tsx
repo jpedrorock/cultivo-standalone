@@ -340,7 +340,7 @@ export default function HistoryTable() {
               <>
                 {/* Mobile Card Layout */}
                 <div className="lg:hidden space-y-6">
-                  {logsData.logs.map((log) => (
+                  {logsData.logs.map((log: any) => (
                     <Card key={log.id} className="overflow-hidden shadow-sm">
                       <CardHeader className="pb-4 bg-muted/30">
                         <div className="flex items-start justify-between gap-3">
@@ -433,7 +433,7 @@ export default function HistoryTable() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {logsData.logs.map((log) => (
+                      {logsData.logs.map((log: any) => (
                         <TableRow key={log.id}>
                           <TableCell className="font-medium">
                             {new Date(log.logDate).toLocaleDateString("pt-BR")}
