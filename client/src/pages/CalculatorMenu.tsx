@@ -56,7 +56,7 @@ export default function CalculatorMenu() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-6">
+        <div className="w-full px-2 py-6 sm:max-w-7xl sm:mx-auto sm:px-3 md:px-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
               <Calculator className="w-6 h-6 text-white" />
@@ -70,8 +70,8 @@ export default function CalculatorMenu() {
       </header>
 
       {/* Content */}
-      <main className="container mx-auto px-3 py-4 md:px-4 md:py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+      <main className="w-full px-0 py-4 sm:max-w-7xl sm:mx-auto sm:px-3 md:px-4 md:py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 px-2 sm:px-0">
           {calculators.map((calc) => {
             const Icon = calc.icon;
             return (

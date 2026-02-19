@@ -880,3 +880,4 @@
 - [ ] Testar fluxo completo: planta → fotos → saúde → mover
 - [ ] Testar edge cases e validações
 - [x] Documentar resultados dos testes
+- [x] Corrigir padding mobile excessivo na página de calculadoras
