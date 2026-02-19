@@ -409,19 +409,21 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
                     {/* Foto à direita */}
                     {log.photoUrl && (
                       <div className="md:w-64 flex-shrink-0">
-                        <div className="relative group aspect-[3/4] w-full">
+                        <div 
+                          className="relative group aspect-[3/4] w-full cursor-pointer"
+                          onClick={() => {
+                            const photoLogs = healthLogs?.filter((l: any) => l.photoUrl) || [];
+                            const index = photoLogs.findIndex((l: any) => l.id === log.id);
+                            setLightboxIndex(index);
+                            setLightboxPhoto(log.photoUrl);
+                          }}
+                        >
                           <img
                             src={log.photoUrl}
                             alt="Foto da planta"
-                            className="w-full h-full object-cover rounded-lg cursor-pointer"
-                            onClick={() => {
-                              const photoLogs = healthLogs?.filter(l => l.photoUrl) || [];
-                              const index = photoLogs.findIndex(l => l.id === log.id);
-                              setLightboxIndex(index);
-                              setLightboxPhoto(log.photoUrl);
-                            }}
+                            className="w-full h-full object-cover rounded-lg"
                           />
-                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center pointer-events-none">
                             <ZoomIn className="w-8 h-8 text-white" />
                           </div>
                         </div>
@@ -449,7 +451,7 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
 
       {/* Lightbox Aprimorado */}
       {lightboxPhoto && (() => {
-        const photoLogs = healthLogs?.filter(l => l.photoUrl) || [];
+        const photoLogs = healthLogs?.filter((l: any) => l.photoUrl) || [];
         const currentLog = photoLogs[lightboxIndex];
         const totalPhotos = photoLogs.length;
         

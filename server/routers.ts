@@ -1791,8 +1791,8 @@ export const appRouter = router({
             const randomSuffix = Math.random().toString(36).substring(7);
             const key = `plants/${input.plantId}/health/${timestamp}-${randomSuffix}.jpg`;
             
-            // Upload para storage configurado (local ou S3)
-            const { storagePut } = await import('./storageUnified');
+            // Upload para S3
+            const { storagePut } = await import('./storage');
             const result = await storagePut(key, buffer, 'image/jpeg');
             
             photoUrl = result.url;
@@ -1866,7 +1866,7 @@ export const appRouter = router({
               const randomSuffix = Math.random().toString(36).substring(7);
               const key = `plants/${currentLog.plantId}/health/${timestamp}-${randomSuffix}.jpg`;
               
-              const { storagePut } = await import('./storageUnified');
+              const { storagePut } = await import('./storage');
               const result = await storagePut(key, buffer, 'image/jpeg');
               
               updateData.photoUrl = result.url;
@@ -1894,7 +1894,7 @@ export const appRouter = router({
         // Opcional: deletar foto do storage também
         // const [log] = await database.select().from(plantHealthLogs).where(eq(plantHealthLogs.id, input.id));
         // if (log?.photoKey) {
-        //   const { storageDelete } = await import('./storageUnified');
+        //   const { storageDelete } = await import('./storage');
         //   await storageDelete(log.photoKey);
         // }
         
@@ -1938,8 +1938,8 @@ export const appRouter = router({
             const randomSuffix = Math.random().toString(36).substring(7);
             const key = `plants/${input.plantId}/trichomes/${timestamp}-${randomSuffix}.jpg`;
             
-            // Upload para storage configurado (local ou S3)
-            const { storagePut } = await import('./storageUnified');
+            // Upload para S3
+            const { storagePut } = await import('./storage');
             const result = await storagePut(key, buffer, 'image/jpeg');
             
             photoUrl = result.url;

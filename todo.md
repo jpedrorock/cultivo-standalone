@@ -80,7 +80,7 @@
 
 ### 🟢 Melhorias de UX/UI
 
-- [ ] Lightbox para zoom nas fotos dos cards da lista de plantas (PAUSADO)
+- [x] Lightbox para zoom nas fotos (corrigido: upload S3 + pointer-events-none no overlay)
 - [ ] Suporte a gestos de swipe no mobile para navegar fotos no lightbox
 - [x] Modal de edição de registro de saúde com formulário preenchido (EditHealthLogDialog - testado e funcional)
 
@@ -125,3 +125,12 @@
 - [x] Implementar modal de edição para registros de saúde (data, status, sintomas, tratamento, notas)
 - [x] Conectar ao backend (procedure de update)
 - [x] Testar edição e validar que dados são atualizados corretamente
+
+## Revisão Completa do Upload de Imagens
+
+- [x] Diagnosticar por que fotos não carregam após upload (storageUnified usava local em vez de S3)
+- [x] Verificar fluxo completo: frontend base64 → backend → S3 → URL salva no banco
+- [x] Corrigir exibição de fotos nos registros de saúde (accordion) - URL CloudFront funcional
+- [x] Corrigir lightbox/zoom nas fotos (pointer-events-none no overlay + onClick no wrapper)
+- [x] Verificar exibição da última foto no card da planta na listagem (já implementado, dependia de URL válida)
+- [x] Testar fluxo completo de upload e exibição - testado com sucesso
