@@ -14,6 +14,7 @@ import TentLog from "./pages/TentLog";
 import TentDetails from "./pages/TentDetails";
 import Strains from "./pages/Strains";
 import Tasks from "./pages/Tasks";
+import Tarefas from "./pages/Tarefas";
 import ManageStrains from "./pages/ManageStrains";
 import Calculators from "./pages/Calculators";
 import CalculatorMenu from "./pages/CalculatorMenu";
@@ -40,6 +41,7 @@ function Router() {
       <Route path={"/strains"} component={Strains} />
       <Route path={"/manage-strains"} component={ManageStrains} />
       <Route path={"/tasks"} component={Tasks} />
+      <Route path={"/tarefas"} component={Tarefas} />
       <Route path={"/calculators"} component={CalculatorMenu} />
 
       <Route path={"/calculators/:id"} component={Calculators} />

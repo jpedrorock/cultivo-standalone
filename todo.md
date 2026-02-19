@@ -339,3 +339,11 @@
 ### 🎯 Melhorias de UX em Andamento (19/02/2026)
 
 - [x] Implementar acordeão na aba "Gerenciar" (Tasks) - agrupar 40 templates por categoria (Manutenção, Vegetativa, Floração) com seções colasáveis para reduzir scroll de 2809px
+
+
+## 📋 Criar Página de Gerenciamento de Tarefas (19/02/2026)
+
+- [x] Criar nova página "Tarefas" no menu lateral
+- [x] Integrar TaskTemplatesManager na nova página
+- [x] Adicionar rota no App.tsx
+- [x] Adicionar item no menu lateral (DashboardLayout)
