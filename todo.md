@@ -790,3 +790,12 @@
 - [ ] Adicionar seção "Ajustes Avançados" colapsada (Accordion)
 - [ ] Mover edição de produtos/NPK para seção avançada
 - [ ] Testar fluxo completo: selecionar fase → inserir volume → gerar receita
+
+## Reversão da Página de Nutrientes para Calculadora Simplificada
+
+- [ ] Reverter Nutrients.tsx para calculadora antiga (sem templates, sem edição de produtos)
+- [ ] Remover seletor de receitas pré-configuradas
+- [ ] Remover editor de produtos (quantidades são calculadas automaticamente)
+- [ ] Manter apenas: Fase + Semana + Volume → Receita calculada
+- [ ] Implementar salvamento de receita apenas para histórico (não como predefinição)
+- [ ] Testar fluxo completo: selecionar fase/semana, digitar volume, ver receita, salvar
