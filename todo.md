@@ -360,4 +360,4 @@
 ## 🎯 Melhorias de Organização (19/02/2026)
 
 - [ ] Ajustar nomes de categorias de templates de tarefas para serem genéricos (sem mencionar estufas específicas)
-- [ ] Implementar tabs por estufa na página Histórico (Todas | Estufa A | Estufa B | Estufa C)
+- [x] Implementar tabs por estufa na página Histórico (Todas | Estufa A | Estufa B | Estufa C)

@@ -1,6 +1,7 @@
 import { trpc } from "@/lib/trpc";
 import { useState, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -192,45 +193,40 @@ export default function HistoryTable() {
 
       {/* Content */}
       <main className="container mx-auto px-4 py-8 space-y-8" id="history-table-container">
-        {/* Analytics Charts - Only show when a specific tent is selected */}
-        {selectedTentId && logsData?.logs && logsData.logs.length > 0 && (
-          <AnalyticsCharts logs={logsData.logs} />
-        )}
+        {/* Tabs por Estufa */}
+        <Tabs
+          value={selectedTentId?.toString() || "all"}
+          onValueChange={(value) => {
+            setSelectedTentId(value === "all" ? undefined : parseInt(value));
+            setOffset(0);
+          }}
+        >
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="all">Todas</TabsTrigger>
+            {tents?.map((tent) => (
+              <TabsTrigger key={tent.id} value={tent.id.toString()}>
+                {tent.name}
+              </TabsTrigger>
+            ))}
+          </TabsList>
 
-        {/* Filters and Table */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Filter className="w-5 h-5" />
-              Filtros
-            </CardTitle>
-            <CardDescription>Filtre os registros por estufa e período</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Estufa Filter */}
-              <div className="space-y-2">
-                <Label htmlFor="tent-filter">Estufa</Label>
-                <Select
-                  value={selectedTentId?.toString() || "all"}
-                  onValueChange={(value) => {
-                    setSelectedTentId(value === "all" ? undefined : parseInt(value));
-                    setOffset(0);
-                  }}
-                >
-                  <SelectTrigger id="tent-filter">
-                    <SelectValue placeholder="Todas as estufas" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas as estufas</SelectItem>
-                    {tents?.map((tent) => (
-                      <SelectItem key={tent.id} value={tent.id.toString()}>
-                        {tent.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+          <TabsContent value={selectedTentId?.toString() || "all"} className="space-y-8 mt-6">
+            {/* Analytics Charts - Always visible when tent is selected */}
+            {selectedTentId && logsData?.logs && logsData.logs.length > 0 && (
+              <AnalyticsCharts logs={logsData.logs} />
+            )}
+
+            {/* Filters and Table */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Filter className="w-5 h-5" />
+                  Filtros
+                </CardTitle>
+                <CardDescription>Filtre os registros por período</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
               {/* Period Filter */}
               <div className="space-y-2">
@@ -503,6 +499,8 @@ export default function HistoryTable() {
             )}
           </CardContent>
         </Card>
+          </TabsContent>
+        </Tabs>
       </main>
 
       {/* Edit Dialog */}
