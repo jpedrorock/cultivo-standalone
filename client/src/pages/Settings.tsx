@@ -1,5 +1,6 @@
 import { NotificationSettings } from "@/components/NotificationSettings";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { AlertSettings } from "@/components/AlertSettings";
 import { ArrowLeft, Download, Upload, Keyboard } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ export default function Settings() {
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto space-y-6">
           <ThemeToggle />
+          <AlertSettings />
           <KeyboardShortcuts />
           <DatabaseExport />
           <DatabaseImport />

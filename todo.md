@@ -355,7 +355,7 @@
 - [x] Adicionar busca em Strains (ManageStrains.tsx) - campo de busca por nome/descrição
 - [x] Adicionar busca na página Tarefas (TaskTemplatesManager) - campo de busca por título/descrição
 - [x] Implementar botão "Ocultar concluídas" na Home - toggle para minimizar tarefas já marcadas
-- [ ] Adicionar seção de Configurações de Alertas (Settings.tsx) - UI para configurar notificações
+- [x] Adicionar seção de Configurações de Alertas (Settings.tsx) - UI para configurar notificações
 
 ## 🎯 Melhorias de Organização (19/02/2026)
 
@@ -370,3 +370,12 @@
 - [x] Ajustar nomes de categorias: "Floração - Estufas B/C" → "Tarefas de Floração"
 - [x] Ajustar nomes de categorias: "Manutenção - Estufa A" → "Tarefas de Manutenção"
 - [x] Atualizar frontend (TaskTemplatesManager) para exibir novos nomes
+
+
+## 🔔 Configurações de Alertas (19/02/2026)
+
+- [x] Criar componente AlertSettings com toggles para cada tipo de alerta
+- [x] Adicionar inputs para thresholds personalizados (temperatura, pH, umidade, PPFD)
+- [x] Integrar AlertSettings na página Settings
+- [ ] Implementar salvamento de preferências de alertas no backend (TODO: tRPC procedure)
+- [x] Testar configurações e validação de inputs
