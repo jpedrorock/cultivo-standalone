@@ -2204,7 +2204,7 @@ export const appRouter = router({
 
   // Fertilization Presets (Predefinições de Fertilização)
   fertilizationPresets: router({
-    create: protectedProcedure
+    create: publicProcedure
       .input(z.object({
         name: z.string(),
         waterVolume: z.number(),
@@ -2219,7 +2219,7 @@ export const appRouter = router({
         if (!database) throw new Error("Database not available");
         
         await database.insert(fertilizationPresets).values({
-          userId: ctx.user.id,
+          
           name: input.name,
           waterVolume: input.waterVolume.toString(),
           targetEC: input.targetEC.toString(),
@@ -2232,7 +2232,7 @@ export const appRouter = router({
         return { success: true };
       }),
 
-    list: protectedProcedure
+    list: publicProcedure
       .query(async ({ ctx }) => {
         const database = await getDb();
         if (!database) throw new Error("Database not available");
@@ -2240,11 +2240,11 @@ export const appRouter = router({
         return await database
           .select()
           .from(fertilizationPresets)
-          .where(eq(fertilizationPresets.userId, ctx.user.id))
+          
           .orderBy(desc(fertilizationPresets.createdAt));
       }),
 
-    delete: protectedProcedure
+    delete: publicProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input, ctx }) => {
         const database = await getDb();
@@ -2254,13 +2254,13 @@ export const appRouter = router({
           .delete(fertilizationPresets)
           .where(and(
             eq(fertilizationPresets.id, input.id),
-            eq(fertilizationPresets.userId, ctx.user.id)
+            
           ));
         
         return { success: true };
       }),
 
-    update: protectedProcedure
+    update: publicProcedure
       .input(z.object({
         id: z.number(),
         name: z.string(),
@@ -2288,7 +2288,7 @@ export const appRouter = router({
           })
           .where(and(
             eq(fertilizationPresets.id, input.id),
-            eq(fertilizationPresets.userId, ctx.user.id)
+            
           ));
         
         return { success: true };
@@ -2297,7 +2297,7 @@ export const appRouter = router({
 
   // Watering Presets (Predefinições de Rega)
   wateringPresets: router({
-    create: protectedProcedure
+    create: publicProcedure
       .input(z.object({
         name: z.string(),
         plantCount: z.number(),
@@ -2311,7 +2311,7 @@ export const appRouter = router({
         if (!database) throw new Error("Database not available");
         
         await database.insert(wateringPresets).values({
-          userId: ctx.user.id,
+          
           name: input.name,
           plantCount: input.plantCount,
           potSize: input.potSize.toString(),
@@ -2323,7 +2323,7 @@ export const appRouter = router({
         return { success: true };
       }),
 
-    list: protectedProcedure
+    list: publicProcedure
       .query(async ({ ctx }) => {
         const database = await getDb();
         if (!database) throw new Error("Database not available");
@@ -2331,11 +2331,11 @@ export const appRouter = router({
         return await database
           .select()
           .from(wateringPresets)
-          .where(eq(wateringPresets.userId, ctx.user.id))
+          
           .orderBy(desc(wateringPresets.createdAt));
       }),
 
-    delete: protectedProcedure
+    delete: publicProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input, ctx }) => {
         const database = await getDb();
@@ -2345,13 +2345,13 @@ export const appRouter = router({
           .delete(wateringPresets)
           .where(and(
             eq(wateringPresets.id, input.id),
-            eq(wateringPresets.userId, ctx.user.id)
+            
           ));
         
         return { success: true };
       }),
 
-    update: protectedProcedure
+    update: publicProcedure
       .input(z.object({
         id: z.number(),
         name: z.string(),
@@ -2377,7 +2377,7 @@ export const appRouter = router({
           })
           .where(and(
             eq(wateringPresets.id, input.id),
-            eq(wateringPresets.userId, ctx.user.id)
+            
           ));
         
         return { success: true };
@@ -2397,7 +2397,7 @@ export const appRouter = router({
       return templates;
     }),
 
-    create: protectedProcedure
+    create: publicProcedure
       .input(
         z.object({
           title: z.string().min(1),
@@ -2422,7 +2422,7 @@ export const appRouter = router({
         return { success: true, id: newTemplate.insertId };
       }),
 
-    update: protectedProcedure
+    update: publicProcedure
       .input(
         z.object({
           id: z.number(),
@@ -2451,7 +2451,7 @@ export const appRouter = router({
         return { success: true };
       }),
 
-    delete: protectedProcedure
+    delete: publicProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         const database = await getDb();

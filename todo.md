@@ -287,3 +287,12 @@
 - [x] Corrigir toast em PlantObservationsTab (sonner)
 - [x] Testar compilação - 0 erros TypeScript restantes
 - [x] Verificar servidor - rodando sem erros
+
+## Correções Adicionais Mobile (19/02/2026 - Parte 2)
+
+- [x] Remover autenticação obrigatória ao salvar predefinições (trocado protectedProcedure por publicProcedure)
+- [x] Remover referências a ctx.user nas procedures públicas (removidas cláusulas where com userId)
+- [x] Corrigir sobreposição das tabs (Saúde, Tricomas, LST, Observações) - trocado grid por flex com overflow-x-auto
+- [x] Reduzir margens laterais dos cards no mobile (container padding reduzido de 16px para 12px)
+- [x] Testar salvamento de predefinições sem autenticação (predefinição "Teste Sem Autenticação" salva com sucesso)
+- [x] Gerenciador de tarefas localizado em /tasks aba "Gerenciar" (ao lado de "Tarefas da Semana")

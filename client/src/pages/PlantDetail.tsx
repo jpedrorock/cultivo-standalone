@@ -231,7 +231,7 @@ export default function PlantDetail() {
 
         {/* Tabs */}
         <Tabs defaultValue="health" className="w-full">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="flex w-full overflow-x-auto">
             <TabsTrigger value="health">
               <Heart className="w-4 h-4 mr-2" />
               Saúde
