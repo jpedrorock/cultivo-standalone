@@ -6,6 +6,12 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -496,8 +502,8 @@ export default function Nutrients() {
               {applications.isLoading ? (
                 <p className="text-muted-foreground text-center py-8">Carregando...</p>
               ) : applications.data && applications.data.length > 0 ? (
-                <div className="grid gap-4">
-                  {applications.data.map((app: any) => {
+                <Accordion type="single" collapsible className="w-full">
+                  {applications.data.map((app: any, index: number) => {
                     const products = JSON.parse(app.productsJson || '[]');
                     const phaseNames = {
                       CLONING: "Clonagem",
@@ -515,24 +521,24 @@ export default function Nutrients() {
                     };
                     
                     return (
-                      <Card key={app.id} className="border-l-4 border-l-green-500">
-                        <CardHeader>
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <CardTitle className="text-lg">
+                      <AccordionItem key={app.id} value={`item-${index}`} className="border-l-4 border-l-green-500 px-4">
+                        <AccordionTrigger className="hover:no-underline">
+                          <div className="flex items-start justify-between w-full pr-4">
+                            <div className="text-left">
+                              <p className="text-lg font-semibold">
                                 {phaseIcons[app.phase as Phase]} {app.recipeName}
-                              </CardTitle>
-                              <CardDescription>
+                              </p>
+                              <p className="text-sm text-muted-foreground">
                                 {phaseNames[app.phase as Phase]} • Semana {app.weekNumber || "N/A"} • {new Date(app.applicationDate).toLocaleDateString('pt-BR')}
-                              </CardDescription>
+                              </p>
                             </div>
                             <div className="text-right">
                               <p className="text-2xl font-bold text-green-600">{app.volumeTotalL}L</p>
                               <p className="text-sm text-muted-foreground">EC: {app.ecTarget ? Number(app.ecTarget).toFixed(2) : "N/A"} mS/cm</p>
                             </div>
                           </div>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
+                        </AccordionTrigger>
+                        <AccordionContent className="space-y-4 pt-4">
                           {/* Produtos */}
                           <div>
                             <h4 className="font-semibold mb-2">Produtos:</h4>
@@ -558,11 +564,11 @@ export default function Nutrients() {
                               <p className="text-sm text-muted-foreground">{app.notes}</p>
                             </div>
                           )}
-                        </CardContent>
-                      </Card>
+                        </AccordionContent>
+                      </AccordionItem>
                     );
                   })}
-                </div>
+                </Accordion>
               ) : (
                 <p className="text-muted-foreground text-center py-8">
                   Nenhuma receita encontrada. Salve uma receita na aba Calculadora para vê-la aqui.

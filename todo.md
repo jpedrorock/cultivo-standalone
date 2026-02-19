@@ -824,3 +824,10 @@
 - [x] Implementar botão Salvar Receita na calculadora de rega
 - [x] Implementar aba Histórico na calculadora de rega
 - [ ] Testar funcionalidade completa
+
+## Melhorias de UX (19/02/2026)
+
+- [x] Adicionar accordion no histórico de nutrientes para compactar
+- [x] Remover "Nutrientes" do menu e mover para dentro de "Calculadoras"
+- [x] Reduzir padding das calculadoras no mobile
+- [x] Remover predefinições da calculadora de rega (deixar só histórico)

@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calculator, Droplets, Sprout, Sun, Download, AlertCircle, CheckCircle2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
-import { WateringPresetsManager } from "@/components/WateringPresetsManager";
 
 // Funções de exportação de receitas
 function exportIrrigationRecipe(potVolume: string, substrate: string, result: { volume: number; frequency: string }) {
@@ -171,7 +170,7 @@ export default function Calculators() {
       </header>
 
       {/* Main Content */}
-      <main className="container py-8">
+      <main className="container py-4 md:py-8">
         {calculatorId === "watering-runoff" && <WateringRunoffCalculator />}
 
         {calculatorId === "lux-ppfd" && <LuxPPFDCalculator />}
@@ -324,14 +323,14 @@ function WateringRunoffCalculator() {
   };
 
   return (
-    <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="space-y-6">
+    <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="space-y-3 md:space-y-6">
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="calculator">🧪 Calculadora</TabsTrigger>
         <TabsTrigger value="history">📋 Histórico</TabsTrigger>
       </TabsList>
       
-      <TabsContent value="calculator" className="space-y-8">
-        <div className="grid gap-8 md:grid-cols-2">
+      <TabsContent value="calculator" className="space-y-4 md:space-y-8">
+        <div className="grid gap-4 md:gap-8 md:grid-cols-2">
           {/* Calculadora de Rega */}
           <Card>
           <CardHeader>
@@ -564,26 +563,6 @@ function WateringRunoffCalculator() {
           </CardContent>
         </Card>
 
-        {/* Gerência de Predefinições */}
-        <Card>
-          <CardHeader>
-            <CardTitle>💾 Predefinições de Rega</CardTitle>
-            <CardDescription>
-              Salve e carregue configurações de rega personalizadas
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <WateringPresetsManager
-              currentValues={{
-                plantCount: numPlants.toString(),
-                potSize: potSize.toString(),
-                targetRunoff: desiredRunoff.toString(),
-              }}
-              onLoadPreset={handleLoadPreset}
-            />
-          </CardContent>
-        </Card>
-    
         {/* Botão Salvar Receita */}
         <Card>
           <CardHeader>
@@ -1185,17 +1164,7 @@ function IrrigationCalculator() {
           </div>
         )}
 
-        {/* Gerência de Predefinições */}
-        <div className="border-t border-border pt-6 mt-6">
-          <WateringPresetsManager
-            currentValues={{
-              plantCount: numPlants,
-              potSize: potVolume,
-              targetRunoff: runoffPercent,
-            }}
-            onLoadPreset={handleLoadPreset}
-          />
-        </div>
+
       </CardContent>
     </Card>
   );
