@@ -669,3 +669,34 @@
 - [x] Criar template "Rotação de Material" - Movimentação para secagem uniforme
 - [x] Criar template "Preparação para Armazenamento" - Limpeza e trimming final
 - [x] Testar visualização das tarefas de DRYING na UI
+
+## Sistema de Receitas de Nutrientes
+
+### Schema de Banco de Dados
+- [x] Criar tabela `recipeTemplates` (nome, fase, weekNumber, NPK, micronutrientes, pH target, EC target)
+- [x] Criar tabela `nutrientApplications` (histórico de aplicações por estufa/ciclo)
+- [x] Aplicar migrations no banco de dados
+
+### Backend - Cálculos Automáticos
+- [x] Implementar função `calculateNutrientMix()` - cálculo de NPK, Ca, Mg, Fe
+- [x] Implementar função `convertPPMtoEC()` e `convertECtoPPM()`
+- [x] Implementar função `calculatepHAdjustment()` - quantidade de pH up/down
+- [x] Criar procedures tRPC para recipeTemplates (getAll, getByPhase, create)
+- [x] Criar procedures tRPC para nutrientApplications (create, getByTent, getHistory)
+
+### Frontend - UI de Receitas
+- [ ] Criar componente `NutrientRecipeSelector` - seleção de receita base por fase
+- [ ] Criar componente `NutrientCalculator` - ajuste de quantidades e cálculos em tempo real
+- [ ] Criar componente `NutrientHistory` - histórico de aplicações por estufa
+- [ ] Integrar com página de Fertilização existente
+
+### Templates de Receitas Pré-configuradas
+- [x] Criar receita "Clonagem Básica" (fase CLONING)
+- [x] Criar receitas "Vega Semana 1-4" (fase VEGA, intensidade crescente)
+- [x] Criar receitas "Flora Semana 1-8" (fase FLORA, boost de P-K)
+- [x] Criar receita "Flush Final" (fase DRYING, apenas água)
+
+### Testes
+- [x] Criar teste vitest para cálculos de nutrientes
+- [x] Criar teste vitest para conversões PPM↔EC
+- [x] Testar fluxo completo de seleção e aplicação de receita

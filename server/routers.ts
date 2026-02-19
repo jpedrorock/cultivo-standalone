@@ -31,6 +31,8 @@ import {
   plantLSTLogs,
   fertilizationPresets,
   wateringPresets,
+  recipeTemplates,
+  nutrientApplications,
 } from "../drizzle/schema";
 
 export const appRouter = router({
@@ -2715,6 +2717,150 @@ export const appRouter = router({
         await database.delete(taskTemplates).where(eq(taskTemplates.id, input.id));
 
         return { success: true };
+      }),
+  }),
+
+  // Nutrient Recipes (Receitas de Nutrientes)
+  nutrients: router({
+    // Listar templates de receitas
+    listTemplates: publicProcedure
+      .input(z.object({ phase: z.enum(["CLONING", "VEGA", "FLORA", "MAINTENANCE", "DRYING"]).optional() }).optional())
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+
+        if (input?.phase) {
+          return database
+            .select()
+            .from(recipeTemplates)
+            .where(eq(recipeTemplates.phase, input.phase))
+            .orderBy(recipeTemplates.weekNumber, recipeTemplates.name);
+        }
+
+        return database
+          .select()
+          .from(recipeTemplates)
+          .orderBy(recipeTemplates.phase, recipeTemplates.weekNumber, recipeTemplates.name);
+      }),
+
+    // Criar template de receita
+    createTemplate: publicProcedure
+      .input(
+        z.object({
+          name: z.string().min(1),
+          phase: z.enum(["CLONING", "VEGA", "FLORA", "MAINTENANCE", "DRYING"]),
+          weekNumber: z.number().int().min(1).max(12).nullable(),
+          volumeTotalL: z.number().positive(),
+          ecTarget: z.number().nonnegative().nullable(),
+          phTarget: z.number().min(4).max(8).nullable(),
+          products: z.array(
+            z.object({
+              name: z.string(),
+              amountMl: z.number().nonnegative(),
+              npk: z.string().optional(),
+              ca: z.number().optional(),
+              mg: z.number().optional(),
+              fe: z.number().optional(),
+            })
+          ),
+          notes: z.string().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+
+        const [newTemplate] = await database.insert(recipeTemplates).values({
+          name: input.name,
+          phase: input.phase,
+          weekNumber: input.weekNumber,
+          volumeTotalL: input.volumeTotalL.toString(),
+          ecTarget: input.ecTarget?.toString() || null,
+          phTarget: input.phTarget?.toString() || null,
+          productsJson: JSON.stringify(input.products),
+          notes: input.notes || null,
+        });
+
+        return { success: true, id: newTemplate.insertId };
+      }),
+
+    // Registrar aplicação de nutrientes
+    recordApplication: publicProcedure
+      .input(
+        z.object({
+          tentId: z.number(),
+          cycleId: z.number().nullable(),
+          recipeTemplateId: z.number().nullable(),
+          recipeName: z.string(),
+          phase: z.enum(["CLONING", "VEGA", "FLORA", "MAINTENANCE", "DRYING"]),
+          weekNumber: z.number().nullable(),
+          volumeTotalL: z.number().positive(),
+          ecTarget: z.number().nullable(),
+          ecActual: z.number().nullable(),
+          phTarget: z.number().nullable(),
+          phActual: z.number().nullable(),
+          products: z.array(
+            z.object({
+              name: z.string(),
+              amountMl: z.number().nonnegative(),
+              npk: z.string().optional(),
+              ca: z.number().optional(),
+              mg: z.number().optional(),
+              fe: z.number().optional(),
+            })
+          ),
+          notes: z.string().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+
+        const [newApplication] = await database.insert(nutrientApplications).values({
+          tentId: input.tentId,
+          cycleId: input.cycleId,
+          recipeTemplateId: input.recipeTemplateId,
+          recipeName: input.recipeName,
+          phase: input.phase,
+          weekNumber: input.weekNumber,
+          volumeTotalL: input.volumeTotalL.toString(),
+          ecTarget: input.ecTarget?.toString() || null,
+          ecActual: input.ecActual?.toString() || null,
+          phTarget: input.phTarget?.toString() || null,
+          phActual: input.phActual?.toString() || null,
+          productsJson: JSON.stringify(input.products),
+          notes: input.notes || null,
+        });
+
+        return { success: true, id: newApplication.insertId };
+      }),
+
+    // Listar histórico de aplicações
+    listApplications: publicProcedure
+      .input(
+        z.object({
+          tentId: z.number().optional(),
+          cycleId: z.number().optional(),
+          limit: z.number().int().positive().default(50),
+        }).optional()
+      )
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+
+        let query = database.select().from(nutrientApplications);
+
+        const conditions = [];
+        if (input?.tentId) conditions.push(eq(nutrientApplications.tentId, input.tentId));
+        if (input?.cycleId) conditions.push(eq(nutrientApplications.cycleId, input.cycleId));
+
+        if (conditions.length > 0) {
+          query = query.where(and(...conditions)) as any;
+        }
+
+        return query
+          .orderBy(desc(nutrientApplications.applicationDate))
+          .limit(input?.limit || 50);
       }),
   }),
 

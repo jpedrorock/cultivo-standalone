@@ -792,3 +792,43 @@ export const notificationSettings = mysqlTable("notificationSettings", {
 
 export type NotificationSettings = typeof notificationSettings.$inferSelect;
 export type InsertNotificationSettings = typeof notificationSettings.$inferInsert;
+
+/**
+ * Histórico de Aplicações de Nutrientes
+ */
+export const nutrientApplications = mysqlTable("nutrientApplications", {
+  id: int("id").autoincrement().primaryKey(),
+  tentId: int("tentId").notNull(),
+  cycleId: int("cycleId"),
+  recipeTemplateId: int("recipeTemplateId"),
+  
+  // Data da aplicação
+  applicationDate: timestamp("applicationDate").defaultNow().notNull(),
+  
+  // Dados da receita aplicada (snapshot)
+  recipeName: varchar("recipeName", { length: 100 }).notNull(),
+  phase: mysqlEnum("phase", ["CLONING", "VEGA", "FLORA", "MAINTENANCE", "DRYING"]).notNull(),
+  weekNumber: int("weekNumber"),
+  
+  // Volume e targets
+  volumeTotalL: decimal("volumeTotalL", { precision: 6, scale: 2 }).notNull(),
+  ecTarget: decimal("ecTarget", { precision: 4, scale: 2 }),
+  ecActual: decimal("ecActual", { precision: 4, scale: 2 }),
+  phTarget: decimal("phTarget", { precision: 3, scale: 1 }),
+  phActual: decimal("phActual", { precision: 3, scale: 1 }),
+  
+  // Produtos aplicados (JSON)
+  productsJson: text("productsJson").notNull(),
+  
+  // Observações
+  notes: text("notes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  tentIdIdx: index("tentId_idx").on(table.tentId),
+  cycleIdIdx: index("cycleId_idx").on(table.cycleId),
+  applicationDateIdx: index("applicationDate_idx").on(table.applicationDate),
+}));
+
+export type NutrientApplication = typeof nutrientApplications.$inferSelect;
+export type InsertNutrientApplication = typeof nutrientApplications.$inferInsert;
