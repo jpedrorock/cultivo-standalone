@@ -4,7 +4,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Scissors, Check } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Plus, Scissors, Check, Info, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 
 interface PlantLSTTabProps {
@@ -15,74 +26,124 @@ const TECHNIQUES = [
   {
     id: "topping",
     name: "Topping",
-    description: "Corte do broto principal acima do 3º-5º nó para criar 2+ colas principais. Aumenta rendimento ao distribuir hormônios de crescimento igualmente. Melhor aplicar na fase vegetativa quando a planta tem pelo menos 6 nós. Recuperação: 3-7 dias.",
+    shortDesc: "Corte do broto principal",
+    description:
+      "Corte do broto principal acima do 3º-5º nó para criar 2+ colas principais. Aumenta rendimento ao distribuir hormônios de crescimento igualmente. Melhor aplicar na fase vegetativa quando a planta tem pelo menos 6 nós. Recuperação: 3-7 dias.",
     icon: "✏️",
-    color: "bg-red-500/10 border-red-500/30 hover:bg-red-500/20",
-    selectedColor: "bg-red-500/30 border-red-500",
+    phase: "vega",
+    recovery: "3-7 dias",
+    color: "bg-red-500/10 border-red-500/30",
+    selectedColor: "bg-red-500/25 border-red-500 ring-2 ring-red-500/40",
+    badgeColor: "bg-red-500/15 text-red-700 dark:text-red-400",
   },
   {
     id: "fim",
-    name: "FIM (Fuck I Missed)",
-    description: "Corte parcial (75-80%) do novo crescimento do topo, deixando pequena porção intacta. Resulta em 4+ colas principais ao invés de 2. Menos estressante que topping tradicional. Ideal para fase vegetativa média. Recuperação: 2-5 dias.",
+    name: "FIM",
+    shortDesc: "Corte parcial do topo",
+    description:
+      "Corte parcial (75-80%) do novo crescimento do topo, deixando pequena porção intacta. Resulta em 4+ colas principais ao invés de 2. Menos estressante que topping tradicional. Ideal para fase vegetativa média. Recuperação: 2-5 dias.",
     icon: "🔪",
-    color: "bg-orange-500/10 border-orange-500/30 hover:bg-orange-500/20",
-    selectedColor: "bg-orange-500/30 border-orange-500",
+    phase: "vega",
+    recovery: "2-5 dias",
+    color: "bg-orange-500/10 border-orange-500/30",
+    selectedColor:
+      "bg-orange-500/25 border-orange-500 ring-2 ring-orange-500/40",
+    badgeColor: "bg-orange-500/15 text-orange-700 dark:text-orange-400",
   },
   {
     id: "lst",
-    name: "LST (Low Stress Training)",
-    description: "Técnica de baixo estresse: dobrar e amarrar galhos horizontalmente para expor mais área à luz. Use arames macios ou cordas. Comece cedo na vegetação (2-3 semanas). Ajuste diariamente conforme crescimento. Aumenta penetração de luz e cria canopy uniforme sem cortes.",
+    name: "LST",
+    shortDesc: "Dobrar e amarrar galhos",
+    description:
+      "Técnica de baixo estresse: dobrar e amarrar galhos horizontalmente para expor mais área à luz. Use arames macios ou cordas. Comece cedo na vegetação (2-3 semanas). Ajuste diariamente conforme crescimento. Aumenta penetração de luz e cria canopy uniforme sem cortes.",
     icon: "🩢",
-    color: "bg-green-500/10 border-green-500/30 hover:bg-green-500/20",
-    selectedColor: "bg-green-500/30 border-green-500",
+    phase: "vega",
+    recovery: "Sem pausa",
+    color: "bg-green-500/10 border-green-500/30",
+    selectedColor:
+      "bg-green-500/25 border-green-500 ring-2 ring-green-500/40",
+    badgeColor: "bg-green-500/15 text-green-700 dark:text-green-400",
   },
   {
     id: "super_cropping",
     name: "Super Cropping",
-    description: "Técnica avançada: apertar suavemente o caule entre dedos até sentir fibras internas quebrarem, depois dobrar 90°. Cria 'nó' que aumenta fluxo de nutrientes. Estimula produção de resina. Aplicar no final da vegetação ou início da floração. Recuperação: 5-10 dias.",
+    shortDesc: "Apertar e dobrar caule",
+    description:
+      "Técnica avançada: apertar suavemente o caule entre dedos até sentir fibras internas quebrarem, depois dobrar 90°. Cria 'nó' que aumenta fluxo de nutrientes. Estimula produção de resina. Aplicar no final da vegetação ou início da floração. Recuperação: 5-10 dias.",
     icon: "💪",
-    color: "bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20",
-    selectedColor: "bg-blue-500/30 border-blue-500",
+    phase: "vega/flora",
+    recovery: "5-10 dias",
+    color: "bg-blue-500/10 border-blue-500/30",
+    selectedColor: "bg-blue-500/25 border-blue-500 ring-2 ring-blue-500/40",
+    badgeColor: "bg-blue-500/15 text-blue-700 dark:text-blue-400",
   },
   {
     id: "lollipopping",
     name: "Lollipopping",
-    description: "Remover todo crescimento (galhos, folhas, brotos) do terço inferior da planta. Direciona energia para colas superiores que recebem mais luz. Melhora circulação de ar, reduz risco de mofo. Aplicar 2-3 semanas antes da floração ou na primeira semana de flora. Resultado: flores maiores e mais densas no topo.",
+    shortDesc: "Limpar terço inferior",
+    description:
+      "Remover todo crescimento (galhos, folhas, brotos) do terço inferior da planta. Direciona energia para colas superiores que recebem mais luz. Melhora circulação de ar, reduz risco de mofo. Aplicar 2-3 semanas antes da floração ou na primeira semana de flora.",
     icon: "🍭",
-    color: "bg-purple-500/10 border-purple-500/30 hover:bg-purple-500/20",
-    selectedColor: "bg-purple-500/30 border-purple-500",
+    phase: "flora",
+    recovery: "2-3 dias",
+    color: "bg-purple-500/10 border-purple-500/30",
+    selectedColor:
+      "bg-purple-500/25 border-purple-500 ring-2 ring-purple-500/40",
+    badgeColor: "bg-purple-500/15 text-purple-700 dark:text-purple-400",
   },
   {
     id: "defoliation",
-    name: "Defoliação Estratégica",
-    description: "Remover folhas grandes (especialmente leques) que bloqueiam luz dos brotos inferiores. Melhora penetração de luz e circulação de ar. Não remover mais de 20-30% de folhas por vez. Aplicar gradualmente durante vegetação e nas semanas 1 e 3 da floração. Evitar em plantas estressadas ou doentes.",
+    name: "Defoliação",
+    shortDesc: "Remover folhas grandes",
+    description:
+      "Remover folhas grandes (especialmente leques) que bloqueiam luz dos brotos inferiores. Melhora penetração de luz e circulação de ar. Não remover mais de 20-30% de folhas por vez. Aplicar gradualmente durante vegetação e nas semanas 1 e 3 da floração.",
     icon: "🍃",
-    color: "bg-yellow-500/10 border-yellow-500/30 hover:bg-yellow-500/20",
-    selectedColor: "bg-yellow-500/30 border-yellow-500",
+    phase: "vega/flora",
+    recovery: "1-3 dias",
+    color: "bg-yellow-500/10 border-yellow-500/30",
+    selectedColor:
+      "bg-yellow-500/25 border-yellow-500 ring-2 ring-yellow-500/40",
+    badgeColor: "bg-yellow-500/15 text-yellow-700 dark:text-yellow-400",
   },
   {
     id: "mainlining",
-    name: "Mainlining (Manifolding)",
-    description: "Técnica avançada: combina topping repetido + LST + lollipopping para criar estrutura perfeitamente simétrica com 8-16 colas principais iguais. Requer tempo (vegetação longa de 6-8 semanas). Resultado: canopy uniforme, fácil manejo, flores de tamanho consistente. Ideal para cultivo indoor com espaço limitado.",
+    name: "Mainlining",
+    shortDesc: "Estrutura simétrica perfeita",
+    description:
+      "Técnica avançada: combina topping repetido + LST + lollipopping para criar estrutura perfeitamente simétrica com 8-16 colas principais iguais. Requer tempo (vegetação longa de 6-8 semanas). Resultado: canopy uniforme, fácil manejo, flores de tamanho consistente.",
     icon: "🌳",
-    color: "bg-indigo-500/10 border-indigo-500/30 hover:bg-indigo-500/20",
-    selectedColor: "bg-indigo-500/30 border-indigo-500",
+    phase: "vega",
+    recovery: "7-14 dias",
+    color: "bg-indigo-500/10 border-indigo-500/30",
+    selectedColor:
+      "bg-indigo-500/25 border-indigo-500 ring-2 ring-indigo-500/40",
+    badgeColor: "bg-indigo-500/15 text-indigo-700 dark:text-indigo-400",
   },
   {
     id: "scrog",
-    name: "ScrOG (Screen of Green)",
-    description: "Instalar tela/rede horizontal (10-30cm acima dos vasos) e tecer galhos através dela durante vegetação. Força canopy plano e uniforme, maximiza exposição à luz. Ideal para poucas plantas (1-4) em espaço pequeno. Requer vegetação longa. Dificulta movimentação de plantas. Rendimento: muito alto por m².",
+    name: "ScrOG",
+    shortDesc: "Tela horizontal para canopy",
+    description:
+      "Instalar tela/rede horizontal (10-30cm acima dos vasos) e tecer galhos através dela durante vegetação. Força canopy plano e uniforme, maximiza exposição à luz. Ideal para poucas plantas (1-4) em espaço pequeno. Rendimento: muito alto por m².",
     icon: "🕸️",
-    color: "bg-pink-500/10 border-pink-500/30 hover:bg-pink-500/20",
-    selectedColor: "bg-pink-500/30 border-pink-500",
+    phase: "vega",
+    recovery: "Sem pausa",
+    color: "bg-pink-500/10 border-pink-500/30",
+    selectedColor: "bg-pink-500/25 border-pink-500 ring-2 ring-pink-500/40",
+    badgeColor: "bg-pink-500/15 text-pink-700 dark:text-pink-400",
   },
   {
     id: "sog",
-    name: "SOG (Sea of Green)",
-    description: "Cultivar muitas plantas pequenas (9-16 por m²) com vegetação curta (2-3 semanas) e forçar floração cedo. Cria 'mar' de colas principais. Ciclo rápido (8-10 semanas total). Ideal para clones. Requer mais plantas mas menos tempo. Bom para rotação rápida. Rendimento: alto por m², médio por planta.",
+    name: "SOG",
+    shortDesc: "Muitas plantas pequenas",
+    description:
+      "Cultivar muitas plantas pequenas (9-16 por m²) com vegetação curta (2-3 semanas) e forçar floração cedo. Cria 'mar' de colas principais. Ciclo rápido (8-10 semanas total). Ideal para clones. Rendimento: alto por m², médio por planta.",
     icon: "🌊",
-    color: "bg-cyan-500/10 border-cyan-500/30 hover:bg-cyan-500/20",
-    selectedColor: "bg-cyan-500/30 border-cyan-500",
+    phase: "vega",
+    recovery: "Sem pausa",
+    color: "bg-cyan-500/10 border-cyan-500/30",
+    selectedColor: "bg-cyan-500/25 border-cyan-500 ring-2 ring-cyan-500/40",
+    badgeColor: "bg-cyan-500/15 text-cyan-700 dark:text-cyan-400",
   },
 ];
 
@@ -100,7 +161,7 @@ export default function PlantLSTTab({ plantId }: PlantLSTTabProps) {
       setNotes("");
       refetch();
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast.error(`Erro ao adicionar registro: ${error.message}`);
     },
   });
@@ -136,74 +197,146 @@ export default function PlantLSTTab({ plantId }: PlantLSTTabProps) {
     <div className="space-y-6">
       {/* Add New LST Log */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Plus className="w-5 h-5" />
-            Registrar Técnica de Treinamento
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Plus className="w-4 h-4" />
+            Registrar Técnica
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Visual Technique Selector */}
-          <div className="space-y-3">
-            <Label>Técnicas Aplicadas</Label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <CardContent className="space-y-4">
+          {/* Compact Technique Selector */}
+          <div className="space-y-2">
+            <Label className="text-sm">Selecione as técnicas aplicadas</Label>
+            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2">
               {TECHNIQUES.map((technique) => {
                 const isSelected = selectedTechniques.includes(technique.id);
                 return (
-                  <button
-                    key={technique.id}
-                    type="button"
-                    onClick={() => toggleTechnique(technique.id)}
-                    className={`relative p-4 border-2 rounded-lg text-left transition-all ${
-                      isSelected ? technique.selectedColor : technique.color
-                    }`}
-                  >
-                    {isSelected && (
-                      <div className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
-                        <Check className="w-4 h-4 text-primary-foreground" />
-                      </div>
-                    )}
-                    <div className="text-3xl mb-2">{technique.icon}</div>
-                    <h4 className="font-semibold text-sm mb-1">
-                      {technique.name}
-                    </h4>
-                    <p className="text-xs text-muted-foreground">
-                      {technique.description}
-                    </p>
-                  </button>
+                  <div key={technique.id} className="relative">
+                    <button
+                      type="button"
+                      onClick={() => toggleTechnique(technique.id)}
+                      className={`w-full flex flex-col items-center gap-1 p-3 border rounded-xl text-center transition-all duration-200 ${
+                        isSelected
+                          ? technique.selectedColor
+                          : `${technique.color} hover:scale-[1.03]`
+                      }`}
+                    >
+                      {isSelected && (
+                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center shadow-sm">
+                          <Check className="w-3 h-3 text-primary-foreground" />
+                        </div>
+                      )}
+                      <span className="text-2xl leading-none">
+                        {technique.icon}
+                      </span>
+                      <span className="text-xs font-medium leading-tight">
+                        {technique.name}
+                      </span>
+                    </button>
+                    {/* Info popover */}
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <button
+                          type="button"
+                          className="absolute -top-1 -left-1 w-5 h-5 bg-muted hover:bg-muted-foreground/20 rounded-full flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Info className="w-3 h-3" />
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        side="top"
+                        className="w-72 text-sm"
+                        align="start"
+                      >
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">{technique.icon}</span>
+                            <h4 className="font-semibold">{technique.name}</h4>
+                          </div>
+                          <p className="text-muted-foreground text-xs leading-relaxed">
+                            {technique.description}
+                          </p>
+                          <div className="flex gap-2 pt-1">
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted font-medium">
+                              ⏱ {technique.recovery}
+                            </span>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted font-medium">
+                              🌱{" "}
+                              {technique.phase === "vega"
+                                ? "Vegetação"
+                                : technique.phase === "flora"
+                                  ? "Floração"
+                                  : "Vega/Flora"}
+                            </span>
+                          </div>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                 );
               })}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Selecione uma ou mais técnicas aplicadas
-            </p>
+            {selectedTechniques.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {selectedTechniques.map((id) => {
+                  const tech = TECHNIQUES.find((t) => t.id === id);
+                  if (!tech) return null;
+                  return (
+                    <span
+                      key={id}
+                      className={`inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium ${tech.badgeColor}`}
+                    >
+                      {tech.icon} {tech.name}
+                      <button
+                        type="button"
+                        onClick={() => toggleTechnique(id)}
+                        className="ml-0.5 hover:opacity-70"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="response">Resposta da Planta</Label>
-            <Textarea
-              id="response"
-              placeholder="Como a planta respondeu à técnica..."
-              value={response}
-              onChange={(e) => setResponse(e.target.value)}
-              rows={3}
-            />
-          </div>
+          {/* Response & Notes - collapsible for cleaner look */}
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label htmlFor="response" className="text-sm">
+                Resposta da Planta
+              </Label>
+              <Textarea
+                id="response"
+                placeholder="Como a planta respondeu à técnica..."
+                value={response}
+                onChange={(e) => setResponse(e.target.value)}
+                rows={2}
+                className="resize-none"
+              />
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="notes">Notas Adicionais</Label>
-            <Textarea
-              id="notes"
-              placeholder="Observações, dificuldades, resultados..."
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              rows={2}
-            />
+            <div className="space-y-2">
+              <Label htmlFor="notes" className="text-sm">
+                Notas Adicionais
+              </Label>
+              <Textarea
+                id="notes"
+                placeholder="Observações, dificuldades, resultados..."
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                rows={2}
+                className="resize-none"
+              />
+            </div>
           </div>
 
           <Button
             onClick={handleSubmit}
             disabled={selectedTechniques.length === 0 || createLSTLog.isPending}
+            className="w-full sm:w-auto"
           >
             {createLSTLog.isPending ? "Salvando..." : "Registrar"}
           </Button>
@@ -211,101 +344,136 @@ export default function PlantLSTTab({ plantId }: PlantLSTTabProps) {
       </Card>
 
       {/* LST Logs List */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Histórico de Treinamento</h3>
+      <div className="space-y-3">
+        <h3 className="text-base font-semibold flex items-center gap-2">
+          <Scissors className="w-4 h-4" />
+          Histórico de Treinamento
+        </h3>
         {lstLogs && lstLogs.length > 0 ? (
-          lstLogs.map((log) => (
-            <Card key={log.id}>
-              <CardHeader>
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <div className="flex items-center gap-2">
-                    <Scissors className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">
+          <Accordion type="multiple" className="space-y-2">
+            {lstLogs.map((log: any) => (
+              <AccordionItem
+                key={log.id}
+                value={String(log.id)}
+                className="border rounded-lg px-4 bg-card"
+              >
+                <AccordionTrigger className="hover:no-underline py-3">
+                  <div className="flex items-center gap-3 text-left">
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">
                       {new Date(log.logDate).toLocaleString("pt-BR", {
                         dateStyle: "short",
                         timeStyle: "short",
                       })}
                     </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {log.technique.split(",").map((tech: string, idx: number) => {
+                        const techData = TECHNIQUES.find(
+                          (t) =>
+                            t.name.toLowerCase() ===
+                            tech.trim().toLowerCase()
+                        );
+                        return (
+                          <span
+                            key={idx}
+                            className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium ${
+                              techData?.badgeColor ||
+                              "bg-purple-500/15 text-purple-700 dark:text-purple-400"
+                            }`}
+                          >
+                            {techData?.icon || "✂️"} {tech.trim()}
+                          </span>
+                        );
+                      })}
+                    </div>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {log.technique.split(",").map((tech, idx) => (
-                      <div
-                        key={idx}
-                        className="px-3 py-1 rounded-md text-sm font-medium bg-purple-500/10 text-purple-600 border border-purple-500/30"
-                      >
-                        {tech.trim()}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {log.response && (
-                  <div>
-                    <p className="text-sm font-medium text-foreground">
-                      Resposta da Planta:
+                </AccordionTrigger>
+                <AccordionContent className="pb-4 space-y-3">
+                  {log.response && (
+                    <div className="bg-muted/50 rounded-lg p-3">
+                      <p className="text-xs font-medium text-muted-foreground mb-1">
+                        Resposta da Planta
+                      </p>
+                      <p className="text-sm">{log.response}</p>
+                    </div>
+                  )}
+                  {log.notes && (
+                    <div className="bg-muted/50 rounded-lg p-3">
+                      <p className="text-xs font-medium text-muted-foreground mb-1">
+                        Notas
+                      </p>
+                      <p className="text-sm">{log.notes}</p>
+                    </div>
+                  )}
+                  {!log.response && !log.notes && (
+                    <p className="text-sm text-muted-foreground italic">
+                      Nenhuma observação registrada
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      {log.response}
-                    </p>
-                  </div>
-                )}
-                {log.notes && (
-                  <div>
-                    <p className="text-sm font-medium text-foreground">Notas:</p>
-                    <p className="text-sm text-muted-foreground">{log.notes}</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         ) : (
           <Card>
-            <CardContent className="py-12 text-center">
-              <Scissors className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">
+            <CardContent className="py-8 text-center">
+              <Scissors className="w-10 h-10 mx-auto text-muted-foreground/40 mb-3" />
+              <p className="text-sm text-muted-foreground">
                 Nenhum registro de treinamento ainda
               </p>
-              <p className="text-sm text-muted-foreground mt-2">
-                Selecione técnicas e registre a resposta da planta
+              <p className="text-xs text-muted-foreground mt-1">
+                Selecione técnicas acima e registre a resposta da planta
               </p>
             </CardContent>
           </Card>
         )}
       </div>
 
-      {/* Technique Guide */}
-      <Card className="bg-muted/30">
-        <CardHeader>
-          <CardTitle className="text-base">📚 Guia Rápido de Técnicas</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2 text-sm">
-          <div>
-            <p className="font-medium">🌱 Fase Vegetativa (Semana 2-6):</p>
-            <p className="text-muted-foreground">
-              Topping, FIM, LST, Super Cropping, Mainlining, ScrOG
-            </p>
-          </div>
-          <div>
-            <p className="font-medium">🌸 Transição para Floração:</p>
-            <p className="text-muted-foreground">
-              Última oportunidade para LST agressivo e defoliação pré-floração
-            </p>
-          </div>
-          <div>
-            <p className="font-medium">🌺 Fase de Floração (Semana 1-5):</p>
-            <p className="text-muted-foreground">
-              Lollipopping (semana 3-4), Defoliação seletiva (cuidado!)
-            </p>
-          </div>
-          <div>
-            <p className="font-medium">⚠️ Evite após Semana 6 de Flora:</p>
-            <p className="text-muted-foreground">
-              Apenas suporte, sem manipulação para não estressar
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Compact Technique Guide */}
+      <Accordion type="single" collapsible>
+        <AccordionItem value="guide" className="border rounded-lg bg-muted/20">
+          <AccordionTrigger className="px-4 py-3 hover:no-underline">
+            <span className="text-sm font-medium flex items-center gap-2">
+              📚 Guia Rápido de Técnicas
+            </span>
+          </AccordionTrigger>
+          <AccordionContent className="px-4 pb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <div className="bg-green-500/5 rounded-lg p-3 border border-green-500/20">
+                <p className="font-medium text-green-700 dark:text-green-400 text-xs mb-1">
+                  🌱 Vegetação (Semana 2-6)
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Topping, FIM, LST, Super Cropping, Mainlining, ScrOG
+                </p>
+              </div>
+              <div className="bg-yellow-500/5 rounded-lg p-3 border border-yellow-500/20">
+                <p className="font-medium text-yellow-700 dark:text-yellow-400 text-xs mb-1">
+                  🌸 Transição para Floração
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Última chance para LST agressivo e defoliação pré-flora
+                </p>
+              </div>
+              <div className="bg-purple-500/5 rounded-lg p-3 border border-purple-500/20">
+                <p className="font-medium text-purple-700 dark:text-purple-400 text-xs mb-1">
+                  🌺 Floração (Semana 1-5)
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Lollipopping (sem 3-4), Defoliação seletiva (cuidado!)
+                </p>
+              </div>
+              <div className="bg-red-500/5 rounded-lg p-3 border border-red-500/20">
+                <p className="font-medium text-red-700 dark:text-red-400 text-xs mb-1">
+                  ⚠️ Após Semana 6 de Flora
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Apenas suporte, sem manipulação para não estressar
+                </p>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 }

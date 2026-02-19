@@ -1,21 +1,83 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Heart, Upload, X, ZoomIn, Download, ChevronLeft, ChevronRight, Edit, Trash2, Camera, Image } from "lucide-react";
+import {
+  Plus,
+  Heart,
+  X,
+  ZoomIn,
+  Download,
+  ChevronLeft,
+  ChevronRight,
+  Edit,
+  Trash2,
+  Camera,
+  Image,
+  ChevronDown,
+} from "lucide-react";
 import { toast } from "sonner";
-import { processImage, blobToBase64, formatFileSize, isHEIC, processImageFile } from "@/lib/imageUtils";
+import {
+  processImage,
+  blobToBase64,
+  formatFileSize,
+  isHEIC,
+  processImageFile,
+} from "@/lib/imageUtils";
 import EditHealthLogDialog from "@/components/EditHealthLogDialog";
 
 interface PlantHealthTabProps {
   plantId: number;
 }
 
+const STATUS_OPTIONS = [
+  {
+    value: "HEALTHY",
+    label: "Saudável",
+    emoji: "🟢",
+    color: "bg-green-500/15 text-green-700 dark:text-green-400 border-green-500/30",
+    selectedColor: "bg-green-500/25 border-green-500 ring-2 ring-green-500/40",
+  },
+  {
+    value: "STRESSED",
+    label: "Estressada",
+    emoji: "🟡",
+    color: "bg-yellow-500/15 text-yellow-700 dark:text-yellow-400 border-yellow-500/30",
+    selectedColor: "bg-yellow-500/25 border-yellow-500 ring-2 ring-yellow-500/40",
+  },
+  {
+    value: "SICK",
+    label: "Doente",
+    emoji: "🔴",
+    color: "bg-red-500/15 text-red-700 dark:text-red-400 border-red-500/30",
+    selectedColor: "bg-red-500/25 border-red-500 ring-2 ring-red-500/40",
+  },
+  {
+    value: "RECOVERING",
+    label: "Recuperando",
+    emoji: "🟣",
+    color: "bg-purple-500/15 text-purple-700 dark:text-purple-400 border-purple-500/30",
+    selectedColor: "bg-purple-500/25 border-purple-500 ring-2 ring-purple-500/40",
+  },
+];
+
 export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
-  const [healthStatus, setHealthStatus] = useState<"HEALTHY" | "STRESSED" | "SICK" | "RECOVERING">("HEALTHY");
+  const [healthStatus, setHealthStatus] = useState<
+    "HEALTHY" | "STRESSED" | "SICK" | "RECOVERING"
+  >("HEALTHY");
   const [symptoms, setSymptoms] = useState("");
   const [treatment, setTreatment] = useState("");
   const [notes, setNotes] = useState("");
@@ -25,11 +87,14 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number>(0);
   const [editingLog, setEditingLog] = useState<any | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const { data: healthLogs, refetch } = trpc.plantHealth.list.useQuery({ plantId });
-  
+  const { data: healthLogs, refetch } = trpc.plantHealth.list.useQuery({
+    plantId,
+  });
+
   const utils = trpc.useUtils();
-  
+
   const createHealthLog = trpc.plantHealth.create.useMutation({
     onSuccess: () => {
       toast.success("Registro de saúde adicionado!");
@@ -38,8 +103,8 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
       setNotes("");
       setPhotoPreview(null);
       setPhotoFile(null);
+      setIsFormOpen(false);
       refetch();
-      // Invalidar lista de plantas para atualizar foto no card
       utils.plants.list.invalidate();
       utils.plants.getById.invalidate({ id: plantId });
     },
@@ -51,7 +116,6 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
   const updateHealthLog = trpc.plantHealth.update.useMutation({
     onSuccess: () => {
       toast.success("Registro atualizado!");
-      // Invalidar lista de plantas para atualizar foto no card
       utils.plants.list.invalidate();
       utils.plants.getById.invalidate({ id: plantId });
       setIsEditModalOpen(false);
@@ -79,50 +143,40 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
 
   const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     let file = e.target.files?.[0];
-    if (!file) {
-      console.log("❌ Nenhum arquivo selecionado");
-      return;
-    }
+    if (!file) return;
 
-    console.log("📸 Arquivo selecionado:", file.name, file.type, formatFileSize(file.size));
-
-    // Validação
     if (!file.type.startsWith("image/") && !isHEIC(file)) {
       toast.error("Por favor, selecione apenas imagens");
-      console.error("❌ Tipo de arquivo inválido:", file.type);
       return;
     }
 
     if (file.size > 10 * 1024 * 1024) {
       toast.error("Imagem muito grande (máx 10MB)");
-      console.error("❌ Arquivo muito grande:", formatFileSize(file.size));
       return;
     }
 
     try {
-      // Converter HEIC para JPEG se necessário
       if (isHEIC(file)) {
         toast.info("🔄 Convertendo HEIC para JPEG...");
         file = await processImageFile(file);
-        toast.success("✅ Imagem convertida com sucesso!");
+        toast.success("✅ Imagem convertida!");
       }
-      
+
       toast.info("Processando imagem...");
-      
-      // Processar imagem: comprimir e ajustar para aspect ratio iPhone (3:4)
+
       const processedBlob = await processImage(file, {
         maxWidth: 1080,
         maxHeight: 1440,
         quality: 0.85,
-        aspectRatio: 3 / 4, // iPhone aspect ratio
-        format: 'image/jpeg'
+        aspectRatio: 3 / 4,
+        format: "image/jpeg",
       });
 
-      // Converter para File
-      const processedFile = new File([processedBlob], file.name, { type: 'image/jpeg' });
+      const processedFile = new File([processedBlob], file.name, {
+        type: "image/jpeg",
+      });
       setPhotoFile(processedFile);
 
-      // Preview
       const base64 = await blobToBase64(processedBlob);
       setPhotoPreview(base64);
 
@@ -130,8 +184,8 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
       const newSize = formatFileSize(processedFile.size);
       toast.success(`Imagem otimizada: ${originalSize} → ${newSize}`);
     } catch (error) {
-      console.error('Erro ao processar imagem:', error);
-      toast.error('Erro ao processar imagem');
+      console.error("Erro ao processar imagem:", error);
+      toast.error("Erro ao processar imagem");
     }
   };
 
@@ -141,7 +195,6 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
       return;
     }
 
-    // Converter foto para base64 se existir
     if (photoFile) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -151,7 +204,7 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
           symptoms: symptoms || undefined,
           treatment: treatment || undefined,
           notes: notes || undefined,
-          photoBase64: reader.result as string, // Envia base64 para o backend fazer upload no S3
+          photoBase64: reader.result as string,
         });
       };
       reader.readAsDataURL(photoFile);
@@ -166,405 +219,476 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "HEALTHY":
-        return "bg-green-500/10 text-green-600 border-green-500/30";
-      case "STRESSED":
-        return "bg-yellow-500/10 text-yellow-600 border-yellow-500/30";
-      case "SICK":
-        return "bg-red-500/10 text-red-600 border-red-500/30";
-      case "RECOVERING":
-        return "bg-blue-500/10 text-blue-600 border-blue-500/30";
-      default:
-        return "bg-gray-500/10 text-gray-600 border-gray-500/30";
-    }
-  };
-
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case "HEALTHY":
-        return "🟢 Saudável";
-      case "STRESSED":
-        return "🟡 Estressada";
-      case "SICK":
-        return "🔴 Doente";
-      case "RECOVERING":
-        return "🟣 Recuperando";
-      default:
-        return status;
-    }
-  };
+  const getStatusOption = (status: string) =>
+    STATUS_OPTIONS.find((s) => s.value === status) || STATUS_OPTIONS[0];
 
   return (
     <div className="space-y-6">
-      {/* Add New Health Log */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Plus className="w-5 h-5" />
-            Registrar Saúde
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="healthStatus">Status de Saúde</Label>
-            <select
-              id="healthStatus"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              value={healthStatus}
-              onChange={(e) => setHealthStatus(e.target.value as any)}
-            >
-              <option value="HEALTHY">🟢 Saudável</option>
-              <option value="STRESSED">🟡 Estressada</option>
-              <option value="SICK">🔴 Doente</option>
-              <option value="RECOVERING">🟣 Recuperando</option>
-            </select>
-          </div>
-
-          {/* Photo Upload */}
-          <div className="space-y-2">
-            <Label>Foto da Planta</Label>
-            {!photoPreview ? (
-              <div className="space-y-3">
-                {/* Botão Tirar Foto (Câmera) */}
-                <label className="flex items-center justify-center gap-2 w-full h-14 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors bg-primary/5 border-primary/30">
-                  <Camera className="w-5 h-5 text-primary" />
-                  <span className="text-sm font-medium text-primary">
-                    📸 Tirar Foto
-                  </span>
-                  <input
-                    type="file"
-                    className="hidden"
-                    accept="image/*,image/jpeg,image/jpg,image/png,image/heic,image/heif"
-                    capture="environment"
-                    onChange={handlePhotoSelect}
-                  />
-                </label>
-                
-                {/* Botão Escolher Arquivo */}
-                <label className="flex items-center justify-center gap-2 w-full h-14 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
-                  <Image className="w-5 h-5 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">
-                    📁 Escolher da Galeria
-                  </span>
-                  <input
-                    type="file"
-                    className="hidden"
-                    accept="image/*,image/jpeg,image/jpg,image/png,image/heic,image/heif"
-                    onChange={handlePhotoSelect}
-                  />
-                </label>
-                
-                <p className="text-xs text-center text-muted-foreground">
-                  PNG, JPG, HEIC até 10MB
-                </p>
-              </div>
-            ) : (
-              <div className="relative">
-                        <img
-                          src={photoPreview}
-                          alt="Preview"
-                          className="w-full h-48 object-cover rounded-lg"
-                          style={{ aspectRatio: '3/4' }}
-                        />
-                <Button
-                  size="icon"
-                  variant="destructive"
-                  className="absolute top-2 right-2"
-                  onClick={() => {
-                    setPhotoPreview(null);
-                    setPhotoFile(null);
-                  }}
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="symptoms">Sintomas</Label>
-            <Textarea
-              id="symptoms"
-              placeholder="Deficiências, pragas, amarelamento, manchas..."
-              value={symptoms}
-              onChange={(e) => setSymptoms(e.target.value)}
-              rows={2}
+      {/* Collapsible Form */}
+      <Collapsible open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <CollapsibleTrigger asChild>
+          <button className="w-full flex items-center justify-between p-4 bg-card border rounded-lg hover:bg-accent/50 transition-colors">
+            <span className="flex items-center gap-2 font-medium text-sm">
+              <Plus className="w-4 h-4" />
+              Registrar Saúde
+            </span>
+            <ChevronDown
+              className={`w-4 h-4 transition-transform duration-200 ${isFormOpen ? "rotate-180" : ""}`}
             />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="treatment">Tratamento</Label>
-            <Textarea
-              id="treatment"
-              placeholder="Ações tomadas, produtos aplicados..."
-              value={treatment}
-              onChange={(e) => setTreatment(e.target.value)}
-              rows={2}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="notes">Notas Adicionais</Label>
-            <Textarea
-              id="notes"
-              placeholder="Observações gerais..."
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              rows={2}
-            />
-          </div>
-
-          <Button onClick={handleSubmit} disabled={createHealthLog.isPending}>
-            {createHealthLog.isPending ? "Salvando..." : "Registrar"}
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* Health Logs List with Accordion */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Histórico de Saúde</h3>
-        {healthLogs && healthLogs.length > 0 ? (
-          <Accordion type="multiple" className="space-y-2">
-            {healthLogs.map((log) => (
-              <AccordionItem key={log.id} value={`log-${log.id}`} className="border rounded-lg px-4">
-                <div className="flex items-center justify-between w-full py-4">
-                  <AccordionTrigger className="hover:no-underline flex-1">
-                    <div className="flex items-center gap-3">
-                      <Heart className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">
-                        {new Date(log.logDate).toLocaleString("pt-BR", {
-                          dateStyle: "short",
-                          timeStyle: "short",
-                        })}
-                      </span>
-                      <div
-                        className={`px-3 py-1 rounded-md text-sm font-medium border ${getStatusColor(log.healthStatus)}`}
-                      >
-                        {getStatusLabel(log.healthStatus)}
-                      </div>
-                    </div>
-                  </AccordionTrigger>
-                  <div className="flex gap-1">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="h-8 w-8"
-                      onClick={() => {
-                        setEditingLog(log);
-                        setIsEditModalOpen(true);
-                      }}
+          </button>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <Card className="border-t-0 rounded-t-none -mt-[1px]">
+            <CardContent className="pt-4 space-y-4">
+              {/* Status Selector - Compact Buttons */}
+              <div className="space-y-2">
+                <Label className="text-sm">Status de Saúde</Label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {STATUS_OPTIONS.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => setHealthStatus(option.value as any)}
+                      className={`flex items-center justify-center gap-1.5 px-3 py-2.5 border rounded-lg text-sm font-medium transition-all duration-200 ${
+                        healthStatus === option.value
+                          ? option.selectedColor
+                          : `${option.color} hover:scale-[1.02]`
+                      }`}
                     >
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
-                      onClick={() => {
-                        if (confirm("Deseja realmente excluir este registro?")) {
-                          deleteHealthLog.mutate({ id: log.id });
-                        }
-                      }}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
+                      <span>{option.emoji}</span>
+                      <span>{option.label}</span>
+                    </button>
+                  ))}
                 </div>
-                <AccordionContent className="pb-4">
-                  <div className="flex flex-col md:flex-row gap-4 pt-2">
-                    {/* Dados à esquerda */}
-                    <div className="flex-1 space-y-3">
-                      {log.symptoms && (
-                        <div>
-                          <p className="text-sm font-medium text-foreground">
-                            Sintomas:
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {log.symptoms}
-                          </p>
-                        </div>
-                      )}
-                      {log.treatment && (
-                        <div>
-                          <p className="text-sm font-medium text-foreground">
-                            Tratamento:
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {log.treatment}
-                          </p>
-                        </div>
-                      )}
-                      {log.notes && (
-                        <div>
-                          <p className="text-sm font-medium text-foreground">
-                            Notas:
-                          </p>
-                          <p className="text-sm text-muted-foreground">{log.notes}</p>
-                        </div>
-                      )}
-                    </div>
-                    
-                    {/* Foto à direita */}
-                    {log.photoUrl && (
-                      <div className="md:w-64 flex-shrink-0">
-                        <div 
-                          className="relative group aspect-[3/4] w-full cursor-pointer"
-                          onClick={() => {
-                            const photoLogs = healthLogs?.filter((l: any) => l.photoUrl) || [];
-                            const index = photoLogs.findIndex((l: any) => l.id === log.id);
-                            setLightboxIndex(index);
-                            setLightboxPhoto(log.photoUrl);
-                          }}
-                        >
-                          <img
-                            src={log.photoUrl}
-                            alt="Foto da planta"
-                            className="w-full h-full object-cover rounded-lg"
-                          />
-                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center pointer-events-none">
-                            <ZoomIn className="w-8 h-8 text-white" />
+              </div>
+
+              {/* Photo Upload - Compact */}
+              <div className="space-y-2">
+                <Label className="text-sm">Foto da Planta</Label>
+                {!photoPreview ? (
+                  <div className="flex gap-2">
+                    <label className="flex-1 flex items-center justify-center gap-2 h-12 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors bg-primary/5 border-primary/30">
+                      <Camera className="w-4 h-4 text-primary" />
+                      <span className="text-sm font-medium text-primary">
+                        Câmera
+                      </span>
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept="image/*,image/jpeg,image/jpg,image/png,image/heic,image/heif"
+                        capture="environment"
+                        onChange={handlePhotoSelect}
+                      />
+                    </label>
+                    <label className="flex-1 flex items-center justify-center gap-2 h-12 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+                      <Image className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">
+                        Galeria
+                      </span>
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept="image/*,image/jpeg,image/jpg,image/png,image/heic,image/heif"
+                        onChange={handlePhotoSelect}
+                      />
+                    </label>
+                  </div>
+                ) : (
+                  <div className="relative inline-block">
+                    <img
+                      src={photoPreview}
+                      alt="Preview"
+                      className="w-24 h-32 object-cover rounded-lg border"
+                    />
+                    <button
+                      type="button"
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center shadow-sm hover:scale-110 transition-transform"
+                      onClick={() => {
+                        setPhotoPreview(null);
+                        setPhotoFile(null);
+                      }}
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Text Fields - More Compact */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="symptoms" className="text-sm">
+                    Sintomas
+                  </Label>
+                  <Textarea
+                    id="symptoms"
+                    placeholder="Deficiências, pragas, manchas..."
+                    value={symptoms}
+                    onChange={(e) => setSymptoms(e.target.value)}
+                    rows={2}
+                    className="resize-none text-sm"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="treatment" className="text-sm">
+                    Tratamento
+                  </Label>
+                  <Textarea
+                    id="treatment"
+                    placeholder="Ações tomadas, produtos..."
+                    value={treatment}
+                    onChange={(e) => setTreatment(e.target.value)}
+                    rows={2}
+                    className="resize-none text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="notes" className="text-sm">
+                  Notas
+                </Label>
+                <Textarea
+                  id="notes"
+                  placeholder="Observações gerais..."
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  rows={2}
+                  className="resize-none text-sm"
+                />
+              </div>
+
+              <Button
+                onClick={handleSubmit}
+                disabled={createHealthLog.isPending}
+                className="w-full sm:w-auto"
+              >
+                {createHealthLog.isPending ? "Salvando..." : "Registrar"}
+              </Button>
+            </CardContent>
+          </Card>
+        </CollapsibleContent>
+      </Collapsible>
+
+      {/* Health Logs Timeline */}
+      <div className="space-y-3">
+        <h3 className="text-base font-semibold flex items-center gap-2">
+          <Heart className="w-4 h-4" />
+          Histórico de Saúde
+          {healthLogs && healthLogs.length > 0 && (
+            <span className="text-xs text-muted-foreground font-normal">
+              ({healthLogs.length} registro{healthLogs.length !== 1 ? "s" : ""})
+            </span>
+          )}
+        </h3>
+        {healthLogs && healthLogs.length > 0 ? (
+          <div className="space-y-2">
+            {healthLogs.map((log) => {
+              const status = getStatusOption(log.healthStatus);
+              const hasDetails = log.symptoms || log.treatment || log.notes;
+              return (
+                <div
+                  key={log.id}
+                  className="border rounded-lg bg-card overflow-hidden"
+                >
+                  {/* Main Row - Always Visible */}
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value={`log-${log.id}`} className="border-0">
+                      <div className="flex items-center gap-3 px-4 py-3">
+                        {/* Photo Thumbnail */}
+                        {log.photoUrl ? (
+                          <div
+                            className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 cursor-pointer ring-1 ring-border hover:ring-2 hover:ring-primary/50 transition-all"
+                            onClick={() => {
+                              const photoLogs =
+                                healthLogs?.filter(
+                                  (l: any) => l.photoUrl
+                                ) || [];
+                              const index = photoLogs.findIndex(
+                                (l: any) => l.id === log.id
+                              );
+                              setLightboxIndex(index);
+                              setLightboxPhoto(log.photoUrl);
+                            }}
+                          >
+                            <img
+                              src={log.photoUrl}
+                              alt=""
+                              className="w-full h-full object-cover"
+                            />
                           </div>
+                        ) : (
+                          <div className="w-12 h-12 rounded-lg bg-muted/50 flex items-center justify-center flex-shrink-0">
+                            <Heart className="w-5 h-5 text-muted-foreground/40" />
+                          </div>
+                        )}
+
+                        {/* Info */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span
+                              className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium border ${status.color}`}
+                            >
+                              {status.emoji} {status.label}
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(log.logDate).toLocaleString("pt-BR", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </span>
+                          </div>
+                          {log.symptoms && (
+                            <p className="text-xs text-muted-foreground mt-1 truncate">
+                              {log.symptoms}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          <button
+                            className="p-1.5 rounded-md hover:bg-muted transition-colors"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEditingLog(log);
+                              setIsEditModalOpen(true);
+                            }}
+                          >
+                            <Edit className="w-3.5 h-3.5 text-muted-foreground" />
+                          </button>
+                          <button
+                            className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (
+                                confirm(
+                                  "Deseja realmente excluir este registro?"
+                                )
+                              ) {
+                                deleteHealthLog.mutate({ id: log.id });
+                              }
+                            }}
+                          >
+                            <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                          </button>
+                          {(hasDetails || log.photoUrl) && (
+                            <AccordionTrigger className="p-1.5 hover:no-underline [&>svg]:w-3.5 [&>svg]:h-3.5" />
+                          )}
                         </div>
                       </div>
-                    )}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+
+                      {/* Expandable Details */}
+                      {(hasDetails || log.photoUrl) && (
+                        <AccordionContent>
+                          <div className="px-4 pb-4 pt-1 border-t">
+                            <div className="flex flex-col md:flex-row gap-4 pt-3">
+                              {/* Text Details */}
+                              {hasDetails && (
+                                <div className="flex-1 space-y-2.5">
+                                  {log.symptoms && (
+                                    <div className="bg-muted/40 rounded-lg p-3">
+                                      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                                        Sintomas
+                                      </p>
+                                      <p className="text-sm">{log.symptoms}</p>
+                                    </div>
+                                  )}
+                                  {log.treatment && (
+                                    <div className="bg-muted/40 rounded-lg p-3">
+                                      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                                        Tratamento
+                                      </p>
+                                      <p className="text-sm">
+                                        {log.treatment}
+                                      </p>
+                                    </div>
+                                  )}
+                                  {log.notes && (
+                                    <div className="bg-muted/40 rounded-lg p-3">
+                                      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                                        Notas
+                                      </p>
+                                      <p className="text-sm">{log.notes}</p>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Photo */}
+                              {log.photoUrl && (
+                                <div className="md:w-48 flex-shrink-0">
+                                  <div
+                                    className="relative group aspect-[3/4] w-full cursor-pointer rounded-lg overflow-hidden"
+                                    onClick={() => {
+                                      const photoLogs =
+                                        healthLogs?.filter(
+                                          (l: any) => l.photoUrl
+                                        ) || [];
+                                      const index = photoLogs.findIndex(
+                                        (l: any) => l.id === log.id
+                                      );
+                                      setLightboxIndex(index);
+                                      setLightboxPhoto(log.photoUrl);
+                                    }}
+                                  >
+                                    <img
+                                      src={log.photoUrl}
+                                      alt="Foto da planta"
+                                      className="w-full h-full object-cover"
+                                    />
+                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                                      <ZoomIn className="w-6 h-6 text-white" />
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </AccordionContent>
+                      )}
+                    </AccordionItem>
+                  </Accordion>
+                </div>
+              );
+            })}
+          </div>
         ) : (
           <Card>
-            <CardContent className="py-12 text-center">
-              <Heart className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">
+            <CardContent className="py-8 text-center">
+              <Heart className="w-10 h-10 mx-auto text-muted-foreground/40 mb-3" />
+              <p className="text-sm text-muted-foreground">
                 Nenhum registro de saúde ainda
               </p>
-              <p className="text-sm text-muted-foreground mt-2">
-                Adicione fotos e informações sobre a saúde da planta
+              <p className="text-xs text-muted-foreground mt-1">
+                Clique em "Registrar Saúde" para adicionar o primeiro registro
               </p>
             </CardContent>
           </Card>
         )}
       </div>
 
-      {/* Lightbox Aprimorado */}
-      {lightboxPhoto && (() => {
-        const photoLogs = healthLogs?.filter((l: any) => l.photoUrl) || [];
-        const currentLog = photoLogs[lightboxIndex];
-        const totalPhotos = photoLogs.length;
-        
-        const handlePrevious = (e: React.MouseEvent) => {
-          e.stopPropagation();
-          if (lightboxIndex > 0) {
-            setLightboxIndex(lightboxIndex - 1);
-            setLightboxPhoto(photoLogs[lightboxIndex - 1].photoUrl!);
-          }
-        };
-        
-        const handleNext = (e: React.MouseEvent) => {
-          e.stopPropagation();
-          if (lightboxIndex < totalPhotos - 1) {
-            setLightboxIndex(lightboxIndex + 1);
-            setLightboxPhoto(photoLogs[lightboxIndex + 1].photoUrl!);
-          }
-        };
-        
-        const handleDownload = async (e: React.MouseEvent) => {
-          e.stopPropagation();
-          try {
-            const response = await fetch(lightboxPhoto);
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `planta-${plantId}-saude-${currentLog?.id || Date.now()}.jpg`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-            toast.success('Foto baixada com sucesso!');
-          } catch (error) {
-            toast.error('Erro ao baixar foto');
-          }
-        };
-        
-        return (
-          <div
-            className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
-            onClick={() => setLightboxPhoto(null)}
-          >
-            <div className="relative max-w-5xl w-full h-full flex flex-col items-center justify-center">
-              {/* Imagem */}
-              <img
-                src={lightboxPhoto}
-                alt="Foto ampliada"
-                className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
-                onClick={(e) => e.stopPropagation()}
-              />
-              
-              {/* Informações */}
-              <div className="mt-4 text-center text-white" onClick={(e) => e.stopPropagation()}>
-                <p className="text-sm opacity-80">
-                  {new Date(currentLog?.logDate || Date.now()).toLocaleString('pt-BR')}
-                </p>
-                <p className="text-xs opacity-60 mt-1">
-                  Foto {lightboxIndex + 1} de {totalPhotos}
-                </p>
-              </div>
-              
-              {/* Botões de controle */}
-              <div className="absolute top-4 right-4 flex gap-2">
-                <Button
-                  size="icon"
-                  variant="secondary"
-                  className="bg-white/10 hover:bg-white/20 backdrop-blur-sm"
-                  onClick={handleDownload}
-                >
-                  <Download className="w-4 h-4 text-white" />
-                </Button>
-                <Button
-                  size="icon"
-                  variant="destructive"
-                  className="bg-red-500/80 hover:bg-red-500"
-                  onClick={() => setLightboxPhoto(null)}
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-              
-              {/* Navegação */}
-              {totalPhotos > 1 && (
-                <>
-                  {lightboxIndex > 0 && (
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-sm"
-                      onClick={handlePrevious}
-                    >
-                      <ChevronLeft className="w-6 h-6 text-white" />
-                    </Button>
-                  )}
-                  {lightboxIndex < totalPhotos - 1 && (
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-sm"
-                      onClick={handleNext}
-                    >
-                      <ChevronRight className="w-6 h-6 text-white" />
-                    </Button>
-                  )}
-                </>
-              )}
-            </div>
-          </div>
-        );
-      })()}
+      {/* Lightbox */}
+      {lightboxPhoto &&
+        (() => {
+          const photoLogs =
+            healthLogs?.filter((l: any) => l.photoUrl) || [];
+          const currentLog = photoLogs[lightboxIndex];
+          const totalPhotos = photoLogs.length;
 
-      {/* Modal de Edição */}
+          const handlePrevious = (e: React.MouseEvent) => {
+            e.stopPropagation();
+            if (lightboxIndex > 0) {
+              setLightboxIndex(lightboxIndex - 1);
+              setLightboxPhoto(photoLogs[lightboxIndex - 1].photoUrl!);
+            }
+          };
+
+          const handleNext = (e: React.MouseEvent) => {
+            e.stopPropagation();
+            if (lightboxIndex < totalPhotos - 1) {
+              setLightboxIndex(lightboxIndex + 1);
+              setLightboxPhoto(photoLogs[lightboxIndex + 1].photoUrl!);
+            }
+          };
+
+          const handleDownload = async (e: React.MouseEvent) => {
+            e.stopPropagation();
+            try {
+              const response = await fetch(lightboxPhoto);
+              const blob = await response.blob();
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = `planta-${plantId}-saude-${currentLog?.id || Date.now()}.jpg`;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              window.URL.revokeObjectURL(url);
+              toast.success("Foto baixada!");
+            } catch (error) {
+              toast.error("Erro ao baixar foto");
+            }
+          };
+
+          return (
+            <div
+              className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
+              onClick={() => setLightboxPhoto(null)}
+            >
+              <div className="relative max-w-5xl w-full h-full flex flex-col items-center justify-center">
+                <img
+                  src={lightboxPhoto}
+                  alt="Foto ampliada"
+                  className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+                  onClick={(e) => e.stopPropagation()}
+                />
+
+                <div
+                  className="mt-4 text-center text-white"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <p className="text-sm opacity-80">
+                    {new Date(
+                      currentLog?.logDate || Date.now()
+                    ).toLocaleString("pt-BR")}
+                  </p>
+                  <p className="text-xs opacity-60 mt-1">
+                    Foto {lightboxIndex + 1} de {totalPhotos}
+                  </p>
+                </div>
+
+                <div className="absolute top-4 right-4 flex gap-2">
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    className="bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                    onClick={handleDownload}
+                  >
+                    <Download className="w-4 h-4 text-white" />
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="destructive"
+                    className="bg-red-500/80 hover:bg-red-500"
+                    onClick={() => setLightboxPhoto(null)}
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+
+                {totalPhotos > 1 && (
+                  <>
+                    {lightboxIndex > 0 && (
+                      <Button
+                        size="icon"
+                        variant="secondary"
+                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                        onClick={handlePrevious}
+                      >
+                        <ChevronLeft className="w-6 h-6 text-white" />
+                      </Button>
+                    )}
+                    {lightboxIndex < totalPhotos - 1 && (
+                      <Button
+                        size="icon"
+                        variant="secondary"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                        onClick={handleNext}
+                      >
+                        <ChevronRight className="w-6 h-6 text-white" />
+                      </Button>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+          );
+        })()}
+
+      {/* Edit Modal */}
       <EditHealthLogDialog
         open={isEditModalOpen}
         onOpenChange={setIsEditModalOpen}

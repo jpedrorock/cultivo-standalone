@@ -134,3 +134,11 @@
 - [x] Corrigir lightbox/zoom nas fotos (pointer-events-none no overlay + onClick no wrapper)
 - [x] Verificar exibição da última foto no card da planta na listagem (já implementado, dependia de URL válida)
 - [x] Testar fluxo completo de upload e exibição - testado com sucesso
+
+## Redesign UX das Abas Saúde, Tricomas e LST
+
+- [x] Redesenhar aba LST - layout compacto com grid de técnicas e info expandível ao clicar
+- [x] Redesenhar aba Saúde - formulário colapsável, cards compactos com thumbnail e badges
+- [x] Redesenhar aba Tricomas - formulário colapsável, status visual com botões, barra de proporção
+- [x] Testar todas as abas redesenhadas - sem erros no console
+- [x] Corrigir bug NaN dias (germDate → createdAt)
