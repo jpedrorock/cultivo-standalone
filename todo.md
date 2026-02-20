@@ -980,7 +980,7 @@
 - [ ] Aumentar botão/slider PPFD para melhor usabilidade (bolinha muito pequena)
 - [ ] Remover zero à esquerda na calculadora de fertilização
 - [ ] Design das cores da calculadora: usar uma cor diferente por elemento (não tudo verde)
-- [ ] Melhorar visualização da página de histórico no mobile com mais de 3 estufas
+- [x] Melhorar visualização da página de histórico no mobile com mais de 3 estufas - Scroll horizontal implementado ✅
 
 ## Implementar Melhorias UX Mobile (20/02/2026)
 - [x] Traduzir "Maintenance" para "Manutenção" em todo o app (já estava traduzido em Home, adicionado em Alerts)
@@ -993,7 +993,7 @@
 - [x] Adicionar endpoint de exclusão de planta no backend (plants.delete com cascade)
 - [x] Adicionar botão de excluir no menu de ações da planta (PlantDetail)
 - [x] Adicionar toast com undo de 5 segundos antes de excluir
-- [ ] Testar exclusão de planta
+- [x] Testar exclusão de planta - Funcionando corretamente! ✅
 
 ## Corrigir Bug de Criação de Registros Diários (20/02/2026)
 - [x] Investigar por que não consegue criar registros a partir da página de histórico - Faltava botão
@@ -1017,3 +1017,9 @@
 - [x] Implementar modal de confirmação com motivo do descarte (usando prompt nativo)
 - [x] Adicionar filtro "Descartadas" na página de plantas
 - [x] Testar fluxo completo de descarte - 3 testes passando ✅
+
+## Melhorar Visualização do Histórico Mobile (20/02/2026)
+- [ ] Analisar página de histórico atual e identificar problemas com muitas estufas
+- [ ] Implementar scroll horizontal ou carrossel para seleção de estufas
+- [ ] Garantir que gráficos sejam responsivos em telas pequenas
+- [ ] Testar com mais de 3 estufas no mobile

@@ -249,7 +249,7 @@ export default function HistoryTable() {
             </Select>
           </div>
 
-          {/* Desktop: Tabs */}
+          {/* Desktop: Tabs with horizontal scroll for many tents */}
           <Tabs
             value={selectedTentId?.toString() || "all"}
             onValueChange={(value) => {
@@ -258,14 +258,16 @@ export default function HistoryTable() {
             }}
             className="hidden md:block"
           >
-            <TabsList className="grid w-full" style={{ gridTemplateColumns: `repeat(${(tents?.length || 0) + 1}, minmax(0, 1fr))` }}>
-              <TabsTrigger value="all">Todas</TabsTrigger>
-              {tents?.map((tent) => (
-                <TabsTrigger key={tent.id} value={tent.id.toString()}>
-                  {tent.name}
-                </TabsTrigger>
-              ))}
-            </TabsList>
+            <div className="relative">
+              <TabsList className="inline-flex w-auto min-w-full overflow-x-auto scrollable-tabs pb-2">
+                <TabsTrigger value="all" className="flex-shrink-0">Todas</TabsTrigger>
+                {tents?.map((tent) => (
+                  <TabsTrigger key={tent.id} value={tent.id.toString()} className="flex-shrink-0 whitespace-nowrap">
+                    {tent.name}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </div>
           </Tabs>
         </div>
 
