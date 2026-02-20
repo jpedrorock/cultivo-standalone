@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,6 +40,8 @@ export default function Home() {
   const [tentToDelete, setTentToDelete] = useState<{ id: number; name: string } | null>(null);
   const [editTentDialogOpen, setEditTentDialogOpen] = useState(false);
   const [tentToEdit, setTentToEdit] = useState<any>(null);
+  const [showMoveAllPlants, setShowMoveAllPlants] = useState(false);
+  const [targetTentId, setTargetTentId] = useState<string>("");
 
   
   const { data: tents, isLoading } = trpc.tents.list.useQuery();
@@ -48,6 +51,19 @@ export default function Home() {
     setSelectedTent({ id: tentId, name: tentName });
     setCycleModalOpen(true);
   };
+
+  const moveAllPlants = trpc.plants.moveAllPlants.useMutation({
+    onSuccess: (data) => {
+      toast.success(`✅ ${data.movedCount} planta(s) movida(s) com sucesso!`);
+      utils.plants.list.invalidate();
+      utils.tents.list.invalidate();
+      setShowMoveAllPlants(false);
+      setTargetTentId("");
+    },
+    onError: (error) => {
+      toast.error(`Erro ao mover plantas: ${error.message}`);
+    },
+  });
 
   const deleteTent = trpc.tents.delete.useMutation({
     onSuccess: () => {
@@ -64,11 +80,26 @@ export default function Home() {
     setDeleteDialogOpen(true);
   };
 
+  const handleMoveAllPlants = () => {
+    if (!tentToDelete || !targetTentId) {
+      toast.error("Selecione uma estufa de destino");
+      return;
+    }
+    
+    moveAllPlants.mutate({
+      fromTentId: tentToDelete.id,
+      toTentId: parseInt(targetTentId),
+      reason: "Movimentação antes de excluir estufa",
+    });
+  };
+
   const confirmDeleteTent = () => {
     if (tentToDelete) {
       const tent = tentToDelete;
       setDeleteDialogOpen(false);
       setTentToDelete(null);
+      setShowMoveAllPlants(false);
+      setTargetTentId("");
       
       let timeoutId: NodeJS.Timeout | null = null;
       
@@ -392,8 +423,14 @@ export default function Home() {
       />
 
       {/* Delete Tent Confirmation Dialog */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
+      <AlertDialog open={deleteDialogOpen} onOpenChange={(open) => {
+        setDeleteDialogOpen(open);
+        if (!open) {
+          setShowMoveAllPlants(false);
+          setTargetTentId("");
+        }
+      }}>
+        <AlertDialogContent className="max-w-lg">
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
             <AlertDialogDescription>
@@ -401,11 +438,69 @@ export default function Home() {
               Esta ação não pode ser desfeita e todos os dados relacionados (ciclos finalizados, registros, tarefas) serão permanentemente excluídos.
             </AlertDialogDescription>
           </AlertDialogHeader>
+          
+          {/* Move All Plants Section */}
+          {!showMoveAllPlants ? (
+            <div className="py-3">
+              <Button
+                variant="outline"
+                onClick={() => setShowMoveAllPlants(true)}
+                className="w-full"
+                disabled={deleteTent.isPending || moveAllPlants.isPending}
+              >
+                🚚 Mover Todas as Plantas Primeiro
+              </Button>
+            </div>
+          ) : (
+            <div className="py-3 space-y-3 border-t border-b">
+              <p className="text-sm font-medium">Mover plantas para:</p>
+              <Select value={targetTentId} onValueChange={setTargetTentId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a estufa de destino" />
+                </SelectTrigger>
+                <SelectContent>
+                  {tents?.filter(t => t.id !== tentToDelete?.id).map(tent => (
+                    <SelectItem key={tent.id} value={tent.id.toString()}>
+                      {tent.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowMoveAllPlants(false);
+                    setTargetTentId("");
+                  }}
+                  disabled={moveAllPlants.isPending}
+                  className="flex-1"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={handleMoveAllPlants}
+                  disabled={!targetTentId || moveAllPlants.isPending}
+                  className="flex-1"
+                >
+                  {moveAllPlants.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Movendo...
+                    </>
+                  ) : (
+                    "Mover Agora"
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
+          
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleteTent.isPending}>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleteTent.isPending || moveAllPlants.isPending}>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDeleteTent}
-              disabled={deleteTent.isPending}
+              disabled={deleteTent.isPending || moveAllPlants.isPending}
               className="bg-red-600 hover:bg-red-700"
             >
               {deleteTent.isPending ? (

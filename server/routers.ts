@@ -2023,6 +2023,47 @@ export const appRouter = router({
         return { success: true };
       }),
 
+    // Mover todas as plantas de uma estufa para outra
+    moveAllPlants: publicProcedure
+      .input(z.object({
+        fromTentId: z.number(),
+        toTentId: z.number(),
+        reason: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Buscar todas as plantas na estufa de origem
+        const plantsToMove = await database
+          .select()
+          .from(plants)
+          .where(eq(plants.currentTentId, input.fromTentId));
+        
+        if (plantsToMove.length === 0) {
+          return { success: true, movedCount: 0 };
+        }
+        
+        // Mover cada planta e registrar histórico
+        for (const plant of plantsToMove) {
+          // Registrar histórico
+          await database.insert(plantTentHistory).values({
+            plantId: plant.id,
+            fromTentId: input.fromTentId,
+            toTentId: input.toTentId,
+            reason: input.reason || "Movimentação em lote",
+          });
+          
+          // Atualizar estufa atual
+          await database
+            .update(plants)
+            .set({ currentTentId: input.toTentId })
+            .where(eq(plants.id, plant.id));
+        }
+        
+        return { success: true, movedCount: plantsToMove.length };
+      }),
+
     // Transplantar para Flora (encontra automaticamente estufa de Flora)
     transplantToFlora: publicProcedure
       .input(z.object({

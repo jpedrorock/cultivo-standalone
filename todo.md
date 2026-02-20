@@ -1113,3 +1113,10 @@
 - [x] Investigar erro "Failed query: delete from tents where tents.id = ?" ao tentar excluir estufa - Foreign key constraint com plants.currentTentId ✅
 - [x] Adicionar validação de dependências (verificar se há ciclos/plantas/registros antes de excluir) - Validado plantas antes de excluir ✅
 - [x] Adicionar mensagem de erro clara para o usuário - "Não é possível excluir uma estufa com X planta(s)" ✅
+
+## Feature: Botão "Mover Todas as Plantas" no Modal de Exclusão (20/02/2026)
+- [x] Adicionar botão "Mover Todas as Plantas" no modal de confirmação de exclusão de estufa ✅
+- [x] Criar procedure backend para mover múltiplas plantas de uma vez - plants.moveAllPlants ✅
+- [x] Mostrar seletor de estufa de destino no modal - Select com lista de estufas ✅
+- [x] Atualizar todas as plantas e histórico de movimentação - Loop com insert em plantTentHistory ✅
+- [x] Testar fluxo completo: mover plantas → excluir estufa - Teste unitário passando ✅
