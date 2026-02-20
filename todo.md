@@ -903,3 +903,8 @@
 - [x] Remover max-w-7xl mx-auto do header para ocupar largura completa
 - [x] Testar em desktop (1280px) - cards agora com ~360px ao invés de ~330px
 - [ ] Testar em mobile real (300px-640px)
+
+## PROBLEMA CRÍTICO - Margem negativa não funciona em todas resoluções
+- [x] Reverter margem negativa (-mx-4 sm:-mx-4) que causa cards estreitos em 640px e 1024px
+- [x] Implementar solução correta: padding responsivo (px-4 sm:px-6 lg:px-8) + xl breakpoint para 3 colunas
+- [x] Validar em 360px, 640px, 1024px, 1280px - TODOS ✅

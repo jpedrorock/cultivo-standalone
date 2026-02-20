@@ -47,10 +47,10 @@ const calculators = [
 
 export default function CalculatorMenu() {
   return (
-    <div className="min-h-screen w-full -mx-4 sm:-mx-4">
+    <div className="min-h-screen w-full px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6 md:p-8">
-        <div>
+        <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
               <Gauge className="w-6 h-6 md:w-8 md:h-8" />
@@ -65,7 +65,7 @@ export default function CalculatorMenu() {
 
       {/* Grid de Calculadoras */}
       <div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 max-w-7xl mx-auto">
           {calculators.map((calc) => {
             const Icon = calc.icon;
             return (
