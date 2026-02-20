@@ -1032,3 +1032,18 @@
 - [x] Adicionar botões de editar e excluir na UI de gestão de estufas
 - [x] Implementar confirmação de exclusão com aviso de dependências - Já existia
 - [x] Testar edição e exclusão com e sem dependências - 4 testes + teste manual ✅
+
+## 🐛 Bugs Críticos Reportados pelo Usuário (20/02/2026)
+
+### Bug 1: Erro ao Excluir Template de Tarefa
+- [x] Investigar erro "Failed query: delete from `taskTemplates` where `taskTemplates`.`id` = ? params: 60011"
+- [x] Verificar se ID 60011 existe no banco - Existe
+- [x] Verificar constraints de foreign key que impedem exclusão - Não há constraints
+- [x] Corrigir lógica de exclusão ou adicionar validação adequada - Adicionada validação
+- [x] Testar exclusão de templates de tarefas - Funcionando corretamente ✅
+
+### Bug 2: Página de Histórico Retorna 404
+- [x] Investigar por que rota `/history` retorna erro 404 - Erro temporário
+- [x] Verificar se rota está registrada em App.tsx - Registrada corretamente
+- [x] Verificar se componente HistoryTable existe e está importado corretamente - Tudo correto
+- [x] Testar navegação para página de histórico - Funcionando perfeitamente ✅

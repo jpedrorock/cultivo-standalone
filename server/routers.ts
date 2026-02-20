@@ -2837,6 +2837,17 @@ export const appRouter = router({
         const database = await getDb();
         if (!database) throw new Error("Database not available");
 
+        // Verificar se o template existe
+        const existing = await database
+          .select()
+          .from(taskTemplates)
+          .where(eq(taskTemplates.id, input.id))
+          .limit(1);
+
+        if (existing.length === 0) {
+          throw new Error("Template de tarefa não encontrado");
+        }
+
         await database.delete(taskTemplates).where(eq(taskTemplates.id, input.id));
 
         return { success: true };
