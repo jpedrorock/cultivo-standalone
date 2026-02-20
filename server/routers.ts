@@ -191,6 +191,13 @@ export const appRouter = router({
         if (!database) {
           throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
         }
+        
+        // Check if strain name already exists
+        const existing = await database.select().from(strains).where(eq(strains.name, input.name));
+        if (existing.length > 0) {
+          throw new Error(`Já existe uma strain com o nome "${input.name}". Por favor, escolha outro nome.`);
+        }
+        
         await database.insert(strains).values(input);
         return { success: true };
       }),
@@ -221,6 +228,19 @@ export const appRouter = router({
         if (!database) {
           throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
         }
+        
+        // Check if strain is used in any cycles
+        const cyclesWithStrain = await database.select().from(cycles).where(eq(cycles.strainId, input.id));
+        if (cyclesWithStrain.length > 0) {
+          throw new Error("Não é possível excluir esta strain pois ela está vinculada a ciclos existentes. Finalize ou exclua os ciclos primeiro.");
+        }
+        
+        // Check if strain is used in any plants
+        const plantsWithStrain = await database.select().from(plants).where(eq(plants.strainId, input.id));
+        if (plantsWithStrain.length > 0) {
+          throw new Error("Não é possível excluir esta strain pois ela está vinculada a plantas existentes. Remova as plantas primeiro.");
+        }
+        
         await database.delete(strains).where(eq(strains.id, input.id));
         return { success: true };
       }),
@@ -1645,6 +1665,16 @@ export const appRouter = router({
           .where(eq(taskInstances.id, input.taskId));
         
         return { success: true, isDone: newIsDone };
+      }),
+    delete: publicProcedure
+      .input(z.object({ taskId: z.number() }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
+        await database.delete(taskInstances).where(eq(taskInstances.id, input.taskId));
+        return { success: true };
       }),
   }),
 

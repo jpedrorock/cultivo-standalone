@@ -600,19 +600,17 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
             }
           };
 
-          const handleDownload = async (e: React.MouseEvent) => {
+          const handleDownload = (e: React.MouseEvent) => {
             e.stopPropagation();
             try {
-              const response = await fetch(lightboxPhoto);
-              const blob = await response.blob();
-              const url = window.URL.createObjectURL(blob);
               const a = document.createElement("a");
-              a.href = url;
+              a.href = lightboxPhoto;
               a.download = `planta-${plantId}-saude-${currentLog?.id || Date.now()}.jpg`;
+              a.target = "_blank";
+              a.rel = "noopener noreferrer";
               document.body.appendChild(a);
               a.click();
               document.body.removeChild(a);
-              window.URL.revokeObjectURL(url);
               toast.success("Foto baixada!");
             } catch (error) {
               toast.error("Erro ao baixar foto");

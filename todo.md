@@ -958,3 +958,26 @@
 ## Adicionar Breadcrumb Navigation (20/02/2026)
 - [x] Criar componente Breadcrumb reutilizável
 - [x] Adicionar breadcrumb na página de Nutrientes/Fertilização (Home > Calculadoras > Fertilização)
+
+## Bugs e Melhorias Reportados - Teste de Usuário (20/02/2026)
+
+### Bugs Críticos
+- [x] Botão de download não funciona nas imagens de planta e tricoma - Corrigido CORS (link direto)
+- [x] Adicionar nova tarefa - Sistema cria automaticamente via templates (funcionando corretamente)
+- [ ] Registros diários não funcionam na página de histórico - Precisa mais detalhes do usuário
+- [x] Não é possível excluir strain - Adicionada validação de dependências (ciclos/plantas)
+- [x] Erro ao criar strains - Adicionada validação de nome duplicado
+
+### Funcionalidades Faltando
+- [ ] Opção de excluir planta (além de marcar como colhida)
+- [ ] Opção de retirar planta caso fique doente (sem ser colheita normal)
+- [x] Poder excluir tarefas - Botão de lixeira adicionado em cada tarefa
+
+### Melhorias de UX/Design
+- [ ] Traduzir "Maintenance" para português (verificar outras traduções faltando)
+- [ ] Faltando cor roxa em tricomas
+- [ ] Mobile: porcentagem não aparece em tricomas - verificar design
+- [ ] Aumentar botão/bolinha do slider PPFD para melhor usabilidade (muito pequeno)
+- [ ] Remover zero à esquerda na calculadora de fertilização
+- [ ] Design das cores da calculadora: usar uma cor diferente por elemento (não tudo verde)
+- [ ] Melhorar visualização da página de histórico no mobile com mais de 3 estufas

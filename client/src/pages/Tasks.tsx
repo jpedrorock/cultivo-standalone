@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, CheckCircle2, Circle, Sprout, Filter } from "lucide-react";
+import { Loader2, CheckCircle2, Circle, Sprout, Filter, Trash2 } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { TaskTemplatesManager } from "@/components/TaskTemplatesManager";
@@ -24,6 +24,16 @@ export default function Tasks() {
     },
     onError: (error) => {
       toast.error(`Erro ao marcar tarefa: ${error.message}`);
+    },
+  });
+
+  const deleteTask = trpc.tasks.delete.useMutation({
+    onSuccess: () => {
+      utils.tasks.getCurrentWeekTasks.invalidate();
+      toast.success("Tarefa excluída!");
+    },
+    onError: (error) => {
+      toast.error(`Erro ao excluir tarefa: ${error.message}`);
     },
   });
 
@@ -267,6 +277,20 @@ export default function Tasks() {
                               </p>
                             )}
                           </div>
+                          {task.id > 0 && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => {
+                                if (confirm("Tem certeza que deseja excluir esta tarefa?")) {
+                                  deleteTask.mutate({ taskId: task.id });
+                                }
+                              }}
+                              className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          )}
                         </div>
                       ))}
                     </div>
