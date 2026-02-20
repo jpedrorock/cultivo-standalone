@@ -221,24 +221,57 @@ export default function HistoryTable() {
 
       {/* Content */}
       <main className="container mx-auto px-4 py-8 space-y-8" id="history-table-container">
-        {/* Tabs por Estufa */}
-        <Tabs
-          value={selectedTentId?.toString() || "all"}
-          onValueChange={(value) => {
-            setSelectedTentId(value === "all" ? undefined : parseInt(value));
-            setOffset(0);
-          }}
-        >
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="all">Todas</TabsTrigger>
-            {tents?.map((tent) => (
-              <TabsTrigger key={tent.id} value={tent.id.toString()}>
-                {tent.name}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+        {/* Tent Selector - Responsive: Dropdown on mobile, Tabs on desktop */}
+        <div className="space-y-4">
+          {/* Mobile: Dropdown */}
+          <div className="md:hidden">
+            <Label htmlFor="tent-select-mobile" className="text-sm font-medium mb-2 block">
+              Selecionar Estufa
+            </Label>
+            <Select
+              value={selectedTentId?.toString() || "all"}
+              onValueChange={(value) => {
+                setSelectedTentId(value === "all" ? undefined : parseInt(value));
+                setOffset(0);
+              }}
+            >
+              <SelectTrigger id="tent-select-mobile" className="w-full">
+                <SelectValue placeholder="Selecione uma estufa" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas as Estufas</SelectItem>
+                {tents?.map((tent) => (
+                  <SelectItem key={tent.id} value={tent.id.toString()}>
+                    {tent.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-          <TabsContent value={selectedTentId?.toString() || "all"} className="space-y-8 mt-6">
+          {/* Desktop: Tabs */}
+          <Tabs
+            value={selectedTentId?.toString() || "all"}
+            onValueChange={(value) => {
+              setSelectedTentId(value === "all" ? undefined : parseInt(value));
+              setOffset(0);
+            }}
+            className="hidden md:block"
+          >
+            <TabsList className="grid w-full" style={{ gridTemplateColumns: `repeat(${(tents?.length || 0) + 1}, minmax(0, 1fr))` }}>
+              <TabsTrigger value="all">Todas</TabsTrigger>
+              {tents?.map((tent) => (
+                <TabsTrigger key={tent.id} value={tent.id.toString()}>
+                  {tent.name}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        </div>
+
+        <Tabs value={selectedTentId?.toString() || "all"}>
+
+          <TabsContent value={selectedTentId?.toString() || "all"} className="space-y-8">
             {/* Analytics Charts - Always visible when tent is selected */}
             {selectedTentId && logsData?.logs && logsData.logs.length > 0 && (
               <AnalyticsCharts logs={logsData.logs} />

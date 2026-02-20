@@ -998,3 +998,7 @@
 ## Corrigir Bug de Criação de Registros Diários (20/02/2026)
 - [x] Investigar por que não consegue criar registros a partir da página de histórico - Faltava botão
 - [x] Adicionar botão "Novo Registro" que redireciona para /tent-log
+
+## Otimizar Histórico Mobile com +3 Estufas (20/02/2026)
+- [x] Implementar dropdown responsivo para seleção de estufa (mobile: dropdown, desktop: tabs)
+- [x] Tabs desktop agora usam grid dinâmico para acomodar qualquer número de estufas
