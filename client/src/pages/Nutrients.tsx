@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast as showToast } from "sonner";
-import { Beaker, Download, Loader2 } from "lucide-react";
+import { Beaker, Download, Loader2, ArrowLeft } from "lucide-react";
 
 type Phase = "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE" | "DRYING";
 
@@ -242,6 +242,15 @@ export default function Nutrients() {
   
   return (
     <div className="container py-6 max-w-5xl">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => window.history.back()}
+        className="mb-4"
+      >
+        <ArrowLeft className="w-4 h-4 mr-2" />
+        Voltar
+      </Button>
       <div className="flex items-center gap-3 mb-6">
         <Beaker className="w-8 h-8 text-green-600" />
         <div>

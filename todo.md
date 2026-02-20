@@ -951,3 +951,6 @@
 - [x] Corrigir testes de cycles - criar tent e strain com nomes únicos (timestamp)
 - [x] Corrigir teste de plantHealth - buscar strain após criação para obter ID
 - [x] Todos os 80 testes passando com sucesso! 🎉
+
+## Adicionar botão de voltar (20/02/2026)
+- [x] Adicionar botão de voltar na página de Nutrientes/Fertilização
