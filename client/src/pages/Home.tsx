@@ -24,6 +24,9 @@ import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCi
 import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
+import { PullToRefreshIndicator } from "@/components/PullToRefreshIndicator";
+import { useIsMobile } from "@/hooks/useMobile";
 
 
 export default function Home() {
@@ -40,6 +43,20 @@ export default function Home() {
   
   const { data: tents, isLoading } = trpc.tents.list.useQuery();
   const { data: activeCycles } = trpc.cycles.listActive.useQuery();
+  const utils = trpc.useUtils();
+  const isMobile = useIsMobile();
+
+  // Pull to refresh
+  const { isRefreshing, pullDistance, isPulling, isReadyToRefresh } = usePullToRefresh({
+    onRefresh: async () => {
+      await Promise.all([
+        utils.tents.list.invalidate(),
+        utils.cycles.listActive.invalidate(),
+      ]);
+      toast.success('Dados atualizados!');
+    },
+    enabled: isMobile,
+  });
 
   const handleStartCycle = (tentId: number, tentName: string) => {
     setSelectedTent({ id: tentId, name: tentName });
@@ -69,7 +86,6 @@ export default function Home() {
     }
   };
 
-  const utils = trpc.useUtils();
   const startFlora = trpc.cycles.startFlora.useMutation({
     onSuccess: () => {
       utils.cycles.listActive.invalidate();
@@ -212,7 +228,13 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
+      <PullToRefreshIndicator
+        pullDistance={pullDistance}
+        isRefreshing={isRefreshing}
+        isReadyToRefresh={isReadyToRefresh}
+      />
+      <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
         <div className="container py-6">
@@ -374,6 +396,7 @@ export default function Home() {
         </AlertDialogContent>
       </AlertDialog>
     </div>
+    </>
   );
 }
 

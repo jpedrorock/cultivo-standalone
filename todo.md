@@ -888,3 +888,10 @@
 - [x] Verificar se DashboardLayout adiciona padding (ENCONTRADO: p-4 no main)
 - [x] Implementar solução definitiva (px-0 no mobile no DashboardLayout main)
 - [ ] Testar em mobile real
+
+## Pull-to-Refresh Mobile
+
+- [x] Criar hook customizado usePullToRefresh
+- [x] Implementar pull-to-refresh na Home
+- [x] Implementar pull-to-refresh em Plantas (pronto para expandir)
+- [x] Testar funcionalidade em mobile
