@@ -158,10 +158,9 @@ export const appRouter = router({
         if (!database) {
           throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
         }
-        
-        // Verificar se há ciclos ativos nesta estufa
+             // Verificar se há ciclos ativos
         const activeCycles = await database
-          .select()
+          .select({ id: cycles.id })
           .from(cycles)
           .where(and(
             eq(cycles.tentId, input.id),
@@ -170,6 +169,16 @@ export const appRouter = router({
         
         if (activeCycles.length > 0) {
           throw new Error("Não é possível excluir uma estufa com ciclos ativos. Finalize o ciclo primeiro.");
+        }
+        
+        // Verificar se há plantas na estufa
+        const plantsInTent = await database
+          .select({ id: plants.id })
+          .from(plants)
+          .where(eq(plants.currentTentId, input.id));
+        
+        if (plantsInTent.length > 0) {
+          throw new Error(`Não é possível excluir uma estufa com ${plantsInTent.length} planta(s). Mova ou finalize as plantas primeiro.`);
         }
         
         // Buscar todos os ciclos da estufa (ativos e finalizados)

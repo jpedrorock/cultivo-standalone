@@ -1107,4 +1107,9 @@
 - [x] Criar estrutura de diretórios (uploads/plants, uploads/health, uploads/trichomes) ✅
 - [x] Adicionar .gitkeep para preservar diretórios vazios no git ✅
 - [x] Atualizar documentação (INSTALACAO.md) com instruções de BASE_URL ✅
-- [ ] Criar novo pacote ZIP standalone com storage local
+- [x] Criar novo pacote ZIP standalone com storage local - app-cultivo-standalone-v2.zip (28KB) ✅
+
+## Bug: Erro ao Excluir Estufa (20/02/2026)
+- [x] Investigar erro "Failed query: delete from tents where tents.id = ?" ao tentar excluir estufa - Foreign key constraint com plants.currentTentId ✅
+- [x] Adicionar validação de dependências (verificar se há ciclos/plantas/registros antes de excluir) - Validado plantas antes de excluir ✅
+- [x] Adicionar mensagem de erro clara para o usuário - "Não é possível excluir uma estufa com X planta(s)" ✅

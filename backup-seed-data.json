@@ -1,7 +1,7 @@
 {
   "json": {
     "version": "1.0",
-    "exportDate": "2026-02-20T20:59:32.680Z",
+    "exportDate": "2026-02-20T21:10:49.888Z",
     "data": {
       "tents": [
         {
@@ -39,6 +39,198 @@
           "powerW": 600,
           "createdAt": "2026-02-20T19:52:50.000Z",
           "updatedAt": "2026-02-20T19:52:50.000Z"
+        },
+        {
+          "id": 330001,
+          "name": "Test Tent C",
+          "category": "FLORA",
+          "width": 120,
+          "depth": 120,
+          "height": 200,
+          "volume": "2880.000",
+          "powerW": null,
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 330002,
+          "name": "Test Tent Health",
+          "category": "VEGA",
+          "width": 120,
+          "depth": 120,
+          "height": 200,
+          "volume": "2880.000",
+          "powerW": null,
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 330003,
+          "name": "Test Tent 1771621514941",
+          "category": "VEGA",
+          "width": 60,
+          "depth": 60,
+          "height": 120,
+          "volume": "432.000",
+          "powerW": 240,
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 330004,
+          "name": "Test Tent 1771621515261",
+          "category": "FLORA",
+          "width": 60,
+          "depth": 120,
+          "height": 150,
+          "volume": "1080.000",
+          "powerW": 320,
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 330005,
+          "name": "Test Tent B",
+          "category": "FLORA",
+          "width": 120,
+          "depth": 120,
+          "height": 200,
+          "volume": "2880.000",
+          "powerW": null,
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 330006,
+          "name": "Test Tent A",
+          "category": "VEGA",
+          "width": 120,
+          "depth": 120,
+          "height": 200,
+          "volume": "2880.000",
+          "powerW": null,
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 330007,
+          "name": "Test Tent 1771621515379",
+          "category": "VEGA",
+          "width": 100,
+          "depth": 100,
+          "height": 200,
+          "volume": "2000.000",
+          "powerW": null,
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 330008,
+          "name": "Filter Test Tent 1771621515416",
+          "category": "VEGA",
+          "width": 60,
+          "depth": 60,
+          "height": 120,
+          "volume": "432.000",
+          "powerW": 240,
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 330009,
+          "name": "Test Tent Flora",
+          "category": "VEGA",
+          "width": 120,
+          "depth": 120,
+          "height": 200,
+          "volume": "2880.000",
+          "powerW": null,
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 330010,
+          "name": "Test Tent",
+          "category": "VEGA",
+          "width": 120,
+          "depth": 120,
+          "height": 200,
+          "volume": "2880.000",
+          "powerW": null,
+          "createdAt": "2026-02-20T21:05:16.000Z",
+          "updatedAt": "2026-02-20T21:05:16.000Z"
+        },
+        {
+          "id": 330011,
+          "name": "Updated Tent Name",
+          "category": "FLORA",
+          "width": 150,
+          "depth": 150,
+          "height": 220,
+          "volume": "4950.000",
+          "powerW": 800,
+          "createdAt": "2026-02-20T21:05:16.000Z",
+          "updatedAt": "2026-02-20T21:05:16.000Z"
+        },
+        {
+          "id": 330013,
+          "name": "Tent Without Power",
+          "category": "DRYING",
+          "width": 100,
+          "depth": 100,
+          "height": 180,
+          "volume": "1800.000",
+          "powerW": null,
+          "createdAt": "2026-02-20T21:05:16.000Z",
+          "updatedAt": "2026-02-20T21:05:16.000Z"
+        },
+        {
+          "id": 330014,
+          "name": "Test Tent",
+          "category": "VEGA",
+          "width": 120,
+          "depth": 120,
+          "height": 200,
+          "volume": "2880.000",
+          "powerW": null,
+          "createdAt": "2026-02-20T21:05:16.000Z",
+          "updatedAt": "2026-02-20T21:05:16.000Z"
+        },
+        {
+          "id": 330015,
+          "name": "Test Tent for Update",
+          "category": "VEGA",
+          "width": 120,
+          "depth": 120,
+          "height": 200,
+          "volume": "2880.000",
+          "powerW": 600,
+          "createdAt": "2026-02-20T21:05:16.000Z",
+          "updatedAt": "2026-02-20T21:05:16.000Z"
+        },
+        {
+          "id": 330016,
+          "name": "Test Tent",
+          "category": "VEGA",
+          "width": 120,
+          "depth": 120,
+          "height": 200,
+          "volume": "2880.000",
+          "powerW": null,
+          "createdAt": "2026-02-20T21:05:16.000Z",
+          "updatedAt": "2026-02-20T21:05:16.000Z"
+        },
+        {
+          "id": 330017,
+          "name": "Test Tent for Update",
+          "category": "VEGA",
+          "width": 120,
+          "depth": 120,
+          "height": 200,
+          "volume": "2880.000",
+          "powerW": 600,
+          "createdAt": "2026-02-20T21:05:16.000Z",
+          "updatedAt": "2026-02-20T21:05:16.000Z"
         }
       ],
       "strains": [
@@ -55,12 +247,82 @@
         {
           "id": 270008,
           "name": "Blue Dream",
-          "description": "Sativa equilibrada para uso diurno",
-          "vegaWeeks": 4,
+          "description": "Updated description",
+          "vegaWeeks": 5,
           "floraWeeks": 9,
           "isActive": true,
           "createdAt": "2026-02-20T19:52:49.000Z",
-          "updatedAt": "2026-02-20T19:52:49.000Z"
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 300001,
+          "name": "Test Strain Health 1771621515172",
+          "description": null,
+          "vegaWeeks": 4,
+          "floraWeeks": 8,
+          "isActive": true,
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 300003,
+          "name": "Test Strain 1771621515172",
+          "description": null,
+          "vegaWeeks": 4,
+          "floraWeeks": 8,
+          "isActive": true,
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 300004,
+          "name": "Test Strain 1771621515190",
+          "description": "Test description",
+          "vegaWeeks": 4,
+          "floraWeeks": 8,
+          "isActive": true,
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 300005,
+          "name": "Test Strain 1771621515279",
+          "description": "Test strain",
+          "vegaWeeks": 4,
+          "floraWeeks": 8,
+          "isActive": true,
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 300007,
+          "name": "Test Strain B 1771621515319",
+          "description": null,
+          "vegaWeeks": 4,
+          "floraWeeks": 8,
+          "isActive": true,
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 300008,
+          "name": "Test Strain Flora 1771621515438",
+          "description": null,
+          "vegaWeeks": 4,
+          "floraWeeks": 8,
+          "isActive": true,
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 300009,
+          "name": "Filter Test Strain 1771621515439",
+          "description": "Test",
+          "vegaWeeks": 4,
+          "floraWeeks": 8,
+          "isActive": true,
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
         }
       ],
       "cycles": [
@@ -163,6 +425,36 @@
           "status": "ACTIVE",
           "createdAt": "2026-02-20T20:10:54.000Z",
           "updatedAt": "2026-02-20T20:10:54.000Z"
+        },
+        {
+          "id": 240001,
+          "tentId": 330001,
+          "strainId": null,
+          "startDate": "2026-02-20T21:05:15.000Z",
+          "floraStartDate": null,
+          "status": "ACTIVE",
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 240002,
+          "tentId": 330005,
+          "strainId": null,
+          "startDate": "2026-02-20T21:05:15.000Z",
+          "floraStartDate": null,
+          "status": "ACTIVE",
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 240003,
+          "tentId": 330009,
+          "strainId": null,
+          "startDate": "2026-02-20T21:05:15.000Z",
+          "floraStartDate": "2026-02-20T21:05:15.000Z",
+          "status": "ACTIVE",
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
         }
       ],
       "plants": [
@@ -429,6 +721,39 @@
           "notes": null,
           "createdAt": "2026-02-20T20:10:54.000Z",
           "updatedAt": "2026-02-20T20:10:54.000Z"
+        },
+        {
+          "id": 240001,
+          "name": "Test Plant Health",
+          "code": "TPH-001",
+          "strainId": 300001,
+          "currentTentId": 330002,
+          "status": "ACTIVE",
+          "notes": "Test plant for health operations",
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 240002,
+          "name": "Test Plant No Reason",
+          "code": null,
+          "strainId": 300005,
+          "currentTentId": 330004,
+          "status": "DISCARDED",
+          "notes": "Descartada",
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 240003,
+          "name": "Plant to Filter",
+          "code": null,
+          "strainId": 300009,
+          "currentTentId": 330008,
+          "status": "DISCARDED",
+          "notes": "Descartada: Test filter",
+          "createdAt": "2026-02-20T21:05:15.000Z",
+          "updatedAt": "2026-02-20T21:05:15.000Z"
         }
       ],
       "dailyLogs": [
@@ -2615,6 +2940,19 @@
           "ec": null,
           "notes": null,
           "createdAt": "2026-02-20T20:10:55.000Z"
+        },
+        {
+          "id": 180001,
+          "tentId": 330010,
+          "logDate": "2026-02-20T21:05:17.000Z",
+          "turn": "AM",
+          "tempC": "23.5",
+          "rhPct": "62.0",
+          "ppfd": 380,
+          "ph": null,
+          "ec": null,
+          "notes": "Test log entry",
+          "createdAt": "2026-02-20T21:05:16.000Z"
         }
       ],
       "taskTemplates": [
@@ -3954,11 +4292,82 @@
           "photoUrl": null,
           "photoKey": null,
           "createdAt": "2026-02-20T20:10:56.000Z"
+        },
+        {
+          "id": 240002,
+          "plantId": 240001,
+          "logDate": "2026-02-20T21:05:15.000Z",
+          "healthStatus": "HEALTHY",
+          "symptoms": "Log 1",
+          "treatment": null,
+          "notes": null,
+          "photoUrl": null,
+          "photoKey": null,
+          "createdAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 240003,
+          "plantId": 240001,
+          "logDate": "2026-02-20T21:05:15.000Z",
+          "healthStatus": "STRESSED",
+          "symptoms": "Log 2",
+          "treatment": null,
+          "notes": null,
+          "photoUrl": null,
+          "photoKey": null,
+          "createdAt": "2026-02-20T21:05:15.000Z"
+        },
+        {
+          "id": 240004,
+          "plantId": 240001,
+          "logDate": "2026-02-20T21:05:15.000Z",
+          "healthStatus": "SICK",
+          "symptoms": "Log 3",
+          "treatment": null,
+          "notes": null,
+          "photoUrl": null,
+          "photoKey": null,
+          "createdAt": "2026-02-20T21:05:15.000Z"
         }
       ],
       "recipeTemplates": [],
       "nutrientApplications": [],
-      "wateringApplications": []
+      "wateringApplications": [
+        {
+          "id": 90001,
+          "tentId": 180001,
+          "cycleId": null,
+          "applicationDate": "2026-02-20T21:05:17.000Z",
+          "recipeName": "Teste Rega 19/02",
+          "potSizeL": "11.00",
+          "numberOfPots": 4,
+          "waterPerPotL": "4.36",
+          "totalWaterL": "17.42",
+          "targetRunoffPercent": "20.0",
+          "expectedRunoffL": "3.48",
+          "actualRunoffL": "3.50",
+          "actualRunoffPercent": "20.1",
+          "notes": "Teste de salvamento de receita de rega",
+          "createdAt": "2026-02-20T21:05:17.000Z"
+        },
+        {
+          "id": 90002,
+          "tentId": 180002,
+          "cycleId": null,
+          "applicationDate": "2026-02-20T21:05:17.000Z",
+          "recipeName": "Rega Simples",
+          "potSizeL": "5.00",
+          "numberOfPots": 3,
+          "waterPerPotL": "1.65",
+          "totalWaterL": "4.95",
+          "targetRunoffPercent": null,
+          "expectedRunoffL": null,
+          "actualRunoffL": null,
+          "actualRunoffPercent": null,
+          "notes": null,
+          "createdAt": "2026-02-20T21:05:17.000Z"
+        }
+      ]
     }
   },
   "meta": {
@@ -3981,6 +4390,102 @@
       "data.tents.2.updatedAt": [
         "Date"
       ],
+      "data.tents.3.createdAt": [
+        "Date"
+      ],
+      "data.tents.3.updatedAt": [
+        "Date"
+      ],
+      "data.tents.4.createdAt": [
+        "Date"
+      ],
+      "data.tents.4.updatedAt": [
+        "Date"
+      ],
+      "data.tents.5.createdAt": [
+        "Date"
+      ],
+      "data.tents.5.updatedAt": [
+        "Date"
+      ],
+      "data.tents.6.createdAt": [
+        "Date"
+      ],
+      "data.tents.6.updatedAt": [
+        "Date"
+      ],
+      "data.tents.7.createdAt": [
+        "Date"
+      ],
+      "data.tents.7.updatedAt": [
+        "Date"
+      ],
+      "data.tents.8.createdAt": [
+        "Date"
+      ],
+      "data.tents.8.updatedAt": [
+        "Date"
+      ],
+      "data.tents.9.createdAt": [
+        "Date"
+      ],
+      "data.tents.9.updatedAt": [
+        "Date"
+      ],
+      "data.tents.10.createdAt": [
+        "Date"
+      ],
+      "data.tents.10.updatedAt": [
+        "Date"
+      ],
+      "data.tents.11.createdAt": [
+        "Date"
+      ],
+      "data.tents.11.updatedAt": [
+        "Date"
+      ],
+      "data.tents.12.createdAt": [
+        "Date"
+      ],
+      "data.tents.12.updatedAt": [
+        "Date"
+      ],
+      "data.tents.13.createdAt": [
+        "Date"
+      ],
+      "data.tents.13.updatedAt": [
+        "Date"
+      ],
+      "data.tents.14.createdAt": [
+        "Date"
+      ],
+      "data.tents.14.updatedAt": [
+        "Date"
+      ],
+      "data.tents.15.createdAt": [
+        "Date"
+      ],
+      "data.tents.15.updatedAt": [
+        "Date"
+      ],
+      "data.tents.16.createdAt": [
+        "Date"
+      ],
+      "data.tents.16.updatedAt": [
+        "Date"
+      ],
+      "data.tents.17.createdAt": [
+        "Date"
+      ],
+      "data.tents.17.updatedAt": [
+        "Date"
+      ],
+      "data.tents.18.createdAt": [
+        "Date"
+      ],
+      "data.tents.18.updatedAt": [
+        "Date"
+      ],
       "data.strains.0.createdAt": [
         "Date"
       ],
@@ -3991,6 +4496,48 @@
         "Date"
       ],
       "data.strains.1.updatedAt": [
+        "Date"
+      ],
+      "data.strains.2.createdAt": [
+        "Date"
+      ],
+      "data.strains.2.updatedAt": [
+        "Date"
+      ],
+      "data.strains.3.createdAt": [
+        "Date"
+      ],
+      "data.strains.3.updatedAt": [
+        "Date"
+      ],
+      "data.strains.4.createdAt": [
+        "Date"
+      ],
+      "data.strains.4.updatedAt": [
+        "Date"
+      ],
+      "data.strains.5.createdAt": [
+        "Date"
+      ],
+      "data.strains.5.updatedAt": [
+        "Date"
+      ],
+      "data.strains.6.createdAt": [
+        "Date"
+      ],
+      "data.strains.6.updatedAt": [
+        "Date"
+      ],
+      "data.strains.7.createdAt": [
+        "Date"
+      ],
+      "data.strains.7.updatedAt": [
+        "Date"
+      ],
+      "data.strains.8.createdAt": [
+        "Date"
+      ],
+      "data.strains.8.updatedAt": [
         "Date"
       ],
       "data.cycles.0.startDate": [
@@ -4096,6 +4643,36 @@
         "Date"
       ],
       "data.cycles.9.updatedAt": [
+        "Date"
+      ],
+      "data.cycles.10.startDate": [
+        "Date"
+      ],
+      "data.cycles.10.createdAt": [
+        "Date"
+      ],
+      "data.cycles.10.updatedAt": [
+        "Date"
+      ],
+      "data.cycles.11.startDate": [
+        "Date"
+      ],
+      "data.cycles.11.createdAt": [
+        "Date"
+      ],
+      "data.cycles.11.updatedAt": [
+        "Date"
+      ],
+      "data.cycles.12.startDate": [
+        "Date"
+      ],
+      "data.cycles.12.floraStartDate": [
+        "Date"
+      ],
+      "data.cycles.12.createdAt": [
+        "Date"
+      ],
+      "data.cycles.12.updatedAt": [
         "Date"
       ],
       "data.plants.0.createdAt": [
@@ -4240,6 +4817,24 @@
         "Date"
       ],
       "data.plants.23.updatedAt": [
+        "Date"
+      ],
+      "data.plants.24.createdAt": [
+        "Date"
+      ],
+      "data.plants.24.updatedAt": [
+        "Date"
+      ],
+      "data.plants.25.createdAt": [
+        "Date"
+      ],
+      "data.plants.25.updatedAt": [
+        "Date"
+      ],
+      "data.plants.26.createdAt": [
+        "Date"
+      ],
+      "data.plants.26.updatedAt": [
         "Date"
       ],
       "data.dailyLogs.0.logDate": [
@@ -5250,6 +5845,12 @@
       "data.dailyLogs.167.createdAt": [
         "Date"
       ],
+      "data.dailyLogs.168.logDate": [
+        "Date"
+      ],
+      "data.dailyLogs.168.createdAt": [
+        "Date"
+      ],
       "data.taskTemplates.0.createdAt": [
         "Date"
       ],
@@ -5932,6 +6533,36 @@
         "Date"
       ],
       "data.plantHealthLogs.95.createdAt": [
+        "Date"
+      ],
+      "data.plantHealthLogs.96.logDate": [
+        "Date"
+      ],
+      "data.plantHealthLogs.96.createdAt": [
+        "Date"
+      ],
+      "data.plantHealthLogs.97.logDate": [
+        "Date"
+      ],
+      "data.plantHealthLogs.97.createdAt": [
+        "Date"
+      ],
+      "data.plantHealthLogs.98.logDate": [
+        "Date"
+      ],
+      "data.plantHealthLogs.98.createdAt": [
+        "Date"
+      ],
+      "data.wateringApplications.0.applicationDate": [
+        "Date"
+      ],
+      "data.wateringApplications.0.createdAt": [
+        "Date"
+      ],
+      "data.wateringApplications.1.applicationDate": [
+        "Date"
+      ],
+      "data.wateringApplications.1.createdAt": [
         "Date"
       ]
     }
