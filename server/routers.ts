@@ -3071,6 +3071,179 @@ export const appRouter = router({
       }),
   }),
 
+  // Backup & Restore
+  backup: router({
+    // Exportar backup completo
+    export: protectedProcedure.query(async () => {
+      const database = await getDb();
+      if (!database) throw new Error("Database not available");
+
+      // Buscar todos os dados
+      const [allTents, allStrains, allCycles, allPlants, allDailyLogs, allTaskTemplates, allAlertSettings, allAlerts, allPlantPhotos, allPlantHealth, allRecipeTemplates, allNutrientApplications, allWateringApplications] = await Promise.all([
+        database.select().from(tents),
+        database.select().from(strains),
+        database.select().from(cycles),
+        database.select().from(plants),
+        database.select().from(dailyLogs),
+        database.select().from(taskTemplates),
+        database.select().from(alertSettings),
+        database.select().from(alerts),
+        database.select().from(plantPhotos),
+        database.select().from(plantHealthLogs),
+        database.select().from(recipeTemplates),
+        database.select().from(nutrientApplications),
+        database.select().from(wateringApplications),
+      ]);
+
+      return {
+        version: "1.0",
+        exportDate: new Date().toISOString(),
+        data: {
+          tents: allTents,
+          strains: allStrains,
+          cycles: allCycles,
+          plants: allPlants,
+          dailyLogs: allDailyLogs,
+          taskTemplates: allTaskTemplates,
+          alertSettings: allAlertSettings,
+          alerts: allAlerts,
+          plantPhotos: allPlantPhotos,
+          plantHealthLogs: allPlantHealth,
+          recipeTemplates: allRecipeTemplates,
+          nutrientApplications: allNutrientApplications,
+          wateringApplications: allWateringApplications,
+        },
+      };
+    }),
+
+    // Importar backup
+    import: protectedProcedure
+      .input(
+        z.object({
+          version: z.string(),
+          exportDate: z.string(),
+          data: z.object({
+            tents: z.array(z.any()).optional(),
+            strains: z.array(z.any()).optional(),
+            cycles: z.array(z.any()).optional(),
+            plants: z.array(z.any()).optional(),
+            dailyLogs: z.array(z.any()).optional(),
+            taskTemplates: z.array(z.any()).optional(),
+            alertSettings: z.array(z.any()).optional(),
+            alerts: z.array(z.any()).optional(),
+            plantPhotos: z.array(z.any()).optional(),
+            plantHealthLogs: z.array(z.any()).optional(),
+            recipeTemplates: z.array(z.any()).optional(),
+            nutrientApplications: z.array(z.any()).optional(),
+            wateringApplications: z.array(z.any()).optional(),
+          }),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+
+        // Validar versão
+        if (input.version !== "1.0") {
+          throw new Error("Versão de backup não suportada");
+        }
+
+        // AVISO: Esta operação limpa todos os dados existentes!
+        // Em produção, considere fazer backup antes de importar
+
+        // Deletar dados existentes (em ordem reversa de dependências)
+        // Aplicações e registros de plantas
+        await database.delete(wateringApplications);
+        await database.delete(nutrientApplications);
+        await database.delete(plantRunoffLogs);
+        await database.delete(plantTrichomeLogs);
+        await database.delete(plantLSTLogs);
+        await database.delete(plantObservations);
+        await database.delete(plantHealthLogs);
+        await database.delete(plantPhotos);
+        await database.delete(plantTentHistory);
+        
+        // Receitas e presets
+        await database.delete(recipeTemplates);
+        await database.delete(wateringPresets);
+        await database.delete(fertilizationPresets);
+        await database.delete(recipes);
+        
+        // Alertas e notificações
+        await database.delete(notificationHistory);
+        await database.delete(alertHistory);
+        await database.delete(alerts);
+        await database.delete(alertSettings);
+        
+        // Tarefas
+        await database.delete(taskInstances);
+        await database.delete(taskTemplates);
+        
+        // Registros diários e plantas
+        await database.delete(dailyLogs);
+        await database.delete(plants);
+        
+        // Eventos de clonagem
+        await database.delete(cloningEvents);
+        
+        // Estado de estufa
+        await database.delete(tentAState);
+        
+        // Ciclos
+        await database.delete(cycles);
+        
+        // Targets semanais (depende de strains)
+        await database.delete(weeklyTargets);
+        
+        // Strains e estufas
+        await database.delete(strains);
+        await database.delete(tents);
+
+        // Inserir dados do backup
+        if (input.data.tents && input.data.tents.length > 0) {
+          await database.insert(tents).values(input.data.tents);
+        }
+        if (input.data.strains && input.data.strains.length > 0) {
+          await database.insert(strains).values(input.data.strains);
+        }
+        if (input.data.cycles && input.data.cycles.length > 0) {
+          await database.insert(cycles).values(input.data.cycles);
+        }
+        if (input.data.plants && input.data.plants.length > 0) {
+          await database.insert(plants).values(input.data.plants);
+        }
+        if (input.data.dailyLogs && input.data.dailyLogs.length > 0) {
+          await database.insert(dailyLogs).values(input.data.dailyLogs);
+        }
+        if (input.data.taskTemplates && input.data.taskTemplates.length > 0) {
+          await database.insert(taskTemplates).values(input.data.taskTemplates);
+        }
+        if (input.data.alertSettings && input.data.alertSettings.length > 0) {
+          await database.insert(alertSettings).values(input.data.alertSettings);
+        }
+        if (input.data.alerts && input.data.alerts.length > 0) {
+          await database.insert(alerts).values(input.data.alerts);
+        }
+        if (input.data.plantPhotos && input.data.plantPhotos.length > 0) {
+          await database.insert(plantPhotos).values(input.data.plantPhotos);
+        }
+        if (input.data.plantHealthLogs && input.data.plantHealthLogs.length > 0) {
+          await database.insert(plantHealthLogs).values(input.data.plantHealthLogs);
+        }
+        if (input.data.recipeTemplates && input.data.recipeTemplates.length > 0) {
+          await database.insert(recipeTemplates).values(input.data.recipeTemplates);
+        }
+        if (input.data.nutrientApplications && input.data.nutrientApplications.length > 0) {
+          await database.insert(nutrientApplications).values(input.data.nutrientApplications);
+        }
+        if (input.data.wateringApplications && input.data.wateringApplications.length > 0) {
+          await database.insert(wateringApplications).values(input.data.wateringApplications);
+        }
+
+        return { success: true, message: "Backup restaurado com sucesso" };
+      }),
+  }),
+
 });
 
 export type AppRouter = typeof appRouter;

@@ -21,6 +21,7 @@ import CalculatorMenu from "./pages/CalculatorMenu";
 import Alerts from "./pages/Alerts";
 import HistoryTable from "./pages/HistoryTable";
 import Settings from "./pages/Settings";
+import Backup from "./pages/Backup";
 import StrainTargets from "./pages/StrainTargets";
 
 import NotificationSettings from "./pages/NotificationSettings";
@@ -52,6 +53,7 @@ function Router() {
       <Route path={"/alerts"} component={Alerts} />
       <Route path={"/history"} component={HistoryTable} />
       <Route path={"/settings"} component={Settings} />
+      <Route path={"/settings/backup"} component={Backup} />
       <Route path={"/settings/notifications"} component={NotificationSettings} />
       <Route path={"/settings/alerts"} component={AlertSettings} />
       <Route path={"/alerts/history"} component={AlertHistory} />

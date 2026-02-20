@@ -1,7 +1,7 @@
 import { NotificationSettings } from "@/components/NotificationSettings";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { AlertSettings } from "@/components/AlertSettings";
-import { ArrowLeft, Download, Upload, Keyboard } from "lucide-react";
+import { ArrowLeft, Download, Upload, Keyboard, Database } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,12 +35,38 @@ export default function Settings() {
           <ThemeToggle />
           <AlertSettings />
           <KeyboardShortcuts />
-          <DatabaseExport />
-          <DatabaseImport />
+          <BackupCard />
           <NotificationSettings />
         </div>
       </main>
     </div>
+  );
+}
+
+function BackupCard() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Database className="w-5 h-5" />
+          Backup e Restauração
+        </CardTitle>
+        <CardDescription>
+          Faça backup dos seus dados ou restaure de um backup anterior
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button asChild className="w-full sm:w-auto">
+          <Link href="/settings/backup">
+            <Database className="w-4 h-4 mr-2" />
+            Gerenciar Backups
+          </Link>
+        </Button>
+        <p className="text-xs text-muted-foreground mt-3">
+          Proteja seus dados fazendo backups regulares de todas as estufas, plantas, ciclos e registros.
+        </p>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -88,171 +114,4 @@ function KeyboardShortcuts() {
   );
 }
 
-function DatabaseExport() {
-  const [isExporting, setIsExporting] = useState(false);
-  const exportDatabase = trpc.database.export.useQuery(undefined, {
-    enabled: false,
-  });
 
-  const handleExport = async () => {
-    setIsExporting(true);
-    try {
-      const result = await exportDatabase.refetch();
-      
-      if (!result.data?.sql) {
-        toast.error("Erro ao exportar banco de dados");
-        return;
-      }
-
-      // Criar arquivo e download
-      const blob = new Blob([result.data.sql], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `cultivo-backup-${new Date().toISOString().split('T')[0]}.sql`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-
-      toast.success("Backup exportado com sucesso!");
-    } catch (error) {
-      console.error("Error exporting database:", error);
-      toast.error("Erro ao exportar banco de dados");
-    } finally {
-      setIsExporting(false);
-    }
-  };
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Backup do Banco de Dados</CardTitle>
-        <CardDescription>
-          Exporte todos os dados do aplicativo em formato SQL para backup ou transferência
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Button
-          onClick={handleExport}
-          disabled={isExporting}
-          className="w-full sm:w-auto"
-        >
-          <Download className="w-4 h-4 mr-2" />
-          {isExporting ? "Exportando..." : "Exportar Banco de Dados"}
-        </Button>
-        <p className="text-xs text-muted-foreground mt-3">
-          O arquivo SQL conterá todas as estufas, ciclos, registros, strains e configurações.
-        </p>
-      </CardContent>
-    </Card>
-  );
-}
-
-function DatabaseImport() {
-  const [isImporting, setIsImporting] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const utils = trpc.useUtils();
-  
-  const importDatabase = trpc.database.import.useMutation({
-    onSuccess: (result) => {
-      if (result.success) {
-        toast.success(result.message);
-        setSelectedFile(null);
-        // Invalidate all queries to refresh data
-        utils.invalidate();
-      } else {
-        toast.error(result.message);
-      }
-      setIsImporting(false);
-    },
-    onError: (error) => {
-      toast.error(`Erro ao importar: ${error.message}`);
-      setIsImporting(false);
-    },
-  });
-
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      // Validate file type
-      if (!file.name.endsWith('.sql')) {
-        toast.error("Por favor, selecione um arquivo .sql");
-        return;
-      }
-      setSelectedFile(file);
-      toast.success(`Arquivo "${file.name}" selecionado com sucesso!`);
-    }
-  };
-
-  const handleImport = async () => {
-    if (!selectedFile) {
-      toast.error("Por favor, selecione um arquivo SQL");
-      return;
-    }
-
-    // Confirm before importing
-    if (!confirm("⚠️ ATENÇÃO: Esta ação irá sobrescrever todos os dados existentes. Tem certeza que deseja continuar?")) {
-      return;
-    }
-
-    setIsImporting(true);
-    try {
-      const fileContent = await selectedFile.text();
-      importDatabase.mutate({ sqlContent: fileContent });
-    } catch (error: any) {
-      toast.error(`Erro ao ler arquivo: ${error.message}`);
-      setIsImporting(false);
-    }
-  };
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Importar Backup do Banco de Dados</CardTitle>
-        <CardDescription>
-          Restaure seus dados a partir de um arquivo SQL exportado anteriormente
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex flex-col gap-3">
-          <div className="space-y-2">
-            <label htmlFor="file-input" className="text-sm font-medium text-foreground">
-              Selecione o arquivo SQL de backup:
-            </label>
-            <input
-              id="file-input"
-              type="file"
-              accept=".sql"
-              onChange={handleFileSelect}
-              className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-green-600 file:cursor-pointer"
-              disabled={isImporting}
-            />
-          </div>
-          
-          {selectedFile && (
-            <div className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
-              <strong>Arquivo selecionado:</strong> {selectedFile.name} ({(selectedFile.size / 1024).toFixed(2)} KB)
-            </div>
-          )}
-
-          <Button
-            onClick={handleImport}
-            disabled={!selectedFile || isImporting}
-            className="w-full sm:w-auto"
-            variant="destructive"
-          >
-            <Upload className="w-4 h-4 mr-2" />
-            {isImporting ? "Importando..." : "Importar Banco de Dados"}
-          </Button>
-        </div>
-
-        <div className="bg-yellow-500/100/10 border border-yellow-500/20 rounded-md p-3">
-          <p className="text-xs text-yellow-800">
-            <strong>⚠️ Aviso:</strong> A importação irá sobrescrever todos os dados existentes. Certifique-se de exportar um backup atual antes de importar.
-          </p>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}

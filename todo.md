@@ -1019,10 +1019,10 @@
 - [x] Testar fluxo completo de descarte - 3 testes passando ✅
 
 ## Melhorar Visualização do Histórico Mobile (20/02/2026)
-- [ ] Analisar página de histórico atual e identificar problemas com muitas estufas
-- [ ] Implementar scroll horizontal ou carrossel para seleção de estufas
-- [ ] Garantir que gráficos sejam responsivos em telas pequenas
-- [ ] Testar com mais de 3 estufas no mobile
+- [x] Analisar página de histórico atual e identificar problemas com muitas estufas
+- [x] Implementar scroll horizontal ou carrossel para seleção de estufas
+- [x] Garantir que gráficos sejam responsivos em telas pequenas
+- [x] Testar com mais de 3 estufas no mobile - Testado com 100+ estufas ✅
 
 ## Implementar Edição e Exclusão de Estufas (20/02/2026)
 - [x] Analisar dependências de estufas (plantas, registros, tarefas)
@@ -1047,3 +1047,14 @@
 - [x] Verificar se rota está registrada em App.tsx - Registrada corretamente
 - [x] Verificar se componente HistoryTable existe e está importado corretamente - Tudo correto
 - [x] Testar navegação para página de histórico - Funcionando perfeitamente ✅
+
+## Implementar Sistema de Backup Automático (20/02/2026)
+- [x] Planejar arquitetura do sistema de backup (JSON export/import)
+- [x] Criar backend procedure para exportar todos os dados (estufas, plantas, registros, strains, etc.)
+- [x] Criar backend procedure para importar backup e restaurar dados
+- [x] Adicionar página de Backup na seção Configurações
+- [x] Implementar botão "Exportar Backup" com download automático
+- [x] Implementar botão "Importar Backup" com upload de arquivo
+- [x] Adicionar validação de integridade do arquivo de backup
+- [x] Testar export e import completo dos dados - 3 testes passando ✅
+- [ ] Adicionar opção de backup automático agendado (opcional)
