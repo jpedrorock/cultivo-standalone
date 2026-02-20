@@ -924,3 +924,9 @@
 - [x] Verificar se Card component tem padding interno excessivo - SIM! CardHeader e CardContent com px-6
 - [x] Remover padding do CardHeader e CardContent - Reduzido para px-3 md:px-6 (12px mobile, 24px desktop)
 - [x] Ganho de 24px (7.8%) no mobile - Card agora com 330px de conteúdo vs 306px anterior
+
+## Ajustar layout dos cards para ocupar melhor o espaço
+- [x] Medir dimensões exatas dos cards na versão funcionando - Grid 992px, padding 32px/16px, gap 16px, cards 320px
+- [x] Ajustar padding (py-8 px-4), gap (16px) e colunas (320px fixas)
+- [x] Testar em desktop - Layout idêntico à versão funcionando ✅
+- [x] Cards agora ocupam bem o espaço disponível (320px cada)
