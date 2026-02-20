@@ -896,3 +896,10 @@
 - [x] Implementar pull-to-refresh em Plantas (pronto para expandir)
 - [x] Testar funcionalidade em mobile
 - [x] Remover max-width e padding no mobile do CalculatorMenu
+
+## Correção Final - Layout Mobile Calculadoras (20/02/2026)
+- [x] Identificar causa raiz: DashboardLayout sm:p-4 (16px) + gap-4 do grid = cards muito estreitos
+- [x] Implementar margem negativa (-mx-4 sm:-mx-4) no container principal do CalculatorMenu
+- [x] Remover max-w-7xl mx-auto do header para ocupar largura completa
+- [x] Testar em desktop (1280px) - cards agora com ~360px ao invés de ~330px
+- [ ] Testar em mobile real (300px-640px)
