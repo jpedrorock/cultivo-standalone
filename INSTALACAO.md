@@ -101,15 +101,29 @@ pnpm dev
 # Banco de Dados
 DATABASE_URL=mysql://usuario:senha@host:3306/cultivo_db
 
-# Autenticação (gerado automaticamente no Manus)
+# Servidor
+PORT=3000
+NODE_ENV=production
+
+# Base URL para arquivos (IMPORTANTE: Altere para seu domínio em produção)
+# Exemplos:
+#   Desenvolvimento: http://localhost:3000
+#   Produção: https://cultivo.seudominio.com
+BASE_URL=http://localhost:3000
+
+# JWT Secret (gere uma string aleatória para produção)
 JWT_SECRET=sua_chave_secreta_aqui
-OAUTH_SERVER_URL=https://api.manus.im
-VITE_OAUTH_PORTAL_URL=https://auth.manus.im
 
 # Aplicação
 VITE_APP_TITLE=App Cultivo
 VITE_APP_LOGO=/logo.png
 ```
+
+**⚠️ IMPORTANTE sobre BASE_URL:**
+- Define onde as fotos serão acessíveis
+- Em desenvolvimento: use `http://localhost:3000`
+- Em produção: use seu domínio real (ex: `https://cultivo.seudominio.com`)
+- Não inclua barra final (`/`) no final da URL
 
 ---
 
@@ -117,9 +131,9 @@ VITE_APP_LOGO=/logo.png
 
 ### 1. Primeiro Acesso
 
-1. Acesse o aplicativo pelo navegador
-2. Faça login com sua conta Manus (ou crie uma nova)
-3. Você será redirecionado para a página inicial
+1. Acesse o aplicativo pelo navegador (http://localhost:3000)
+2. Você será automaticamente direcionado para a página inicial
+3. O app funciona sem autenticação (standalone)
 
 ### 2. Criar Primeira Estufa
 
@@ -480,3 +494,75 @@ Desenvolvido com ❤️ usando:
 
 **Última atualização**: 07/02/2026
 **Versão do documento**: 2.0
+
+
+---
+
+## 📸 Armazenamento de Fotos
+
+### Como Funciona
+
+O app armazena fotos **localmente** no servidor, na pasta `uploads/`:
+
+```
+uploads/
+├── plants/           # Fotos de plantas
+├── health/           # Fotos de saúde
+└── trichomes/        # Fotos de tricomas
+```
+
+### Configuração
+
+1. **Criar diretório de uploads** (se não existir):
+```bash
+mkdir -p uploads/plants uploads/health uploads/trichomes
+chmod 755 uploads
+```
+
+2. **Configurar BASE_URL** no arquivo `.env`:
+```env
+# Desenvolvimento
+BASE_URL=http://localhost:3000
+
+# Produção (use seu domínio real)
+BASE_URL=https://cultivo.seudominio.com
+```
+
+### Backup de Fotos
+
+**⚠️ IMPORTANTE**: As fotos NÃO são incluídas no backup JSON do banco de dados!
+
+Para fazer backup completo:
+
+```bash
+# Backup do banco de dados
+# (via interface: Configurações → Backup e Restauração → Exportar)
+
+# Backup das fotos
+tar -czf uploads-backup-$(date +%Y%m%d).tar.gz uploads/
+```
+
+Para restaurar:
+
+```bash
+# Restaurar banco de dados
+# (via interface: Configurações → Backup e Restauração → Importar)
+
+# Restaurar fotos
+tar -xzf uploads-backup-20260220.tar.gz
+```
+
+### Requisitos de Espaço
+
+- Cada foto: ~500KB - 2MB
+- Estimativa: 100 fotos = ~100MB
+- Recomendado: Mínimo 5GB livre para armazenamento
+
+### Permissões
+
+Certifique-se de que o usuário do Node.js tem permissão de escrita:
+
+```bash
+chown -R node:node uploads/
+chmod -R 755 uploads/
+```
