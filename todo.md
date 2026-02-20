@@ -885,3 +885,13 @@
 - [x] Remover width: 333px fixo dos cards
 - [x] Adicionar w-full para cards ocuparem 100% da largura disponível
 - [ ] Testar no mobile para confirmar
+
+## Melhorar diagramação interna dos cards
+- [x] Ajustar padding e espaçamento entre elementos
+- [x] Melhorar hierarquia visual (tamanhos de fonte, pesos)
+- [x] Garantir alinhamento consistente
+- [ ] Testar resultado final
+
+## Verificar botão voltar em todas calculadoras
+- [x] Verificado - Todas calculadoras usam o mesmo header com botão ArrowLeft (linhas 160-165)
+- [x] Botão voltar funciona e redireciona para /calculators

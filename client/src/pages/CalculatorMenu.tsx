@@ -76,20 +76,22 @@ export default function CalculatorMenu() {
             const Icon = calc.icon;
             return (
               <Link key={calc.id} href={`/calculators/${calc.id}`}>
-                <Card className={`cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 ${calc.bgColor} hover:border-primary/50 w-full`}>
-                  <CardHeader className="p-3 md:p-6 pb-2 md:pb-4">
-                    <div className={`w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br ${calc.color} flex items-center justify-center mb-2 md:mb-4 shadow-lg`}>
-                      <Icon className="w-5 h-5 md:w-8 md:h-8 text-white" />
+                <Card className={`cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border-2 ${calc.bgColor} hover:border-primary/50 w-full overflow-hidden`}>
+                  <CardHeader className="p-4 md:p-6 space-y-3 md:space-y-4">
+                    <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br ${calc.color} flex items-center justify-center shadow-lg`}>
+                      <Icon className="w-7 h-7 md:w-8 md:h-8 text-white" />
                     </div>
-                    <CardTitle className="text-lg md:text-xl">{calc.title}</CardTitle>
-                    <CardDescription className="text-sm md:text-base">
-                      {calc.description}
-                    </CardDescription>
+                    <div className="space-y-1.5">
+                      <CardTitle className="text-xl md:text-2xl font-bold leading-tight">{calc.title}</CardTitle>
+                      <CardDescription className="text-sm md:text-base leading-relaxed">
+                        {calc.description}
+                      </CardDescription>
+                    </div>
                   </CardHeader>
-                  <CardContent className="p-3 md:p-6 pt-0">
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                  <CardContent className="px-4 pb-4 md:px-6 md:pb-6 pt-0">
+                    <div className="flex items-center text-sm md:text-base font-medium text-primary">
                       <span>Abrir calculadora</span>
-                      <span className="text-2xl">→</span>
+                      <span className="ml-2 text-xl">→</span>
                     </div>
                   </CardContent>
                 </Card>
