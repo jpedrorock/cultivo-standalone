@@ -910,9 +910,9 @@
 - [ ] Implementar loading states em botões durante operações assíncronas
 
 ## Implementar EmptyState nas páginas principais
-- [ ] Adicionar EmptyState na página de Plantas quando não houver plantas cadastradas
-- [ ] Adicionar EmptyState na página de Histórico quando não houver registros
-- [ ] Adicionar EmptyState na página de Alertas quando não houver alertas ativos
+- [x] Adicionar EmptyState na página de Plantas quando não houver plantas cadastradas
+- [x] Adicionar EmptyState na página de Histórico quando não houver registros
+- [x] Adicionar EmptyState na página de Alertas quando não houver alertas ativos
 
 ## Correções de Dark Mode e Layout Desktop (20/02/2026)
 - [x] Corrigir contraste do texto "Litros" no dark mode (text-muted-foreground → text-foreground)

@@ -5,9 +5,11 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { trpc } from "@/lib/trpc";
 import { Bell, ThermometerSun, Droplets, Sun, Loader2, Settings, ArrowLeft } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+import { EmptyState } from "@/components/EmptyState";
 
 export default function Alerts() {
+  const [, navigate] = useLocation();
   const [selectedTentId, setSelectedTentId] = useState<number>(1);
 
   // Buscar estufas
@@ -144,21 +146,13 @@ export default function Alerts() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-16 text-muted-foreground">
-                  <div className="inline-flex p-4 bg-muted/50 rounded-full mb-4">
-                    <Bell className="w-12 h-12 opacity-30" />
-                  </div>
-                  <p className="text-lg font-medium">Nenhum alerta disparado ainda</p>
-                  <p className="text-sm mt-2">
-                    Os alertas aparecerão aqui quando valores ambientais saírem da faixa ideal
-                  </p>
-                  <Button asChild variant="outline" size="sm" className="mt-6">
-                    <Link href="/settings">
-                      <Settings className="w-4 h-4 mr-2" />
-                      Configurar Thresholds
-                    </Link>
-                  </Button>
-                </div>
+                <EmptyState
+                  icon={Bell}
+                  title="Nenhum alerta disparado ainda"
+                  description="Os alertas aparecerão aqui quando valores ambientais (temperatura, umidade, PPFD) saírem da faixa ideal configurada para cada estufa."
+                  actionLabel="Configurar Alertas"
+                  onAction={() => navigate("/settings")}
+                />
               )}
             </CardContent>
           </Card>
