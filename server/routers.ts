@@ -1,7 +1,7 @@
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { eq, and, desc, sql, isNotNull } from "drizzle-orm";
 import * as db from "./db";
@@ -40,14 +40,9 @@ export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
   auth: router({
-    me: publicProcedure.query(opts => opts.ctx.user),
-    logout: publicProcedure.mutation(({ ctx }) => {
-      const cookieOptions = getSessionCookieOptions(ctx.req);
-      ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
-      return {
-        success: true,
-      } as const;
-    }),
+    // Simplified auth for standalone deployment
+    me: publicProcedure.query(() => ({ id: 1, name: "Local User", email: "user@local" })),
+    logout: publicProcedure.mutation(() => ({ success: true })),
   }),
 
   // Weather (Clima)
@@ -981,11 +976,10 @@ export const appRouter = router({
       if (!database) return null;
       const { notificationSettings } = await import("../drizzle/schema");
       
-      // Usar userId fixo 1 (sem autenticação)
+      // Pegar primeira configuração (sem autenticação)
       const settings = await database
         .select()
         .from(notificationSettings)
-        .where(eq(notificationSettings.userId, 1))
         .limit(1);
       
       return settings[0] || null;
@@ -1011,28 +1005,21 @@ export const appRouter = router({
         
         const { notificationSettings } = await import("../drizzle/schema");
         
-        // Usar userId fixo 1 (sem autenticação)
-        const userId = 1;
-        
         // Verificar se já existe configuração
         const existing = await database
           .select()
           .from(notificationSettings)
-          .where(eq(notificationSettings.userId, userId))
           .limit(1);
         
         if (existing.length > 0) {
-          // Atualizar existente
+          // Atualizar existente (primeira configuração)
           await database
             .update(notificationSettings)
             .set(input)
-            .where(eq(notificationSettings.userId, userId));
+            .where(eq(notificationSettings.id, existing[0].id));
         } else {
           // Criar nova
-          await database.insert(notificationSettings).values({
-            userId,
-            ...input,
-          });
+          await database.insert(notificationSettings).values(input);
         }
         
         return { success: true };
@@ -3074,7 +3061,7 @@ export const appRouter = router({
   // Backup & Restore
   backup: router({
     // Exportar backup completo
-    export: protectedProcedure.query(async () => {
+    export: publicProcedure.query(async () => {
       const database = await getDb();
       if (!database) throw new Error("Database not available");
 
@@ -3117,7 +3104,7 @@ export const appRouter = router({
     }),
 
     // Importar backup
-    import: protectedProcedure
+    import: publicProcedure
       .input(
         z.object({
           version: z.string(),

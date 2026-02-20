@@ -690,7 +690,6 @@ export type InsertPlantLSTLog = typeof plantLSTLogs.$inferInsert;
  */
 export const fertilizationPresets = mysqlTable("fertilizationPresets", {
   id: int("id").autoincrement().primaryKey(),
-  userId: int("userId").notNull(),
   name: varchar("name", { length: 100 }).notNull(),
   waterVolume: decimal("waterVolume", { precision: 10, scale: 2 }).notNull(),
   targetEC: decimal("targetEC", { precision: 10, scale: 2 }).notNull(),
@@ -700,9 +699,7 @@ export const fertilizationPresets = mysqlTable("fertilizationPresets", {
   calculationMode: mysqlEnum("calculationMode", ["per-irrigation", "per-week"]).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-}, (table) => ({
-  userIdIdx: index("userId_idx").on(table.userId),
-}));
+});
 
 export type FertilizationPreset = typeof fertilizationPresets.$inferSelect;
 export type InsertFertilizationPreset = typeof fertilizationPresets.$inferInsert;
@@ -712,7 +709,6 @@ export type InsertFertilizationPreset = typeof fertilizationPresets.$inferInsert
  */
 export const wateringPresets = mysqlTable("wateringPresets", {
   id: int("id").autoincrement().primaryKey(),
-  userId: int("userId").notNull(),
   name: varchar("name", { length: 100 }).notNull(),
   plantCount: int("plantCount").notNull(),
   potSize: decimal("potSize", { precision: 10, scale: 1 }).notNull(),
@@ -721,9 +717,7 @@ export const wateringPresets = mysqlTable("wateringPresets", {
   weekNumber: int("weekNumber"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-}, (table) => ({
-  userIdIdx: index("userId_idx").on(table.userId),
-}));
+});
 
 export type WateringPreset = typeof wateringPresets.$inferSelect;
 export type InsertWateringPreset = typeof wateringPresets.$inferInsert;
@@ -734,7 +728,6 @@ export type InsertWateringPreset = typeof wateringPresets.$inferInsert;
  */
 export const alertPreferences = mysqlTable("alertPreferences", {
   id: int("id").autoincrement().primaryKey(),
-  userId: int("userId").notNull().unique(),
   
   // Temperatura
   temperatureEnabled: boolean("temperatureEnabled").default(true).notNull(),
@@ -757,9 +750,7 @@ export const alertPreferences = mysqlTable("alertPreferences", {
   
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-}, (table) => ({
-  userIdIdx: index("userId_idx").on(table.userId),
-}));
+});
 
 export type AlertPreference = typeof alertPreferences.$inferSelect;
 export type InsertAlertPreference = typeof alertPreferences.$inferInsert;
@@ -769,7 +760,6 @@ export type InsertAlertPreference = typeof alertPreferences.$inferInsert;
  */
 export const notificationSettings = mysqlTable("notificationSettings", {
   id: int("id").autoincrement().primaryKey(),
-  userId: int("userId").notNull().unique(),
   
   // Habilitar/desabilitar notificações por tipo de alerta
   tempAlertsEnabled: boolean("tempAlertsEnabled").default(true).notNull(),
@@ -786,9 +776,7 @@ export const notificationSettings = mysqlTable("notificationSettings", {
   
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-}, (table) => ({
-  userIdIdx: index("userId_idx").on(table.userId),
-}));
+});
 
 export type NotificationSettings = typeof notificationSettings.$inferSelect;
 export type InsertNotificationSettings = typeof notificationSettings.$inferInsert;

@@ -1080,3 +1080,13 @@
 - [ ] Gerar registros de tricomas e LST - Banco limpo, sem dados de teste
 - [ ] Criar presets de fertilização e rega
 - [ ] Verificar dados no app
+
+## Remover Autenticação e Dependências Manus (20/02/2026)
+- [x] Remover userId de todas as tabelas no schema.ts - 4 tabelas atualizadas ✅
+- [x] Gerar migration para remover colunas userId do banco - Aplicado via SQL ✅
+- [x] Converter todos protectedProcedure para publicProcedure - 3 procedures convertidos ✅
+- [ ] Remover sistema OAuth (server/_core/oauth.ts)
+- [ ] Remover hooks de autenticação (useAuth)
+- [ ] Remover variáveis de ambiente Manus (OAUTH_SERVER_URL, etc)
+- [ ] Remover componentes de login
+- [ ] Testar aplicação standalone
