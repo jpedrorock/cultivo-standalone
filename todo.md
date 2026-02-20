@@ -895,3 +895,7 @@
 ## Verificar botão voltar em todas calculadoras
 - [x] Verificado - Todas calculadoras usam o mesmo header com botão ArrowLeft (linhas 160-165)
 - [x] Botão voltar funciona e redireciona para /calculators
+
+## Adicionar padding interno geral nos cards
+- [x] Adicionar padding uniforme no Card (p-5 md:p-6) para centralizar conteúdo
+- [ ] Testar visualmente

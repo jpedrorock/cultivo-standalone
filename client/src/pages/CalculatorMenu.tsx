@@ -76,7 +76,7 @@ export default function CalculatorMenu() {
             const Icon = calc.icon;
             return (
               <Link key={calc.id} href={`/calculators/${calc.id}`}>
-                <Card className={`cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border-2 ${calc.bgColor} hover:border-primary/50 w-full overflow-hidden`}>
+                <Card className={`cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border-2 ${calc.bgColor} hover:border-primary/50 w-full overflow-hidden p-5 md:p-6`}>
                   <CardHeader className="p-4 md:p-6 space-y-3 md:space-y-4">
                     <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br ${calc.color} flex items-center justify-center shadow-lg`}>
                       <Icon className="w-7 h-7 md:w-8 md:h-8 text-white" />
