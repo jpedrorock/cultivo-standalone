@@ -64,8 +64,8 @@ export default function CalculatorMenu() {
       </div>
 
       {/* Grid de Calculadoras */}
-      <div className="p-4 md:p-8">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="px-0 py-4 md:p-8">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {calculators.map((calc) => {
             const Icon = calc.icon;
             return (
