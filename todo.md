@@ -1090,3 +1090,10 @@
 - [ ] Remover variáveis de ambiente Manus (OAUTH_SERVER_URL, etc)
 - [ ] Remover componentes de login
 - [ ] Testar aplicação standalone
+
+## Criar Pacote ZIP para Deploy (20/02/2026)
+- [x] Exportar backup completo do banco com dados de exemplo - 149KB JSON ✅
+- [x] Criar estrutura de diretórios para deploy - docs/ e database/ ✅
+- [x] Copiar arquivos essenciais (código, docs, scripts) - 5 documentos + backup ✅
+- [x] Gerar arquivo ZIP final - app-cultivo-deploy.zip (24KB) ✅
+- [ ] Testar extração e instalação do pacote
