@@ -507,8 +507,8 @@
 - [x] Atualizar Home.tsx para renderizar estufas dinamicamente do banco
 - [x] Corrigir erro de botão aninhado em "Tarefas da Semana"
 - [x] Testar criação de múltiplas estufas - "Estufa Teste 4" criada com sucesso
-- [ ] Implementar edição de estufas (modal de edição)
-- [ ] Implementar exclusão de estufas (confirmação + cascade delete)
+- [x] Implementar edição de estufas (modal de edição) - EditTentDialog criado ✅
+- [x] Implementar exclusão de estufas (confirmação + cascade delete) - Já existia ✅
 
 
 ## 📊 Filtro por Estufa no Histórico (19/02/2026)
@@ -1023,3 +1023,12 @@
 - [ ] Implementar scroll horizontal ou carrossel para seleção de estufas
 - [ ] Garantir que gráficos sejam responsivos em telas pequenas
 - [ ] Testar com mais de 3 estufas no mobile
+
+## Implementar Edição e Exclusão de Estufas (20/02/2026)
+- [x] Analisar dependências de estufas (plantas, registros, tarefas)
+- [x] Criar backend procedure tents.update para edição
+- [x] Criar backend procedure tents.delete com cascade delete - Já existia
+- [x] Criar componente EditTentDialog (modal de edição)
+- [x] Adicionar botões de editar e excluir na UI de gestão de estufas
+- [x] Implementar confirmação de exclusão com aviso de dependências - Já existia
+- [x] Testar edição e exclusão com e sem dependências - 4 testes + teste manual ✅

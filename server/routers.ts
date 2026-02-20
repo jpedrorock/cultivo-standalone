@@ -108,6 +108,54 @@ export const appRouter = router({
         
         return { success: true, id: result.insertId };
       }),
+    update: publicProcedure
+      .input(
+        z.object({
+          id: z.number(),
+          name: z.string().min(1).max(50),
+          category: z.enum(["MAINTENANCE", "VEGA", "FLORA", "DRYING"]),
+          width: z.number().int().positive(),
+          depth: z.number().int().positive(),
+          height: z.number().int().positive(),
+          powerW: z.number().int().positive().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
+        
+        // Verificar se a estufa existe
+        const existingTent = await database
+          .select()
+          .from(tents)
+          .where(eq(tents.id, input.id))
+          .limit(1);
+        
+        if (existingTent.length === 0) {
+          throw new Error("Estufa não encontrada");
+        }
+        
+        // Calcular volume (em litros)
+        const volume = (input.width * input.depth * input.height) / 1000;
+        
+        const { id, ...updateData } = input;
+        
+        // Se powerW não foi fornecido, definir como null explicitamente
+        const dataToUpdate = {
+          ...updateData,
+          volume: volume.toFixed(3),
+          powerW: input.powerW ?? null,
+        };
+        
+        await database
+          .update(tents)
+          .set(dataToUpdate)
+          .where(eq(tents.id, id));
+        
+        return { success: true };
+      }),
     delete: publicProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {

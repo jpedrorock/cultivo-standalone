@@ -6,6 +6,7 @@ import StartCycleModal from "@/components/StartCycleModal";
 import { InitiateCycleModal } from "@/components/InitiateCycleModal";
 import { EditCycleModal } from "@/components/EditCycleModal";
 import { CreateTentModal } from "@/components/CreateTentModal";
+import { EditTentDialog } from "@/components/EditTentDialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,8 @@ export default function Home() {
   const [createTentModalOpen, setCreateTentModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [tentToDelete, setTentToDelete] = useState<{ id: number; name: string } | null>(null);
+  const [editTentDialogOpen, setEditTentDialogOpen] = useState(false);
+  const [tentToEdit, setTentToEdit] = useState<any>(null);
 
   
   const { data: tents, isLoading } = trpc.tents.list.useQuery();
@@ -139,6 +142,11 @@ export default function Home() {
     setSelectedCycle(cycle);
     setSelectedTent({ id: tent.id, name: tent.name });
     setEditModalOpen(true);
+  };
+
+  const handleEditTent = (tent: any) => {
+    setTentToEdit(tent);
+    setEditTentDialogOpen(true);
   };
 
 
@@ -282,6 +290,7 @@ export default function Home() {
                 onInitiateCycle={handleInitiateCycle}
                 onEditCycle={handleEditCycle}
                 onFinalizeCycle={handleFinalizeCycle}
+                onEditTent={handleEditTent}
                 onDeleteTent={handleDeleteTent}
               />
             );
@@ -371,6 +380,17 @@ export default function Home() {
         onOpenChange={setCreateTentModalOpen}
       />
 
+      {/* Edit Tent Dialog */}
+      <EditTentDialog
+        tent={tentToEdit}
+        open={editTentDialogOpen}
+        onOpenChange={setEditTentDialogOpen}
+        onSuccess={() => {
+          utils.tents.list.invalidate();
+          utils.cycles.listActive.invalidate();
+        }}
+      />
+
       {/* Delete Tent Confirmation Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
@@ -405,7 +425,7 @@ export default function Home() {
 }
 
 // Separate component for Tent Card with Tasks
-function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlora, onInitiateCycle, onEditCycle, onFinalizeCycle, onDeleteTent }: any) {
+function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlora, onInitiateCycle, onEditCycle, onFinalizeCycle, onEditTent, onDeleteTent }: any) {
   const [tasksExpanded, setTasksExpanded] = useState(false);
   const [hideCompleted, setHideCompleted] = useState(false);
   const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set());
@@ -759,15 +779,26 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
               </>
             )}
             {!cycle && (
-              <Button
-                onClick={() => onDeleteTent(tent.id, tent.name)}
-                variant="outline"
-                size="sm"
-                className="w-full border-red-500 text-red-600 hover:bg-red-50 flex items-center justify-center gap-2"
-              >
-                <Trash2 className="w-4 h-4" />
-                Excluir Estufa
-              </Button>
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  onClick={() => onEditTent(tent)}
+                  variant="outline"
+                  size="sm"
+                  className="border-blue-500 text-blue-600 hover:bg-blue-50 flex items-center justify-center gap-2"
+                >
+                  <Wrench className="w-4 h-4" />
+                  Editar
+                </Button>
+                <Button
+                  onClick={() => onDeleteTent(tent.id, tent.name)}
+                  variant="outline"
+                  size="sm"
+                  className="border-red-500 text-red-600 hover:bg-red-50 flex items-center justify-center gap-2"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Excluir
+                </Button>
+              </div>
             )}
           </div>
         </div>
