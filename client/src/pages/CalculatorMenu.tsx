@@ -60,11 +60,14 @@ export default function CalculatorMenu() {
       {/* Calculators Grid */}
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {calculators.map((calc) => {
+          {calculators.map((calc, index) => {
             const Icon = calc.icon;
             return (
               <Link key={calc.id} href={calc.href}>
-                <Card className={`${calc.bgColor} border-2 hover:border-primary/50 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer h-full`}>
+                <Card 
+                  className={`${calc.bgColor} border-2 hover:border-primary/50 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer h-full animate-in fade-in slide-in-from-bottom-4`}
+                  style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'backwards' }}
+                >
                   <CardHeader className="pb-4">
                     <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${calc.gradient} flex items-center justify-center mb-4 shadow-lg`}>
                       <Icon className="w-8 h-8 text-white" />

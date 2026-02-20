@@ -935,3 +935,13 @@
 - [x] Procurar todas as páginas .tsx no projeto
 - [x] Identificar qual usa grid de cards - ManageStrains usa grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6
 - [x] Refazer CalculatorMenu do zero usando estrutura simples de ManageStrains
+
+## Adicionar animação de carregamento aos cards
+- [x] Implementar fade-in com delay escalonado usando Tailwind animate-in fade-in slide-in-from-bottom-4
+- [x] Cada card aparece com delay de 100ms entre eles
+
+## CRÍTICO - Recriar CalculatorMenu DO ZERO ABSOLUTO
+- [ ] Apagar arquivo completamente
+- [ ] Criar novo arquivo sem aproveitar NADA do anterior
+- [ ] Usar APENAS grid simples: grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6
+- [ ] SEM padding complexo, SEM max-w, SEM nada customizado
