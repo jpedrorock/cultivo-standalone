@@ -8,6 +8,7 @@ import { Loader2, CheckCircle2, Circle, Sprout, Filter } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { TaskTemplatesManager } from "@/components/TaskTemplatesManager";
+import { TaskCardSkeleton } from "@/components/ListSkeletons";
 import { useState } from "react";
 
 export default function Tasks() {
@@ -34,8 +35,21 @@ export default function Tasks() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="w-8 h-8 animate-spin text-green-600" />
+      <div className="min-h-screen bg-background">
+        <div className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
+          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+            <Link href="/">
+              <Button variant="ghost" size="sm">
+                ← Voltar
+              </Button>
+            </Link>
+            <h1 className="text-xl font-bold">Tarefas da Semana</h1>
+            <div className="w-20" />
+          </div>
+        </div>
+        <main className="container mx-auto px-4 py-6">
+          <TaskCardSkeleton count={3} />
+        </main>
       </div>
     );
   }

@@ -16,6 +16,7 @@ import {
 import { Plus, Sprout, Search, Filter, ChevronDown, ChevronRight, MoveRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { EmptyState } from "@/components/EmptyState";
+import { PlantListSkeleton } from "@/components/ListSkeletons";
 import { useLocation } from "wouter";
 
 export default function PlantsList() {
@@ -199,10 +200,7 @@ export default function PlantsList() {
 
         {/* Plants Grouped by Tent */}
         {isLoading ? (
-          <div className="text-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin mx-auto text-muted-foreground mb-4" />
-            <p className="text-muted-foreground">Carregando plantas...</p>
-          </div>
+          <PlantListSkeleton count={6} />
         ) : filteredPlants && filteredPlants.length > 0 ? (
           <div className="space-y-4">
             {tents?.map((tent) => {

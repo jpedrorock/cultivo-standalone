@@ -32,6 +32,7 @@ import {
 import { toast } from "sonner";
 import { Printer } from "lucide-react";
 import { EmptyState } from "@/components/EmptyState";
+import { HistoryTableSkeleton } from "@/components/ListSkeletons";
 import { useLocation } from "wouter";
 
 export default function HistoryTable() {
@@ -326,9 +327,7 @@ export default function HistoryTable() {
           </CardHeader>
           <CardContent>
             {logsLoading ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-primary" />
-              </div>
+              <HistoryTableSkeleton count={8} />
             ) : !logsData?.logs || logsData.logs.length === 0 ? (
               <EmptyState
                 icon={ClipboardList}

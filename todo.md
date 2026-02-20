@@ -920,3 +920,9 @@
 - [x] Corrigir cores dos cards Micronutrientes para dark mode (mesma estratégia de cores adaptativas)
 - [x] Corrigir cor do card EC Estimado para dark mode
 - [x] Melhorar layout desktop da calculadora de fertilização (grid 2 colunas lg:grid-cols-2 para inputs)
+
+## Implementar Loading Skeletons (20/02/2026)
+- [x] Criar componente reutilizável de skeleton para listas (ListSkeletons.tsx)
+- [x] Implementar skeleton na página de Plantas (PlantsList) - PlantListSkeleton
+- [x] Implementar skeleton na página de Histórico (HistoryTable) - HistoryTableSkeleton
+- [x] Implementar skeleton na página de Tarefas (Tasks) - TaskCardSkeleton
