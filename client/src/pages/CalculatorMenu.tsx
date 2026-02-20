@@ -1,95 +1,88 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
-import { Calculator, Droplets, Sprout, Sun, Beaker, TestTube, Waves } from "lucide-react";
+import { Droplets, Beaker, Sun, Gauge, FlaskConical } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+const calculators = [
+  {
+    id: "watering-runoff",
+    title: "Rega e Runoff",
+    description: "Calcule volume ideal de rega e meça runoff real",
+    icon: Droplets,
+    color: "from-blue-500 to-cyan-500",
+    bgColor: "bg-blue-50 dark:bg-blue-950/20",
+  },
+  {
+    id: "nutrients",
+    title: "Fertilização",
+    description: "Calcule receitas de sais minerais por fase e semana",
+    icon: Beaker,
+    color: "from-green-500 to-emerald-500",
+    bgColor: "bg-green-50 dark:bg-green-950/20",
+  },
+  {
+    id: "lux-ppfd",
+    title: "Conversor Lux → PPFD",
+    description: "Converta leitura de lux para PPFD",
+    icon: Sun,
+    color: "from-orange-500 to-yellow-500",
+    bgColor: "bg-orange-50 dark:bg-orange-950/20",
+  },
+  {
+    id: "ppm-ec",
+    title: "Conversor PPM ↔ EC",
+    description: "Converta entre PPM e EC (mS/cm)",
+    icon: Gauge,
+    color: "from-purple-500 to-pink-500",
+    bgColor: "bg-purple-50 dark:bg-purple-950/20",
+  },
+  {
+    id: "ph",
+    title: "Calculadora de pH",
+    description: "Ajuste pH da solução nutritiva",
+    icon: FlaskConical,
+    color: "from-red-500 to-rose-500",
+    bgColor: "bg-red-50 dark:bg-red-950/20",
+  },
+];
 
 export default function CalculatorMenu() {
-  const calculators = [
-    {
-      id: "watering-runoff",
-      title: "Rega e Runoff",
-      description: "Calcule volume ideal de rega e meça runoff real",
-      icon: Droplets,
-      color: "from-blue-500 to-cyan-500",
-      bgColor: "bg-blue-500/10",
-      iconColor: "text-blue-600",
-    },
-    {
-      id: "nutrients",
-      title: "Fertilização",
-      description: "Calcule receitas de sais minerais por fase e semana",
-      icon: Beaker,
-      color: "from-green-500 to-emerald-500",
-      bgColor: "bg-green-500/10",
-      iconColor: "text-green-600",
-    },
-
-    {
-      id: "lux-ppfd",
-      title: "Conversor Lux → PPFD",
-      description: "Converta leitura de lux para PPFD",
-      icon: Sun,
-      color: "from-yellow-500 to-orange-500",
-      bgColor: "bg-yellow-500/10",
-      iconColor: "text-yellow-600",
-    },
-    {
-      id: "ppm-ec",
-      title: "Conversor PPM ↔ EC",
-      description: "Converta entre PPM e EC bidirecionalmente",
-      icon: Calculator,
-      color: "from-purple-500 to-pink-500",
-      bgColor: "bg-purple-500/10",
-      iconColor: "text-purple-600",
-    },
-    {
-      id: "ph-adjust",
-      title: "Calculadora de pH",
-      description: "Calcule ajustes necessários de pH",
-      icon: TestTube,
-      color: "from-red-500 to-rose-500",
-      bgColor: "bg-red-500/10",
-      iconColor: "text-red-600",
-    },
-  ];
-
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
-        <div className="w-full px-2 py-6 sm:max-w-7xl sm:mx-auto sm:px-3 md:px-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
-              <Calculator className="w-6 h-6 text-white" />
+      <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6 md:p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <Gauge className="w-6 h-6 md:w-8 md:h-8" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Calculadoras</h1>
-              <p className="text-sm text-muted-foreground">Ferramentas para cultivo</p>
+              <h1 className="text-2xl md:text-3xl font-bold">Calculadoras</h1>
+              <p className="text-green-100 text-sm md:text-base">Ferramentas para cultivo</p>
             </div>
           </div>
         </div>
-      </header>
+      </div>
 
-      {/* Content */}
-      <main className="w-full px-0 py-4 md:max-w-7xl md:mx-auto md:px-4 md:py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 px-0 md:px-0">
+      {/* Grid de Calculadoras */}
+      <div className="p-4 md:p-8">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {calculators.map((calc) => {
             const Icon = calc.icon;
             return (
               <Link key={calc.id} href={`/calculators/${calc.id}`}>
                 <Card className={`cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 ${calc.bgColor} hover:border-primary/50`}>
-                  <CardHeader className="p-3 md:p-6 pb-2 md:pb-4">
-                    <div className={`w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br ${calc.color} flex items-center justify-center mb-2 md:mb-4 shadow-lg`}>
-                      <Icon className="w-5 h-5 md:w-8 md:h-8 text-white" />
+                  <CardHeader className="pb-4">
+                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${calc.color} flex items-center justify-center mb-4 shadow-lg`}>
+                      <Icon className="w-8 h-8 text-white" />
                     </div>
-                    <CardTitle className="text-lg md:text-xl">{calc.title}</CardTitle>
-                    <CardDescription className="text-sm md:text-base">
+                    <CardTitle className="text-xl">{calc.title}</CardTitle>
+                    <CardDescription className="text-base">
                       {calc.description}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="p-3 md:p-6 pt-0">
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
-                      <span>Abrir calculadora</span>
-                      <span className="text-2xl">→</span>
+                  <CardContent>
+                    <div className="flex items-center text-sm text-primary font-medium">
+                      Abrir calculadora →
                     </div>
                   </CardContent>
                 </Card>
@@ -97,35 +90,7 @@ export default function CalculatorMenu() {
             );
           })}
         </div>
-
-        {/* Info Card */}
-        <Card className="mt-4 md:mt-8 bg-primary/10 border-primary/20">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Beaker className="w-5 h-5 text-green-600" />
-              Sobre as Calculadoras
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 text-sm text-foreground">
-            <p>
-              <strong>💧 Rega e Runoff:</strong> Calcule o volume ideal de rega e meça o runoff real com recomendações de ajuste
-            </p>
-            <p>
-              <strong>🧪 Fertilização:</strong> Calcule receitas de sais minerais (Nitrato de Cálcio, Potássio, MKP, Sulfato de Magnésio) por fase e semana
-            </p>
-
-            <p>
-              <strong>☀️ Lux → PPFD:</strong> Converta leituras de luxímetro para PPFD (medida usada em cultivo)
-            </p>
-            <p>
-              <strong>🧪 PPM ↔ EC:</strong> Converta entre partes por milhão e condutividade elétrica
-            </p>
-            <p>
-              <strong>🔬 pH:</strong> Calcule quanto ácido/base adicionar para ajustar o pH da solução
-            </p>
-          </CardContent>
-        </Card>
-      </main>
+      </div>
     </div>
   );
 }
