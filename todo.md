@@ -895,3 +895,4 @@
 - [x] Implementar pull-to-refresh na Home
 - [x] Implementar pull-to-refresh em Plantas (pronto para expandir)
 - [x] Testar funcionalidade em mobile
+- [x] Remover max-width e padding no mobile do CalculatorMenu
