@@ -930,3 +930,8 @@
 - [x] Ajustar padding (py-8 px-4), gap (16px) e colunas (320px fixas)
 - [x] Testar em desktop - Layout idêntico à versão funcionando ✅
 - [x] Cards agora ocupam bem o espaço disponível (320px cada)
+
+## Encontrar página com grid de cards funcionando
+- [x] Procurar todas as páginas .tsx no projeto
+- [x] Identificar qual usa grid de cards - ManageStrains usa grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6
+- [x] Refazer CalculatorMenu do zero usando estrutura simples de ManageStrains
