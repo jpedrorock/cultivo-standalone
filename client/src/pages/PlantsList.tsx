@@ -15,8 +15,11 @@ import {
 } from "@/components/ui/dialog";
 import { Plus, Sprout, Search, Filter, ChevronDown, ChevronRight, MoveRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { EmptyState } from "@/components/EmptyState";
+import { useLocation } from "wouter";
 
 export default function PlantsList() {
+  const [, navigate] = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<"ACTIVE" | "HARVESTED" | "DEAD" | undefined>();
   
@@ -320,21 +323,13 @@ export default function PlantsList() {
             })}
           </div>
         ) : (
-          <Card>
-            <CardContent className="py-12 text-center">
-              <Sprout className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-              <p className="text-lg font-medium text-foreground mb-2">Nenhuma planta encontrada</p>
-              <p className="text-sm text-muted-foreground mb-4">
-                Comece adicionando sua primeira planta
-              </p>
-              <Link href="/plants/new">
-                <Button>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Nova Planta
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
+          <EmptyState
+            icon={Sprout}
+            title="Nenhuma planta encontrada"
+            description="Comece adicionando sua primeira planta para acompanhar o crescimento e desenvolvimento."
+            actionLabel="Nova Planta"
+            onAction={() => navigate("/plants/new")}
+          />
         )}
       </main>
 

@@ -257,65 +257,68 @@ export default function Nutrients() {
         </TabsList>
         
         <TabsContent value="calculator" className="space-y-6">
-          {/* Seletor de Fase e Semana */}
-          <Card>
-            <CardHeader>
-              <CardTitle>1. Selecione a Fase e Semana</CardTitle>
-              <CardDescription>O sistema calculará automaticamente os produtos e quantidades</CardDescription>
-            </CardHeader>
-            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Fase</Label>
-                <Select value={phase} onValueChange={(v) => setPhase(v as Phase)}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="CLONING">🌱 Clonagem</SelectItem>
-                    <SelectItem value="VEGA">🌿 Vegetativa</SelectItem>
-                    <SelectItem value="FLORA">🌸 Floração</SelectItem>
-                    <SelectItem value="MAINTENANCE">🔧 Manutenção</SelectItem>
-                    <SelectItem value="DRYING">💨 Secagem</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label>Semana</Label>
-                <Select value={week.toString()} onValueChange={(v) => setWeek(Number(v))}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map(w => (
-                      <SelectItem key={w} value={w.toString()}>Semana {w}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </CardContent>
-          </Card>
-          
-          {/* Campo de Volume */}
-          <Card className="border-green-200 shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-2xl">2. Quantos litros você vai preparar?</CardTitle>
-              <CardDescription>Digite o volume total da solução nutritiva</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-4">
-                <Input
-                  type="number"
-                  value={volumeL}
-                  onChange={(e) => setVolumeL(Number(e.target.value))}
-                  className="text-4xl h-20 text-center font-bold"
-                  min={1}
-                  max={1000}
-                />
-                <span className="text-4xl font-bold text-muted-foreground">Litros</span>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Inputs - Grid de 2 colunas no desktop */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Seletor de Fase e Semana */}
+            <Card>
+              <CardHeader>
+                <CardTitle>1. Selecione a Fase e Semana</CardTitle>
+                <CardDescription>O sistema calculará automaticamente os produtos e quantidades</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Fase</Label>
+                  <Select value={phase} onValueChange={(v) => setPhase(v as Phase)}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="CLONING">🌱 Clonagem</SelectItem>
+                      <SelectItem value="VEGA">🌿 Vegetativa</SelectItem>
+                      <SelectItem value="FLORA">🌸 Floração</SelectItem>
+                      <SelectItem value="MAINTENANCE">🔧 Manutenção</SelectItem>
+                      <SelectItem value="DRYING">💨 Secagem</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label>Semana</Label>
+                  <Select value={week.toString()} onValueChange={(v) => setWeek(Number(v))}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[1, 2, 3, 4, 5, 6, 7, 8].map(w => (
+                        <SelectItem key={w} value={w.toString()}>Semana {w}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Campo de Volume */}
+            <Card className="border-green-500/30">
+              <CardHeader>
+                <CardTitle className="text-2xl">2. Quantos litros você vai preparar?</CardTitle>
+                <CardDescription>Digite o volume total da solução nutritiva</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-4">
+                  <Input
+                    type="number"
+                    value={volumeL}
+                    onChange={(e) => setVolumeL(Number(e.target.value))}
+                    className="text-4xl h-20 text-center font-bold"
+                    min={1}
+                    max={1000}
+                  />
+                  <span className="text-4xl font-bold text-foreground">Litros</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
           
           {/* Receita Calculada */}
           <Card className="border-green-500">
@@ -361,22 +364,22 @@ export default function Nutrients() {
               <div className="space-y-3">
                 <h3 className="font-semibold text-lg">NPK Total</h3>
                 <div className="grid grid-cols-3 gap-3">
-                  <Card className="bg-purple-50 border-purple-200">
+                  <Card className="bg-purple-500/10 dark:bg-purple-500/20 border-purple-500/30">
                     <CardContent className="pt-4">
                       <p className="text-sm text-muted-foreground">Nitrogênio (N):</p>
-                      <p className="text-2xl font-bold text-purple-700">{npkTotal.n} ppm</p>
+                      <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{npkTotal.n} ppm</p>
                     </CardContent>
                   </Card>
-                  <Card className="bg-blue-50 border-blue-200">
+                  <Card className="bg-blue-500/10 dark:bg-blue-500/20 border-blue-500/30">
                     <CardContent className="pt-4">
                       <p className="text-sm text-muted-foreground">Fósforo (P):</p>
-                      <p className="text-2xl font-bold text-blue-700">{npkTotal.p} ppm</p>
+                      <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{npkTotal.p} ppm</p>
                     </CardContent>
                   </Card>
-                  <Card className="bg-green-50 border-green-200">
+                  <Card className="bg-green-500/10 dark:bg-green-500/20 border-green-500/30">
                     <CardContent className="pt-4">
                       <p className="text-sm text-muted-foreground">Potássio (K):</p>
-                      <p className="text-2xl font-bold text-green-700">{npkTotal.k} ppm</p>
+                      <p className="text-2xl font-bold text-green-600 dark:text-green-400">{npkTotal.k} ppm</p>
                     </CardContent>
                   </Card>
                 </div>
@@ -386,38 +389,38 @@ export default function Nutrients() {
               <div className="space-y-3">
                 <h3 className="font-semibold text-lg">Micronutrientes</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <Card className="bg-orange-50 border-orange-200">
+                  <Card className="bg-orange-500/10 dark:bg-orange-500/20 border-orange-500/30">
                     <CardContent className="pt-4">
                       <p className="text-sm text-muted-foreground">Cálcio (Ca):</p>
-                      <p className="text-xl font-bold text-orange-700">{microsTotal.ca} ppm</p>
+                      <p className="text-xl font-bold text-orange-600 dark:text-orange-400">{microsTotal.ca} ppm</p>
                     </CardContent>
                   </Card>
-                  <Card className="bg-emerald-50 border-emerald-200">
+                  <Card className="bg-emerald-500/10 dark:bg-emerald-500/20 border-emerald-500/30">
                     <CardContent className="pt-4">
                       <p className="text-sm text-muted-foreground">Magnésio (Mg):</p>
-                      <p className="text-xl font-bold text-emerald-700">{microsTotal.mg} ppm</p>
+                      <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">{microsTotal.mg} ppm</p>
                     </CardContent>
                   </Card>
-                  <Card className="bg-yellow-50 border-yellow-200">
+                  <Card className="bg-yellow-500/10 dark:bg-yellow-500/20 border-yellow-500/30">
                     <CardContent className="pt-4">
                       <p className="text-sm text-muted-foreground">Ferro (Fe):</p>
-                      <p className="text-xl font-bold text-yellow-700">{microsTotal.fe} ppm</p>
+                      <p className="text-xl font-bold text-yellow-600 dark:text-yellow-400">{microsTotal.fe} ppm</p>
                     </CardContent>
                   </Card>
-                  <Card className="bg-amber-50 border-amber-200">
+                  <Card className="bg-amber-500/10 dark:bg-amber-500/20 border-amber-500/30">
                     <CardContent className="pt-4">
                       <p className="text-sm text-muted-foreground">Enxofre (S):</p>
-                      <p className="text-xl font-bold text-amber-700">{microsTotal.s} ppm</p>
+                      <p className="text-xl font-bold text-amber-600 dark:text-amber-400">{microsTotal.s} ppm</p>
                     </CardContent>
                   </Card>
                 </div>
               </div>
               
               {/* EC */}
-              <Card className="bg-blue-50 border-blue-200">
+              <Card className="bg-blue-500/10 dark:bg-blue-500/20 border-blue-500/30">
                 <CardContent className="pt-4">
                   <p className="text-sm text-muted-foreground">EC Estimado:</p>
-                  <p className="text-3xl font-bold text-blue-700">{ecEstimated} mS/cm</p>
+                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{ecEstimated} mS/cm</p>
                   <p className="text-sm text-muted-foreground mt-1">PPM Aproximado: {ppmApprox} ppm</p>
                 </CardContent>
               </Card>

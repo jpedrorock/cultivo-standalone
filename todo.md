@@ -908,3 +908,15 @@
 - [x] Criar empty states para páginas sem dados (componente EmptyState criado)
 - [x] Adicionar badges "Novo" e "Popular" nas calculadoras (Rega e Fertilização = Popular, pH = Novo)
 - [ ] Implementar loading states em botões durante operações assíncronas
+
+## Implementar EmptyState nas páginas principais
+- [ ] Adicionar EmptyState na página de Plantas quando não houver plantas cadastradas
+- [ ] Adicionar EmptyState na página de Histórico quando não houver registros
+- [ ] Adicionar EmptyState na página de Alertas quando não houver alertas ativos
+
+## Correções de Dark Mode e Layout Desktop (20/02/2026)
+- [x] Corrigir contraste do texto "Litros" no dark mode (text-muted-foreground → text-foreground)
+- [x] Corrigir cores dos cards NPK para dark mode (bg-color-500/10 dark:bg-color-500/20, text-color-600 dark:text-color-400)
+- [x] Corrigir cores dos cards Micronutrientes para dark mode (mesma estratégia de cores adaptativas)
+- [x] Corrigir cor do card EC Estimado para dark mode
+- [x] Melhorar layout desktop da calculadora de fertilização (grid 2 colunas lg:grid-cols-2 para inputs)

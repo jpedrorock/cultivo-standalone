@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Download, Calendar, Filter, Table as TableIcon, Pencil, Trash2, FileDown } from "lucide-react";
+import { Loader2, Download, Calendar, Filter, Table as TableIcon, Pencil, Trash2, FileDown, ClipboardList } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -31,8 +31,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { Printer } from "lucide-react";
+import { EmptyState } from "@/components/EmptyState";
+import { useLocation } from "wouter";
 
 export default function HistoryTable() {
+  const [, navigate] = useLocation();
   const [selectedTentId, setSelectedTentId] = useState<number | undefined>(undefined);
   const [period, setPeriod] = useState<string>("30");
   const [startDate, setStartDate] = useState<string>("");
@@ -327,11 +330,13 @@ export default function HistoryTable() {
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
               </div>
             ) : !logsData?.logs || logsData.logs.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
-                <Calendar className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>Nenhum registro encontrado</p>
-                <p className="text-sm mt-2">Ajuste os filtros ou registre novos dados</p>
-              </div>
+              <EmptyState
+                icon={ClipboardList}
+                title="Nenhum registro encontrado"
+                description="Não há registros diários para o período selecionado. Ajuste os filtros ou comece a registrar dados das suas estufas."
+                actionLabel="Registrar Dados"
+                onAction={() => navigate("/daily-log")}
+              />
             ) : (
               <>
                 {/* Mobile Card Layout */}
