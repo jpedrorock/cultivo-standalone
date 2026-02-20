@@ -899,3 +899,12 @@
 ## Adicionar padding interno geral nos cards
 - [x] Adicionar padding uniforme no Card (p-5 md:p-6) para centralizar conteúdo
 - [ ] Testar visualmente
+
+
+## Melhorias Prioritárias da Auditoria (20/02/2026)
+
+- [x] Implementar animações de entrada nos cards de calculadoras (fade-in escalonado com delay 100ms)
+- [x] Adicionar sistema de toasts para feedback visual (sucesso/erro após ações) - Já implementado com Sonner em 13 páginas
+- [x] Criar empty states para páginas sem dados (componente EmptyState criado)
+- [x] Adicionar badges "Novo" e "Popular" nas calculadoras (Rega e Fertilização = Popular, pH = Novo)
+- [ ] Implementar loading states em botões durante operações assíncronas

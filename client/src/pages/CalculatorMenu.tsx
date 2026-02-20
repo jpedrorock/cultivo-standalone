@@ -1,4 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { Calculator, Droplets, Sprout, Sun, Beaker, TestTube, Waves } from "lucide-react";
 
@@ -12,6 +13,7 @@ export default function CalculatorMenu() {
       color: "from-blue-500 to-cyan-500",
       bgColor: "bg-blue-500/10",
       iconColor: "text-blue-600",
+      badge: "Popular",
     },
     {
       id: "nutrients",
@@ -21,6 +23,7 @@ export default function CalculatorMenu() {
       color: "from-green-500 to-emerald-500",
       bgColor: "bg-green-500/10",
       iconColor: "text-green-600",
+      badge: "Popular",
     },
 
     {
@@ -49,6 +52,7 @@ export default function CalculatorMenu() {
       color: "from-red-500 to-rose-500",
       bgColor: "bg-red-500/10",
       iconColor: "text-red-600",
+      badge: "Novo",
     },
   ];
 
@@ -72,14 +76,27 @@ export default function CalculatorMenu() {
       {/* Content */}
       <main className="container mx-auto px-3 py-4 md:px-4 md:py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-          {calculators.map((calc) => {
+          {calculators.map((calc, index) => {
             const Icon = calc.icon;
             return (
               <Link key={calc.id} href={`/calculators/${calc.id}`}>
-                <Card className={`cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border-2 ${calc.bgColor} hover:border-primary/50 w-full overflow-hidden p-5 md:p-6`}>
+                <Card 
+                  className={`cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border-2 ${calc.bgColor} hover:border-primary/50 w-full overflow-hidden p-5 md:p-6 animate-in fade-in slide-in-from-bottom-4`}
+                  style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'backwards' }}
+                >
                   <CardHeader className="p-4 md:p-6 space-y-3 md:space-y-4">
-                    <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br ${calc.color} flex items-center justify-center shadow-lg`}>
-                      <Icon className="w-7 h-7 md:w-8 md:h-8 text-white" />
+                    <div className="flex items-start justify-between gap-2">
+                      <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br ${calc.color} flex items-center justify-center shadow-lg`}>
+                        <Icon className="w-7 h-7 md:w-8 md:h-8 text-white" />
+                      </div>
+                      {calc.badge && (
+                        <Badge 
+                          variant={calc.badge === "Novo" ? "default" : "secondary"}
+                          className="text-xs font-semibold"
+                        >
+                          {calc.badge}
+                        </Badge>
+                      )}
                     </div>
                     <div className="space-y-1.5">
                       <CardTitle className="text-xl md:text-2xl font-bold leading-tight">{calc.title}</CardTitle>
