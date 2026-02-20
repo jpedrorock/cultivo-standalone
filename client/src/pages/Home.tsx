@@ -363,12 +363,20 @@ export default function Home() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleteTent.isPending}>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDeleteTent}
+              disabled={deleteTent.isPending}
               className="bg-red-600 hover:bg-red-700"
             >
-              Excluir Estufa
+              {deleteTent.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Excluindo...
+                </>
+              ) : (
+                "Excluir Estufa"
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

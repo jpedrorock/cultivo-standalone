@@ -16,7 +16,8 @@ import {
   MoveRight,
   MoreVertical,
   Flower2,
-  CheckCircle
+  CheckCircle,
+  Loader2
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -177,9 +178,21 @@ export default function PlantDetail() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   {tent?.category === "VEGA" && (
-                    <DropdownMenuItem onClick={handleTransplantToFlora}>
-                      <Flower2 className="w-4 h-4 mr-2" />
-                      Transplantar para Flora
+                    <DropdownMenuItem 
+                      onClick={handleTransplantToFlora}
+                      disabled={transplantMutation.isPending}
+                    >
+                      {transplantMutation.isPending ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Transplantando...
+                        </>
+                      ) : (
+                        <>
+                          <Flower2 className="w-4 h-4 mr-2" />
+                          Transplantar para Flora
+                        </>
+                      )}
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuItem onClick={() => setMoveTentModalOpen(true)}>
@@ -187,9 +200,22 @@ export default function PlantDetail() {
                     Mover para Outra Estufa
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleHarvest} className="text-green-600">
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Marcar como Colhida
+                  <DropdownMenuItem 
+                    onClick={handleHarvest} 
+                    disabled={harvestMutation.isPending}
+                    className="text-green-600"
+                  >
+                    {harvestMutation.isPending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Salvando...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        Marcar como Colhida
+                      </>
+                    )}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

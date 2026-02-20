@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast as showToast } from "sonner";
-import { Beaker, Download } from "lucide-react";
+import { Beaker, Download, Loader2 } from "lucide-react";
 
 type Phase = "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE" | "DRYING";
 
@@ -431,8 +431,19 @@ export default function Nutrients() {
                   <Download className="w-4 h-4 mr-2" />
                   Exportar Receita (TXT)
                 </Button>
-                <Button onClick={saveRecipe} className="flex-1 bg-green-600 hover:bg-green-700">
-                  Salvar Receita
+                <Button 
+                  onClick={saveRecipe} 
+                  disabled={recordApplication.isPending}
+                  className="flex-1 bg-green-600 hover:bg-green-700"
+                >
+                  {recordApplication.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Salvando...
+                    </>
+                  ) : (
+                    "Salvar Receita"
+                  )}
                 </Button>
               </div>
             </CardContent>

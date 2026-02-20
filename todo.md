@@ -926,3 +926,13 @@
 - [x] Implementar skeleton na página de Plantas (PlantsList) - PlantListSkeleton
 - [x] Implementar skeleton na página de Histórico (HistoryTable) - HistoryTableSkeleton
 - [x] Implementar skeleton na página de Tarefas (Tasks) - TaskCardSkeleton
+
+## Implementar Loading States em Botões Assíncronos (20/02/2026)
+- [x] Adicionar loading state no botão de salvar receita (Nutrients page) - "Salvando..."
+- [x] Botão de mover plantas (PlantsList) - já tinha "Movendo..."
+- [x] Melhorar botão de exclusão (HistoryTable) - "Excluindo..." com texto
+- [x] Adicionar loading state em transplantar planta (PlantDetail) - "Transplantando..."
+- [x] Adicionar loading state em marcar como colhida (PlantDetail) - "Salvando..."
+- [x] Adicionar loading state em excluir estufa (Home) - "Excluindo..."
+- [x] Botão de criar planta (NewPlant) - já tinha "Criando..."
+- [x] Botão de salvar registro (TentLog) - já tinha "Salvando..."
