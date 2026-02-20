@@ -908,3 +908,13 @@
 - [x] Reverter margem negativa (-mx-4 sm:-mx-4) que causa cards estreitos em 640px e 1024px
 - [x] Implementar solução correta: padding responsivo (px-4 sm:px-6 lg:px-8) + xl breakpoint para 3 colunas
 - [x] Validar em 360px, 640px, 1024px, 1280px - TODOS ✅
+
+## Remover max-w-7xl para cards ocuparem toda largura
+- [ ] Remover max-w-7xl mx-auto do grid de calculadoras
+- [ ] Validar que cards agora têm ~320px ao invés de 309px
+
+## REFAZER LAYOUT COMPLETO - Muito espaço desperdiçado no mobile
+- [x] Analisar screenshot e medir espaço desperdiçado nas laterais
+- [x] Remover TODOS os paddings desnecessários (container sem padding, wrapper com p-3 md:p-4)
+- [x] Cards agora com 320px (vs 309px anterior) em desktop 1280px
+- [ ] Testar em mobile real para confirmar melhoria

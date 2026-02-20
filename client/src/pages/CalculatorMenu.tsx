@@ -47,36 +47,34 @@ const calculators = [
 
 export default function CalculatorMenu() {
   return (
-    <div className="min-h-screen w-full px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen w-full">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6 md:p-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-              <Gauge className="w-6 h-6 md:w-8 md:h-8" />
-            </div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold">Calculadoras</h1>
-              <p className="text-green-100 text-sm md:text-base">Ferramentas para cultivo</p>
-            </div>
+      <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-4 md:p-6">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+            <Gauge className="w-6 h-6 md:w-7 md:h-7" />
+          </div>
+          <div>
+            <h1 className="text-xl md:text-2xl font-bold">Calculadoras</h1>
+            <p className="text-green-100 text-sm">Ferramentas para cultivo</p>
           </div>
         </div>
       </div>
 
       {/* Grid de Calculadoras */}
-      <div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 max-w-7xl mx-auto">
+      <div className="p-3 md:p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
           {calculators.map((calc) => {
             const Icon = calc.icon;
             return (
               <Link key={calc.id} href={`/calculators/${calc.id}`}>
                 <Card className={`cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 ${calc.bgColor} hover:border-primary/50`}>
                   <CardHeader className="pb-4">
-                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${calc.color} flex items-center justify-center mb-4 shadow-lg`}>
-                      <Icon className="w-8 h-8 text-white" />
+                    <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br ${calc.color} flex items-center justify-center mb-3 shadow-lg`}>
+                      <Icon className="w-7 h-7 md:w-8 md:h-8 text-white" />
                     </div>
-                    <CardTitle className="text-xl">{calc.title}</CardTitle>
-                    <CardDescription className="text-base">
+                    <CardTitle className="text-lg md:text-xl">{calc.title}</CardTitle>
+                    <CardDescription className="text-sm md:text-base">
                       {calc.description}
                     </CardDescription>
                   </CardHeader>
