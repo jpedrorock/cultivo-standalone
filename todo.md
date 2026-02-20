@@ -918,3 +918,9 @@
 - [x] Remover TODOS os paddings desnecessários (container sem padding, wrapper com p-3 md:p-4)
 - [x] Cards agora com 320px (vs 309px anterior) em desktop 1280px
 - [ ] Testar em mobile real para confirmar melhoria
+
+## ESPAÇO BRANCO EXCESSIVO NO MOBILE
+- [x] Analisar screenshot do mobile e medir espaço branco real - Card tinha px-6 (24px cada lado)
+- [x] Verificar se Card component tem padding interno excessivo - SIM! CardHeader e CardContent com px-6
+- [x] Remover padding do CardHeader e CardContent - Reduzido para px-3 md:px-6 (12px mobile, 24px desktop)
+- [x] Ganho de 24px (7.8%) no mobile - Card agora com 330px de conteúdo vs 306px anterior
