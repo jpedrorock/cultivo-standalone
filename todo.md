@@ -881,3 +881,10 @@
 - [ ] Testar edge cases e validações
 - [x] Documentar resultados dos testes
 - [x] Corrigir padding mobile excessivo na página de calculadoras
+
+## Investigação Profunda - Padding Mobile Cards Calculadoras
+
+- [x] Analisar estrutura completa do CalculatorMenu.tsx
+- [x] Verificar se DashboardLayout adiciona padding (ENCONTRADO: p-4 no main)
+- [x] Implementar solução definitiva (px-0 no mobile no DashboardLayout main)
+- [ ] Testar em mobile real
