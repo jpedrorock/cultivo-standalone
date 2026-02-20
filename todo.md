@@ -936,3 +936,11 @@
 - [x] Adicionar loading state em excluir estufa (Home) - "Excluindo..."
 - [x] Botão de criar planta (NewPlant) - já tinha "Criando..."
 - [x] Botão de salvar registro (TentLog) - já tinha "Salvando..."
+
+## Implementar Funcionalidade de Desfazer Exclusões (20/02/2026)
+- [x] Implementar undo para exclusão de registros diários (HistoryTable) - 5s grace period
+- [x] Implementar undo para exclusão de estufas (Home) - 5s grace period
+- [x] Implementar undo para exclusão de strains (Strains page) - 5s grace period
+- [x] Implementar undo para exclusão de strains (ManageStrains page) - 5s grace period
+- [x] Adicionar toast com botão "Desfazer" e timer de 5 segundos usando Sonner
+- [x] Plantas não têm funcionalidade de exclusão (apenas harvest/transplant)

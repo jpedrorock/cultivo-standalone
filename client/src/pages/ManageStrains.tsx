@@ -92,15 +92,34 @@ export default function ManageStrains() {
   const handleDelete = async () => {
     if (!selectedStrain) return;
 
-    try {
-      await deleteStrain.mutateAsync({ id: selectedStrain.id });
-      toast.success("Strain deletada com sucesso!");
-      setIsDeleteOpen(false);
-      setSelectedStrain(null);
-      refetch();
-    } catch (error) {
-      toast.error("Erro ao deletar strain");
-    }
+    const strain = selectedStrain;
+    setIsDeleteOpen(false);
+    setSelectedStrain(null);
+    
+    let timeoutId: NodeJS.Timeout | null = null;
+    
+    // Show toast with undo button
+    toast.info(`Strain "${strain.name}" será excluída em 5 segundos`, {
+      duration: 5000,
+      action: {
+        label: "Desfazer",
+        onClick: () => {
+          if (timeoutId) clearTimeout(timeoutId);
+          toast.success("Exclusão cancelada!");
+        },
+      },
+    });
+    
+    // Schedule deletion after 5 seconds
+    timeoutId = setTimeout(async () => {
+      try {
+        await deleteStrain.mutateAsync({ id: strain.id });
+        toast.success("Strain deletada com sucesso!");
+        refetch();
+      } catch (error) {
+        toast.error("Erro ao deletar strain");
+      }
+    }, 5000);
   };
 
   const openEditDialog = (strain: any) => {

@@ -63,9 +63,28 @@ export default function Home() {
 
   const confirmDeleteTent = () => {
     if (tentToDelete) {
-      deleteTent.mutate({ id: tentToDelete.id });
+      const tent = tentToDelete;
       setDeleteDialogOpen(false);
       setTentToDelete(null);
+      
+      let timeoutId: NodeJS.Timeout | null = null;
+      
+      // Show toast with undo button
+      toast.info(`Estufa "${tent.name}" será excluída em 5 segundos`, {
+        duration: 5000,
+        action: {
+          label: "Desfazer",
+          onClick: () => {
+            if (timeoutId) clearTimeout(timeoutId);
+            toast.success("Exclusão cancelada!");
+          },
+        },
+      });
+      
+      // Schedule deletion after 5 seconds
+      timeoutId = setTimeout(() => {
+        deleteTent.mutate({ id: tent.id });
+      }, 5000);
     }
   };
 

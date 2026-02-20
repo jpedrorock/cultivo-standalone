@@ -91,7 +91,27 @@ export default function HistoryTable() {
 
   const handleDelete = () => {
     if (deletingLogId) {
-      deleteMutation.mutate({ id: deletingLogId });
+      const logId = deletingLogId;
+      setDeletingLogId(null); // Close dialog immediately
+      
+      let timeoutId: NodeJS.Timeout | null = null;
+      
+      // Show toast with undo button
+      toast.info("Registro será excluído em 5 segundos", {
+        duration: 5000,
+        action: {
+          label: "Desfazer",
+          onClick: () => {
+            if (timeoutId) clearTimeout(timeoutId);
+            toast.success("Exclusão cancelada!");
+          },
+        },
+      });
+      
+      // Schedule deletion after 5 seconds
+      timeoutId = setTimeout(() => {
+        deleteMutation.mutate({ id: logId });
+      }, 5000);
     }
   };
 

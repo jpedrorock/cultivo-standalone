@@ -103,7 +103,24 @@ export default function Strains() {
 
   const handleDelete = (id: number, name: string) => {
     if (confirm(`Tem certeza que deseja excluir a strain "${name}"?`)) {
-      deleteStrain.mutate({ id });
+      let timeoutId: NodeJS.Timeout | null = null;
+      
+      // Show toast with undo button
+      toast.info(`Strain "${name}" será excluída em 5 segundos`, {
+        duration: 5000,
+        action: {
+          label: "Desfazer",
+          onClick: () => {
+            if (timeoutId) clearTimeout(timeoutId);
+            toast.success("Exclusão cancelada!");
+          },
+        },
+      });
+      
+      // Schedule deletion after 5 seconds
+      timeoutId = setTimeout(() => {
+        deleteStrain.mutate({ id });
+      }, 5000);
     }
   };
 
