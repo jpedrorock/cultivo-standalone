@@ -880,3 +880,8 @@
 - [ ] Testar fluxo completo: planta → fotos → saúde → mover
 - [ ] Testar edge cases e validações
 - [x] Documentar resultados dos testes
+
+## Cards ocuparem largura completa no mobile
+- [x] Remover width: 333px fixo dos cards
+- [x] Adicionar w-full para cards ocuparem 100% da largura disponível
+- [ ] Testar no mobile para confirmar
