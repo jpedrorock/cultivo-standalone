@@ -17,7 +17,8 @@ import {
   MoreVertical,
   Flower2,
   CheckCircle,
-  Loader2
+  Loader2,
+  Trash2
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -69,6 +70,16 @@ export default function PlantDetail() {
     },
   });
   
+  const deleteMutation = trpc.plants.delete.useMutation({
+    onSuccess: () => {
+      toast.success('✅ Planta excluída com sucesso!');
+      window.location.href = '/plants';
+    },
+    onError: (error) => {
+      toast.error(`Erro ao excluir planta: ${error.message}`);
+    },
+  });
+  
   // Handlers
   const handleTransplantToFlora = () => {
     if (confirm('Deseja transplantar esta planta para a estufa de Flora?')) {
@@ -80,6 +91,33 @@ export default function PlantDetail() {
     if (confirm('Deseja marcar esta planta como colhida?')) {
       harvestMutation.mutate({ plantId, status: 'HARVESTED' });
     }
+  };
+  
+  const handleDelete = () => {
+    const plantId = deleteMutation.variables?.plantId;
+    
+    let timeoutId: NodeJS.Timeout | null = null;
+    
+    // Show toast with undo button
+    toast.info('Planta será excluída em 5 segundos', {
+      duration: 5000,
+      action: {
+        label: 'Desfazer',
+        onClick: () => {
+          if (timeoutId) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+          }
+          toast.success('Exclusão cancelada!');
+        },
+      },
+    });
+    
+    // Set timeout to execute deletion after 5 seconds
+    timeoutId = setTimeout(() => {
+      deleteMutation.mutate({ plantId: plant!.id });
+      timeoutId = null;
+    }, 5000);
   };
 
   if (isLoading) {
@@ -214,6 +252,24 @@ export default function PlantDetail() {
                       <>
                         <CheckCircle className="w-4 h-4 mr-2" />
                         Marcar como Colhida
+                      </>
+                    )}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    onClick={handleDelete}
+                    disabled={deleteMutation.isPending}
+                    className="text-red-600"
+                  >
+                    {deleteMutation.isPending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Excluindo...
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Excluir Planta
                       </>
                     )}
                   </DropdownMenuItem>

@@ -981,3 +981,9 @@
 - [ ] Remover zero à esquerda na calculadora de fertilização
 - [ ] Design das cores da calculadora: usar uma cor diferente por elemento (não tudo verde)
 - [ ] Melhorar visualização da página de histórico no mobile com mais de 3 estufas
+
+## Implementar Funcionalidade de Excluir Planta (20/02/2026)
+- [x] Adicionar endpoint de exclusão de planta no backend (plants.delete com cascade)
+- [x] Adicionar botão de excluir no menu de ações da planta (PlantDetail)
+- [x] Adicionar toast com undo de 5 segundos antes de excluir
+- [ ] Testar exclusão de planta

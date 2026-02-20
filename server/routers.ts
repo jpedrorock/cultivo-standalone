@@ -2049,6 +2049,28 @@ export const appRouter = router({
         return { success: true };
       }),
 
+    // Excluir planta permanentemente
+    delete: publicProcedure
+      .input(z.object({ plantId: z.number() }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Delete all related records first (cascade)
+        await database.delete(plantObservations).where(eq(plantObservations.plantId, input.plantId));
+        await database.delete(plantPhotos).where(eq(plantPhotos.plantId, input.plantId));
+        await database.delete(plantRunoffLogs).where(eq(plantRunoffLogs.plantId, input.plantId));
+        await database.delete(plantHealthLogs).where(eq(plantHealthLogs.plantId, input.plantId));
+        await database.delete(plantTrichomeLogs).where(eq(plantTrichomeLogs.plantId, input.plantId));
+        await database.delete(plantLSTLogs).where(eq(plantLSTLogs.plantId, input.plantId));
+        await database.delete(plantTentHistory).where(eq(plantTentHistory.plantId, input.plantId));
+        
+        // Delete the plant itself
+        await database.delete(plants).where(eq(plants.id, input.plantId));
+        
+        return { success: true };
+      }),
+
     // Buscar fotos da planta
     getPhotos: publicProcedure
       .input(z.object({ plantId: z.number() }))
