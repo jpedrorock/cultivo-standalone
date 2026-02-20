@@ -994,3 +994,7 @@
 - [x] Adicionar botão de excluir no menu de ações da planta (PlantDetail)
 - [x] Adicionar toast com undo de 5 segundos antes de excluir
 - [ ] Testar exclusão de planta
+
+## Corrigir Bug de Criação de Registros Diários (20/02/2026)
+- [x] Investigar por que não consegue criar registros a partir da página de histórico - Faltava botão
+- [x] Adicionar botão "Novo Registro" que redireciona para /tent-log

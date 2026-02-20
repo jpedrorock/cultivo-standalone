@@ -202,6 +202,10 @@ export default function HistoryTable() {
               </div>
             </div>
             <div className="flex gap-2 w-full md:w-auto">
+              <Button variant="default" onClick={() => navigate("/tent-log")} className="flex-1 md:flex-none">
+                <ClipboardList className="w-4 h-4 md:mr-2" />
+                <span className="hidden md:inline">Novo Registro</span>
+              </Button>
               <Button variant="outline" onClick={handlePrint} disabled={!logsData?.logs || logsData.logs.length === 0} className="flex-1 md:flex-none">
                 <Printer className="w-4 h-4 md:mr-2" />
                 <span className="hidden md:inline">Imprimir</span>
