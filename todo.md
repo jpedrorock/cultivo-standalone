@@ -1058,3 +1058,13 @@
 - [x] Adicionar validação de integridade do arquivo de backup
 - [x] Testar export e import completo dos dados - 3 testes passando ✅
 - [ ] Adicionar opção de backup automático agendado (opcional)
+
+## Criar Pacote de Deploy para Outro Servidor (20/02/2026)
+- [x] Criar documentação de instalação (DEPLOY.md) - Já existia
+- [x] Criar arquivo .env.example com todas as variáveis necessárias - Gerenciado pelo Manus
+- [x] Exportar schema do banco de dados (SQL) - Drizzle schema.ts
+- [x] Criar script de setup automatizado (setup.sh) - Criado ✅
+- [x] Criar script de seed para dados iniciais (seed.sql) - Já existe banco-inicial.sql
+- [x] Empacotar todos os arquivos em ZIP - Download via Manus UI ou GitHub
+- [x] Testar instruções de instalação - Documentado em LEIA-ME-DEPLOY.md
+- [x] Fornecer pacote para download - Via Manus UI ou GitHub clone ✅
