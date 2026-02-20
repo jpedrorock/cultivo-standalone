@@ -945,3 +945,15 @@
 - [x] Criar novo arquivo sem aproveitar NADA do anterior
 - [x] Usar APENAS grid simples: grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6
 - [x] SEM padding complexo, SEM max-w, SEM nada customizado - apenas container mx-auto p-6
+
+## COMPARAR HTML DAS DUAS VERSÕES
+- [ ] Extrair HTML completo da versão funcionando
+- [ ] Extrair HTML completo da versão atual
+- [ ] Comparar lado a lado e identificar diferenças
+- [ ] Aplicar correção baseada nas diferenças encontradas
+
+## REPLICAR LAYOUT COMPLETO DO ANDY.PLUS
+- [x] Analisar screenshot do andy.plus - cards coloridos com ícones grandes
+- [x] Recriar página com cards coloridos (blue, green, orange, purple)
+- [x] Header verde com título e descrição
+- [x] Grid responsivo com max-w-7xl mx-auto
