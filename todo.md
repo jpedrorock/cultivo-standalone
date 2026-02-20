@@ -944,3 +944,10 @@
 - [x] Implementar undo para exclusão de strains (ManageStrains page) - 5s grace period
 - [x] Adicionar toast com botão "Desfazer" e timer de 5 segundos usando Sonner
 - [x] Plantas não têm funcionalidade de exclusão (apenas harvest/transplant)
+
+## Corrigir Testes Falhando (20/02/2026)
+- [x] Corrigir testes de daily logs - criar tent com campos obrigatórios (category, width, depth, height)
+- [x] Corrigir testes de nutrientes - trocar amountMl por amountG (sais minerais sólidos)
+- [x] Corrigir testes de cycles - criar tent e strain com nomes únicos (timestamp)
+- [x] Corrigir teste de plantHealth - buscar strain após criação para obter ID
+- [x] Todos os 80 testes passando com sucesso! 🎉

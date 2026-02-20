@@ -24,18 +24,39 @@ describe('Plant Health - Update and Delete', () => {
     const ctx = createTestContext();
     caller = appRouter.createCaller(ctx);
     
+    // First create tent and strain
+    const tent = await caller.tents.create({
+      name: "Test Tent Health",
+      location: "Test Location",
+      category: "VEGA",
+      width: 120,
+      depth: 120,
+      height: 200,
+    });
+
+    const strainName = `Test Strain Health ${Date.now()}`;
+    await caller.strains.create({
+      name: strainName,
+      vegaWeeks: 4,
+      floraWeeks: 8,
+    });
+
+    // Fetch the created strain to get its ID
+    const allStrains = await caller.strains.list();
+    const strain = allStrains.find(s => s.name === strainName);
+    if (!strain) throw new Error('Test strain not found');
+    
     // Criar planta de teste
     await caller.plants.create({
       name: 'Test Plant Health',
       code: 'TPH-001',
-      strainId: 1,
-      currentTentId: 1,
-      germDate: new Date().toISOString(),
+      strainId: strain.id,
+      currentTentId: tent.id,
       notes: 'Test plant for health operations'
     });
     
     // Buscar a planta criada para pegar o ID
-    const plants = await caller.plants.list({ tentId: 1 });
+    const plants = await caller.plants.list({ tentId: tent.id });
     const testPlant = plants.find(p => p.code === 'TPH-001');
     if (!testPlant) throw new Error('Test plant not found');
     testPlantId = testPlant.id;

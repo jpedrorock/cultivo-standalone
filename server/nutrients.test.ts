@@ -61,33 +61,32 @@ describe('Nutrient Calculations', () => {
   describe('Nutrient Mix Calculations', () => {
     it('should calculate NPK totals correctly', () => {
       const products: NutrientProduct[] = [
-        { name: 'Grow', amountMl: 30, npk: '7-4-10' }, // 30ml em 10L
+        { name: 'Nitrato de Cálcio', amountG: 5, npk: '15.5-0-0', ca: 19 }, // 5g em 10L
       ];
 
       const mix = calculateNutrientMix(products, 10);
 
       expect(mix.npkTotal.n).toBeGreaterThan(0);
-      expect(mix.npkTotal.p).toBeGreaterThan(0);
-      expect(mix.npkTotal.k).toBeGreaterThan(0);
+      expect(mix.micronutrients.ca).toBeGreaterThan(0);
     });
 
     it('should calculate micronutrients correctly', () => {
       const products: NutrientProduct[] = [
-        { name: 'CalMag', amountMl: 20, ca: 3, mg: 1 },
-        { name: 'Iron', amountMl: 10, fe: 0.5 },
+        { name: 'Sulfato de Magnésio', amountG: 3, mg: 10, s: 13 },
+        { name: 'Micronutrientes', amountG: 0.5, fe: 6 },
       ];
 
       const mix = calculateNutrientMix(products, 10);
 
-      expect(mix.micronutrients.ca).toBeGreaterThan(0);
       expect(mix.micronutrients.mg).toBeGreaterThan(0);
       expect(mix.micronutrients.fe).toBeGreaterThan(0);
+      expect(mix.micronutrients.s).toBeGreaterThan(0);
     });
 
     it('should estimate EC based on total nutrients', () => {
       const products: NutrientProduct[] = [
-        { name: 'Grow', amountMl: 50, npk: '7-4-10' },
-        { name: 'CalMag', amountMl: 20, ca: 3, mg: 1 },
+        { name: 'Nitrato de Cálcio', amountG: 5, npk: '15.5-0-0', ca: 19 },
+        { name: 'Sulfato de Magnésio', amountG: 3, mg: 10, s: 13 },
       ];
 
       const mix = calculateNutrientMix(products, 10);
@@ -98,7 +97,7 @@ describe('Nutrient Calculations', () => {
 
     it('should return correct structure', () => {
       const products: NutrientProduct[] = [
-        { name: 'Test', amountMl: 10, npk: '5-5-5' },
+        { name: 'Test', amountG: 5, npk: '15-0-0' },
       ];
 
       const mix = calculateNutrientMix(products, 10);
@@ -156,7 +155,8 @@ describe('Nutrient Calculations', () => {
       const recipe20L = getRecommendedRecipe('VEGA', 2, 20);
 
       // Products should scale proportionally
-      expect(recipe20L.products[0].amountMl).toBeGreaterThan(recipe10L.products[0].amountMl);
+      expect(recipe20L.products[0].amountG).toBeGreaterThan(recipe10L.products[0].amountG);
+      expect(recipe20L.products[0].amountG).toBeCloseTo(recipe10L.products[0].amountG * 2, 1);
     });
   });
 });

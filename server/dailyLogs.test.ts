@@ -36,8 +36,18 @@ describe("dailyLogs API", () => {
     const ctx = createTestContext();
     const caller = appRouter.createCaller(ctx);
 
+    // First create a tent
+    const tent = await caller.tents.create({
+      name: "Test Tent",
+      location: "Test Location",
+      category: "VEGA",
+      width: 120,
+      depth: 120,
+      height: 200,
+    });
+
     const result = await caller.dailyLogs.create({
-      tentId: 1,
+      tentId: tent.id,
       logDate: new Date(),
       turn: "AM",
       tempC: "23.5",
@@ -53,8 +63,18 @@ describe("dailyLogs API", () => {
     const ctx = createTestContext();
     const caller = appRouter.createCaller(ctx);
 
+    // First create a tent
+    const tent = await caller.tents.create({
+      name: "Test Tent",
+      location: "Test Location",
+      category: "VEGA",
+      width: 120,
+      depth: 120,
+      height: 200,
+    });
+
     const result = await caller.dailyLogs.list({
-      tentId: 1,
+      tentId: tent.id,
     });
 
     expect(Array.isArray(result)).toBe(true);
@@ -64,11 +84,21 @@ describe("dailyLogs API", () => {
     const ctx = createTestContext();
     const caller = appRouter.createCaller(ctx);
 
+    // First create a tent
+    const tent = await caller.tents.create({
+      name: "Test Tent",
+      location: "Test Location",
+      category: "VEGA",
+      width: 120,
+      depth: 120,
+      height: 200,
+    });
+
     const startDate = new Date("2026-02-01");
     const endDate = new Date("2026-02-10");
 
     const result = await caller.dailyLogs.list({
-      tentId: 1,
+      tentId: tent.id,
       startDate,
       endDate,
     });

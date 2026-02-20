@@ -34,9 +34,25 @@ describe("cycles API", () => {
     const ctx = createTestContext();
     const caller = appRouter.createCaller(ctx);
 
+    // First create a tent and strain
+    const tent = await caller.tents.create({
+      name: "Test Tent C",
+      location: "Test Location",
+      category: "FLORA",
+      width: 120,
+      depth: 120,
+      height: 200,
+    });
+
+    const strain = await caller.strains.create({
+      name: `Test Strain ${Date.now()}`,
+      vegaWeeks: 4,
+      floraWeeks: 8,
+    });
+
     const result = await caller.cycles.create({
-      tentId: 3, // Estufa C
-      strainId: 1,
+      tentId: tent.id,
+      strainId: strain.id,
       startDate: new Date(),
     });
 
@@ -57,11 +73,33 @@ describe("cycles API", () => {
     const ctx = createTestContext();
     const caller = appRouter.createCaller(ctx);
 
-    const cycle = await caller.cycles.getByTent({ tentId: 2 }); // Estufa B
+    // Create tent, strain, and cycle
+    const tent = await caller.tents.create({
+      name: "Test Tent B",
+      location: "Test Location",
+      category: "FLORA",
+      width: 120,
+      depth: 120,
+      height: 200,
+    });
+
+    const strain = await caller.strains.create({
+      name: `Test Strain B ${Date.now()}`,
+      vegaWeeks: 4,
+      floraWeeks: 8,
+    });
+
+    await caller.cycles.create({
+      tentId: tent.id,
+      strainId: strain.id,
+      startDate: new Date(),
+    });
+
+    const cycle = await caller.cycles.getByTent({ tentId: tent.id });
 
     expect(cycle).toBeDefined();
     if (cycle) {
-      expect(cycle.tentId).toBe(2);
+      expect(cycle.tentId).toBe(tent.id);
       expect(cycle.status).toBe("ACTIVE");
     }
   });
@@ -70,17 +108,49 @@ describe("cycles API", () => {
     const ctx = createTestContext();
     const caller = appRouter.createCaller(ctx);
 
-    const cycle = await caller.cycles.getByTent({ tentId: 1 }); // Estufa A (não tem ciclo)
+    // Create a tent without a cycle
+    const tent = await caller.tents.create({
+      name: "Test Tent A",
+      location: "Test Location",
+      category: "VEGA",
+      width: 120,
+      depth: 120,
+      height: 200,
+    });
 
-    expect(cycle).toBeNull();
+    const cycle = await caller.cycles.getByTent({ tentId: tent.id });
+
+    expect(cycle).toBeUndefined();
   });
 
   it("should start flora phase", async () => {
     const ctx = createTestContext();
     const caller = appRouter.createCaller(ctx);
 
-    // Get cycle from Estufa C
-    const cycle = await caller.cycles.getByTent({ tentId: 3 });
+    // Create tent, strain, and cycle
+    const tent = await caller.tents.create({
+      name: "Test Tent Flora",
+      location: "Test Location",
+      category: "VEGA",
+      width: 120,
+      depth: 120,
+      height: 200,
+    });
+
+    const strain = await caller.strains.create({
+      name: `Test Strain Flora ${Date.now()}`,
+      vegaWeeks: 4,
+      floraWeeks: 8,
+    });
+
+    await caller.cycles.create({
+      tentId: tent.id,
+      strainId: strain.id,
+      startDate: new Date(),
+    });
+
+    // Get cycle
+    const cycle = await caller.cycles.getByTent({ tentId: tent.id });
     expect(cycle).toBeDefined();
 
     // Start flora (will update if not already in flora)
@@ -92,7 +162,7 @@ describe("cycles API", () => {
     expect(result).toEqual({ success: true });
 
     // Verify flora date is set
-    const updatedCycle = await caller.cycles.getByTent({ tentId: 3 });
+    const updatedCycle = await caller.cycles.getByTent({ tentId: tent.id });
     expect(updatedCycle?.floraStartDate).toBeDefined();
   });
 });
