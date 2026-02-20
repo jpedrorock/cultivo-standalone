@@ -326,7 +326,16 @@ export default function Nutrients() {
                   <Input
                     type="number"
                     value={volumeL}
-                    onChange={(e) => setVolumeL(Number(e.target.value))}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      // Remove leading zeros and convert to number
+                      const num = val === '' ? 0 : parseInt(val, 10);
+                      setVolumeL(isNaN(num) ? 0 : num);
+                    }}
+                    onBlur={(e) => {
+                      // Ensure minimum value of 1 on blur
+                      if (volumeL < 1) setVolumeL(1);
+                    }}
                     className="text-4xl h-20 text-center font-bold"
                     min={1}
                     max={1000}

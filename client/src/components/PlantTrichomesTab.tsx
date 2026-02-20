@@ -552,7 +552,7 @@ export default function PlantTrichomesTab({
                               />
                             )}
                         </div>
-                        <div className="flex justify-between text-[10px] text-muted-foreground">
+                        <div className="flex justify-between text-xs sm:text-[10px] text-foreground sm:text-muted-foreground font-medium sm:font-normal">
                           {log.clearPercent !== null && (
                             <span>⚪ {log.clearPercent}%</span>
                           )}

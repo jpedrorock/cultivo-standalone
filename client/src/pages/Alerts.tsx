@@ -74,7 +74,12 @@ export default function Alerts() {
                 >
                   <div className="text-left">
                     <div className="font-semibold">{tent.name}</div>
-                    <div className="text-xs opacity-80">{tent.category}</div>
+                    <div className="text-xs opacity-80">
+                      {tent.category === 'MAINTENANCE' ? 'Manutenção' :
+                       tent.category === 'VEGA' ? 'Vegetativa' :
+                       tent.category === 'FLORA' ? 'Floração' :
+                       tent.category === 'DRYING' ? 'Secagem' : tent.category}
+                    </div>
                   </div>
                 </Button>
               ))}

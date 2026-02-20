@@ -974,13 +974,20 @@
 - [x] Poder excluir tarefas - Botão de lixeira adicionado em cada tarefa
 
 ### Melhorias de UX/Design
-- [ ] Traduzir "Maintenance" para português (verificar outras traduções faltando)
-- [ ] Faltando cor roxa em tricomas
-- [ ] Mobile: porcentagem não aparece em tricomas - verificar design
-- [ ] Aumentar botão/bolinha do slider PPFD para melhor usabilidade (muito pequeno)
+- [ ] Traduzir "Maintenance" e verificar possíveis erros de tradução (app é em português)
+- [ ] Adicionar cor roxa faltando em tricomas
+- [ ] Porcentagem de tricomas não aparece no mobile - verificar design
+- [ ] Aumentar botão/slider PPFD para melhor usabilidade (bolinha muito pequena)
 - [ ] Remover zero à esquerda na calculadora de fertilização
 - [ ] Design das cores da calculadora: usar uma cor diferente por elemento (não tudo verde)
 - [ ] Melhorar visualização da página de histórico no mobile com mais de 3 estufas
+
+## Implementar Melhorias UX Mobile (20/02/2026)
+- [x] Traduzir "Maintenance" para "Manutenção" em todo o app (já estava traduzido em Home, adicionado em Alerts)
+- [x] Adicionar opção de cor roxa (purple) em tricomas - Já existe (Misto)
+- [x] Corrigir exibição de porcentagem de tricomas no mobile - Aumentado tamanho e contraste
+- [x] Aumentar tamanho do slider PPFD - Convertido para slider com thumb 6x6 (24px)
+- [x] Remover zero à esquerda no input de volume da calculadora de fertilização - parseInt remove automaticamente
 
 ## Implementar Funcionalidade de Excluir Planta (20/02/2026)
 - [x] Adicionar endpoint de exclusão de planta no backend (plants.delete com cascade)

@@ -444,20 +444,25 @@ export default function TentLog() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* PPFD */}
                 <div className="space-y-2">
-                  <Label htmlFor="ppfd" className="flex items-center gap-2">
-                    <Sun className="w-4 h-4 text-orange-600" />
-                    PPFD (µmol/m²/s)
+                  <Label htmlFor="ppfd" className="flex items-center gap-2 justify-between">
+                    <span className="flex items-center gap-2">
+                      <Sun className="w-4 h-4 text-orange-600" />
+                      PPFD (µmol/m²/s)
+                    </span>
+                    <span className="text-lg font-bold">{ppfd || '0'}</span>
                   </Label>
-                  <Input
+                  <input
                     id="ppfd"
-                    type="number"
-                    placeholder="Ex: 550"
-                    value={ppfd}
+                    type="range"
+                    min="0"
+                    max="1500"
+                    step="10"
+                    value={ppfd || '0'}
                     onChange={(e) => setPpfd(e.target.value)}
-                    className={`text-lg ${getValidationClasses(ppfdValidation)}`}
+                    className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-orange-600 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-orange-600 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0"
                   />
                   {currentTargets && (
-                    <p className="text-xs text-blue-600 font-medium">
+                    <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">
                       ✓ Ideal: {currentTargets.ppfdMin}-{currentTargets.ppfdMax}
                     </p>
                   )}
