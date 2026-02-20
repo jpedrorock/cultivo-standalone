@@ -1073,12 +1073,12 @@
 - [x] Deletar todos os dados existentes do banco - Limpo ✅
 - [x] Criar 3 estufas (A Manutenção, B Vega, C Floração) - Criadas ✅
 - [x] Criar strains principais - 2 strains (OG Kush, Blue Dream) ✅
-- [ ] Criar ciclos ativos para estufas B e C - Banco limpo, sem dados de teste
-- [ ] Criar plantas (2 em cada estufa) - Banco limpo, sem dados de teste
-- [ ] Gerar registros diários de 1 semana para todas as estufas - Banco limpo, sem dados de teste
-- [ ] Gerar registros de saúde de plantas - Banco limpo, sem dados de teste
-- [ ] Gerar registros de tricomas e LST - Banco limpo, sem dados de teste
-- [ ] Criar presets de fertilização e rega
+- [x] Criar ciclos ativos para estufas B e C - 2 ciclos criados ✅
+- [x] Criar plantas (2 em cada estufa) - 6 plantas criadas ✅
+- [x] Gerar registros diários de 1 semana para todas as estufas - 42 registros ✅
+- [x] Gerar registros de saúde, tricomas e LST de plantas - 38 registros ✅
+- [x] Criar tarefas e templates de tarefas - 6 templates + 3 tarefas ✅
+- [x] Criar receitas de fertilização e rega - 8 receitas ✅
 - [ ] Verificar dados no app
 
 ## Remover Autenticação e Dependências Manus (20/02/2026)
