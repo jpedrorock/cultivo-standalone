@@ -22,7 +22,7 @@ import { useLocation } from "wouter";
 export default function PlantsList() {
   const [, navigate] = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState<"ACTIVE" | "HARVESTED" | "DEAD" | undefined>();
+  const [filterStatus, setFilterStatus] = useState<"ACTIVE" | "HARVESTED" | "DEAD" | "DISCARDED" | undefined>();
   
   // Ler query param ?tent=ID para auto-expandir estufa
   const tentParam = new URLSearchParams(window.location.search).get('tent');
@@ -86,6 +86,8 @@ export default function PlantsList() {
         return "bg-blue-500/10 text-blue-600 border-blue-500/30";
       case "DEAD":
         return "bg-red-500/10 text-red-600 border-red-500/30";
+      case "DISCARDED":
+        return "bg-orange-500/10 text-orange-600 border-orange-500/30";
       default:
         return "bg-gray-500/10 text-gray-600 border-gray-500/30";
     }
@@ -99,6 +101,8 @@ export default function PlantsList() {
         return "Colhida";
       case "DEAD":
         return "Morta";
+      case "DISCARDED":
+        return "Descartada";
       default:
         return status;
     }
@@ -192,6 +196,7 @@ export default function PlantsList() {
                   <option value="ACTIVE">Ativa</option>
                   <option value="HARVESTED">Colhida</option>
                   <option value="DEAD">Morta</option>
+                  <option value="DISCARDED">Descartada</option>
                 </select>
               </div>
             </div>

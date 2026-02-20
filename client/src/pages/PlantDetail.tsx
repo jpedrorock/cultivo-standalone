@@ -18,7 +18,8 @@ import {
   Flower2,
   CheckCircle,
   Loader2,
-  Trash2
+  Trash2,
+  XCircle
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -80,6 +81,16 @@ export default function PlantDetail() {
     },
   });
   
+  const discardMutation = trpc.plants.discard.useMutation({
+    onSuccess: () => {
+      toast.success('🗑️ Planta descartada com sucesso!');
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(`Erro ao descartar planta: ${error.message}`);
+    },
+  });
+  
   // Handlers
   const handleTransplantToFlora = () => {
     if (confirm('Deseja transplantar esta planta para a estufa de Flora?')) {
@@ -119,6 +130,13 @@ export default function PlantDetail() {
       timeoutId = null;
     }, 5000);
   };
+  
+  const handleDiscard = () => {
+    const reason = prompt('Motivo do descarte (opcional):');
+    if (reason !== null) { // null = cancelado, "" = OK sem motivo
+      discardMutation.mutate({ plantId, reason: reason || undefined });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -152,6 +170,8 @@ export default function PlantDetail() {
         return "bg-blue-500/10 text-blue-600 border-blue-500/30";
       case "DEAD":
         return "bg-red-500/10 text-red-600 border-red-500/30";
+      case "DISCARDED":
+        return "bg-orange-500/10 text-orange-600 border-orange-500/30";
       default:
         return "bg-gray-500/10 text-gray-600 border-gray-500/30";
     }
@@ -165,6 +185,8 @@ export default function PlantDetail() {
         return "Colhida";
       case "DEAD":
         return "Morta";
+      case "DISCARDED":
+        return "Descartada";
       default:
         return status;
     }
@@ -252,6 +274,23 @@ export default function PlantDetail() {
                       <>
                         <CheckCircle className="w-4 h-4 mr-2" />
                         Marcar como Colhida
+                      </>
+                    )}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={handleDiscard} 
+                    disabled={discardMutation.isPending}
+                    className="text-orange-600"
+                  >
+                    {discardMutation.isPending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Descartando...
+                      </>
+                    ) : (
+                      <>
+                        <XCircle className="w-4 h-4 mr-2" />
+                        Descartar Planta (Doente)
                       </>
                     )}
                   </DropdownMenuItem>

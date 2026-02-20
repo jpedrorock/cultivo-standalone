@@ -74,6 +74,16 @@ const getProductsByPhaseWeek = (phase: Phase, week: number) => {
   return [];
 };
 
+// Função para atribuir cor baseado no produto
+const getProductColor = (productName: string) => {
+  if (productName.includes("Cálcio")) return "text-orange-600 dark:text-orange-400";
+  if (productName.includes("Potássio")) return "text-green-600 dark:text-green-400";
+  if (productName.includes("MKP") || productName.includes("Fosfato")) return "text-blue-600 dark:text-blue-400";
+  if (productName.includes("Magnésio")) return "text-emerald-600 dark:text-emerald-400";
+  if (productName.includes("Micronutrientes")) return "text-yellow-600 dark:text-yellow-400";
+  return "text-purple-600 dark:text-purple-400"; // default
+};
+
 export default function Nutrients() {
   const [phase, setPhase] = useState<Phase>("VEGA");
   const [week, setWeek] = useState(1);
@@ -378,7 +388,7 @@ export default function Nutrients() {
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="text-2xl font-bold text-green-600">{prod.totalG.toFixed(1)} g</p>
+                          <p className={`text-2xl font-bold ${getProductColor(prod.name)}`}>{prod.totalG.toFixed(1)} g</p>
                         </div>
                       </div>
                     ))}
@@ -591,7 +601,7 @@ export default function Nutrients() {
                                       {prod.gPerLiter?.toFixed(2) || (prod.totalG / app.volumeTotalL).toFixed(2)} g/L
                                     </p>
                                   </div>
-                                  <p className="font-bold text-green-600">{prod.totalG?.toFixed(1) || prod.amountMl?.toFixed(1)}g</p>
+                                  <p className={`font-bold ${getProductColor(prod.name)}`}>{prod.totalG?.toFixed(1) || prod.amountMl?.toFixed(1)}g</p>
                                 </div>
                               ))}
                             </div>

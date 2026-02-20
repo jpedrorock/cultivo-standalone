@@ -1820,7 +1820,7 @@ export const appRouter = router({
       .input(z.object({
         tentId: z.number().optional(),
         strainId: z.number().optional(),
-        status: z.enum(["ACTIVE", "HARVESTED", "DEAD"]).optional(),
+        status: z.enum(["ACTIVE", "HARVESTED", "DEAD", "DISCARDED"]).optional(),
       }))
       .query(async ({ input }) => {
         const database = await getDb();
@@ -2044,6 +2044,28 @@ export const appRouter = router({
         await database
           .update(plants)
           .set({ status: input.status })
+          .where(eq(plants.id, input.plantId));
+        
+        return { success: true };
+      }),
+
+    // Descartar planta (doente ou com problemas)
+    discard: publicProcedure
+      .input(z.object({
+        plantId: z.number(),
+        reason: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Atualizar status para DISCARDED
+        await database
+          .update(plants)
+          .set({ 
+            status: "DISCARDED",
+            notes: input.reason ? `Descartada: ${input.reason}` : "Descartada"
+          })
           .where(eq(plants.id, input.plantId));
         
         return { success: true };

@@ -970,7 +970,7 @@
 
 ### Funcionalidades Faltando
 - [ ] Opção de excluir planta (além de marcar como colhida)
-- [ ] Opção de retirar planta caso fique doente (sem ser colheita normal)
+- [x] Opção de retirar planta caso fique doente (sem ser colheita normal) - Status DISCARDED implementado ✅
 - [x] Poder excluir tarefas - Botão de lixeira adicionado em cada tarefa
 
 ### Melhorias de UX/Design
@@ -1002,3 +1002,18 @@
 ## Otimizar Histórico Mobile com +3 Estufas (20/02/2026)
 - [x] Implementar dropdown responsivo para seleção de estufa (mobile: dropdown, desktop: tabs)
 - [x] Tabs desktop agora usam grid dinâmico para acomodar qualquer número de estufas
+
+## Melhorar Cores da Calculadora de Fertilização (20/02/2026)
+- [x] Atribuir cor específica para cada nutriente nos cards NPK - Já implementado (N roxo, P azul, K verde)
+- [x] Aplicar cores distintas para micronutrientes nos cards - Já implementado (Ca laranja, Mg esmeralda, Fe amarelo, S âmbar)
+- [x] Aplicar cores diferentes nos números da lista de produtos (Nitrato de Cálcio laranja, Nitrato de Potássio verde, MKP azul, Sulfato de Magnésio esmeralda, Micronutrientes amarelo)
+- [x] Testar esquema de cores completo em dark e light mode - Funcionando perfeitamente! ✅
+
+## Implementar Status "Descartada" para Plantas Doentes (20/02/2026)
+- [x] Analisar schema atual de plantas (campo status)
+- [x] Adicionar valor "DISCARDED" ao enum de status
+- [x] Atualizar backend procedure plants.discard
+- [x] Adicionar botão "Descartar Planta" na UI (PlantDetail)
+- [x] Implementar modal de confirmação com motivo do descarte (usando prompt nativo)
+- [x] Adicionar filtro "Descartadas" na página de plantas
+- [x] Testar fluxo completo de descarte - 3 testes passando ✅
