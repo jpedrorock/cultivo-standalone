@@ -1068,3 +1068,15 @@
 - [x] Empacotar todos os arquivos em ZIP - Download via Manus UI ou GitHub
 - [x] Testar instruções de instalação - Documentado em LEIA-ME-DEPLOY.md
 - [x] Fornecer pacote para download - Via Manus UI ou GitHub clone ✅
+
+## Limpar Dados de Teste e Criar Seed Limpo (20/02/2026)
+- [x] Deletar todos os dados existentes do banco - Limpo ✅
+- [x] Criar 3 estufas (A Manutenção, B Vega, C Floração) - Criadas ✅
+- [x] Criar strains principais - 2 strains (OG Kush, Blue Dream) ✅
+- [ ] Criar ciclos ativos para estufas B e C - Banco limpo, sem dados de teste
+- [ ] Criar plantas (2 em cada estufa) - Banco limpo, sem dados de teste
+- [ ] Gerar registros diários de 1 semana para todas as estufas - Banco limpo, sem dados de teste
+- [ ] Gerar registros de saúde de plantas - Banco limpo, sem dados de teste
+- [ ] Gerar registros de tricomas e LST - Banco limpo, sem dados de teste
+- [ ] Criar presets de fertilização e rega
+- [ ] Verificar dados no app
