@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { toast as showToast } from "sonner";
 import { Beaker, Download, Loader2, ArrowLeft } from "lucide-react";
+import { Breadcrumb } from "@/components/Breadcrumb";
 
 type Phase = "CLONING" | "VEGA" | "FLORA" | "MAINTENANCE" | "DRYING";
 
@@ -242,6 +243,13 @@ export default function Nutrients() {
   
   return (
     <div className="container py-6 max-w-5xl">
+      <Breadcrumb
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Calculadoras", href: "/calculators" },
+          { label: "Fertilização" },
+        ]}
+      />
       <Button
         variant="ghost"
         size="sm"

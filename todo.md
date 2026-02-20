@@ -954,3 +954,7 @@
 
 ## Adicionar botão de voltar (20/02/2026)
 - [x] Adicionar botão de voltar na página de Nutrientes/Fertilização
+
+## Adicionar Breadcrumb Navigation (20/02/2026)
+- [x] Criar componente Breadcrumb reutilizável
+- [x] Adicionar breadcrumb na página de Nutrientes/Fertilização (Home > Calculadoras > Fertilização)
