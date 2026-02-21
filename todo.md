@@ -1441,3 +1441,12 @@
 - [x] Incluir inputs contextuais (data, notas, clones produzidos, estufa destino)
 - [x] Remover modais individuais (StartFloraModal, StartDryingModal, StartCloningModal, ReturnToMaintenanceModal)
 - [x] Remover botões de transição dos cards
+
+
+## Remover TODAS as Cores dos Temas de Alto Contraste (21/02/2026) ✅
+- [x] Identificar onde cores ainda aparecem nos temas highcontrast/highcontrast-dark (SVG, gradientes, shadows)
+- [x] Adicionar filter: grayscale(100%) universal nos temas highcontrast
+- [x] Remover colored shadows com --tw-shadow-colored override
+- [x] Verificar badges, ícones, gráficos, bordas, sombras - todos em grayscale
+- [x] Testar ambos os temas de alto contraste
+- [x] Garantir 100% preto e branco (sem verde, azul, vermelho, etc.)

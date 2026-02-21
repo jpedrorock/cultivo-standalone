@@ -590,10 +590,18 @@ input[type="range"]::-moz-range-track {
 }
 
 /* High Contrast Themes - Remove ALL colors, force grayscale */
+.highcontrast,
+.highcontrast-dark {
+  /* Nuclear option: force EVERYTHING to grayscale */
+  filter: grayscale(100%) !important;
+}
+
 .highcontrast *,
 .highcontrast-dark * {
   /* Override all text colors to use only foreground/muted */
   --tw-text-opacity: 1 !important;
+  /* Remove any colored shadows */
+  --tw-shadow-colored: 0 0 #0000 !important;
 }
 
 /* High Contrast: Force all colored text to black/gray */
