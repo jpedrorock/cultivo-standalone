@@ -474,6 +474,7 @@ export const appRouter = router({
           strainId: cycles.strainId,
           strainName: strains.name,
           startDate: cycles.startDate,
+          cloningStartDate: cycles.cloningStartDate,
           floraStartDate: cycles.floraStartDate,
           status: cycles.status,
           vegaWeeks: strains.vegaWeeks,
@@ -492,10 +493,25 @@ export const appRouter = router({
         
         let currentWeek = 1;
         let totalWeeks = cycle.vegaWeeks || 4;
-        let phase: 'VEGA' | 'FLORA' = 'VEGA';
+        let phase: 'MAINTENANCE' | 'CLONING' | 'VEGA' | 'FLORA' = 'VEGA';
         let daysUntilHarvest = 0;
         
-        if (cycle.floraStartDate) {
+        // Detectar fase baseado nos campos de data
+        if (cycle.tentCategory === 'MAINTENANCE') {
+          // Ciclo de manutenção/clonagem
+          if (cycle.cloningStartDate) {
+            phase = 'CLONING';
+            const cloningStartDate = new Date(cycle.cloningStartDate);
+            const daysSinceCloning = Math.floor((now.getTime() - cloningStartDate.getTime()) / (1000 * 60 * 60 * 24));
+            currentWeek = Math.floor(daysSinceCloning / 7) + 1;
+            totalWeeks = 2; // 2 semanas de clonagem
+          } else {
+            phase = 'MAINTENANCE';
+            currentWeek = Math.floor(daysSinceStart / 7) + 1;
+            totalWeeks = 999; // Manutenção contínua
+          }
+          daysUntilHarvest = 0; // Não se aplica
+        } else if (cycle.floraStartDate) {
           // Ciclo em floração
           const floraStartDate = new Date(cycle.floraStartDate);
           const daysSinceFlora = Math.floor((now.getTime() - floraStartDate.getTime()) / (1000 * 60 * 60 * 24));
@@ -690,6 +706,80 @@ export const appRouter = router({
         
         return { success: true, plantsHarvested: cyclePlants.length };
       }),
+    
+    // Transição MAINTENANCE → CLONING
+    transitionToCloning: publicProcedure
+      .input(
+        z.object({
+          cycleId: z.number(),
+          cloningStartDate: z.date(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) {
+          throw new Error("Banco de dados não inicializado");
+        }
+        
+        // Buscar ciclo atual
+        const [cycle] = await database
+          .select()
+          .from(cycles)
+          .where(eq(cycles.id, input.cycleId));
+        
+        if (!cycle) {
+          throw new Error("Ciclo não encontrado");
+        }
+        
+        if (cycle.cloningStartDate) {
+          throw new Error("Ciclo já está em clonagem");
+        }
+        
+        // Atualizar ciclo para CLONING
+        await database
+          .update(cycles)
+          .set({ cloningStartDate: input.cloningStartDate })
+          .where(eq(cycles.id, input.cycleId));
+        
+        return { success: true };
+      }),
+    
+    // Transição CLONING → MAINTENANCE
+    transitionToMaintenance: publicProcedure
+      .input(
+        z.object({
+          cycleId: z.number(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) {
+          throw new Error("Banco de dados não inicializado");
+        }
+        
+        // Buscar ciclo atual
+        const [cycle] = await database
+          .select()
+          .from(cycles)
+          .where(eq(cycles.id, input.cycleId));
+        
+        if (!cycle) {
+          throw new Error("Ciclo não encontrado");
+        }
+        
+        if (!cycle.cloningStartDate) {
+          throw new Error("Ciclo não está em clonagem");
+        }
+        
+        // Retornar para MAINTENANCE (remover cloningStartDate)
+        await database
+          .update(cycles)
+          .set({ cloningStartDate: null })
+          .where(eq(cycles.id, input.cycleId));
+        
+        return { success: true };
+      }),
+    
     initiate: publicProcedure
       .input(
         z.object({

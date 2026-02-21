@@ -1366,3 +1366,23 @@
 - [x] Adicionar botão "Iniciar Secagem" em cards FLORA do CyclesDashboard
 - [x] Botões com ícone ArrowRight e layout full-width
 - [x] Invalidar queries após transições (cycles, tents, plants)
+
+
+## Transições MANUTENÇÃO↔CLONAGEM (21/02/2026) ✅
+### Backend
+- [x] Adicionar campo cloningStartDate à tabela cycles (via SQL)
+- [x] Atualizar `cycles.getActiveCyclesWithProgress` para detectar fase MAINTENANCE e CLONING
+- [x] Lógica: tentCategory=MAINTENANCE + cloningStartDate null/preenchido
+- [x] Criar procedure `cycles.transitionToCloning` (marca início de clonagem)
+- [x] Criar procedure `cycles.transitionToMaintenance` (retorna para manutenção após clonagem)
+- [x] Validar que apenas MAINTENANCE pode ir para CLONING
+- [x] Validar que apenas CLONING pode retornar para MAINTENANCE
+
+### Frontend
+- [x] Adicionar botão "Iniciar Clonagem" em cards MAINTENANCE do CyclesDashboard
+- [x] Adicionar botão "Retornar para Manutenção" em cards CLONING do CyclesDashboard
+- [x] Usar ícones e cores apropriados (MAINTENANCE: azul/Leaf, CLONING: ciano/Scissors)
+- [x] Criar modais StartCloningModal e ReturnToMaintenanceModal
+- [x] Esconder "Colheita estimada" para ciclos MAINTENANCE/CLONING
+- [x] Criar testes unitários (4 testes passando)
+- [x] Testar fluxo: MAINTENANCE → CLONING → MAINTENANCE (ciclo contínuo)

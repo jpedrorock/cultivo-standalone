@@ -3,14 +3,18 @@ import { trpc } from "@/lib/trpc";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Calendar, Leaf, Sprout, ArrowRight } from "lucide-react";
+import { Calendar, Leaf, Sprout, ArrowRight, Scissors } from "lucide-react";
 import { StartFloraModal } from "@/components/StartFloraModal";
 import { StartDryingModal } from "@/components/StartDryingModal";
+import { StartCloningModal } from "@/components/StartCloningModal";
+import { ReturnToMaintenanceModal } from "@/components/ReturnToMaintenanceModal";
 
 export function CyclesDashboard() {
   const { data: cycles, isLoading } = trpc.cycles.getActiveCyclesWithProgress.useQuery();
   const [floraModalOpen, setFloraModalOpen] = useState(false);
   const [dryingModalOpen, setDryingModalOpen] = useState(false);
+  const [cloningModalOpen, setCloningModalOpen] = useState(false);
+  const [maintenanceModalOpen, setMaintenanceModalOpen] = useState(false);
   const [selectedCycle, setSelectedCycle] = useState<{ id: number; name: string } | null>(null);
 
   if (isLoading) {
@@ -48,11 +52,35 @@ export function CyclesDashboard() {
       <h2 className="text-2xl font-bold">Ciclos Ativos</h2>
       <div className="grid gap-4 md:grid-cols-2">
         {cycles.map((cycle: any) => {
-          const isVega = cycle.phase === 'VEGA';
-          const PhaseIcon = isVega ? Sprout : Leaf;
-          const phaseColor = isVega ? 'text-green-600' : 'text-purple-600';
-          const phaseBg = isVega ? 'bg-green-50' : 'bg-purple-50';
-          const phaseBorder = isVega ? 'border-green-200' : 'border-purple-200';
+          // Determinar ícone, cor e badge baseado na fase
+          let PhaseIcon = Sprout;
+          let phaseColor = 'text-green-600';
+          let phaseBg = 'bg-green-50';
+          let phaseBorder = 'border-green-200';
+          let phaseLabel = 'Vegetativa';
+          
+          if (cycle.phase === 'MAINTENANCE') {
+            PhaseIcon = Leaf;
+            phaseColor = 'text-blue-600';
+            phaseBg = 'bg-blue-50';
+            phaseBorder = 'border-blue-200';
+            phaseLabel = 'Manutenção';
+          } else if (cycle.phase === 'CLONING') {
+            PhaseIcon = Scissors;
+            phaseColor = 'text-cyan-600';
+            phaseBg = 'bg-cyan-50';
+            phaseBorder = 'border-cyan-200';
+            phaseLabel = 'Clonagem';
+          } else if (cycle.phase === 'FLORA') {
+            PhaseIcon = Leaf;
+            phaseColor = 'text-purple-600';
+            phaseBg = 'bg-purple-50';
+            phaseBorder = 'border-purple-200';
+            phaseLabel = 'Floração';
+          } else {
+            // VEGA (padrão)
+            phaseLabel = 'Vegetativa';
+          }
 
           return (
             <Card key={cycle.id} className={`p-6 border-2 ${phaseBorder}`}>
@@ -68,7 +96,7 @@ export function CyclesDashboard() {
                   </div>
                 </div>
                 <span className={`px-3 py-1 rounded-full text-xs font-medium ${phaseBg} ${phaseColor}`}>
-                  {isVega ? 'Vegetativa' : 'Floração'}
+                  {phaseLabel}
                 </span>
               </div>
 
@@ -83,29 +111,31 @@ export function CyclesDashboard() {
                 <Progress value={cycle.progress} className="h-2" />
               </div>
 
-              {/* Harvest Date */}
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Calendar className="w-4 h-4" />
-                <span>
-                  Colheita estimada:{" "}
-                  <span className="font-medium text-foreground">
-                    {new Date(cycle.estimatedHarvestDate).toLocaleDateString('pt-BR', {
-                      day: '2-digit',
-                      month: 'short',
-                      year: 'numeric'
-                    })}
-                  </span>
-                  {cycle.daysUntilHarvest > 0 && (
-                    <span className="ml-1">
-                      ({cycle.daysUntilHarvest} dias)
+              {/* Harvest Date (apenas para VEGA/FLORA) */}
+              {(cycle.phase === 'VEGA' || cycle.phase === 'FLORA') && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Calendar className="w-4 h-4" />
+                  <span>
+                    Colheita estimada:{" "}
+                    <span className="font-medium text-foreground">
+                      {new Date(cycle.estimatedHarvestDate).toLocaleDateString('pt-BR', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                      })}
                     </span>
-                  )}
-                </span>
-              </div>
+                    {cycle.daysUntilHarvest > 0 && (
+                      <span className="ml-1">
+                        ({cycle.daysUntilHarvest} dias)
+                      </span>
+                    )}
+                  </span>
+                </div>
+              )}
 
               {/* Transition Button */}
               <div className="mt-4 pt-4 border-t border-border">
-                {isVega ? (
+                {cycle.phase === 'VEGA' && (
                   <Button
                     variant="outline"
                     size="sm"
@@ -118,7 +148,8 @@ export function CyclesDashboard() {
                     <ArrowRight className="w-4 h-4 mr-2" />
                     Iniciar Floração
                   </Button>
-                ) : (
+                )}
+                {cycle.phase === 'FLORA' && (
                   <Button
                     variant="outline"
                     size="sm"
@@ -130,6 +161,34 @@ export function CyclesDashboard() {
                   >
                     <ArrowRight className="w-4 h-4 mr-2" />
                     Iniciar Secagem
+                  </Button>
+                )}
+                {cycle.phase === 'MAINTENANCE' && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
+                    onClick={() => {
+                      setSelectedCycle({ id: cycle.id, name: cycle.tentName });
+                      setCloningModalOpen(true);
+                    }}
+                  >
+                    <ArrowRight className="w-4 h-4 mr-2" />
+                    Iniciar Clonagem
+                  </Button>
+                )}
+                {cycle.phase === 'CLONING' && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
+                    onClick={() => {
+                      setSelectedCycle({ id: cycle.id, name: cycle.tentName });
+                      setMaintenanceModalOpen(true);
+                    }}
+                  >
+                    <ArrowRight className="w-4 h-4 mr-2" />
+                    Retornar para Manutenção
                   </Button>
                 )}
               </div>
@@ -154,6 +213,24 @@ export function CyclesDashboard() {
             open={dryingModalOpen}
             onClose={() => {
               setDryingModalOpen(false);
+              setSelectedCycle(null);
+            }}
+            cycleId={selectedCycle.id}
+            cycleName={selectedCycle.name}
+          />
+          <StartCloningModal
+            open={cloningModalOpen}
+            onClose={() => {
+              setCloningModalOpen(false);
+              setSelectedCycle(null);
+            }}
+            cycleId={selectedCycle.id}
+            cycleName={selectedCycle.name}
+          />
+          <ReturnToMaintenanceModal
+            open={maintenanceModalOpen}
+            onClose={() => {
+              setMaintenanceModalOpen(false);
               setSelectedCycle(null);
             }}
             cycleId={selectedCycle.id}
