@@ -256,13 +256,10 @@ export function PhaseTransitionDialog({
 
         <div className="space-y-6 py-2">
           {/* Next Phase Card */}
-          <div className="glass-light border-hairline border-hairline-light rounded-2xl p-6 relative overflow-hidden">
-            {/* Phase-tinted overlay */}
-            <div className={`absolute inset-0 ${nextPhase.bgColor} opacity-30 pointer-events-none`} />
-            <div className="flex items-start gap-4 relative z-10">
-              <div className="glass-medium border-hairline border-hairline-light p-3 rounded-full relative">
-                <div className={`absolute inset-0 ${nextPhase.bgColor} opacity-40 rounded-full`} />
-                <Icon className={`w-6 h-6 ${nextPhase.color} relative z-10`} />
+          <div className={`${nextPhase.bgColor} rounded-lg p-6 border-2 border-border`}>
+            <div className="flex items-start gap-4">
+              <div className={`${nextPhase.color} p-3 rounded-full bg-background/50`}>
+                <Icon className="w-6 h-6" />
               </div>
               <div className="flex-1">
                 <h3 className="text-xl font-semibold mb-1">

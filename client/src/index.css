@@ -42,160 +42,268 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* ========================================
-   LIQUID GLASS THEME - Light Mode
-   ======================================== */
 :root {
-  /* Liquid Glass Primary Palette */
-  --forest-green: #2D5016;
-  --forest-green-light: #4A7C2E;
-  --earth-brown: #6B4423;
-  --earth-brown-light: #8B5A3C;
-  --sky-blue: #4A90E2;
-  --sky-blue-light: #5BA3F5;
-  
-  /* Liquid Glass Semantic Colors */
-  --success-green: #34C759;
-  --warning-amber: #FF9500;
-  --critical-red: #FF3B30;
-  --info-cyan: #5AC8FA;
-  
-  /* Liquid Glass Neutrals (Light Mode) */
-  --neutral-0: #FFFFFF;
-  --neutral-50: #F2F2F7;
-  --neutral-100: #E5E5EA;
-  --neutral-200: #C7C7CC;
-  --neutral-300: #8E8E93;
-  --neutral-400: #636366;
-  --neutral-500: #48484A;
-  --neutral-600: #3A3A3C;
-  --neutral-700: #2C2C2E;
-  --neutral-800: #1C1C1E;
-  --neutral-900: #000000;
-  
-  /* Liquid Glass Tints (5% opacity overlays) */
-  --glass-tint-vega: rgba(45, 80, 22, 0.05);
-  --glass-tint-flora: rgba(142, 68, 173, 0.05);
-  --glass-tint-maintenance: rgba(255, 149, 0, 0.05);
-  
-  /* Theme Colors - Mapped to Liquid Glass Palette */
-  --primary: var(--forest-green);
-  --primary-foreground: var(--neutral-0);
-  --sidebar-primary: var(--forest-green);
-  --sidebar-primary-foreground: var(--neutral-0);
-  
-  --background: var(--neutral-0);
-  --foreground: var(--neutral-900);
-  
-  --card: var(--neutral-0);
-  --card-foreground: var(--neutral-900);
-  
-  --popover: var(--neutral-0);
-  --popover-foreground: var(--neutral-900);
-  
-  --secondary: var(--neutral-50);
-  --secondary-foreground: var(--neutral-600);
-  
-  --muted: var(--neutral-100);
-  --muted-foreground: var(--neutral-400);
-  
-  --accent: var(--forest-green);
-  --accent-foreground: var(--neutral-0);
-  
-  --destructive: var(--critical-red);
-  --destructive-foreground: var(--neutral-0);
-  
-  --border: var(--neutral-200);
-  --input: var(--neutral-100);
-  --ring: var(--forest-green);
-  
-  --chart-1: var(--success-green);
-  --chart-2: var(--sky-blue);
-  --chart-3: var(--warning-amber);
-  --chart-4: var(--critical-red);
-  --chart-5: var(--info-cyan);
-  
-  --sidebar: var(--neutral-0);
-  --sidebar-foreground: var(--neutral-900);
-  --sidebar-accent: var(--neutral-100);
-  --sidebar-accent-foreground: var(--neutral-900);
-  --sidebar-border: var(--neutral-200);
-  --sidebar-ring: var(--forest-green);
-  
-  /* Liquid Glass specific: larger radius for Apple-like rounded corners */
-  --radius: 1rem; /* 16px */
+  --primary: var(--color-green-600);
+  --primary-foreground: var(--color-green-50);
+  --sidebar-primary: var(--color-green-600);
+  --sidebar-primary-foreground: var(--color-green-50);
+  --chart-1: var(--color-green-300);
+  --chart-2: var(--color-green-500);
+  --chart-3: var(--color-green-600);
+  --chart-4: var(--color-green-700);
+  --chart-5: var(--color-green-800);
+  --radius: 0.65rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.235 0.015 65);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.235 0.015 65);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.235 0.015 65);
+  --secondary: oklch(0.98 0.001 286.375);
+  --secondary-foreground: oklch(0.4 0.015 65);
+  --muted: oklch(0.967 0.001 286.375);
+  --muted-foreground: oklch(0.552 0.016 285.938);
+  --accent: oklch(0.967 0.001 286.375);
+  --accent-foreground: oklch(0.141 0.005 285.823);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.92 0.004 286.32);
+  --input: oklch(0.92 0.004 286.32);
+  --ring: oklch(0.623 0.214 259.815);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.235 0.015 65);
+  --sidebar-accent: oklch(0.967 0.001 286.375);
+  --sidebar-accent-foreground: oklch(0.141 0.005 285.823);
+  --sidebar-border: oklch(0.92 0.004 286.32);
+  --sidebar-ring: oklch(0.623 0.214 259.815);
 }
 
-/* ========================================
-   LIQUID GLASS THEME - Dark Mode
-   ======================================== */
 .dark {
-  /* Liquid Glass Neutrals (Dark Mode) */
-  --neutral-0-dark: #000000;
-  --neutral-50-dark: #1C1C1E;
-  --neutral-100-dark: #2C2C2E;
-  --neutral-200-dark: #3A3A3C;
-  --neutral-300-dark: #48484A;
-  --neutral-400-dark: #636366;
-  --neutral-500-dark: #8E8E93;
-  --neutral-600-dark: #C7C7CC;
-  --neutral-700-dark: #E5E5EA;
-  --neutral-800-dark: #F2F2F7;
-  --neutral-900-dark: #FFFFFF;
+  /* Primary colors - Green theme with more vibrance */
+  --primary: var(--color-green-500);
+  --primary-foreground: oklch(0.98 0 0);
+  --sidebar-primary: var(--color-green-500);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
   
-  /* Primary colors - Lighter variants for dark mode */
-  --primary: var(--forest-green-light);
-  --primary-foreground: var(--neutral-0-dark);
-  --sidebar-primary: var(--forest-green-light);
-  --sidebar-primary-foreground: var(--neutral-0-dark);
+  /* Base colors - Much darker for better contrast */
+  --background: oklch(0.12 0.005 285);
+  --foreground: oklch(0.96 0.005 285);
   
-  /* Base colors - True black with subtle warm tint */
-  --background: var(--neutral-0-dark);
-  --foreground: var(--neutral-900-dark);
+  /* Card colors - Dark gray with good separation from background */
+  --card: oklch(0.16 0.006 285);
+  --card-foreground: oklch(0.96 0.005 285);
   
-  /* Card colors - Elevated dark surfaces */
-  --card: var(--neutral-50-dark);
-  --card-foreground: var(--neutral-900-dark);
+  /* Popover colors - Same as cards for consistency */
+  --popover: oklch(0.16 0.006 285);
+  --popover-foreground: oklch(0.96 0.005 285);
   
-  /* Popover colors - More elevated than cards */
-  --popover: var(--neutral-100-dark);
-  --popover-foreground: var(--neutral-900-dark);
+  /* Secondary colors - For hover states and secondary actions */
+  --secondary: oklch(0.20 0.006 285);
+  --secondary-foreground: oklch(0.96 0.005 285);
   
-  /* Secondary colors */
-  --secondary: var(--neutral-100-dark);
-  --secondary-foreground: var(--neutral-900-dark);
+  /* Muted colors - For disabled or less important elements */
+  --muted: oklch(0.18 0.006 285);
+  --muted-foreground: oklch(0.60 0.015 285);
   
-  /* Muted colors */
-  --muted: var(--neutral-200-dark);
-  --muted-foreground: var(--neutral-500-dark);
+  /* Accent colors - For highlights and important elements */
+  --accent: oklch(0.22 0.006 285);
+  --accent-foreground: oklch(0.98 0.005 285);
   
-  /* Accent colors */
-  --accent: var(--forest-green-light);
-  --accent-foreground: var(--neutral-0-dark);
+  /* Destructive colors - More vibrant red/pink for delete actions */
+  --destructive: oklch(0.58 0.24 20);
+  --destructive-foreground: oklch(0.98 0 0);
   
-  /* Destructive colors */
-  --destructive: var(--critical-red);
-  --destructive-foreground: var(--neutral-900-dark);
+  /* Border and input colors - More visible */
+  --border: oklch(0.30 0.005 285);
+  --input: oklch(0.18 0.006 285);
+  --ring: var(--color-green-500);
   
-  /* Border and input colors */
-  --border: var(--neutral-200-dark);
-  --input: var(--neutral-100-dark);
-  --ring: var(--forest-green-light);
+  /* Chart colors - Vibrant for visibility */
+  --chart-1: var(--color-green-400);
+  --chart-2: var(--color-blue-400);
+  --chart-3: var(--color-purple-400);
+  --chart-4: var(--color-orange-400);
+  --chart-5: var(--color-pink-400);
   
-  /* Chart colors - Vibrant for dark backgrounds */
-  --chart-1: var(--success-green);
-  --chart-2: var(--sky-blue-light);
-  --chart-3: var(--warning-amber);
-  --chart-4: var(--critical-red);
-  --chart-5: var(--info-cyan);
+  /* Sidebar colors - Almost black for maximum contrast */
+  --sidebar: oklch(0.10 0.006 285);
+  --sidebar-foreground: oklch(0.96 0.005 285);
+  --sidebar-accent: oklch(0.18 0.006 285);
+  --sidebar-accent-foreground: oklch(0.98 0 0);
+  --sidebar-border: oklch(0.25 0.005 285);
+  --sidebar-ring: var(--color-green-500);
+}
+
+.highcontrast {
+  /* High Contrast theme - Pure black and white, no colors */
+  --primary: oklch(0 0 0);
+  --primary-foreground: oklch(1 0 0);
+  --sidebar-primary: oklch(0 0 0);
+  --sidebar-primary-foreground: oklch(1 0 0);
   
-  /* Sidebar colors */
-  --sidebar: var(--neutral-0-dark);
-  --sidebar-foreground: var(--neutral-900-dark);
-  --sidebar-accent: var(--neutral-100-dark);
-  --sidebar-accent-foreground: var(--neutral-900-dark);
-  --sidebar-border: var(--neutral-200-dark);
-  --sidebar-ring: var(--forest-green-light);
+  /* Base colors - Pure white background, pure black text */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0 0 0);
+  
+  /* Card colors - Light gray for subtle separation */
+  --card: oklch(0.98 0 0);
+  --card-foreground: oklch(0 0 0);
+  
+  /* Popover colors - Same as cards */
+  --popover: oklch(0.98 0 0);
+  --popover-foreground: oklch(0 0 0);
+  
+  /* Secondary colors - Medium gray */
+  --secondary: oklch(0.95 0 0);
+  --secondary-foreground: oklch(0 0 0);
+  
+  /* Muted colors - Light gray for less important elements */
+  --muted: oklch(0.92 0 0);
+  --muted-foreground: oklch(0.4 0 0);
+  
+  /* Accent colors - Dark gray for highlights */
+  --accent: oklch(0.90 0 0);
+  --accent-foreground: oklch(0 0 0);
+  
+  /* Destructive colors - Pure black (no red) */
+  --destructive: oklch(0 0 0);
+  --destructive-foreground: oklch(1 0 0);
+  
+  /* Border and input colors - Medium gray for definition */
+  --border: oklch(0.70 0 0);
+  --input: oklch(0.95 0 0);
+  --ring: oklch(0 0 0);
+  
+  /* Chart colors - Grayscale gradient */
+  --chart-1: oklch(0.20 0 0);
+  --chart-2: oklch(0.35 0 0);
+  --chart-3: oklch(0.50 0 0);
+  --chart-4: oklch(0.65 0 0);
+  --chart-5: oklch(0.80 0 0);
+  
+  /* Sidebar colors - Pure black sidebar */
+  --sidebar: oklch(0 0 0);
+  --sidebar-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.15 0 0);
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: oklch(0.30 0 0);
+  --sidebar-ring: oklch(1 0 0);
+}
+
+.highcontrast-dark {
+  /* High Contrast Dark theme - Pure white and black inverted, no colors */
+  --primary: oklch(1 0 0);
+  --primary-foreground: oklch(0 0 0);
+  --sidebar-primary: oklch(1 0 0);
+  --sidebar-primary-foreground: oklch(0 0 0);
+  
+  /* Base colors - Pure black background, pure white text */
+  --background: oklch(0 0 0);
+  --foreground: oklch(1 0 0);
+  
+  /* Card colors - Dark gray for subtle separation */
+  --card: oklch(0.08 0 0);
+  --card-foreground: oklch(1 0 0);
+  
+  /* Popover colors - Same as cards */
+  --popover: oklch(0.08 0 0);
+  --popover-foreground: oklch(1 0 0);
+  
+  /* Secondary colors - Medium dark gray */
+  --secondary: oklch(0.12 0 0);
+  --secondary-foreground: oklch(1 0 0);
+  
+  /* Muted colors - Dark gray for less important elements */
+  --muted: oklch(0.15 0 0);
+  --muted-foreground: oklch(0.6 0 0);
+  
+  /* Accent colors - Light gray for highlights */
+  --accent: oklch(0.20 0 0);
+  --accent-foreground: oklch(1 0 0);
+  
+  /* Destructive colors - Pure white (no red) */
+  --destructive: oklch(1 0 0);
+  --destructive-foreground: oklch(0 0 0);
+  
+  /* Border and input colors - Medium gray for definition */
+  --border: oklch(0.35 0 0);
+  --input: oklch(0.12 0 0);
+  --ring: oklch(1 0 0);
+  
+  /* Chart colors - Grayscale gradient (inverted) */
+  --chart-1: oklch(0.80 0 0);
+  --chart-2: oklch(0.65 0 0);
+  --chart-3: oklch(0.50 0 0);
+  --chart-4: oklch(0.35 0 0);
+  --chart-5: oklch(0.20 0 0);
+  
+  /* Sidebar colors - Pure white sidebar */
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0 0 0);
+  --sidebar-accent: oklch(0.90 0 0);
+  --sidebar-accent-foreground: oklch(0 0 0);
+  --sidebar-border: oklch(0.75 0 0);
+  --sidebar-ring: oklch(0 0 0);
+}
+
+.apple {
+  /* Apple theme - Inspired by macOS/iOS design */
+  /* Primary colors - Apple blue accent */
+  --primary: oklch(0.55 0.17 252); /* Apple blue */
+  --primary-foreground: oklch(1 0 0);
+  --sidebar-primary: oklch(0.55 0.17 252);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  
+  /* Base colors - Clean white with subtle warmth */
+  --background: oklch(0.99 0.002 90); /* Slightly warm white */
+  --foreground: oklch(0.20 0.005 285);
+  
+  /* Card colors - Frosted glass effect (light) */
+  --card: oklch(0.97 0.003 90);
+  --card-foreground: oklch(0.20 0.005 285);
+  
+  /* Popover colors - Elevated frosted glass */
+  --popover: oklch(0.98 0.002 90);
+  --popover-foreground: oklch(0.20 0.005 285);
+  
+  /* Secondary colors - Subtle gray for secondary actions */
+  --secondary: oklch(0.95 0.002 285);
+  --secondary-foreground: oklch(0.30 0.005 285);
+  
+  /* Muted colors - Softer gray for less emphasis */
+  --muted: oklch(0.94 0.002 285);
+  --muted-foreground: oklch(0.50 0.005 285);
+  
+  /* Accent colors - Light blue tint */
+  --accent: oklch(0.96 0.015 252);
+  --accent-foreground: oklch(0.20 0.005 285);
+  
+  /* Destructive colors - Apple red */
+  --destructive: oklch(0.58 0.22 25); /* Apple red */
+  --destructive-foreground: oklch(1 0 0);
+  
+  /* Border and input colors - Very subtle borders */
+  --border: oklch(0.88 0.003 285);
+  --input: oklch(0.96 0.002 285);
+  --ring: oklch(0.55 0.17 252); /* Apple blue ring */
+  
+  /* Chart colors - Apple color palette */
+  --chart-1: oklch(0.65 0.17 252); /* Blue */
+  --chart-2: oklch(0.65 0.17 140); /* Green */
+  --chart-3: oklch(0.65 0.20 45);  /* Orange */
+  --chart-4: oklch(0.60 0.22 25);  /* Red */
+  --chart-5: oklch(0.60 0.15 300); /* Purple */
+  
+  /* Sidebar colors - Translucent sidebar with blur */
+  --sidebar: oklch(0.96 0.003 285);
+  --sidebar-foreground: oklch(0.25 0.005 285);
+  --sidebar-accent: oklch(0.93 0.015 252);
+  --sidebar-accent-foreground: oklch(0.20 0.005 285);
+  --sidebar-border: oklch(0.90 0.003 285);
+  --sidebar-ring: oklch(0.55 0.17 252);
+  
+  /* Apple-specific: Larger border radius for that signature rounded look */
+  --radius: 0.85rem;
 }
 
 @layer base {
@@ -203,7 +311,7 @@
   *,
   *::before,
   *::after {
-    transition-property: color, background-color, border-color, fill, stroke, opacity, transform;
+    transition-property: color, background-color, border-color, fill, stroke;
     transition-duration: 300ms;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -217,38 +325,12 @@
     transition: none !important;
   }
 
-  /* Liquid Glass Animation Keyframes */
   @keyframes shimmer {
     0% {
       background-position: 200% 0;
     }
     100% {
       background-position: -200% 0;
-    }
-  }
-  
-  @keyframes glass-morph {
-    0% {
-      backdrop-filter: blur(0px);
-      opacity: 0;
-    }
-    100% {
-      backdrop-filter: blur(20px);
-      opacity: 1;
-    }
-  }
-  
-  @keyframes spring-in {
-    0% {
-      transform: scale(0.9);
-      opacity: 0;
-    }
-    50% {
-      transform: scale(1.02);
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
     }
   }
 
@@ -264,7 +346,7 @@
   /* Show scrollbar for tabs with many items */
   .scrollable-tabs {
     scrollbar-width: thin; /* Firefox */
-    scrollbar-color: var(--border) transparent;
+    scrollbar-color: hsl(var(--border)) transparent;
   }
   .scrollable-tabs::-webkit-scrollbar {
     display: block;
@@ -274,11 +356,11 @@
     background: transparent;
   }
   .scrollable-tabs::-webkit-scrollbar-thumb {
-    background-color: var(--border);
+    background-color: hsl(var(--border));
     border-radius: 3px;
   }
   .scrollable-tabs::-webkit-scrollbar-thumb:hover {
-    background-color: var(--muted-foreground);
+    background-color: hsl(var(--muted-foreground));
   }
 
   * {
@@ -286,7 +368,6 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -302,103 +383,27 @@
 }
 
 @layer components {
-  /* ========================================
-     LIQUID GLASS UTILITIES
-     ======================================== */
-  
-  /* Glass Backgrounds with Blur */
-  .glass-light {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
-  
-  .glass-medium {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-  }
-  
-  .glass-heavy {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-  }
-  
-  /* Dark Mode Glass */
-  .dark .glass-light {
-    background: rgba(28, 28, 30, 0.7);
-  }
-  
-  .dark .glass-medium {
-    background: rgba(28, 28, 30, 0.8);
-  }
-  
-  .dark .glass-heavy {
-    background: rgba(28, 28, 30, 0.9);
-  }
-  
-  /* Phase-Tinted Glass */
-  .glass-vega {
-    background: linear-gradient(to bottom, rgba(45, 80, 22, 0.05), rgba(255, 255, 255, 0.75));
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-  }
-  
-  .glass-flora {
-    background: linear-gradient(to bottom, rgba(142, 68, 173, 0.05), rgba(255, 255, 255, 0.75));
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-  }
-  
-  .glass-maintenance {
-    background: linear-gradient(to bottom, rgba(255, 149, 0, 0.05), rgba(255, 255, 255, 0.75));
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-  }
-  
-  /* Hairline Borders */
-  .border-hairline {
-    border-width: 0.5px;
-  }
-  
-  .border-hairline-light {
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-  
-  .border-hairline-dark {
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  /* Glass Shadows - Soft and Diffused */
-  .shadow-glass {
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-  }
-  
-  .shadow-glass-lg {
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
-  }
-  
-  /* Spring Animation */
-  .animate-spring-in {
-    animation: spring-in 0.4s cubic-bezier(0.25, 0.1, 0.25, 1.0);
-  }
-  
-  /* Glass Morph Animation */
-  .animate-glass-morph {
-    animation: glass-morph 0.3s ease-out;
-  }
-
   /**
    * Custom container utility that centers content and adds responsive padding.
+   *
+   * This overrides Tailwind's default container behavior to:
+   * - Auto-center content (mx-auto)
+   * - Add responsive horizontal padding
+   * - Set max-width for large screens
+   *
+   * Usage: <div className="container">...</div>
+   *
+   * For custom widths, use max-w-* utilities directly:
+   * <div className="max-w-6xl mx-auto px-4">...</div>
    */
   .container {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1rem; /* 16px - mobile padding (8px grid) */
-    padding-right: 1rem;
+    padding-left: 0.75rem; /* 12px - mobile padding */
+    padding-right: 0.75rem;
   }
+
 
   .flex {
     min-height: 0;
@@ -407,22 +412,22 @@
 
   @media (min-width: 640px) {
     .container {
-      padding-left: 1.5rem; /* 24px - tablet padding (8px grid) */
+      padding-left: 1.5rem; /* 24px - tablet padding */
       padding-right: 1.5rem;
     }
   }
 
   @media (min-width: 1024px) {
     .container {
-      padding-left: 2rem; /* 32px - desktop padding (8px grid) */
+      padding-left: 2rem; /* 32px - desktop padding */
       padding-right: 2rem;
-      max-width: 1280px;
+      max-width: 1280px; /* Standard content width */
     }
   }
 }
-
 /* Print Styles */
 @media print {
+  /* Hide navigation elements */
   nav,
   aside,
   .sidebar,
@@ -432,16 +437,19 @@
     display: none !important;
   }
 
+  /* Optimize page layout for printing */
   body {
     background: white !important;
     color: black !important;
   }
 
+  /* Ensure content fills the page */
   .container {
     max-width: 100% !important;
     padding: 0 !important;
   }
 
+  /* Optimize cards for printing */
   .card,
   [class*="card"] {
     border: 1px solid #e5e7eb !important;
@@ -449,11 +457,13 @@
     page-break-inside: avoid;
   }
 
+  /* Ensure charts are visible */
   svg {
     max-width: 100% !important;
     height: auto !important;
   }
 
+  /* Optimize tables for printing */
   table {
     page-break-inside: auto;
   }
@@ -467,15 +477,18 @@
     display: table-header-group;
   }
 
+  /* Remove backgrounds and shadows */
   * {
     background: white !important;
     box-shadow: none !important;
   }
 
+  /* Keep text colors readable */
   h1, h2, h3, h4, h5, h6, p, span, td, th, label {
     color: black !important;
   }
 
+  /* Preserve badge colors */
   .badge,
   [class*="badge"] {
     border: 1px solid #000 !important;
@@ -483,68 +496,55 @@
     color: black !important;
   }
 
+  /* Ensure buttons are hidden in print */
   button {
     display: none !important;
   }
 
+  /* Keep header visible but simplified */
   header {
     border-bottom: 2px solid #000 !important;
     padding: 1rem 0 !important;
     margin-bottom: 1rem !important;
   }
 
+  /* Optimize spacing */
   .py-8, .py-6, .py-4 {
     padding-top: 0.5rem !important;
     padding-bottom: 0.5rem !important;
   }
 }
 
-/* Custom Range Slider - Liquid Glass Style */
+/* Custom Range Slider for Light Intensity */
 input[type="range"]::-webkit-slider-thumb {
   appearance: none;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  border: 2px solid var(--primary);
+  background: white;
+  border: 3px solid hsl(var(--primary));
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1.0);
-}
-
-input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-}
-
-input[type="range"]::-webkit-slider-thumb:active {
-  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 input[type="range"]::-moz-range-thumb {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  border: 2px solid var(--primary);
+  background: white;
+  border: 3px solid hsl(var(--primary));
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(10px);
-  transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1.0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 input[type="range"]::-webkit-slider-runnable-track {
-  height: 6px;
-  border-radius: 3px;
-  background: var(--muted);
+  height: 12px;
+  border-radius: 6px;
 }
 
 input[type="range"]::-moz-range-track {
-  height: 6px;
-  border-radius: 3px;
-  background: var(--muted);
+  height: 12px;
+  border-radius: 6px;
 }
 
 /* Custom animations for Splash Screen */
@@ -561,14 +561,16 @@ input[type="range"]::-moz-range-track {
   animation: bounce-slow 2s ease-in-out infinite;
 }
 
-/* Mobile Touch Targets - Minimum 44x44px (Apple HIG) */
+/* Mobile Touch Targets - Minimum 44x44px for better accessibility */
 @media (max-width: 768px) {
+  /* Increase checkbox touch area */
   input[type="checkbox"],
   button[role="checkbox"] {
     min-width: 44px;
     min-height: 44px;
   }
 
+  /* Increase icon button touch area */
   button:has(svg:only-child),
   a:has(svg:only-child) {
     min-width: 44px;
@@ -576,101 +578,477 @@ input[type="range"]::-moz-range-track {
     @apply flex items-center justify-center;
   }
 
+  /* Increase card spacing for better readability */
   .space-y-4 > * + * {
-    margin-top: 1.5rem !important; /* 24px (8px grid) */
+    margin-top: 1.5rem !important; /* 24px instead of 16px */
   }
 
+  /* Increase gap in flex/grid containers */
   .gap-4 {
-    gap: 1.5rem !important; /* 24px (8px grid) */
+    gap: 1.5rem !important; /* 24px instead of 16px */
   }
 }
 
-/* Toast Notifications - Liquid Glass Style */
-[data-sonner-toast] {
-  background: rgba(255, 255, 255, 0.9) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 0.5px solid rgba(255, 255, 255, 0.2) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
-  border-radius: 16px !important;
+/* High Contrast Themes - Remove ALL colors, force grayscale */
+.highcontrast,
+.highcontrast-dark {
+  /* Nuclear option: force EVERYTHING to grayscale */
+  filter: grayscale(100%) !important;
 }
 
-.dark [data-sonner-toast] {
-  background: rgba(28, 28, 30, 0.9) !important;
-  border: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+.highcontrast *,
+.highcontrast-dark * {
+  /* Override all text colors to use only foreground/muted */
+  --tw-text-opacity: 1 !important;
+  /* Remove any colored shadows */
+  --tw-shadow-colored: 0 0 #0000 !important;
+}
+
+/* High Contrast: Force all colored text to black/gray */
+.highcontrast .text-green-50,
+.highcontrast .text-green-100,
+.highcontrast .text-green-200,
+.highcontrast .text-green-300,
+.highcontrast .text-green-400,
+.highcontrast .text-green-500,
+.highcontrast .text-green-600,
+.highcontrast .text-green-700,
+.highcontrast .text-green-800,
+.highcontrast .text-green-900,
+.highcontrast .text-blue-50,
+.highcontrast .text-blue-100,
+.highcontrast .text-blue-200,
+.highcontrast .text-blue-300,
+.highcontrast .text-blue-400,
+.highcontrast .text-blue-500,
+.highcontrast .text-blue-600,
+.highcontrast .text-blue-700,
+.highcontrast .text-blue-800,
+.highcontrast .text-blue-900,
+.highcontrast .text-red-50,
+.highcontrast .text-red-100,
+.highcontrast .text-red-200,
+.highcontrast .text-red-300,
+.highcontrast .text-red-400,
+.highcontrast .text-red-500,
+.highcontrast .text-red-600,
+.highcontrast .text-red-700,
+.highcontrast .text-red-800,
+.highcontrast .text-red-900,
+.highcontrast .text-yellow-50,
+.highcontrast .text-yellow-100,
+.highcontrast .text-yellow-200,
+.highcontrast .text-yellow-300,
+.highcontrast .text-yellow-400,
+.highcontrast .text-yellow-500,
+.highcontrast .text-yellow-600,
+.highcontrast .text-yellow-700,
+.highcontrast .text-yellow-800,
+.highcontrast .text-yellow-900,
+.highcontrast .text-purple-50,
+.highcontrast .text-purple-100,
+.highcontrast .text-purple-200,
+.highcontrast .text-purple-300,
+.highcontrast .text-purple-400,
+.highcontrast .text-purple-500,
+.highcontrast .text-purple-600,
+.highcontrast .text-purple-700,
+.highcontrast .text-purple-800,
+.highcontrast .text-purple-900,
+.highcontrast .text-orange-50,
+.highcontrast .text-orange-100,
+.highcontrast .text-orange-200,
+.highcontrast .text-orange-300,
+.highcontrast .text-orange-400,
+.highcontrast .text-orange-500,
+.highcontrast .text-orange-600,
+.highcontrast .text-orange-700,
+.highcontrast .text-orange-800,
+.highcontrast .text-orange-900,
+.highcontrast .text-pink-50,
+.highcontrast .text-pink-100,
+.highcontrast .text-pink-200,
+.highcontrast .text-pink-300,
+.highcontrast .text-pink-400,
+.highcontrast .text-pink-500,
+.highcontrast .text-pink-600,
+.highcontrast .text-pink-700,
+.highcontrast .text-pink-800,
+.highcontrast .text-pink-900,
+.highcontrast .text-emerald-50,
+.highcontrast .text-emerald-100,
+.highcontrast .text-emerald-200,
+.highcontrast .text-emerald-300,
+.highcontrast .text-emerald-400,
+.highcontrast .text-emerald-500,
+.highcontrast .text-emerald-600,
+.highcontrast .text-emerald-700,
+.highcontrast .text-emerald-800,
+.highcontrast .text-emerald-900,
+.highcontrast .text-amber-50,
+.highcontrast .text-amber-100,
+.highcontrast .text-amber-200,
+.highcontrast .text-amber-300,
+.highcontrast .text-amber-400,
+.highcontrast .text-amber-500,
+.highcontrast .text-amber-600,
+.highcontrast .text-amber-700,
+.highcontrast .text-amber-800,
+.highcontrast .text-amber-900 {
+  color: oklch(0 0 0) !important;
+}
+
+/* High Contrast: Force all colored backgrounds to white/light gray */
+.highcontrast .bg-green-50,
+.highcontrast .bg-green-100,
+.highcontrast .bg-green-200,
+.highcontrast .bg-green-500\/10,
+.highcontrast .bg-green-500\/15,
+.highcontrast .bg-green-500\/20,
+.highcontrast .bg-green-500\/25,
+.highcontrast .bg-blue-50,
+.highcontrast .bg-blue-100,
+.highcontrast .bg-blue-200,
+.highcontrast .bg-blue-500\/10,
+.highcontrast .bg-blue-500\/15,
+.highcontrast .bg-blue-500\/20,
+.highcontrast .bg-blue-500\/25,
+.highcontrast .bg-red-50,
+.highcontrast .bg-red-100,
+.highcontrast .bg-red-200,
+.highcontrast .bg-red-500,
+.highcontrast .bg-red-500\/10,
+.highcontrast .bg-red-500\/15,
+.highcontrast .bg-red-500\/20,
+.highcontrast .bg-red-500\/25,
+.highcontrast .bg-yellow-50,
+.highcontrast .bg-yellow-100,
+.highcontrast .bg-yellow-200,
+.highcontrast .bg-yellow-500\/10,
+.highcontrast .bg-yellow-500\/15,
+.highcontrast .bg-yellow-500\/20,
+.highcontrast .bg-yellow-500\/25,
+.highcontrast .bg-purple-50,
+.highcontrast .bg-purple-100,
+.highcontrast .bg-purple-200,
+.highcontrast .bg-purple-500\/10,
+.highcontrast .bg-purple-500\/15,
+.highcontrast .bg-purple-500\/20,
+.highcontrast .bg-purple-500\/25,
+.highcontrast .bg-orange-50,
+.highcontrast .bg-orange-100,
+.highcontrast .bg-orange-200,
+.highcontrast .bg-orange-500\/10,
+.highcontrast .bg-orange-500\/15,
+.highcontrast .bg-orange-500\/20,
+.highcontrast .bg-orange-500\/25,
+.highcontrast .bg-pink-50,
+.highcontrast .bg-pink-100,
+.highcontrast .bg-pink-200,
+.highcontrast .bg-emerald-50,
+.highcontrast .bg-emerald-100,
+.highcontrast .bg-emerald-200,
+.highcontrast .bg-amber-50,
+.highcontrast .bg-amber-100,
+.highcontrast .bg-amber-200,
+.highcontrast .bg-amber-500,
+.highcontrast .bg-amber-500\/5 {
+  background-color: oklch(0.95 0 0) !important;
+}
+
+/* High Contrast: Force all colored borders to medium gray */
+.highcontrast .border-green-200,
+.highcontrast .border-green-300,
+.highcontrast .border-green-500,
+.highcontrast .border-green-500\/20,
+.highcontrast .border-green-500\/30,
+.highcontrast .border-green-500\/50,
+.highcontrast .border-blue-200,
+.highcontrast .border-blue-300,
+.highcontrast .border-blue-500,
+.highcontrast .border-blue-500\/20,
+.highcontrast .border-blue-500\/30,
+.highcontrast .border-blue-500\/50,
+.highcontrast .border-red-200,
+.highcontrast .border-red-300,
+.highcontrast .border-red-500,
+.highcontrast .border-red-500\/20,
+.highcontrast .border-red-500\/30,
+.highcontrast .border-red-500\/50,
+.highcontrast .border-yellow-200,
+.highcontrast .border-yellow-300,
+.highcontrast .border-yellow-500,
+.highcontrast .border-yellow-500\/20,
+.highcontrast .border-yellow-500\/30,
+.highcontrast .border-yellow-500\/50,
+.highcontrast .border-purple-200,
+.highcontrast .border-purple-300,
+.highcontrast .border-purple-500,
+.highcontrast .border-purple-500\/20,
+.highcontrast .border-purple-500\/30,
+.highcontrast .border-purple-500\/50,
+.highcontrast .border-orange-200,
+.highcontrast .border-orange-300,
+.highcontrast .border-orange-500,
+.highcontrast .border-orange-500\/20,
+.highcontrast .border-orange-500\/30,
+.highcontrast .border-orange-500\/50,
+.highcontrast .border-amber-500,
+.highcontrast .border-amber-500\/50 {
+  border-color: oklch(0.70 0 0) !important;
+}
+
+/* High Contrast Dark: Force all colored text to white/gray */
+.highcontrast-dark .text-green-50,
+.highcontrast-dark .text-green-100,
+.highcontrast-dark .text-green-200,
+.highcontrast-dark .text-green-300,
+.highcontrast-dark .text-green-400,
+.highcontrast-dark .text-green-500,
+.highcontrast-dark .text-green-600,
+.highcontrast-dark .text-green-700,
+.highcontrast-dark .text-green-800,
+.highcontrast-dark .text-green-900,
+.highcontrast-dark .text-blue-50,
+.highcontrast-dark .text-blue-100,
+.highcontrast-dark .text-blue-200,
+.highcontrast-dark .text-blue-300,
+.highcontrast-dark .text-blue-400,
+.highcontrast-dark .text-blue-500,
+.highcontrast-dark .text-blue-600,
+.highcontrast-dark .text-blue-700,
+.highcontrast-dark .text-blue-800,
+.highcontrast-dark .text-blue-900,
+.highcontrast-dark .text-red-50,
+.highcontrast-dark .text-red-100,
+.highcontrast-dark .text-red-200,
+.highcontrast-dark .text-red-300,
+.highcontrast-dark .text-red-400,
+.highcontrast-dark .text-red-500,
+.highcontrast-dark .text-red-600,
+.highcontrast-dark .text-red-700,
+.highcontrast-dark .text-red-800,
+.highcontrast-dark .text-red-900,
+.highcontrast-dark .text-yellow-50,
+.highcontrast-dark .text-yellow-100,
+.highcontrast-dark .text-yellow-200,
+.highcontrast-dark .text-yellow-300,
+.highcontrast-dark .text-yellow-400,
+.highcontrast-dark .text-yellow-500,
+.highcontrast-dark .text-yellow-600,
+.highcontrast-dark .text-yellow-700,
+.highcontrast-dark .text-yellow-800,
+.highcontrast-dark .text-yellow-900,
+.highcontrast-dark .text-purple-50,
+.highcontrast-dark .text-purple-100,
+.highcontrast-dark .text-purple-200,
+.highcontrast-dark .text-purple-300,
+.highcontrast-dark .text-purple-400,
+.highcontrast-dark .text-purple-500,
+.highcontrast-dark .text-purple-600,
+.highcontrast-dark .text-purple-700,
+.highcontrast-dark .text-purple-800,
+.highcontrast-dark .text-purple-900,
+.highcontrast-dark .text-orange-50,
+.highcontrast-dark .text-orange-100,
+.highcontrast-dark .text-orange-200,
+.highcontrast-dark .text-orange-300,
+.highcontrast-dark .text-orange-400,
+.highcontrast-dark .text-orange-500,
+.highcontrast-dark .text-orange-600,
+.highcontrast-dark .text-orange-700,
+.highcontrast-dark .text-orange-800,
+.highcontrast-dark .text-orange-900,
+.highcontrast-dark .text-pink-50,
+.highcontrast-dark .text-pink-100,
+.highcontrast-dark .text-pink-200,
+.highcontrast-dark .text-pink-300,
+.highcontrast-dark .text-pink-400,
+.highcontrast-dark .text-pink-500,
+.highcontrast-dark .text-pink-600,
+.highcontrast-dark .text-pink-700,
+.highcontrast-dark .text-pink-800,
+.highcontrast-dark .text-pink-900,
+.highcontrast-dark .text-emerald-50,
+.highcontrast-dark .text-emerald-100,
+.highcontrast-dark .text-emerald-200,
+.highcontrast-dark .text-emerald-300,
+.highcontrast-dark .text-emerald-400,
+.highcontrast-dark .text-emerald-500,
+.highcontrast-dark .text-emerald-600,
+.highcontrast-dark .text-emerald-700,
+.highcontrast-dark .text-emerald-800,
+.highcontrast-dark .text-emerald-900,
+.highcontrast-dark .text-amber-50,
+.highcontrast-dark .text-amber-100,
+.highcontrast-dark .text-amber-200,
+.highcontrast-dark .text-amber-300,
+.highcontrast-dark .text-amber-400,
+.highcontrast-dark .text-amber-500,
+.highcontrast-dark .text-amber-600,
+.highcontrast-dark .text-amber-700,
+.highcontrast-dark .text-amber-800,
+.highcontrast-dark .text-amber-900 {
+  color: oklch(1 0 0) !important;
+}
+
+/* High Contrast Dark: Force all colored backgrounds to black/dark gray */
+.highcontrast-dark .bg-green-50,
+.highcontrast-dark .bg-green-100,
+.highcontrast-dark .bg-green-200,
+.highcontrast-dark .bg-green-500,
+.highcontrast-dark .bg-green-500\/10,
+.highcontrast-dark .bg-green-500\/15,
+.highcontrast-dark .bg-green-500\/20,
+.highcontrast-dark .bg-green-500\/25,
+.highcontrast-dark .bg-green-950,
+.highcontrast-dark .bg-blue-50,
+.highcontrast-dark .bg-blue-100,
+.highcontrast-dark .bg-blue-200,
+.highcontrast-dark .bg-blue-500,
+.highcontrast-dark .bg-blue-500\/10,
+.highcontrast-dark .bg-blue-500\/15,
+.highcontrast-dark .bg-blue-500\/20,
+.highcontrast-dark .bg-blue-500\/25,
+.highcontrast-dark .bg-blue-950,
+.highcontrast-dark .bg-red-50,
+.highcontrast-dark .bg-red-100,
+.highcontrast-dark .bg-red-200,
+.highcontrast-dark .bg-red-500,
+.highcontrast-dark .bg-red-500\/10,
+.highcontrast-dark .bg-red-500\/15,
+.highcontrast-dark .bg-red-500\/20,
+.highcontrast-dark .bg-red-500\/25,
+.highcontrast-dark .bg-red-950,
+.highcontrast-dark .bg-yellow-50,
+.highcontrast-dark .bg-yellow-100,
+.highcontrast-dark .bg-yellow-200,
+.highcontrast-dark .bg-yellow-500\/10,
+.highcontrast-dark .bg-yellow-500\/15,
+.highcontrast-dark .bg-yellow-500\/20,
+.highcontrast-dark .bg-yellow-500\/25,
+.highcontrast-dark .bg-yellow-950,
+.highcontrast-dark .bg-purple-50,
+.highcontrast-dark .bg-purple-100,
+.highcontrast-dark .bg-purple-200,
+.highcontrast-dark .bg-purple-500\/10,
+.highcontrast-dark .bg-purple-500\/15,
+.highcontrast-dark .bg-purple-500\/20,
+.highcontrast-dark .bg-purple-500\/25,
+.highcontrast-dark .bg-purple-950,
+.highcontrast-dark .bg-orange-50,
+.highcontrast-dark .bg-orange-100,
+.highcontrast-dark .bg-orange-200,
+.highcontrast-dark .bg-orange-500,
+.highcontrast-dark .bg-orange-500\/10,
+.highcontrast-dark .bg-orange-500\/15,
+.highcontrast-dark .bg-orange-500\/20,
+.highcontrast-dark .bg-orange-500\/25,
+.highcontrast-dark .bg-orange-950,
+.highcontrast-dark .bg-pink-50,
+.highcontrast-dark .bg-pink-100,
+.highcontrast-dark .bg-pink-200,
+.highcontrast-dark .bg-emerald-50,
+.highcontrast-dark .bg-emerald-100,
+.highcontrast-dark .bg-emerald-200,
+.highcontrast-dark .bg-emerald-500,
+.highcontrast-dark .bg-amber-50,
+.highcontrast-dark .bg-amber-100,
+.highcontrast-dark .bg-amber-200,
+.highcontrast-dark .bg-amber-500,
+.highcontrast-dark .bg-amber-500\/5 {
+  background-color: oklch(0.12 0 0) !important;
+}
+
+/* High Contrast Dark: Force all colored borders to medium gray */
+.highcontrast-dark .border-green-200,
+.highcontrast-dark .border-green-300,
+.highcontrast-dark .border-green-500,
+.highcontrast-dark .border-green-500\/20,
+.highcontrast-dark .border-green-500\/30,
+.highcontrast-dark .border-green-500\/50,
+.highcontrast-dark .border-green-800,
+.highcontrast-dark .border-green-900,
+.highcontrast-dark .border-blue-200,
+.highcontrast-dark .border-blue-300,
+.highcontrast-dark .border-blue-500,
+.highcontrast-dark .border-blue-500\/20,
+.highcontrast-dark .border-blue-500\/30,
+.highcontrast-dark .border-blue-500\/50,
+.highcontrast-dark .border-blue-800,
+.highcontrast-dark .border-blue-900,
+.highcontrast-dark .border-red-200,
+.highcontrast-dark .border-red-300,
+.highcontrast-dark .border-red-500,
+.highcontrast-dark .border-red-500\/20,
+.highcontrast-dark .border-red-500\/30,
+.highcontrast-dark .border-red-500\/50,
+.highcontrast-dark .border-red-800,
+.highcontrast-dark .border-red-900,
+.highcontrast-dark .border-yellow-200,
+.highcontrast-dark .border-yellow-300,
+.highcontrast-dark .border-yellow-500,
+.highcontrast-dark .border-yellow-500\/20,
+.highcontrast-dark .border-yellow-500\/30,
+.highcontrast-dark .border-yellow-500\/50,
+.highcontrast-dark .border-yellow-800,
+.highcontrast-dark .border-yellow-900,
+.highcontrast-dark .border-purple-200,
+.highcontrast-dark .border-purple-300,
+.highcontrast-dark .border-purple-500,
+.highcontrast-dark .border-purple-500\/20,
+.highcontrast-dark .border-purple-500\/30,
+.highcontrast-dark .border-purple-500\/50,
+.highcontrast-dark .border-purple-800,
+.highcontrast-dark .border-purple-900,
+.highcontrast-dark .border-orange-200,
+.highcontrast-dark .border-orange-300,
+.highcontrast-dark .border-orange-500,
+.highcontrast-dark .border-orange-500\/20,
+.highcontrast-dark .border-orange-500\/30,
+.highcontrast-dark .border-orange-500\/50,
+.highcontrast-dark .border-orange-800,
+.highcontrast-dark .border-orange-900,
+.highcontrast-dark .border-amber-500,
+.highcontrast-dark .border-amber-500\/50 {
+  border-color: oklch(0.35 0 0) !important;
+}
+
+/* Remove gradients in high contrast themes */
+.highcontrast .bg-gradient-to-br,
+.highcontrast .bg-gradient-to-r,
+.highcontrast .bg-gradient-to-l,
+.highcontrast .bg-gradient-to-t,
+.highcontrast .bg-gradient-to-b,
+.highcontrast-dark .bg-gradient-to-br,
+.highcontrast-dark .bg-gradient-to-r,
+.highcontrast-dark .bg-gradient-to-l,
+.highcontrast-dark .bg-gradient-to-t,
+.highcontrast-dark .bg-gradient-to-b {
+  background-image: none !important;
+}
+
+/* Toast notifications - Ensure visibility and proper z-index */
+[data-sonner-toaster] {
+  z-index: 9999 !important;
+  position: fixed !important;
+}
+
+[data-sonner-toast] {
+  background: var(--popover) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--popover-foreground) !important;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
 }
 
 [data-sonner-toast][data-type="success"] {
-  background: linear-gradient(to bottom, rgba(52, 199, 89, 0.1), rgba(255, 255, 255, 0.9)) !important;
+  background: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
 }
 
 [data-sonner-toast][data-type="error"] {
-  background: linear-gradient(to bottom, rgba(255, 59, 48, 0.1), rgba(255, 255, 255, 0.9)) !important;
-}
-
-.dark [data-sonner-toast][data-type="success"] {
-  background: linear-gradient(to bottom, rgba(52, 199, 89, 0.1), rgba(28, 28, 30, 0.9)) !important;
-}
-
-.dark [data-sonner-toast][data-type="error"] {
-  background: linear-gradient(to bottom, rgba(255, 59, 48, 0.1), rgba(28, 28, 30, 0.9)) !important;
-}
-
-/* ========================================
-   ACCESSIBILITY - Reduced Motion
-   ======================================== */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  /* Reduce blur effects for performance */
-  .glass-light,
-  .glass-medium,
-  .glass-heavy {
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
-  }
-
-  /* Disable scale transforms */
-  button:active,
-  a:active,
-  [role="button"]:active {
-    transform: none !important;
-  }
-
-  /* Disable spring animations */
-  @keyframes spring {
-    from, to {
-      transform: none !important;
-    }
-  }
-
-  @keyframes morph {
-    from, to {
-      transform: none !important;
-    }
-  }
-
-  @keyframes bounce-slow {
-    from, to {
-      transform: none !important;
-    }
-  }
-
-  /* Toast notifications - instant */
-  [data-sonner-toast] {
-    animation: none !important;
-    transition: none !important;
-  }
-
-  /* Pull-to-refresh - no animation */
-  .ptr__children {
-    transition: none !important;
-  }
+  background: var(--destructive) !important;
+  color: var(--destructive-foreground) !important;
+  border-color: var(--destructive) !important;
 }

@@ -254,7 +254,6 @@ export default function Home() {
       return {
         phase: "Manutenção",
         color: "bg-blue-500/100",
-        glassTint: "glass-maintenance",
         icon: Wrench,
       };
     }
@@ -263,7 +262,6 @@ export default function Home() {
       return {
         phase: "Vegetativa",
         color: "bg-primary/100",
-        glassTint: "glass-vega",
         icon: Sprout,
       };
     }
@@ -272,7 +270,6 @@ export default function Home() {
       return {
         phase: "Floração",
         color: "bg-purple-500",
-        glassTint: "glass-flora",
         icon: Flower2,
       };
     }
@@ -281,7 +278,6 @@ export default function Home() {
       return {
         phase: "Secagem",
         color: "bg-amber-500",
-        glassTint: "glass-maintenance",
         icon: Wind,
       };
     }
@@ -736,14 +732,14 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
   const totalTasks = tasks?.length || 0;
 
   return (
-    <Card className="glass-medium border-hairline border-hairline-light shadow-glass hover:shadow-glass-lg transition-all duration-300 hover:-translate-y-0.5 active:scale-[0.99] rounded-3xl overflow-hidden">
-      <CardHeader className={`pb-4 ${phaseInfo.glassTint || ''} border-b border-hairline border-hairline-light`}>
+    <Card className="bg-card/90 backdrop-blur-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+      <CardHeader>
         <div className="flex items-start justify-between">
           <div>
             <CardTitle className="text-xl flex items-center gap-2">
               {tent.name}
               <Badge 
-                className={`${phaseInfo.color} text-white border-0 rounded-xl px-3 py-1 shadow-sm`}
+                className={`${phaseInfo.color} text-white border-0`}
               >
                 <PhaseIcon className="w-3 h-3 mr-1" />
                 {phaseInfo.phase}
@@ -793,7 +789,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
           {/* Cycle Info */}
           {cycle ? (
             <div 
-              className="glass-light border border-hairline border-hairline-light rounded-2xl p-4 space-y-2 cursor-pointer hover:bg-primary/5 transition-all duration-200 active:scale-[0.98] shadow-sm"
+              className="bg-primary/10 rounded-lg p-4 space-y-2 cursor-pointer hover:bg-primary/15 transition-colors"
               onClick={() => setPhaseTransitionOpen(true)}
             >
               <div className="flex justify-between items-center">
@@ -835,7 +831,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
               </div>
             </div>
           ) : (
-            <div className="glass-light border border-hairline border-hairline-light rounded-2xl p-4 text-center shadow-sm">
+            <div className="bg-muted rounded-lg p-4 text-center">
               <p className="text-sm text-muted-foreground">Nenhum ciclo ativo</p>
             </div>
           )}
@@ -843,7 +839,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
           {/* Weekly Tasks */}
           {cycle && (
             <div className="space-y-2">
-              <div className="w-full flex items-center justify-between hover:bg-muted/30 rounded-xl p-2 transition-all duration-200">
+              <div className="w-full flex items-center justify-between hover:bg-muted/50 rounded p-2 transition-colors">
                 <button
                   onClick={() => setTasksExpanded(!tasksExpanded)}
                   className="flex-1 flex items-center gap-2 text-left"
@@ -926,10 +922,10 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
               </p>
             </div>
           )}
-          <div className="grid grid-cols-3 gap-3 pt-5">
-            <div className="glass-light border border-hairline border-hairline-light rounded-2xl p-3 text-center shadow-sm transition-all duration-200 hover:shadow-md">
-              <ThermometerSun className="w-5 h-5 mx-auto text-orange-500 mb-2" />
-              <p className="text-xs font-medium text-muted-foreground mb-1">Temp</p>
+          <div className="grid grid-cols-3 gap-3 pt-5 border-t">
+            <div className="text-center">
+              <ThermometerSun className="w-5 h-5 mx-auto text-orange-500 mb-1" />
+              <p className="text-xs text-muted-foreground">Temp</p>
               <div className="flex items-center justify-center gap-1">
                 <p className={`text-sm font-semibold ${
                   latestLog?.tempC 
@@ -941,9 +937,9 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                 {latestLog?.tempC && getStatusIcon(parseFloat(latestLog.tempC), targets?.tempMin, targets?.tempMax)}
               </div>
             </div>
-            <div className="glass-light border border-hairline border-hairline-light rounded-2xl p-3 text-center shadow-sm transition-all duration-200 hover:shadow-md">
-              <Droplets className="w-5 h-5 mx-auto text-blue-500 mb-2" />
-              <p className="text-xs font-medium text-muted-foreground mb-1">RH</p>
+            <div className="text-center">
+              <Droplets className="w-5 h-5 mx-auto text-blue-500 mb-1" />
+              <p className="text-xs text-muted-foreground">RH</p>
               <div className="flex items-center justify-center gap-1">
                 <p className={`text-sm font-semibold ${
                   latestLog?.rhPct 
@@ -955,9 +951,9 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                 {latestLog?.rhPct && getStatusIcon(parseFloat(latestLog.rhPct), targets?.rhMin, targets?.rhMax)}
               </div>
             </div>
-            <div className="glass-light border border-hairline border-hairline-light rounded-2xl p-3 text-center shadow-sm transition-all duration-200 hover:shadow-md">
-              <Sun className="w-5 h-5 mx-auto text-yellow-500 mb-2" />
-              <p className="text-xs font-medium text-muted-foreground mb-1">PPFD</p>
+            <div className="text-center">
+              <Sun className="w-5 h-5 mx-auto text-yellow-500 mb-1" />
+              <p className="text-xs text-muted-foreground">PPFD</p>
               <div className="flex items-center justify-center gap-1">
                 <p className={`text-sm font-semibold ${
                   latestLog?.ppfd 
@@ -977,21 +973,21 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
               {!cycle ? (
                 <Button
                   onClick={() => onInitiateCycle(tent.id, tent.name)}
-                  className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl shadow-sm active:scale-[0.98] transition-all duration-200"
+                  className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   Novo Ciclo
                 </Button>
               ) : (
                 <Link 
                   href={`/tent/${tent.id}/log`}
-                  className="flex-1 inline-flex items-center justify-center rounded-xl text-sm font-semibold ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm active:scale-[0.98] h-10 px-4 py-2"
+                  className="flex-1 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
                 >
                   Registrar
                 </Link>
               )}
               <Link 
                 href={`/tent/${tent.id}`}
-                className="flex-1 inline-flex items-center justify-center rounded-xl text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-hairline border-hairline-light glass-light hover:bg-accent/50 hover:text-accent-foreground shadow-sm active:scale-[0.98] h-10 px-4 py-2"
+                className="flex-1 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
               >
                 Ver Detalhes
               </Link>
