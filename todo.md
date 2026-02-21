@@ -1468,3 +1468,22 @@
 - [x] Configurar Toaster com posição, duração e estilos customizados
 - [x] Adicionar CSS para garantir visibilidade (z-index 9999, cores contrastantes)
 - [x] Testar notificações toast após transições de fase (MAINTENANCE→CLONING, VEGA→FLORA, FLORA→DRYING, CLONING→MAINTENANCE)
+
+## Simplificação do Fluxo de Transição de Fase
+
+- [x] Remover badge clicável da fase atual
+- [x] Adicionar botão/link clicável em "Ciclo Ativo" no card da estufa
+- [x] Redesenhar PhaseTransitionDialog com UI mais bonita e limpa:
+  - [x] Mostrar apenas a próxima fase disponível (não dropdown de todas as opções)
+  - [x] Título claro: "Avançar para [Próxima Fase]"
+  - [x] Checkbox simples: "Transferir plantas para outra estufa?"
+  - [x] Select de estufa destino aparece APENAS se checkbox marcado
+  - [x] Lógica: se transferir → encerra ciclo na estufa atual + inicia na destino
+  - [x] Lógica: se NÃO transferir → mantém plantas na mesma estufa, apenas muda fase
+- [x] Testar fluxo completo:
+  - [x] Dialog abre ao clicar em "Ciclo Ativo"
+  - [x] Card visual bonito com ícone e cor da próxima fase
+  - [x] Checkbox funciona corretamente
+  - [x] Select aparece/desaparece conforme checkbox
+  - [x] Estufa atual é excluída das opções de transferência
+  - [x] Texto explicativo dinâmico

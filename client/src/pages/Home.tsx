@@ -699,8 +699,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
             <CardTitle className="text-xl flex items-center gap-2">
               {tent.name}
               <Badge 
-                className={`${phaseInfo.color} text-white border-0 cursor-pointer hover:opacity-80 transition-opacity`}
-                onClick={() => cycle && setPhaseTransitionOpen(true)}
+                className={`${phaseInfo.color} text-white border-0`}
               >
                 <PhaseIcon className="w-3 h-3 mr-1" />
                 {phaseInfo.phase}
@@ -739,7 +738,10 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
         <div className="space-y-4">
           {/* Cycle Info */}
           {cycle ? (
-            <div className="bg-primary/10 rounded-lg p-4 space-y-2">
+            <div 
+              className="bg-primary/10 rounded-lg p-4 space-y-2 cursor-pointer hover:bg-primary/15 transition-colors"
+              onClick={() => setPhaseTransitionOpen(true)}
+            >
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium text-foreground">Ciclo Ativo</span>
                 <span className="text-sm font-semibold text-primary">
@@ -987,6 +989,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
           onOpenChange={setPhaseTransitionOpen}
           cycleId={cycle.id}
           currentPhase={cycle.floraStartDate ? "FLORA" : (cycle.cloningStartDate ? "CLONING" : (tent.category === "MAINTENANCE" ? "MAINTENANCE" : "VEGA"))}
+          tentId={tent.id}
           tentName={tent.name}
         />
       )}
