@@ -748,12 +748,22 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
             <CardDescription className="mt-2 space-y-1">
               <div className="flex items-center gap-3">
                 <span>Tipo {tent.tentType} • {tent.width}×{tent.depth}×{tent.height}cm</span>
-                {tent.plantCount !== undefined && (
+                {(tent.plantCount !== undefined || tent.seedlingCount !== undefined) && (
                   <Link href={`/plants?tent=${tent.id}`}>
-                    <Badge variant="outline" className="gap-1 cursor-pointer hover:bg-primary/10 hover:border-primary/50 transition-colors">
-                      <Sprout className="w-3 h-3" />
-                      {tent.plantCount} {tent.plantCount === 1 ? 'planta' : 'plantas'}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      {tent.plantCount > 0 && (
+                        <Badge variant="outline" className="gap-1 cursor-pointer hover:bg-primary/10 hover:border-primary/50 transition-colors">
+                          <Sprout className="w-3 h-3" />
+                          {tent.plantCount} {tent.plantCount === 1 ? 'planta' : 'plantas'}
+                        </Badge>
+                      )}
+                      {tent.seedlingCount > 0 && (
+                        <Badge variant="outline" className="gap-1 cursor-pointer hover:bg-cyan-10 hover:border-cyan-50 transition-colors bg-cyan-50/50 text-cyan-700 border-cyan-200">
+                          <Scissors className="w-3 h-3" />
+                          {tent.seedlingCount} {tent.seedlingCount === 1 ? 'muda' : 'mudas'}
+                        </Badge>
+                      )}
+                    </div>
                   </Link>
                 )}
               </div>

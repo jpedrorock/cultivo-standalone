@@ -142,13 +142,13 @@ export async function getUserByOpenId(openId: string) {
   }
 }
 
-export async function getAllTents(): Promise<(Tent & { plantCount: number })[]> {
+export async function getAllTents(): Promise<(Tent & { plantCount: number; seedlingCount: number })[]> {
   const db = await getDb();
   if (!db) return [];
   
   const allTents = await db.select().from(tents).orderBy(tents.id);
   
-  // Para cada estufa, contar plantas ativas
+  // Para cada estufa, contar plantas e mudas ativas separadamente
   const tentsWithPlantCount = await Promise.all(
     allTents.map(async (tent: Tent) => {
       const plantsList = await db
@@ -156,9 +156,13 @@ export async function getAllTents(): Promise<(Tent & { plantCount: number })[]> 
         .from(plants)
         .where(and(eq(plants.currentTentId, tent.id), eq(plants.status, 'ACTIVE')));
       
+      const plantsOnly = plantsList.filter((p: any) => p.plantStage === 'PLANT');
+      const seedlingsOnly = plantsList.filter((p: any) => p.plantStage === 'SEEDLING');
+      
       return {
         ...tent,
-        plantCount: plantsList.length,
+        plantCount: plantsOnly.length,
+        seedlingCount: seedlingsOnly.length,
       };
     })
   );

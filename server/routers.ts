@@ -786,7 +786,22 @@ export const appRouter = router({
           })
           .where(eq(cycles.id, input.cycleId));
         
-        return { success: true };
+        // Se clones foram produzidos, criar mudas (SEEDLING)
+        if (input.clonesProduced && input.clonesProduced > 0) {
+          const seedlings = [];
+          for (let i = 1; i <= input.clonesProduced; i++) {
+            seedlings.push({
+              name: `Clone ${i} - ${cycle.strainName || 'Sem strain'}`,
+              strainId: cycle.strainId,
+              currentTentId: cycle.tentId,
+              plantStage: "SEEDLING" as const,
+              status: "ACTIVE" as const,
+            });
+          }
+          await database.insert(plants).values(seedlings);
+        }
+        
+        return { success: true, seedlingsCreated: input.clonesProduced || 0 };
       }),
     
     initiate: publicProcedure
@@ -2452,6 +2467,12 @@ export const appRouter = router({
           return { success: true, movedCount: 0 };
         }
         
+        // Buscar estufa de destino para verificar se é VEGA
+        const [toTent] = await database
+          .select()
+          .from(tents)
+          .where(eq(tents.id, input.toTentId));
+        
         // Mover cada planta e registrar histórico
         for (const plant of plantsToMove) {
           // Registrar histórico
@@ -2462,10 +2483,18 @@ export const appRouter = router({
             reason: input.reason || "Movimentação em lote",
           });
           
-          // Atualizar estufa atual
+          // Promover SEEDLING para PLANT se indo para estufa VEGA
+          const newStage = (plant.plantStage === "SEEDLING" && toTent?.category === "VEGA") 
+            ? "PLANT" 
+            : plant.plantStage;
+          
+          // Atualizar estufa atual e estágio
           await database
             .update(plants)
-            .set({ currentTentId: input.toTentId })
+            .set({ 
+              currentTentId: input.toTentId,
+              plantStage: newStage
+            })
             .where(eq(plants.id, plant.id));
         }
         

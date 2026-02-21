@@ -487,6 +487,7 @@ export const plants = mysqlTable(
       .references(() => strains.id),
     currentTentId: int("currentTentId")
       .references(() => tents.id),
+    plantStage: mysqlEnum("plantStage", ["CLONE", "SEEDLING", "PLANT"]).default("SEEDLING").notNull(),
     status: mysqlEnum("status", ["ACTIVE", "HARVESTED", "DEAD", "DISCARDED"]).default("ACTIVE").notNull(),
     finishedAt: timestamp("finishedAt"),
     finishReason: text("finishReason"),
@@ -498,6 +499,7 @@ export const plants = mysqlTable(
     strainIdx: index("strainIdx").on(table.strainId),
     tentIdx: index("tentIdx").on(table.currentTentId),
     statusIdx: index("statusIdx").on(table.status),
+    stageIdx: index("stageIdx").on(table.plantStage),
   })
 );
 
