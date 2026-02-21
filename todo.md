@@ -1285,3 +1285,11 @@
 - [x] Forçar grayscale em text/bg/border coloridos nos temas highcontrast
 - [x] Criar tema Alto Contraste Escuro (invertido - fundo preto, texto branco)
 - [x] Remover gradientes nos temas de alto contraste
+
+
+## Preview Visual de Temas (21/02/2026) ✅
+- [x] Criar componente ThemePreview com miniatura visual (16x12px)
+- [x] Mostrar cores de fundo, texto e card de cada tema
+- [x] Adicionar preview ao lado de cada opção no ThemeToggle
+- [x] Layout com sidebar + header + card em miniatura
+- [x] Cores corretas para cada tema (light, dark, highcontrast, highcontrast-dark)
