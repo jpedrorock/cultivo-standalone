@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { eq, and, desc, sql, isNotNull } from "drizzle-orm";
+import { eq, and, or, desc, sql, isNotNull } from "drizzle-orm";
 import * as db from "./db";
 import { getDb } from "./db";
 import {
@@ -214,8 +214,27 @@ export const appRouter = router({
         // Deletar cloning events
         await database.delete(cloningEvents).where(eq(cloningEvents.tentId, input.id));
         
+        // Deletar recipes (receitas nutricionais)
+        await database.delete(recipes).where(eq(recipes.tentId, input.id));
+        
+        // Deletar plant tent history (histórico de movimentações)
+        await database.delete(plantTentHistory).where(
+          or(
+            eq(plantTentHistory.fromTentId, input.id),
+            eq(plantTentHistory.toTentId, input.id)
+          )
+        );
+        
         // Finalmente, deletar estufa
-        await database.delete(tents).where(eq(tents.id, input.id));
+        try {
+          await database.delete(tents).where(eq(tents.id, input.id));
+        } catch (error: any) {
+          // Se falhar por foreign key constraint, mostrar mensagem clara
+          if (error.message?.includes('foreign key constraint')) {
+            throw new Error("Não é possível excluir esta estufa. Verifique se há ciclos ativos ou registros relacionados. Finalize o ciclo primeiro.");
+          }
+          throw error;
+        }
         
         return { success: true };
       }),

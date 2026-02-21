@@ -1136,3 +1136,20 @@
 - [x] Sugerir finalizar ciclo antes de excluir - Mensagem já sugere "Finalize o ciclo primeiro" ✅
 
 **Nota:** Não é um bug - comportamento correto. Usuário deve finalizar ciclo ativo antes de excluir estufa.
+
+## UX: Melhorar Mensagem de Erro ao Excluir Estufa (20/02/2026)
+- [ ] Mensagem atual genérica "Failed query: delete from tents" não é clara para usuário
+- [ ] Melhorar para mostrar motivo específico: "Não é possível excluir. Finalize o ciclo ativo primeiro."
+- [ ] Adicionar link/botão rápido "Finalizar Ciclo Agora" no toast de erro
+- [ ] Considerar adicionar confirmação com opção "Finalizar ciclo e excluir estufa"
+
+## Bug: Estufas Excluídas Aparecem na Lista de Movimentação (20/02/2026)
+- [x] Verificar se tents.list está retornando estufas deletadas - Estufas não estavam sendo deletadas ✅
+- [x] Verificar se há soft delete (deletedAt) em vez de hard delete - Hard delete confirmado ✅
+- [x] Corrigir query para filtrar apenas estufas ativas - Não necessário, problema era exclusão falhando ✅
+
+## Bug: Algumas Estufas Não Conseguem Ser Excluídas (20/02/2026)
+- [x] Identificar qual tabela está bloqueando a exclusão (foreign key) - recipes e plantTentHistory ✅
+- [x] Verificar se há registros órfãos em tabelas não deletadas pelo código - Sim, 2 tabelas faltando ✅
+- [x] Adicionar deleção de recipes e plantTentHistory antes de deletar estufa ✅
+- [x] Adicionar try-catch com mensagem clara para foreign key constraints ✅
