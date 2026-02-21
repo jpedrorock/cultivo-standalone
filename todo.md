@@ -1302,3 +1302,12 @@
 - [x] Aplicar transição em *, *::before, *::after para cobertura total
 - [x] Desabilitar transições em inputs e progressbars (mudança instantânea)
 - [x] Testar performance da animação
+
+
+## Atualizar Ícones PWA (21/02/2026) ✅
+- [x] Usar ícone Sprout verde fornecido pelo usuário
+- [x] Copiar ícone para public folder (icon-192.png, icon-512.png, favicon.png)
+- [x] Atualizar index.html com novos favicons
+- [x] Atualizar apple-touch-icon para usar icon-192.png
+- [x] Manifest.json já estava configurado corretamente
+- [x] Testar carregamento dos novos ícones
