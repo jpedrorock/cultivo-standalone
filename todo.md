@@ -1649,3 +1649,28 @@
   - [ ] Tablet (iPad)
   - [ ] Desktop
 - [ ] Testar Dark Mode
+
+### Fase 5 - Dialogs & Modals (Diálogos e Modais)
+- [x] Redesenhar componente base Dialog (shadcn/ui)
+  - [x] Glass panel (glass-heavy, 90% opacity, 40px blur)
+  - [x] Rounded corners (rounded-3xl 24px)
+  - [x] Shadow-glass effect
+  - [x] Background overlay (bg-black/60 backdrop-blur-md)
+  - [x] Spring animations (scale + fade, duration-300)
+- [x] Atualizar PhaseTransitionDialog
+  - [x] Glass panel com phase-tinted header (glass-light + phase overlay)
+  - [x] Icon em glass-medium com phase tint
+  - [x] Herda glass buttons e inputs dos componentes base
+- [x] Atualizar HarvestConfirmationDialog
+  - [x] Glass panel flutuante (herda do Dialog base)
+  - [x] Checklist com glass checkboxes (herda do Checkbox base)
+  - [x] Input de peso com glass styling (herda do Input base)
+- [x] Atualizar outros dialogs/sheets
+  - [x] Todos os dialogs herdam glass styling do Dialog base
+  - [x] Sheet "Mais" usa glass-medium
+  - [x] Confirmation e Alert dialogs com glass-heavy
+- [x] Testar todos os modals
+  - [x] Animações spring funcionando (zoom-in/out + scale)
+  - [x] Blur de fundo aplicado (backdrop-blur-md)
+  - [x] Glass aesthetic consistente (glass-heavy em todos)
+  - [x] Acessibilidade (Esc para fechar, focus trap mantido)
