@@ -1311,3 +1311,18 @@
 - [x] Atualizar apple-touch-icon para usar icon-192.png
 - [x] Manifest.json já estava configurado corretamente
 - [x] Testar carregamento dos novos ícones
+
+
+## Seed Database com Dados de Teste (21/02/2026) ✅
+- [x] Criar script seed-db.mjs para popular banco
+- [x] Limpar todas as tabelas existentes (com tratamento de erros)
+- [x] Criar 8 strains (24K Gold, OG Kush, Blue Dream, Northern Lights, Gorilla Glue #4, White Widow, Amnesia Haze, Purple Punch)
+- [x] Criar 3 estufas com configurações específicas:
+  - Estufa Manutenção: 45x75x90cm, 65W, 2 plantas
+  - Estufa Vegetativa: 60x60x120cm, 240W, 3 plantas (todas 24K)
+  - Estufa Floração: 60x120x150cm, 320W, 3 plantas (todas OG Kush)
+- [x] Criar 8 plantas distribuídas nas estufas com códigos (M-24K-01, V-24K-01, F-OGK-01, etc.)
+- [x] Gerar 7 dias de histórico (42 registros: 7 dias × 2 turnos × 3 estufas)
+- [x] Registros AM (8h) e PM (20h) com variações realistas
+- [x] Parâmetros por categoria: MAINTENANCE (24°C, 60% RH, 300 PPFD), VEGA (25°C, 65% RH, 500 PPFD), FLORA (23°C, 48% RH, 750 PPFD)
+- [x] Executar seed e verificar dados no app
