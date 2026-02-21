@@ -246,6 +246,66 @@
   --sidebar-ring: oklch(0 0 0);
 }
 
+.apple {
+  /* Apple theme - Inspired by macOS/iOS design */
+  /* Primary colors - Apple blue accent */
+  --primary: oklch(0.55 0.17 252); /* Apple blue */
+  --primary-foreground: oklch(1 0 0);
+  --sidebar-primary: oklch(0.55 0.17 252);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  
+  /* Base colors - Clean white with subtle warmth */
+  --background: oklch(0.99 0.002 90); /* Slightly warm white */
+  --foreground: oklch(0.20 0.005 285);
+  
+  /* Card colors - Frosted glass effect (light) */
+  --card: oklch(0.97 0.003 90);
+  --card-foreground: oklch(0.20 0.005 285);
+  
+  /* Popover colors - Elevated frosted glass */
+  --popover: oklch(0.98 0.002 90);
+  --popover-foreground: oklch(0.20 0.005 285);
+  
+  /* Secondary colors - Subtle gray for secondary actions */
+  --secondary: oklch(0.95 0.002 285);
+  --secondary-foreground: oklch(0.30 0.005 285);
+  
+  /* Muted colors - Softer gray for less emphasis */
+  --muted: oklch(0.94 0.002 285);
+  --muted-foreground: oklch(0.50 0.005 285);
+  
+  /* Accent colors - Light blue tint */
+  --accent: oklch(0.96 0.015 252);
+  --accent-foreground: oklch(0.20 0.005 285);
+  
+  /* Destructive colors - Apple red */
+  --destructive: oklch(0.58 0.22 25); /* Apple red */
+  --destructive-foreground: oklch(1 0 0);
+  
+  /* Border and input colors - Very subtle borders */
+  --border: oklch(0.88 0.003 285);
+  --input: oklch(0.96 0.002 285);
+  --ring: oklch(0.55 0.17 252); /* Apple blue ring */
+  
+  /* Chart colors - Apple color palette */
+  --chart-1: oklch(0.65 0.17 252); /* Blue */
+  --chart-2: oklch(0.65 0.17 140); /* Green */
+  --chart-3: oklch(0.65 0.20 45);  /* Orange */
+  --chart-4: oklch(0.60 0.22 25);  /* Red */
+  --chart-5: oklch(0.60 0.15 300); /* Purple */
+  
+  /* Sidebar colors - Translucent sidebar with blur */
+  --sidebar: oklch(0.96 0.003 285);
+  --sidebar-foreground: oklch(0.25 0.005 285);
+  --sidebar-accent: oklch(0.93 0.015 252);
+  --sidebar-accent-foreground: oklch(0.20 0.005 285);
+  --sidebar-border: oklch(0.90 0.003 285);
+  --sidebar-ring: oklch(0.55 0.17 252);
+  
+  /* Apple-specific: Larger border radius for that signature rounded look */
+  --radius: 0.85rem;
+}
+
 @layer base {
   /* Smooth theme transition animations */
   *,

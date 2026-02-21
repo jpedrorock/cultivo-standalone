@@ -1,11 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Contrast, Moon, Sun } from "lucide-react";
+import { Apple, Contrast, Moon, Sun } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 
 // Theme preview component showing visual representation
-function ThemePreview({ type }: { type: "light" | "dark" | "highcontrast" | "highcontrast-dark" }) {
+function ThemePreview({ type }: { type: "light" | "dark" | "highcontrast" | "highcontrast-dark" | "apple" }) {
   const previewStyles = {
     light: {
       bg: "bg-white",
@@ -30,6 +30,12 @@ function ThemePreview({ type }: { type: "light" | "dark" | "highcontrast" | "hig
       card: "bg-gray-900",
       text: "bg-white",
       accent: "bg-white",
+    },
+    apple: {
+      bg: "bg-gray-50",
+      card: "bg-white",
+      text: "bg-gray-800",
+      accent: "bg-blue-500",
     },
   };
 
@@ -70,6 +76,7 @@ export function ThemeToggle() {
           {theme === "dark" && <Moon className="w-5 h-5 text-blue-600" />}
           {theme === "light" && <Sun className="w-5 h-5 text-yellow-600" />}
           {(theme === "highcontrast" || theme === "highcontrast-dark") && <Contrast className="w-5 h-5" />}
+          {theme === "apple" && <Apple className="w-5 h-5 text-blue-500" />}
           Tema
         </CardTitle>
         <CardDescription>
@@ -134,6 +141,21 @@ export function ThemeToggle() {
               </Label>
               <p className="text-sm text-muted-foreground mt-1">
                 Preto e branco invertido (fundo preto, texto branco)
+              </p>
+            </div>
+          </div>
+          
+          {/* Apple Theme */}
+          <div className="flex items-center gap-3 rounded-md border p-4 mt-3">
+            <RadioGroupItem value="apple" id="apple" />
+            <ThemePreview type="apple" />
+            <div className="flex-1">
+              <Label htmlFor="apple" className="flex items-center gap-2 cursor-pointer">
+                <Apple className="w-4 h-4 text-blue-500" />
+                <span className="font-medium">Apple</span>
+              </Label>
+              <p className="text-sm text-muted-foreground mt-1">
+                Inspirado no design macOS/iOS com bordas arredondadas
               </p>
             </div>
           </div>

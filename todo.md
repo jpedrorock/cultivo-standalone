@@ -1407,3 +1407,15 @@
 - [x] Adicionar histórico de 7 dias para estufa de manutenção (AM/PM)
 - [x] Executar seed e verificar ciclo MAINTENANCE no dashboard
 - [x] Atualizar resumo do seed para mostrar 3 ciclos ativos
+
+
+## Tema Apple (macOS/iOS) (21/02/2026) ✅
+- [x] Criar CSS variables para tema Apple (cores Apple blue, warm white background)
+- [x] Paleta de cores: Apple blue (primary), Apple red (destructive), cores de chart variadas
+- [x] Bordas arredondadas maiores (--radius: 0.85rem vs 0.65rem padrão)
+- [x] Bordas sutis e sombras suaves para efeito de profundidade
+- [x] Tipografia system-ui (San Francisco) já configurada globalmente
+- [x] Atualizar ThemeContext para suportar 5 temas (light, dark, highcontrast, highcontrast-dark, apple)
+- [x] Atualizar ThemeToggle com opção "Apple" e ícone Apple
+- [x] Preview thumbnail do tema Apple (bg-gray-50, card-white, accent-blue-500)
+- [x] Testar tema Apple (renderização correta, sem erros TypeScript)
