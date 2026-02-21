@@ -1460,3 +1460,11 @@
 - [ ] Opção de mover plantas para outra estufa ou manter na mesma
 - [ ] Atualizar categoria da estufa ao mudar fase
 - [ ] Testar transições a partir dos cards de estufas
+
+## Toast Notifications para Transições de Fase
+
+- [x] Verificar instalação da biblioteca sonner
+- [x] Adicionar componente Toaster ao App.tsx ou main.tsx
+- [x] Configurar Toaster com posição, duração e estilos customizados
+- [x] Adicionar CSS para garantir visibilidade (z-index 9999, cores contrastantes)
+- [x] Testar notificações toast após transições de fase (MAINTENANCE→CLONING, VEGA→FLORA, FLORA→DRYING, CLONING→MAINTENANCE)
