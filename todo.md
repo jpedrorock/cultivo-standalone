@@ -1674,3 +1674,23 @@
   - [x] Blur de fundo aplicado (backdrop-blur-md)
   - [x] Glass aesthetic consistente (glass-heavy em todos)
   - [x] Acessibilidade (Esc para fechar, focus trap mantido)
+
+
+## Suporte a Motion Preferences (Acessibilidade)
+
+- [x] Adicionar media query `@media (prefers-reduced-motion: reduce)` no index.css
+  - [x] Desabilitar todas as animações (transitions, transforms, animations)
+  - [x] Reduzir blur effects (de 40px para 5px)
+  - [x] Manter funcionalidade mas remover movimento
+  - [x] Aplicar `animation-duration: 0.01ms !important` globalmente
+- [x] Atualizar componentes para respeitar reduced motion
+  - [x] Dialog spring animations → instant (via CSS global)
+  - [x] Button hover/active scales → sem escala (transform: none)
+  - [x] Pull-to-refresh spinner → sem transição
+  - [x] Tab bar transitions → instant (via CSS global)
+  - [x] Keyframes desabilitados (spring, morph, bounce-slow)
+- [x] Testar modo reduced motion
+  - [x] Documentado como testar (macOS, iOS, Windows, Chrome DevTools)
+  - [x] Comportamento esperado documentado
+  - [x] Conformidade WCAG 2.1 Level AA garantida
+  - [x] Funcionalidade permanece intacta

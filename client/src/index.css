@@ -615,3 +615,62 @@ input[type="range"]::-moz-range-track {
 .dark [data-sonner-toast][data-type="error"] {
   background: linear-gradient(to bottom, rgba(255, 59, 48, 0.1), rgba(28, 28, 30, 0.9)) !important;
 }
+
+/* ========================================
+   ACCESSIBILITY - Reduced Motion
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Reduce blur effects for performance */
+  .glass-light,
+  .glass-medium,
+  .glass-heavy {
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+  }
+
+  /* Disable scale transforms */
+  button:active,
+  a:active,
+  [role="button"]:active {
+    transform: none !important;
+  }
+
+  /* Disable spring animations */
+  @keyframes spring {
+    from, to {
+      transform: none !important;
+    }
+  }
+
+  @keyframes morph {
+    from, to {
+      transform: none !important;
+    }
+  }
+
+  @keyframes bounce-slow {
+    from, to {
+      transform: none !important;
+    }
+  }
+
+  /* Toast notifications - instant */
+  [data-sonner-toast] {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Pull-to-refresh - no animation */
+  .ptr__children {
+    transition: none !important;
+  }
+}
