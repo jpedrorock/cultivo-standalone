@@ -61,33 +61,26 @@ export default function PlantDetail() {
     },
   });
   
-  const harvestMutation = trpc.plants.finish.useMutation({
-    onSuccess: () => {
-      toast.success('✅ Planta marcada como colhida com sucesso!');
-      refetch();
+  const archiveMutation = trpc.plants.archive.useMutation({
+    onSuccess: (_, variables) => {
+      const message = variables.status === 'HARVESTED' 
+        ? '✅ Planta marcada como colhida e arquivada!'
+        : '🗑️ Planta descartada e arquivada!';
+      toast.success(message);
+      window.location.href = '/plants';
     },
     onError: (error) => {
-      toast.error(`Erro ao marcar como colhida: ${error.message}`);
+      toast.error(`Erro ao arquivar planta: ${error.message}`);
     },
   });
   
-  const deleteMutation = trpc.plants.delete.useMutation({
+  const deleteMutation = trpc.plants.deletePermanently.useMutation({
     onSuccess: () => {
-      toast.success('✅ Planta excluída com sucesso!');
+      toast.success('✅ Planta excluída permanentemente!');
       window.location.href = '/plants';
     },
     onError: (error) => {
       toast.error(`Erro ao excluir planta: ${error.message}`);
-    },
-  });
-  
-  const discardMutation = trpc.plants.discard.useMutation({
-    onSuccess: () => {
-      toast.success('🗑️ Planta descartada com sucesso!');
-      refetch();
-    },
-    onError: (error) => {
-      toast.error(`Erro ao descartar planta: ${error.message}`);
     },
   });
   
@@ -99,42 +92,30 @@ export default function PlantDetail() {
   };
   
   const handleHarvest = () => {
-    if (confirm('Deseja marcar esta planta como colhida?')) {
-      harvestMutation.mutate({ plantId, status: 'HARVESTED' });
+    const reason = prompt('Notas sobre a colheita (opcional - ex: peso, qualidade):');
+    if (reason !== null) { // null = cancelado
+      archiveMutation.mutate({ 
+        plantId, 
+        status: 'HARVESTED',
+        finishReason: reason || undefined
+      });
     }
   };
   
   const handleDelete = () => {
-    const plantId = deleteMutation.variables?.plantId;
-    
-    let timeoutId: NodeJS.Timeout | null = null;
-    
-    // Show toast with undo button
-    toast.info('Planta será excluída em 5 segundos', {
-      duration: 5000,
-      action: {
-        label: 'Desfazer',
-        onClick: () => {
-          if (timeoutId) {
-            clearTimeout(timeoutId);
-            timeoutId = null;
-          }
-          toast.success('Exclusão cancelada!');
-        },
-      },
-    });
-    
-    // Set timeout to execute deletion after 5 seconds
-    timeoutId = setTimeout(() => {
+    if (confirm('⚠️ ATENÇÃO: Esta ação é PERMANENTE e não pode ser desfeita!\n\nUse apenas para plantas cadastradas por erro.\n\nPara plantas colhidas ou descartadas, use "Marcar como Colhida" ou "Descartar Planta".\n\nDeseja realmente excluir permanentemente?')) {
       deleteMutation.mutate({ plantId: plant!.id });
-      timeoutId = null;
-    }, 5000);
+    }
   };
   
   const handleDiscard = () => {
-    const reason = prompt('Motivo do descarte (opcional):');
-    if (reason !== null) { // null = cancelado, "" = OK sem motivo
-      discardMutation.mutate({ plantId, reason: reason || undefined });
+    const reason = prompt('Motivo do descarte (ex: doente, hermafrodita, baixa qualidade):');
+    if (reason !== null) { // null = cancelado
+      archiveMutation.mutate({ 
+        plantId, 
+        status: 'DISCARDED',
+        finishReason: reason || undefined
+      });
     }
   };
 
@@ -262,13 +243,13 @@ export default function PlantDetail() {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
                     onClick={handleHarvest} 
-                    disabled={harvestMutation.isPending}
+                    disabled={archiveMutation.isPending}
                     className="text-green-600"
                   >
-                    {harvestMutation.isPending ? (
+                    {archiveMutation.isPending ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Salvando...
+                        Arquivando...
                       </>
                     ) : (
                       <>
@@ -279,18 +260,18 @@ export default function PlantDetail() {
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     onClick={handleDiscard} 
-                    disabled={discardMutation.isPending}
+                    disabled={archiveMutation.isPending}
                     className="text-orange-600"
                   >
-                    {discardMutation.isPending ? (
+                    {archiveMutation.isPending ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Descartando...
+                        Arquivando...
                       </>
                     ) : (
                       <>
                         <XCircle className="w-4 h-4 mr-2" />
-                        Descartar Planta (Doente)
+                        Descartar Planta
                       </>
                     )}
                   </DropdownMenuItem>

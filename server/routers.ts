@@ -1959,7 +1959,7 @@ export const appRouter = router({
         return { id: result.insertId };
       }),
 
-    // Listar plantas
+    // Listar plantas (apenas ACTIVE por padrão)
     list: publicProcedure
       .input(z.object({
         tentId: z.number().optional(),
@@ -1970,19 +1970,25 @@ export const appRouter = router({
         const database = await getDb();
         if (!database) throw new Error("Database not available");
         
-        let query = database.select().from(plants);
+        let conditions = [];
+        
+        // Filtrar apenas plantas ACTIVE por padrão
+        if (input.status) {
+          conditions.push(eq(plants.status, input.status));
+        } else {
+          conditions.push(eq(plants.status, "ACTIVE"));
+        }
         
         if (input.tentId) {
-          query = query.where(eq(plants.currentTentId, input.tentId)) as any;
+          conditions.push(eq(plants.currentTentId, input.tentId));
         }
         if (input.strainId) {
-          query = query.where(eq(plants.strainId, input.strainId)) as any;
-        }
-        if (input.status) {
-          query = query.where(eq(plants.status, input.status)) as any;
+          conditions.push(eq(plants.strainId, input.strainId));
         }
         
-        const plantsList = await query;
+        let query = database.select().from(plants).where(and(...conditions));
+        
+        const plantsList = await query as any;
         
         // Para cada planta, buscar última foto de saúde, status de saúde e fase do ciclo
         const plantsWithDetails = await Promise.all(
@@ -2380,6 +2386,166 @@ export const appRouter = router({
         await database
           .delete(plantPhotos)
           .where(eq(plantPhotos.id, input.id));
+        
+        return { success: true };
+      }),
+
+    // Arquivar planta (marcar como HARVESTED ou DISCARDED)
+    archive: publicProcedure
+      .input(z.object({
+        plantId: z.number(),
+        status: z.enum(["HARVESTED", "DISCARDED"]),
+        finishReason: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Verificar se planta está ACTIVE
+        const [plant] = await database
+          .select()
+          .from(plants)
+          .where(eq(plants.id, input.plantId));
+        
+        if (!plant) {
+          throw new Error("Planta não encontrada");
+        }
+        
+        if (plant.status !== "ACTIVE") {
+          throw new Error("Apenas plantas ativas podem ser arquivadas");
+        }
+        
+        // Atualizar status e remover de estufa
+        await database
+          .update(plants)
+          .set({
+            status: input.status,
+            finishedAt: new Date(),
+            finishReason: input.finishReason,
+            currentTentId: null as any, // Remove da estufa
+          })
+          .where(eq(plants.id, input.plantId));
+        
+        return { success: true };
+      }),
+
+    // Desarquivar planta (voltar para ACTIVE)
+    unarchive: publicProcedure
+      .input(z.object({
+        plantId: z.number(),
+        targetTentId: z.number(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Verificar se planta está arquivada
+        const [plant] = await database
+          .select()
+          .from(plants)
+          .where(eq(plants.id, input.plantId));
+        
+        if (!plant) {
+          throw new Error("Planta não encontrada");
+        }
+        
+        if (plant.status === "ACTIVE") {
+          throw new Error("Planta já está ativa");
+        }
+        
+        // Restaurar para ACTIVE e colocar em estufa
+        await database
+          .update(plants)
+          .set({
+            status: "ACTIVE",
+            finishedAt: null,
+            finishReason: null,
+            currentTentId: input.targetTentId,
+          })
+          .where(eq(plants.id, input.plantId));
+        
+        // Registrar histórico de movimentação
+        await database.insert(plantTentHistory).values({
+          plantId: input.plantId,
+          fromTentId: null,
+          toTentId: input.targetTentId,
+          reason: "Planta restaurada do arquivo",
+        });
+        
+        return { success: true };
+      }),
+
+    // Listar plantas arquivadas
+    listArchived: publicProcedure
+      .input(z.object({
+        status: z.enum(["HARVESTED", "DISCARDED", "DEAD"]).optional(),
+      }))
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        let query = database
+          .select()
+          .from(plants)
+          .where(
+            input.status 
+              ? eq(plants.status, input.status)
+              : or(
+                  eq(plants.status, "HARVESTED"),
+                  eq(plants.status, "DISCARDED"),
+                  eq(plants.status, "DEAD")
+                )
+          )
+          .orderBy(desc(plants.finishedAt));
+        
+        const archivedPlants = await query;
+        
+        // Para cada planta, buscar strain e última foto
+        const plantsWithDetails = await Promise.all(
+          archivedPlants.map(async (plant: any) => {
+            // Buscar strain
+            const [strain] = await database
+              .select()
+              .from(strains)
+              .where(eq(strains.id, plant.strainId));
+            
+            // Última foto de saúde
+            const [lastHealthPhoto] = await database
+              .select()
+              .from(plantHealthLogs)
+              .where(eq(plantHealthLogs.plantId, plant.id))
+              .orderBy(desc(plantHealthLogs.logDate))
+              .limit(1);
+            
+            return {
+              ...plant,
+              strainName: strain?.name || "Desconhecida",
+              lastHealthPhotoUrl: lastHealthPhoto?.photoUrl || null,
+            };
+          })
+        );
+        
+        return plantsWithDetails;
+      }),
+
+    // Excluir planta permanentemente (apenas para erros de cadastro)
+    deletePermanently: publicProcedure
+      .input(z.object({ plantId: z.number() }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Deletar todos os registros relacionados primeiro (cascade manual)
+        await database.delete(plantHealthLogs).where(eq(plantHealthLogs.plantId, input.plantId));
+        await database.delete(plantTrichomeLogs).where(eq(plantTrichomeLogs.plantId, input.plantId));
+        await database.delete(plantLSTLogs).where(eq(plantLSTLogs.plantId, input.plantId));
+        await database.delete(plantPhotos).where(eq(plantPhotos.plantId, input.plantId));
+        await database.delete(plantObservations).where(eq(plantObservations.plantId, input.plantId));
+        await database.delete(plantTentHistory).where(eq(plantTentHistory.plantId, input.plantId));
+        await database.delete(plantRunoffLogs).where(eq(plantRunoffLogs.plantId, input.plantId));
+        
+        // Deletar planta
+        await database.delete(plants).where(eq(plants.id, input.plantId));
         
         return { success: true };
       }),

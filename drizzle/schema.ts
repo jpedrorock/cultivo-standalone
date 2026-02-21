@@ -482,9 +482,10 @@ export const plants = mysqlTable(
       .notNull()
       .references(() => strains.id),
     currentTentId: int("currentTentId")
-      .notNull()
       .references(() => tents.id),
     status: mysqlEnum("status", ["ACTIVE", "HARVESTED", "DEAD", "DISCARDED"]).default("ACTIVE").notNull(),
+    finishedAt: timestamp("finishedAt"),
+    finishReason: text("finishReason"),
     notes: text("notes"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

@@ -30,6 +30,7 @@ import AlertSettings from "./pages/AlertSettings";
 import PlantsList from "./pages/PlantsList";
 import PlantDetail from "./pages/PlantDetail";
 import NewPlant from "./pages/NewPlant";
+import PlantArchivePage from "./pages/PlantArchivePage";
 
 import Nutrients from "./pages/Nutrients";
 
@@ -61,7 +62,7 @@ function Router() {
 
       <Route path={"/plants"} component={PlantsList} />
       <Route path="/plants/new" component={NewPlant} />
-
+      <Route path="/plants/archive" component={PlantArchivePage} />
       <Route path={"/plants/:id"} component={PlantDetail} />
 
       <Route path={"/tent/:id"} component={TentDetails} />

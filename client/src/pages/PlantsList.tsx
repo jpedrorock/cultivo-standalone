@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Sprout, Search, Filter, ChevronDown, ChevronRight, MoveRight, Loader2 } from "lucide-react";
+import { Plus, Sprout, Search, Filter, ChevronDown, ChevronRight, MoveRight, Loader2, Archive } from "lucide-react";
 import { toast } from "sonner";
 import { EmptyState } from "@/components/EmptyState";
 import { PlantListSkeleton } from "@/components/ListSkeletons";
@@ -209,12 +209,20 @@ export default function PlantsList() {
                 <p className="text-sm text-muted-foreground">Agrupadas por estufa</p>
               </div>
             </div>
-            <Link href="/plants/new">
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                Nova Planta
-              </Button>
-            </Link>
+            <div className="flex gap-2">
+              <Link href="/plants/archive">
+                <Button variant="outline">
+                  <Archive className="w-4 h-4 mr-2" />
+                  Arquivo
+                </Button>
+              </Link>
+              <Link href="/plants/new">
+                <Button>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Nova Planta
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </header>

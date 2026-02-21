@@ -1225,3 +1225,45 @@
 ### Favicon
 - [x] Trocar favicon atual pelo ícone da plantinha do menu do app - Já estava correto ✅
 - [x] Usar mesmo ícone verde da sidebar/menu - Já estava correto ✅
+
+
+## Sistema de Arquivo de Plantas (21/02/2026) ✅
+### Backend - Schema e Procedures
+- [x] Adicionar campo `status` na tabela `plants` (ACTIVE, HARVESTED, DISCARDED, DELETED) - já existia
+- [x] Adicionar campo `finishedAt` (timestamp) para data de finalização
+- [x] Adicionar campo `finishReason` (texto) para motivo/notas
+- [x] Criar procedure `plants.archive` (marcar como HARVESTED ou DISCARDED)
+- [x] Criar procedure `plants.unarchive` (voltar para ACTIVE)
+- [x] Criar procedure `plants.listArchived` (listar apenas arquivadas)
+- [x] Atualizar `plants.list` para filtrar apenas ACTIVE por padrão
+- [x] Criar procedure `plants.deletePermanently` (exclusão permanente, apenas para erros)
+- [x] Tornar currentTentId nullable para permitir plantas sem estufa (arquivadas)
+
+### Frontend - UI e Integração
+- [x] Criar página `/plants/archive` para visualizar plantas arquivadas
+- [x] Adicionar botões "Marcar como Colhida" e "Descartar" no PlantDetail
+- [x] Criar modal de confirmação com campo de notas ao arquivar (via prompt)
+- [x] Mostrar badge de status (HARVESTED/DISCARDED/DEAD) em cards arquivados
+- [x] Adicionar filtro por tipo (colhida/descartada/morta) na página de arquivo
+- [x] Adicionar botão "Restaurar" para desarquivar plantas
+- [x] Adicionar link "Arquivo" na página de Plantas ativas (header)
+- [x] Mostrar estatísticas: total, colhidas, descartadas, mortas (cards no topo)
+
+### Regras de Negócio
+- [x] Plantas arquivadas não aparecem em listagens normais
+- [x] Plantas arquivadas não pertencem a nenhuma estufa (currentTentId = null)
+- [x] Apenas plantas ACTIVE podem ser arquivadas
+- [x] Apenas plantas arquivadas podem ser restauradas
+- [x] Exclusão permanente (DELETE) só para plantas cadastradas por erro
+- [x] Histórico de fotos, logs e eventos é preservado ao arquivar
+
+### Testes
+- [x] Teste: arquivar planta como HARVESTED ✅
+- [x] Teste: arquivar planta como DISCARDED ✅
+- [x] Teste: restaurar planta arquivada ✅
+- [x] Teste: listar apenas plantas ativas ✅
+- [x] Teste: listar apenas plantas arquivadas ✅
+- [x] Teste: filtrar plantas arquivadas por status ✅
+- [x] Teste: prevenir arquivar plantas não-ativas ✅
+- [x] Teste: prevenir desarquivar plantas ativas ✅
+- [x] Teste: excluir planta permanentemente ✅
