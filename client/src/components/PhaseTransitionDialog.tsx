@@ -21,6 +21,7 @@ import { trpc } from "@/lib/trpc";
 import { ArrowRight, Sprout, Flower2, Wind } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { HarvestConfirmationDialog } from "./HarvestConfirmationDialog";
 
 interface PhaseTransitionDialogProps {
   open: boolean;
@@ -49,6 +50,11 @@ export function PhaseTransitionDialog({
   const [transitionDate, setTransitionDate] = useState(
     new Date().toISOString().split("T")[0]
   );
+  
+  // State for harvest confirmation
+  const [showHarvestConfirmation, setShowHarvestConfirmation] = useState(false);
+  const [harvestWeight, setHarvestWeight] = useState<number | undefined>();
+  const [harvestNotes, setHarvestNotes] = useState<string | undefined>();
 
   // Get available tents for selection (exclude current tent)
   const { data: tents } = trpc.tents.list.useQuery();
@@ -120,6 +126,18 @@ export function PhaseTransitionDialog({
   const handleTransition = () => {
     if (!nextPhase) return;
     
+    // If transitioning to DRYING (harvest), show confirmation dialog first
+    if (nextPhase.value === "DRYING") {
+      setShowHarvestConfirmation(true);
+      return;
+    }
+    
+    executeTransition();
+  };
+  
+  const executeTransition = () => {
+    if (!nextPhase) return;
+    
     const targetTent = transferPlants && targetTentId ? parseInt(targetTentId) : undefined;
 
     switch (nextPhase.value) {
@@ -149,11 +167,23 @@ export function PhaseTransitionDialog({
         transitionToDrying.mutate({
           cycleId,
           dryingStartDate: new Date(transitionDate),
-          harvestNotes: notes,
+          harvestNotes: harvestNotes || notes,
+          harvestWeight: harvestWeight,
           targetTentId: targetTent,
         });
         break;
     }
+  };
+  
+  const handleHarvestConfirm = (data: { estimatedWeight?: number; notes?: string }) => {
+    setHarvestWeight(data.estimatedWeight);
+    setHarvestNotes(data.notes);
+    setShowHarvestConfirmation(false);
+    
+    // Execute the transition after confirmation
+    setTimeout(() => {
+      executeTransition();
+    }, 100);
   };
 
   // Determine next phase based on current phase
@@ -214,6 +244,7 @@ export function PhaseTransitionDialog({
     transitionToDrying.isPending;
 
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[540px]">
         <DialogHeader>
@@ -356,5 +387,14 @@ export function PhaseTransitionDialog({
         </div>
       </DialogContent>
     </Dialog>
+    
+    {/* Harvest Confirmation Dialog */}
+    <HarvestConfirmationDialog
+      open={showHarvestConfirmation}
+      onOpenChange={setShowHarvestConfirmation}
+      onConfirm={handleHarvestConfirm}
+      tentName={tentName}
+    />
+    </>
   );
 }

@@ -637,6 +637,7 @@ export const appRouter = router({
           dryingStartDate: z.date(),
           targetTentId: z.number().optional(),
           harvestNotes: z.string().optional(),
+          harvestWeight: z.number().optional(),
         })
       )
       .mutation(async ({ input }) => {
@@ -659,10 +660,14 @@ export const appRouter = router({
           throw new Error("Ciclo não está em floração");
         }
         
-        // Finalizar ciclo atual
+        // Finalizar ciclo atual e salvar dados de colheita
         await database
           .update(cycles)
-          .set({ status: "FINISHED" })
+          .set({ 
+            status: "FINISHED",
+            harvestWeight: input.harvestWeight ? input.harvestWeight.toString() : null,
+            harvestNotes: input.harvestNotes || null,
+          })
           .where(eq(cycles.id, input.cycleId));
         
         // Buscar plantas do ciclo

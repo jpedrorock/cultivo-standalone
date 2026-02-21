@@ -88,6 +88,8 @@ export const cycles = mysqlTable(
     cloningStartDate: timestamp("cloningStartDate"),
     floraStartDate: timestamp("floraStartDate"),
     clonesProduced: int("clonesProduced"), // Número de clones produzidos ao retornar de CLONING para MAINTENANCE
+    harvestWeight: decimal("harvestWeight", { precision: 10, scale: 2 }), // Peso estimado da colheita em gramas
+    harvestNotes: text("harvestNotes"), // Notas sobre a colheita
     status: mysqlEnum("status", ["ACTIVE", "FINISHED"]).default("ACTIVE").notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

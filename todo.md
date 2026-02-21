@@ -1509,3 +1509,29 @@
   - [x] Aumentar padding interno (p-5 ou p-6)
   - [x] Aumentar espaçamento entre seções
   - [x] Melhorar organização visual dos elementos
+
+## Confirmação de Colheita (Harvest Confirmation Dialog)
+
+- [x] Criar componente HarvestConfirmationDialog
+  - [x] Checklist de validação pré-colheita:
+    - [x] Tricomas verificados (âmbar/leitoso)?
+    - [x] Peso estimado registrado?
+    - [x] Fotos tiradas?
+    - [x] Flush completo (última rega só com água)?
+    - [x] Notas de colheita adicionadas?
+  - [x] Campos opcionais:
+    - [x] Peso estimado (gramas)
+    - [x] Notas de colheita (textarea)
+  - [x] Botão "Confirmar Colheita" só habilita se todos os checkboxes marcados
+  - [x] Design bonito e claro, com ícones e cores
+
+- [x] Integrar HarvestConfirmationDialog no PhaseTransitionDialog
+  - [x] Detectar quando transição é FLORA→DRYING
+  - [x] Mostrar HarvestConfirmationDialog antes de executar transição
+  - [x] Passar dados de confirmação (peso, notas) para o backend
+
+- [x] Atualizar backend para salvar dados de colheita
+  - [x] Adicionar campos ao cycle: harvestWeight, harvestNotes
+  - [x] Salvar dados quando FLORA→DRYING for executado
+
+- [x] Testar fluxo completo de colheita
