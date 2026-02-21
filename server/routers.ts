@@ -2071,25 +2071,46 @@ export const appRouter = router({
 
     // Atualizar planta
     update: publicProcedure
-      .input(z.object({
-        id: z.number(),
-        name: z.string().optional(),
-        code: z.string().optional(),
-        notes: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          id: z.number(),
+          name: z.string().min(1).optional(),
+          code: z.string().optional(),
+          notes: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         const database = await getDb();
         if (!database) throw new Error("Database not available");
-        
+
+        // Verificar se planta existe
+        const existingPlant = await database
+          .select()
+          .from(plants)
+          .where(eq(plants.id, input.id))
+          .limit(1);
+
+        if (existingPlant.length === 0) {
+          throw new Error("Planta não encontrada");
+        }
+
+        // Preparar campos para atualização (apenas os fornecidos)
+        const updateData: any = {};
+        if (input.name !== undefined) updateData.name = input.name;
+        if (input.code !== undefined) updateData.code = input.code;
+        if (input.notes !== undefined) updateData.notes = input.notes;
+
+        // Verificar se há algo para atualizar
+        if (Object.keys(updateData).length === 0) {
+          return { success: true }; // Nada para atualizar
+        }
+
+        // Atualizar planta
         await database
           .update(plants)
-          .set({
-            name: input.name,
-            code: input.code,
-            notes: input.notes,
-          })
+          .set(updateData)
           .where(eq(plants.id, input.id));
-        
+
         return { success: true };
       }),
 

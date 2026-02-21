@@ -1267,3 +1267,11 @@
 - [x] Teste: prevenir arquivar plantas não-ativas ✅
 - [x] Teste: prevenir desarquivar plantas ativas ✅
 - [x] Teste: excluir planta permanentemente ✅
+
+
+## Bug: Botão Editar Planta Não Funciona (21/02/2026) ✅
+- [x] Investigar implementação do botão "Editar" no PlantDetail (não tinha onClick)
+- [x] Implementar modal de edição com Dialog
+- [x] Permitir editar: nome, código, notas
+- [x] Melhorar procedure plants.update (validação, atualização parcial)
+- [x] Criar testes unitários (7 testes passando)

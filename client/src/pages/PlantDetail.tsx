@@ -3,6 +3,17 @@ import { useRoute, Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   ArrowLeft, 
@@ -39,6 +50,8 @@ export default function PlantDetail() {
   const [, params] = useRoute("/plants/:id");
   const plantId = params?.id ? parseInt(params.id) : 0;
   const [moveTentModalOpen, setMoveTentModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editForm, setEditForm] = useState({ name: "", code: "", notes: "" });
 
   const { data: plant, isLoading, refetch } = trpc.plants.getById.useQuery({ id: plantId });
   const { data: strain } = trpc.strains.getById.useQuery(
@@ -83,6 +96,17 @@ export default function PlantDetail() {
       toast.error(`Erro ao excluir planta: ${error.message}`);
     },
   });
+
+  const updateMutation = trpc.plants.update.useMutation({
+    onSuccess: () => {
+      toast.success('✅ Planta atualizada com sucesso!');
+      setEditModalOpen(false);
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(`Erro ao atualizar planta: ${error.message}`);
+    },
+  });
   
   // Handlers
   const handleTransplantToFlora = () => {
@@ -117,6 +141,26 @@ export default function PlantDetail() {
         finishReason: reason || undefined
       });
     }
+  };
+
+  const handleEditClick = () => {
+    if (plant) {
+      setEditForm({
+        name: plant.name,
+        code: plant.code || "",
+        notes: plant.notes || "",
+      });
+      setEditModalOpen(true);
+    }
+  };
+
+  const handleEditSave = () => {
+    updateMutation.mutate({
+      id: plantId,
+      name: editForm.name,
+      code: editForm.code || undefined,
+      notes: editForm.notes || undefined,
+    });
   };
 
   if (isLoading) {
@@ -204,7 +248,7 @@ export default function PlantDetail() {
               )}
             </div>
             <div className="flex gap-2">
-              <Button variant="outline">
+              <Button variant="outline" onClick={handleEditClick}>
                 <Edit className="w-4 h-4 mr-2" />
                 Editar
               </Button>
@@ -382,6 +426,70 @@ export default function PlantDetail() {
         currentTentId={plant?.currentTentId || 0}
         onSuccess={refetch}
       />
+
+      {/* Modal de Editar Planta */}
+      <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Editar Planta</DialogTitle>
+            <DialogDescription>
+              Atualize as informações da planta
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-name">Nome *</Label>
+              <Input
+                id="edit-name"
+                value={editForm.name}
+                onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                placeholder="Nome da planta"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-code">Código</Label>
+              <Input
+                id="edit-code"
+                value={editForm.code}
+                onChange={(e) => setEditForm({ ...editForm, code: e.target.value })}
+                placeholder="Ex: NL-001"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-notes">Notas</Label>
+              <Textarea
+                id="edit-notes"
+                value={editForm.notes}
+                onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
+                placeholder="Observações gerais sobre a planta"
+                rows={4}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setEditModalOpen(false)}
+              disabled={updateMutation.isPending}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleEditSave}
+              disabled={!editForm.name || updateMutation.isPending}
+            >
+              {updateMutation.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Salvando...
+                </>
+              ) : (
+                'Salvar'
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
