@@ -1293,3 +1293,12 @@
 - [x] Adicionar preview ao lado de cada opção no ThemeToggle
 - [x] Layout com sidebar + header + card em miniatura
 - [x] Cores corretas para cada tema (light, dark, highcontrast, highcontrast-dark)
+
+
+## Animação de Transição entre Temas (21/02/2026) ✅
+- [x] Adicionar CSS transitions para cores de fundo, texto e bordas
+- [x] Implementar fade suave de 300ms ao trocar temas
+- [x] Usar cubic-bezier(0.4, 0, 0.2, 1) para easing suave
+- [x] Aplicar transição em *, *::before, *::after para cobertura total
+- [x] Desabilitar transições em inputs e progressbars (mudança instantânea)
+- [x] Testar performance da animação

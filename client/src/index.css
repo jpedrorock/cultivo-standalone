@@ -247,6 +247,24 @@
 }
 
 @layer base {
+  /* Smooth theme transition animations */
+  *,
+  *::before,
+  *::after {
+    transition-property: color, background-color, border-color, fill, stroke;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Disable transitions for elements that should change instantly */
+  input[type="range"],
+  input[type="checkbox"],
+  input[type="radio"],
+  [role="progressbar"],
+  .no-transition {
+    transition: none !important;
+  }
+
   @keyframes shimmer {
     0% {
       background-position: 200% 0;
