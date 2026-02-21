@@ -1419,3 +1419,25 @@
 - [x] Atualizar ThemeToggle com opção "Apple" e ícone Apple
 - [x] Preview thumbnail do tema Apple (bg-gray-50, card-white, accent-blue-500)
 - [x] Testar tema Apple (renderização correta, sem erros TypeScript)
+
+
+## Corrigir Erro ao Iniciar Floração e Mudar UX de Transição (21/02/2026)
+- [ ] Investigar erro ao clicar em "Iniciar Floração"
+- [ ] Corrigir erro no backend ou frontend
+- [ ] Remover botões de transição dos cards de ciclos
+- [ ] Tornar nome da fase clicável (ex: "Manutenção", "Vegetativa")
+- [ ] Criar popup único de transição de fase ao clicar no nome
+- [ ] Popup deve mostrar opções de transição disponíveis para aquela fase
+- [ ] Testar todas as transições via popup
+
+
+## Corrigir Erro ao Iniciar Floração e Implementar Popup de Transição (21/02/2026) ✅
+- [x] Investigar erro ao clicar em "Iniciar Floração" (coluna clonesProduced com case incorreto)
+- [x] Reiniciar servidor para limpar cache do Drizzle
+- [x] Criar componente PhaseTransitionDialog unificado
+- [x] Substituir botões de transição por badge clicável da fase
+- [x] Ao clicar na fase (ex: "Manutenção"), abrir popup com opções de transição disponíveis
+- [x] Popup mostra apenas transições válidas para fase atual
+- [x] Incluir inputs contextuais (data, notas, clones produzidos, estufa destino)
+- [x] Remover modais individuais (StartFloraModal, StartDryingModal, StartCloningModal, ReturnToMaintenanceModal)
+- [x] Remover botões de transição dos cards

@@ -4,18 +4,16 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Calendar, Leaf, Sprout, ArrowRight, Scissors } from "lucide-react";
-import { StartFloraModal } from "@/components/StartFloraModal";
-import { StartDryingModal } from "@/components/StartDryingModal";
-import { StartCloningModal } from "@/components/StartCloningModal";
-import { ReturnToMaintenanceModal } from "@/components/ReturnToMaintenanceModal";
+import { PhaseTransitionDialog } from "@/components/PhaseTransitionDialog";
 
 export function CyclesDashboard() {
   const { data: cycles, isLoading } = trpc.cycles.getActiveCyclesWithProgress.useQuery();
-  const [floraModalOpen, setFloraModalOpen] = useState(false);
-  const [dryingModalOpen, setDryingModalOpen] = useState(false);
-  const [cloningModalOpen, setCloningModalOpen] = useState(false);
-  const [maintenanceModalOpen, setMaintenanceModalOpen] = useState(false);
-  const [selectedCycle, setSelectedCycle] = useState<{ id: number; name: string } | null>(null);
+  const [transitionDialogOpen, setTransitionDialogOpen] = useState(false);
+  const [selectedCycle, setSelectedCycle] = useState<{
+    id: number;
+    name: string;
+    phase: "MAINTENANCE" | "CLONING" | "VEGA" | "FLORA";
+  } | null>(null);
 
   if (isLoading) {
     return (
@@ -95,9 +93,15 @@ export function CyclesDashboard() {
                     <p className="text-sm text-muted-foreground">{cycle.strainName}</p>
                   </div>
                 </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${phaseBg} ${phaseColor}`}>
+                <button
+                  onClick={() => {
+                    setSelectedCycle({ id: cycle.id, name: cycle.tentName, phase: cycle.phase });
+                    setTransitionDialogOpen(true);
+                  }}
+                  className={`px-3 py-1 rounded-full text-xs font-medium ${phaseBg} ${phaseColor} hover:opacity-80 transition-opacity cursor-pointer`}
+                >
                   {phaseLabel}
-                </span>
+                </button>
               </div>
 
               {/* Progress */}
@@ -150,110 +154,24 @@ export function CyclesDashboard() {
                 </div>
               )}
 
-              {/* Transition Button */}
-              <div className="mt-4 pt-4 border-t border-border">
-                {cycle.phase === 'VEGA' && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full"
-                    onClick={() => {
-                      setSelectedCycle({ id: cycle.id, name: cycle.tentName });
-                      setFloraModalOpen(true);
-                    }}
-                  >
-                    <ArrowRight className="w-4 h-4 mr-2" />
-                    Iniciar Floração
-                  </Button>
-                )}
-                {cycle.phase === 'FLORA' && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full"
-                    onClick={() => {
-                      setSelectedCycle({ id: cycle.id, name: cycle.tentName });
-                      setDryingModalOpen(true);
-                    }}
-                  >
-                    <ArrowRight className="w-4 h-4 mr-2" />
-                    Iniciar Secagem
-                  </Button>
-                )}
-                {cycle.phase === 'MAINTENANCE' && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full"
-                    onClick={() => {
-                      setSelectedCycle({ id: cycle.id, name: cycle.tentName });
-                      setCloningModalOpen(true);
-                    }}
-                  >
-                    <ArrowRight className="w-4 h-4 mr-2" />
-                    Iniciar Clonagem
-                  </Button>
-                )}
-                {cycle.phase === 'CLONING' && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full"
-                    onClick={() => {
-                      setSelectedCycle({ id: cycle.id, name: cycle.tentName });
-                      setMaintenanceModalOpen(true);
-                    }}
-                  >
-                    <ArrowRight className="w-4 h-4 mr-2" />
-                    Retornar para Manutenção
-                  </Button>
-                )}
-              </div>
+
             </Card>
           );
         })}
       </div>
 
-      {/* Modals */}
+      {/* Phase Transition Dialog */}
       {selectedCycle && (
-        <>
-          <StartFloraModal
-            open={floraModalOpen}
-            onClose={() => {
-              setFloraModalOpen(false);
-              setSelectedCycle(null);
-            }}
-            cycleId={selectedCycle.id}
-            cycleName={selectedCycle.name}
-          />
-          <StartDryingModal
-            open={dryingModalOpen}
-            onClose={() => {
-              setDryingModalOpen(false);
-              setSelectedCycle(null);
-            }}
-            cycleId={selectedCycle.id}
-            cycleName={selectedCycle.name}
-          />
-          <StartCloningModal
-            open={cloningModalOpen}
-            onClose={() => {
-              setCloningModalOpen(false);
-              setSelectedCycle(null);
-            }}
-            cycleId={selectedCycle.id}
-            cycleName={selectedCycle.name}
-          />
-          <ReturnToMaintenanceModal
-            open={maintenanceModalOpen}
-            onClose={() => {
-              setMaintenanceModalOpen(false);
-              setSelectedCycle(null);
-            }}
-            cycleId={selectedCycle.id}
-            cycleName={selectedCycle.name}
-          />
-        </>
+        <PhaseTransitionDialog
+          open={transitionDialogOpen}
+          onOpenChange={(open) => {
+            setTransitionDialogOpen(open);
+            if (!open) setSelectedCycle(null);
+          }}
+          cycleId={selectedCycle.id}
+          currentPhase={selectedCycle.phase}
+          tentName={selectedCycle.name}
+        />
       )}
     </div>
   );
