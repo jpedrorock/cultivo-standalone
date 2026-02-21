@@ -2352,26 +2352,10 @@ export const appRouter = router({
         const base64Data = input.imageData.split(',')[1] || input.imageData;
         const buffer = Buffer.from(base64Data, 'base64');
         
-        // Salvar localmente em uploads/
-        const fs = await import('fs/promises');
-        const path = await import('path');
-        
-        // Criar diretórios se não existirem
-        const uploadsDir = path.join(process.cwd(), 'uploads', 'plants');
-        await fs.mkdir(uploadsDir, { recursive: true });
-        
-        // Gerar nome único para o arquivo
-        const extension = input.mimeType.split('/')[1];
-        const filename = `${input.plantId}-${Date.now()}.${extension}`;
-        const filePath = path.join(uploadsDir, filename);
-        const fileKey = `plants/${filename}`;
-        
-        // Salvar arquivo
-        await fs.writeFile(filePath, buffer);
-        
-        // Gerar URL local
-        const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
-        const url = `${baseUrl}/uploads/plants/${filename}`;
+        // Upload para S3
+        const { storagePut } = await import("./storage");
+        const fileKey = `plants/${input.plantId}/${Date.now()}.${input.mimeType.split('/')[1]}`;
+        const { url } = await storagePut(fileKey, buffer, input.mimeType);
         
         // Salvar no banco
         const [photo] = await database
@@ -2541,33 +2525,18 @@ export const appRouter = router({
         let photoUrl: string | undefined;
         let photoKey: string | undefined;
 
-        // Se tem foto, fazer upload local
+        // Se tem foto, fazer upload S3
         if (input.photoBase64) {
           try {
             // Converter base64 para buffer
             const base64Data = input.photoBase64.replace(/^data:image\/\w+;base64,/, "");
             const buffer = Buffer.from(base64Data, 'base64');
             
-            const fs = await import('fs/promises');
-            const path = await import('path');
-            
-            // Criar diretórios se não existirem
-            const uploadsDir = path.join(process.cwd(), 'uploads', 'health');
-            await fs.mkdir(uploadsDir, { recursive: true });
-            
-            // Gerar nome único para o arquivo
-            const timestamp = Date.now();
-            const randomSuffix = Math.random().toString(36).substring(7);
-            const filename = `${input.plantId}-${timestamp}-${randomSuffix}.jpg`;
-            const filePath = path.join(uploadsDir, filename);
-            photoKey = `health/${filename}`;
-            
-            // Salvar arquivo
-            await fs.writeFile(filePath, buffer);
-            
-            // Gerar URL local
-            const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
-            photoUrl = `${baseUrl}/uploads/health/${filename}`;
+            // Upload para S3
+            const { storagePut } = await import("./storage");
+            photoKey = `health/${input.plantId}/${Date.now()}.jpg`;
+            const result = await storagePut(photoKey, buffer, "image/jpeg");
+            photoUrl = result.url;
           } catch (error) {
             console.error('Erro ao fazer upload da foto:', error);
             // Continua sem a foto se o upload falhar
@@ -2633,25 +2602,13 @@ export const appRouter = router({
               const base64Data = input.photoBase64.replace(/^data:image\/\w+;base64,/, "");
               const buffer = Buffer.from(base64Data, 'base64');
               
-              const fs = await import('fs/promises');
-              const path = await import('path');
+              // Upload para S3
+              const { storagePut } = await import("./storage");
+              const photoKey = `health/${currentLog.plantId}/${Date.now()}.jpg`;
+              const result = await storagePut(photoKey, buffer, "image/jpeg");
               
-              // Criar diretórios se não existirem
-              const uploadsDir = path.join(process.cwd(), 'uploads', 'health');
-              await fs.mkdir(uploadsDir, { recursive: true });
-              
-              const timestamp = Date.now();
-              const randomSuffix = Math.random().toString(36).substring(7);
-              const filename = `${currentLog.plantId}-${timestamp}-${randomSuffix}.jpg`;
-              const filePath = path.join(uploadsDir, filename);
-              
-              // Salvar arquivo
-              await fs.writeFile(filePath, buffer);
-              
-              // Gerar URL local
-              const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
-              updateData.photoUrl = `${baseUrl}/uploads/health/${filename}`;
-              updateData.photoKey = `health/${filename}`;
+              updateData.photoUrl = result.url;
+              updateData.photoKey = photoKey;
             }
           } catch (error) {
             console.error('Erro ao fazer upload da nova foto:', error);
@@ -2707,33 +2664,18 @@ export const appRouter = router({
         let photoUrl: string | undefined;
         let photoKey: string | undefined;
 
-        // Se tem foto, fazer upload local
+        // Se tem foto, fazer upload S3
         if (input.photoBase64) {
           try {
             // Converter base64 para buffer
             const base64Data = input.photoBase64.replace(/^data:image\/\w+;base64,/, "");
             const buffer = Buffer.from(base64Data, 'base64');
             
-            const fs = await import('fs/promises');
-            const path = await import('path');
-            
-            // Criar diretórios se não existirem
-            const uploadsDir = path.join(process.cwd(), 'uploads', 'trichomes');
-            await fs.mkdir(uploadsDir, { recursive: true });
-            
-            // Gerar nome único para o arquivo
-            const timestamp = Date.now();
-            const randomSuffix = Math.random().toString(36).substring(7);
-            const filename = `${input.plantId}-${timestamp}-${randomSuffix}.jpg`;
-            const filePath = path.join(uploadsDir, filename);
-            photoKey = `trichomes/${filename}`;
-            
-            // Salvar arquivo
-            await fs.writeFile(filePath, buffer);
-            
-            // Gerar URL local
-            const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
-            photoUrl = `${baseUrl}/uploads/trichomes/${filename}`;
+            // Upload para S3
+            const { storagePut } = await import("./storage");
+            photoKey = `trichomes/${input.plantId}/${Date.now()}.jpg`;
+            const result = await storagePut(photoKey, buffer, "image/jpeg");
+            photoUrl = result.url;
           } catch (error) {
             console.error('Erro ao fazer upload da foto:', error);
             // Continua sem a foto se o upload falhar

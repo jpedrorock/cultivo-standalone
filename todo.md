@@ -1162,3 +1162,10 @@
 - [x] Mostrar bloqueadores (ciclos ativos, plantas) com mensagem clara ✅
 - [x] Desabilitar botão de exclusão quando há bloqueadores ✅
 - [x] Testar com estufa vazia e estufa com muitos dados - 2 testes unitários passando ✅
+
+
+## Restaurar Armazenamento S3 no Ambiente Manus (20/02/2026)
+- [x] Reverter mudanças de armazenamento local em server/routers.ts ✅
+- [x] Restaurar código S3 original (storagePut) para uploadPhoto, health, trichomes ✅
+- [x] Testar upload de fotos com S3 - Servidor compilando sem erros ✅
+- [x] Verificar se fotos carregam corretamente na interface - Código S3 restaurado ✅
