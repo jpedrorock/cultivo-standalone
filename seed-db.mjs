@@ -168,6 +168,20 @@ const [floraCycleResult] = await connection.query(
 );
 console.log(`  ✓ Ciclo FLORA criado (Estufa Floração, OG Kush, semana 5 de floração)`);
 
+// Criar ciclo para Estufa Manutenção (iniciado 60 dias atrás, última clonagem há 14 dias com 18 clones)
+const maintenanceTent = tentIds.find(t => t.category === 'MAINTENANCE');
+const maintenanceStrain = strainIds.find(s => s.name === '24K Gold');
+const maintenanceStartDate = new Date(now);
+maintenanceStartDate.setDate(maintenanceStartDate.getDate() - 60); // 60 dias atrás
+maintenanceStartDate.setHours(0, 0, 0, 0);
+
+const [maintenanceCycleResult] = await connection.query(
+  `INSERT INTO cycles (tentId, strainId, startDate, clonesProduced, status)
+   VALUES (?, ?, ?, 18, 'ACTIVE')`,
+  [maintenanceTent.id, maintenanceStrain.id, maintenanceStartDate]
+);
+console.log(`  ✓ Ciclo MAINTENANCE criado (Estufa Manutenção, 24K Gold, última clonagem: 18 clones)`);
+
 console.log('');
 console.log('📊 Gerando histórico de 7 dias (manhã e noite)...');
 
@@ -228,13 +242,13 @@ console.log('');
 console.log('📈 Resumo:');
 console.log(`  • ${strains.length} strains criadas`);
 console.log(`  • ${tents.length} estufas configuradas`);
-console.log(`  • 2 ciclos ativos (VEGA semana 3, FLORA semana 5)`);
+console.log(`  • 3 ciclos ativos (MAINTENANCE, VEGA semana 3, FLORA semana 5)`);
 console.log(`  • ${plants.length} plantas ativas`);
 console.log(`  • ${logCount} registros de histórico (7 dias × 2 turnos × 3 estufas)`);
 console.log('');
 console.log('💡 Dados criados:');
-console.log('  Estufa Manutenção: 2 plantas (24K Gold, OG Kush) - 65W');
-console.log('  Estufa Vegetativa: 3 plantas (todas 24K Gold) - 240W');
-console.log('  Estufa Floração: 3 plantas (todas OG Kush) - 320W');
+console.log('  Estufa Manutenção: 2 plantas mãe (24K Gold, OG Kush) - 65W - Última clonagem: 18 clones');
+console.log('  Estufa Vegetativa: 3 plantas (todas 24K Gold) - 240W - Semana 3');
+console.log('  Estufa Floração: 3 plantas (todas OG Kush) - 320W - Semana 5 de floração');
 
 await connection.end();

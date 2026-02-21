@@ -1398,3 +1398,12 @@
   - CLONING: mostra "Clonagem - Semana X" (sem barra de progresso)
   - VEGA/FLORA: mostra "Semana X de Y" com barra de progresso
 - [x] Criar testes unitários para contador de clones (4 testes passando)
+
+
+## Adicionar Ciclo de Manutenção ao Seed (21/02/2026) ✅
+- [x] Atualizar seed-db.mjs para criar estufa de manutenção (45x75x90cm, 65W)
+- [x] Criar ciclo MAINTENANCE com 2 plantas mãe (24K Gold, OG Kush)
+- [x] Definir clonesProduced = 18 (última clonagem)
+- [x] Adicionar histórico de 7 dias para estufa de manutenção (AM/PM)
+- [x] Executar seed e verificar ciclo MAINTENANCE no dashboard
+- [x] Atualizar resumo do seed para mostrar 3 ciclos ativos
