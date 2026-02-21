@@ -151,6 +151,87 @@ export const appRouter = router({
         
         return { success: true };
       }),
+    getDeletePreview: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) {
+          throw new Error("Banco de dados não inicializado.");
+        }
+        
+        // Contar registros relacionados que serão deletados
+        const [cyclesCount] = await database
+          .select({ count: sql<number>`count(*)` })
+          .from(cycles)
+          .where(eq(cycles.tentId, input.id));
+        
+        const [plantsCount] = await database
+          .select({ count: sql<number>`count(*)` })
+          .from(plants)
+          .where(eq(plants.currentTentId, input.id));
+        
+        const [recipesCount] = await database
+          .select({ count: sql<number>`count(*)` })
+          .from(recipes)
+          .where(eq(recipes.tentId, input.id));
+        
+        const [dailyLogsCount] = await database
+          .select({ count: sql<number>`count(*)` })
+          .from(dailyLogs)
+          .where(eq(dailyLogs.tentId, input.id));
+        
+        const [alertsCount] = await database
+          .select({ count: sql<number>`count(*)` })
+          .from(alerts)
+          .where(eq(alerts.tentId, input.id));
+        
+        const [taskInstancesCount] = await database
+          .select({ count: sql<number>`count(*)` })
+          .from(taskInstances)
+          .where(eq(taskInstances.tentId, input.id));
+        
+        const [plantHistoryCount] = await database
+          .select({ count: sql<number>`count(*)` })
+          .from(plantTentHistory)
+          .where(
+            or(
+              eq(plantTentHistory.fromTentId, input.id),
+              eq(plantTentHistory.toTentId, input.id)
+            )
+          );
+        
+        // Verificar se há ciclos ativos (bloqueador)
+        const [activeCyclesCount] = await database
+          .select({ count: sql<number>`count(*)` })
+          .from(cycles)
+          .where(and(
+            eq(cycles.tentId, input.id),
+            eq(cycles.status, "ACTIVE")
+          ));
+        
+        return {
+          canDelete: plantsCount.count === 0 && activeCyclesCount.count === 0,
+          blockers: {
+            activeCycles: activeCyclesCount.count,
+            plants: plantsCount.count,
+          },
+          willDelete: {
+            cycles: cyclesCount.count,
+            recipes: recipesCount.count,
+            dailyLogs: dailyLogsCount.count,
+            alerts: alertsCount.count,
+            taskInstances: taskInstancesCount.count,
+            plantHistory: plantHistoryCount.count,
+          },
+          totalRecords: 
+            cyclesCount.count + 
+            recipesCount.count + 
+            dailyLogsCount.count + 
+            alertsCount.count + 
+            taskInstancesCount.count + 
+            plantHistoryCount.count,
+        };
+      }),
     delete: publicProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {

@@ -42,6 +42,12 @@ export default function Home() {
   const [tentToEdit, setTentToEdit] = useState<any>(null);
   const [showMoveAllPlants, setShowMoveAllPlants] = useState(false);
   const [targetTentId, setTargetTentId] = useState<string>("");
+  const [deletePreviewTentId, setDeletePreviewTentId] = useState<number | null>(null);
+  
+  const { data: deletePreview, isLoading: deletePreviewLoading } = trpc.tents.getDeletePreview.useQuery(
+    { id: deletePreviewTentId! },
+    { enabled: deletePreviewTentId !== null }
+  );
 
   
   const { data: tents, isLoading } = trpc.tents.list.useQuery();
@@ -77,6 +83,7 @@ export default function Home() {
 
   const handleDeleteTent = (tentId: number, tentName: string) => {
     setTentToDelete({ id: tentId, name: tentName });
+    setDeletePreviewTentId(tentId); // Trigger preview query
     setDeleteDialogOpen(true);
   };
 
@@ -428,16 +435,79 @@ export default function Home() {
         if (!open) {
           setShowMoveAllPlants(false);
           setTargetTentId("");
+          setDeletePreviewTentId(null);
         }
       }}>
         <AlertDialogContent className="max-w-lg">
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir a estufa "{tentToDelete?.name}"? 
-              Esta ação não pode ser desfeita e todos os dados relacionados (ciclos finalizados, registros, tarefas) serão permanentemente excluídos.
+              Tem certeza que deseja excluir a estufa "{tentToDelete?.name}"?
             </AlertDialogDescription>
           </AlertDialogHeader>
+          
+          {/* Delete Preview Section */}
+          {deletePreviewLoading ? (
+            <div className="flex items-center justify-center py-4">
+              <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+              <span className="ml-2 text-sm text-muted-foreground">Verificando dados...</span>
+            </div>
+          ) : deletePreview ? (
+            <div className="space-y-3 py-3">
+              {/* Blockers */}
+              {!deletePreview.canDelete && (
+                <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-md">
+                  <p className="text-sm font-medium text-destructive mb-2">⚠️ Não é possível excluir:
+                  </p>
+                  <ul className="text-sm space-y-1 text-destructive/90">
+                    {deletePreview.blockers.activeCycles > 0 && (
+                      <li>• {deletePreview.blockers.activeCycles} ciclo(s) ativo(s) - finalize primeiro</li>
+                    )}
+                    {deletePreview.blockers.plants > 0 && (
+                      <li>• {deletePreview.blockers.plants} planta(s) na estufa - mova ou finalize primeiro</li>
+                    )}
+                  </ul>
+                </div>
+              )}
+              
+              {/* Preview of what will be deleted */}
+              {deletePreview.totalRecords > 0 && (
+                <div className="p-3 bg-muted/50 rounded-md">
+                  <p className="text-sm font-medium mb-2">Serão excluídos permanentemente:</p>
+                  <ul className="text-sm space-y-1 text-muted-foreground">
+                    {deletePreview.willDelete.cycles > 0 && (
+                      <li>• {deletePreview.willDelete.cycles} ciclo(s) finalizado(s)</li>
+                    )}
+                    {deletePreview.willDelete.recipes > 0 && (
+                      <li>• {deletePreview.willDelete.recipes} receita(s) nutricional(is)</li>
+                    )}
+                    {deletePreview.willDelete.dailyLogs > 0 && (
+                      <li>• {deletePreview.willDelete.dailyLogs} registro(s) diário(s)</li>
+                    )}
+                    {deletePreview.willDelete.alerts > 0 && (
+                      <li>• {deletePreview.willDelete.alerts} alerta(s)</li>
+                    )}
+                    {deletePreview.willDelete.taskInstances > 0 && (
+                      <li>• {deletePreview.willDelete.taskInstances} tarefa(s)</li>
+                    )}
+                    {deletePreview.willDelete.plantHistory > 0 && (
+                      <li>• {deletePreview.willDelete.plantHistory} registro(s) de movimentação</li>
+                    )}
+                  </ul>
+                  <p className="text-xs text-muted-foreground mt-2 font-medium">
+                    Total: {deletePreview.totalRecords} registro(s)
+                    {deletePreview.totalRecords > 100 && " ⚠️ Grande quantidade de dados!"}
+                  </p>
+                </div>
+              )}
+              
+              {deletePreview.totalRecords === 0 && deletePreview.canDelete && (
+                <div className="p-3 bg-muted/30 rounded-md">
+                  <p className="text-sm text-muted-foreground">✅ Estufa vazia, sem dados relacionados.</p>
+                </div>
+              )}
+            </div>
+          ) : null}
           
           {/* Move All Plants Section */}
           {!showMoveAllPlants ? (
@@ -500,7 +570,7 @@ export default function Home() {
             <AlertDialogCancel disabled={deleteTent.isPending || moveAllPlants.isPending}>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDeleteTent}
-              disabled={deleteTent.isPending || moveAllPlants.isPending}
+              disabled={deleteTent.isPending || moveAllPlants.isPending || (deletePreview && !deletePreview.canDelete)}
               className="bg-red-600 hover:bg-red-700"
             >
               {deleteTent.isPending ? (

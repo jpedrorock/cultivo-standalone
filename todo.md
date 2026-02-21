@@ -1153,3 +1153,12 @@
 - [x] Verificar se há registros órfãos em tabelas não deletadas pelo código - Sim, 2 tabelas faltando ✅
 - [x] Adicionar deleção de recipes e plantTentHistory antes de deletar estufa ✅
 - [x] Adicionar try-catch com mensagem clara para foreign key constraints ✅
+
+## Feature: Modal de Confirmação de Exclusão com Preview (20/02/2026)
+- [x] Criar procedure backend para contar registros relacionados à estufa - tents.getDeletePreview ✅
+- [x] Retornar contagem de: ciclos, plantas, receitas, logs, alertas, histórico - Todas as 6 tabelas ✅
+- [x] Atualizar modal de exclusão para mostrar preview dos dados que serão deletados - UI com loading state ✅
+- [x] Adicionar aviso visual se houver muitos registros (ex: >100 logs) - Aviso "⚠️ Grande quantidade de dados!" ✅
+- [x] Mostrar bloqueadores (ciclos ativos, plantas) com mensagem clara ✅
+- [x] Desabilitar botão de exclusão quando há bloqueadores ✅
+- [x] Testar com estufa vazia e estufa com muitos dados - 2 testes unitários passando ✅
