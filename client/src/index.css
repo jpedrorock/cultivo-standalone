@@ -134,8 +134,8 @@
   --sidebar-ring: var(--color-green-500);
 }
 
-.kindle {
-  /* Kindle theme - High contrast black and white, no colors */
+.highcontrast {
+  /* High Contrast theme - Pure black and white, no colors */
   --primary: oklch(0 0 0);
   --primary-foreground: oklch(1 0 0);
   --sidebar-primary: oklch(0 0 0);
@@ -188,6 +188,62 @@
   --sidebar-accent-foreground: oklch(1 0 0);
   --sidebar-border: oklch(0.30 0 0);
   --sidebar-ring: oklch(1 0 0);
+}
+
+.highcontrast-dark {
+  /* High Contrast Dark theme - Pure white and black inverted, no colors */
+  --primary: oklch(1 0 0);
+  --primary-foreground: oklch(0 0 0);
+  --sidebar-primary: oklch(1 0 0);
+  --sidebar-primary-foreground: oklch(0 0 0);
+  
+  /* Base colors - Pure black background, pure white text */
+  --background: oklch(0 0 0);
+  --foreground: oklch(1 0 0);
+  
+  /* Card colors - Dark gray for subtle separation */
+  --card: oklch(0.08 0 0);
+  --card-foreground: oklch(1 0 0);
+  
+  /* Popover colors - Same as cards */
+  --popover: oklch(0.08 0 0);
+  --popover-foreground: oklch(1 0 0);
+  
+  /* Secondary colors - Medium dark gray */
+  --secondary: oklch(0.12 0 0);
+  --secondary-foreground: oklch(1 0 0);
+  
+  /* Muted colors - Dark gray for less important elements */
+  --muted: oklch(0.15 0 0);
+  --muted-foreground: oklch(0.6 0 0);
+  
+  /* Accent colors - Light gray for highlights */
+  --accent: oklch(0.20 0 0);
+  --accent-foreground: oklch(1 0 0);
+  
+  /* Destructive colors - Pure white (no red) */
+  --destructive: oklch(1 0 0);
+  --destructive-foreground: oklch(0 0 0);
+  
+  /* Border and input colors - Medium gray for definition */
+  --border: oklch(0.35 0 0);
+  --input: oklch(0.12 0 0);
+  --ring: oklch(1 0 0);
+  
+  /* Chart colors - Grayscale gradient (inverted) */
+  --chart-1: oklch(0.80 0 0);
+  --chart-2: oklch(0.65 0 0);
+  --chart-3: oklch(0.50 0 0);
+  --chart-4: oklch(0.35 0 0);
+  --chart-5: oklch(0.20 0 0);
+  
+  /* Sidebar colors - Pure white sidebar */
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0 0 0);
+  --sidebar-accent: oklch(0.90 0 0);
+  --sidebar-accent-foreground: oklch(0 0 0);
+  --sidebar-border: oklch(0.75 0 0);
+  --sidebar-ring: oklch(0 0 0);
 }
 
 @layer base {
@@ -453,4 +509,435 @@ input[type="range"]::-moz-range-track {
   .gap-4 {
     gap: 1.5rem !important; /* 24px instead of 16px */
   }
+}
+
+/* High Contrast Themes - Remove ALL colors, force grayscale */
+.highcontrast *,
+.highcontrast-dark * {
+  /* Override all text colors to use only foreground/muted */
+  --tw-text-opacity: 1 !important;
+}
+
+/* High Contrast: Force all colored text to black/gray */
+.highcontrast .text-green-50,
+.highcontrast .text-green-100,
+.highcontrast .text-green-200,
+.highcontrast .text-green-300,
+.highcontrast .text-green-400,
+.highcontrast .text-green-500,
+.highcontrast .text-green-600,
+.highcontrast .text-green-700,
+.highcontrast .text-green-800,
+.highcontrast .text-green-900,
+.highcontrast .text-blue-50,
+.highcontrast .text-blue-100,
+.highcontrast .text-blue-200,
+.highcontrast .text-blue-300,
+.highcontrast .text-blue-400,
+.highcontrast .text-blue-500,
+.highcontrast .text-blue-600,
+.highcontrast .text-blue-700,
+.highcontrast .text-blue-800,
+.highcontrast .text-blue-900,
+.highcontrast .text-red-50,
+.highcontrast .text-red-100,
+.highcontrast .text-red-200,
+.highcontrast .text-red-300,
+.highcontrast .text-red-400,
+.highcontrast .text-red-500,
+.highcontrast .text-red-600,
+.highcontrast .text-red-700,
+.highcontrast .text-red-800,
+.highcontrast .text-red-900,
+.highcontrast .text-yellow-50,
+.highcontrast .text-yellow-100,
+.highcontrast .text-yellow-200,
+.highcontrast .text-yellow-300,
+.highcontrast .text-yellow-400,
+.highcontrast .text-yellow-500,
+.highcontrast .text-yellow-600,
+.highcontrast .text-yellow-700,
+.highcontrast .text-yellow-800,
+.highcontrast .text-yellow-900,
+.highcontrast .text-purple-50,
+.highcontrast .text-purple-100,
+.highcontrast .text-purple-200,
+.highcontrast .text-purple-300,
+.highcontrast .text-purple-400,
+.highcontrast .text-purple-500,
+.highcontrast .text-purple-600,
+.highcontrast .text-purple-700,
+.highcontrast .text-purple-800,
+.highcontrast .text-purple-900,
+.highcontrast .text-orange-50,
+.highcontrast .text-orange-100,
+.highcontrast .text-orange-200,
+.highcontrast .text-orange-300,
+.highcontrast .text-orange-400,
+.highcontrast .text-orange-500,
+.highcontrast .text-orange-600,
+.highcontrast .text-orange-700,
+.highcontrast .text-orange-800,
+.highcontrast .text-orange-900,
+.highcontrast .text-pink-50,
+.highcontrast .text-pink-100,
+.highcontrast .text-pink-200,
+.highcontrast .text-pink-300,
+.highcontrast .text-pink-400,
+.highcontrast .text-pink-500,
+.highcontrast .text-pink-600,
+.highcontrast .text-pink-700,
+.highcontrast .text-pink-800,
+.highcontrast .text-pink-900,
+.highcontrast .text-emerald-50,
+.highcontrast .text-emerald-100,
+.highcontrast .text-emerald-200,
+.highcontrast .text-emerald-300,
+.highcontrast .text-emerald-400,
+.highcontrast .text-emerald-500,
+.highcontrast .text-emerald-600,
+.highcontrast .text-emerald-700,
+.highcontrast .text-emerald-800,
+.highcontrast .text-emerald-900,
+.highcontrast .text-amber-50,
+.highcontrast .text-amber-100,
+.highcontrast .text-amber-200,
+.highcontrast .text-amber-300,
+.highcontrast .text-amber-400,
+.highcontrast .text-amber-500,
+.highcontrast .text-amber-600,
+.highcontrast .text-amber-700,
+.highcontrast .text-amber-800,
+.highcontrast .text-amber-900 {
+  color: oklch(0 0 0) !important;
+}
+
+/* High Contrast: Force all colored backgrounds to white/light gray */
+.highcontrast .bg-green-50,
+.highcontrast .bg-green-100,
+.highcontrast .bg-green-200,
+.highcontrast .bg-green-500\/10,
+.highcontrast .bg-green-500\/15,
+.highcontrast .bg-green-500\/20,
+.highcontrast .bg-green-500\/25,
+.highcontrast .bg-blue-50,
+.highcontrast .bg-blue-100,
+.highcontrast .bg-blue-200,
+.highcontrast .bg-blue-500\/10,
+.highcontrast .bg-blue-500\/15,
+.highcontrast .bg-blue-500\/20,
+.highcontrast .bg-blue-500\/25,
+.highcontrast .bg-red-50,
+.highcontrast .bg-red-100,
+.highcontrast .bg-red-200,
+.highcontrast .bg-red-500,
+.highcontrast .bg-red-500\/10,
+.highcontrast .bg-red-500\/15,
+.highcontrast .bg-red-500\/20,
+.highcontrast .bg-red-500\/25,
+.highcontrast .bg-yellow-50,
+.highcontrast .bg-yellow-100,
+.highcontrast .bg-yellow-200,
+.highcontrast .bg-yellow-500\/10,
+.highcontrast .bg-yellow-500\/15,
+.highcontrast .bg-yellow-500\/20,
+.highcontrast .bg-yellow-500\/25,
+.highcontrast .bg-purple-50,
+.highcontrast .bg-purple-100,
+.highcontrast .bg-purple-200,
+.highcontrast .bg-purple-500\/10,
+.highcontrast .bg-purple-500\/15,
+.highcontrast .bg-purple-500\/20,
+.highcontrast .bg-purple-500\/25,
+.highcontrast .bg-orange-50,
+.highcontrast .bg-orange-100,
+.highcontrast .bg-orange-200,
+.highcontrast .bg-orange-500\/10,
+.highcontrast .bg-orange-500\/15,
+.highcontrast .bg-orange-500\/20,
+.highcontrast .bg-orange-500\/25,
+.highcontrast .bg-pink-50,
+.highcontrast .bg-pink-100,
+.highcontrast .bg-pink-200,
+.highcontrast .bg-emerald-50,
+.highcontrast .bg-emerald-100,
+.highcontrast .bg-emerald-200,
+.highcontrast .bg-amber-50,
+.highcontrast .bg-amber-100,
+.highcontrast .bg-amber-200,
+.highcontrast .bg-amber-500,
+.highcontrast .bg-amber-500\/5 {
+  background-color: oklch(0.95 0 0) !important;
+}
+
+/* High Contrast: Force all colored borders to medium gray */
+.highcontrast .border-green-200,
+.highcontrast .border-green-300,
+.highcontrast .border-green-500,
+.highcontrast .border-green-500\/20,
+.highcontrast .border-green-500\/30,
+.highcontrast .border-green-500\/50,
+.highcontrast .border-blue-200,
+.highcontrast .border-blue-300,
+.highcontrast .border-blue-500,
+.highcontrast .border-blue-500\/20,
+.highcontrast .border-blue-500\/30,
+.highcontrast .border-blue-500\/50,
+.highcontrast .border-red-200,
+.highcontrast .border-red-300,
+.highcontrast .border-red-500,
+.highcontrast .border-red-500\/20,
+.highcontrast .border-red-500\/30,
+.highcontrast .border-red-500\/50,
+.highcontrast .border-yellow-200,
+.highcontrast .border-yellow-300,
+.highcontrast .border-yellow-500,
+.highcontrast .border-yellow-500\/20,
+.highcontrast .border-yellow-500\/30,
+.highcontrast .border-yellow-500\/50,
+.highcontrast .border-purple-200,
+.highcontrast .border-purple-300,
+.highcontrast .border-purple-500,
+.highcontrast .border-purple-500\/20,
+.highcontrast .border-purple-500\/30,
+.highcontrast .border-purple-500\/50,
+.highcontrast .border-orange-200,
+.highcontrast .border-orange-300,
+.highcontrast .border-orange-500,
+.highcontrast .border-orange-500\/20,
+.highcontrast .border-orange-500\/30,
+.highcontrast .border-orange-500\/50,
+.highcontrast .border-amber-500,
+.highcontrast .border-amber-500\/50 {
+  border-color: oklch(0.70 0 0) !important;
+}
+
+/* High Contrast Dark: Force all colored text to white/gray */
+.highcontrast-dark .text-green-50,
+.highcontrast-dark .text-green-100,
+.highcontrast-dark .text-green-200,
+.highcontrast-dark .text-green-300,
+.highcontrast-dark .text-green-400,
+.highcontrast-dark .text-green-500,
+.highcontrast-dark .text-green-600,
+.highcontrast-dark .text-green-700,
+.highcontrast-dark .text-green-800,
+.highcontrast-dark .text-green-900,
+.highcontrast-dark .text-blue-50,
+.highcontrast-dark .text-blue-100,
+.highcontrast-dark .text-blue-200,
+.highcontrast-dark .text-blue-300,
+.highcontrast-dark .text-blue-400,
+.highcontrast-dark .text-blue-500,
+.highcontrast-dark .text-blue-600,
+.highcontrast-dark .text-blue-700,
+.highcontrast-dark .text-blue-800,
+.highcontrast-dark .text-blue-900,
+.highcontrast-dark .text-red-50,
+.highcontrast-dark .text-red-100,
+.highcontrast-dark .text-red-200,
+.highcontrast-dark .text-red-300,
+.highcontrast-dark .text-red-400,
+.highcontrast-dark .text-red-500,
+.highcontrast-dark .text-red-600,
+.highcontrast-dark .text-red-700,
+.highcontrast-dark .text-red-800,
+.highcontrast-dark .text-red-900,
+.highcontrast-dark .text-yellow-50,
+.highcontrast-dark .text-yellow-100,
+.highcontrast-dark .text-yellow-200,
+.highcontrast-dark .text-yellow-300,
+.highcontrast-dark .text-yellow-400,
+.highcontrast-dark .text-yellow-500,
+.highcontrast-dark .text-yellow-600,
+.highcontrast-dark .text-yellow-700,
+.highcontrast-dark .text-yellow-800,
+.highcontrast-dark .text-yellow-900,
+.highcontrast-dark .text-purple-50,
+.highcontrast-dark .text-purple-100,
+.highcontrast-dark .text-purple-200,
+.highcontrast-dark .text-purple-300,
+.highcontrast-dark .text-purple-400,
+.highcontrast-dark .text-purple-500,
+.highcontrast-dark .text-purple-600,
+.highcontrast-dark .text-purple-700,
+.highcontrast-dark .text-purple-800,
+.highcontrast-dark .text-purple-900,
+.highcontrast-dark .text-orange-50,
+.highcontrast-dark .text-orange-100,
+.highcontrast-dark .text-orange-200,
+.highcontrast-dark .text-orange-300,
+.highcontrast-dark .text-orange-400,
+.highcontrast-dark .text-orange-500,
+.highcontrast-dark .text-orange-600,
+.highcontrast-dark .text-orange-700,
+.highcontrast-dark .text-orange-800,
+.highcontrast-dark .text-orange-900,
+.highcontrast-dark .text-pink-50,
+.highcontrast-dark .text-pink-100,
+.highcontrast-dark .text-pink-200,
+.highcontrast-dark .text-pink-300,
+.highcontrast-dark .text-pink-400,
+.highcontrast-dark .text-pink-500,
+.highcontrast-dark .text-pink-600,
+.highcontrast-dark .text-pink-700,
+.highcontrast-dark .text-pink-800,
+.highcontrast-dark .text-pink-900,
+.highcontrast-dark .text-emerald-50,
+.highcontrast-dark .text-emerald-100,
+.highcontrast-dark .text-emerald-200,
+.highcontrast-dark .text-emerald-300,
+.highcontrast-dark .text-emerald-400,
+.highcontrast-dark .text-emerald-500,
+.highcontrast-dark .text-emerald-600,
+.highcontrast-dark .text-emerald-700,
+.highcontrast-dark .text-emerald-800,
+.highcontrast-dark .text-emerald-900,
+.highcontrast-dark .text-amber-50,
+.highcontrast-dark .text-amber-100,
+.highcontrast-dark .text-amber-200,
+.highcontrast-dark .text-amber-300,
+.highcontrast-dark .text-amber-400,
+.highcontrast-dark .text-amber-500,
+.highcontrast-dark .text-amber-600,
+.highcontrast-dark .text-amber-700,
+.highcontrast-dark .text-amber-800,
+.highcontrast-dark .text-amber-900 {
+  color: oklch(1 0 0) !important;
+}
+
+/* High Contrast Dark: Force all colored backgrounds to black/dark gray */
+.highcontrast-dark .bg-green-50,
+.highcontrast-dark .bg-green-100,
+.highcontrast-dark .bg-green-200,
+.highcontrast-dark .bg-green-500,
+.highcontrast-dark .bg-green-500\/10,
+.highcontrast-dark .bg-green-500\/15,
+.highcontrast-dark .bg-green-500\/20,
+.highcontrast-dark .bg-green-500\/25,
+.highcontrast-dark .bg-green-950,
+.highcontrast-dark .bg-blue-50,
+.highcontrast-dark .bg-blue-100,
+.highcontrast-dark .bg-blue-200,
+.highcontrast-dark .bg-blue-500,
+.highcontrast-dark .bg-blue-500\/10,
+.highcontrast-dark .bg-blue-500\/15,
+.highcontrast-dark .bg-blue-500\/20,
+.highcontrast-dark .bg-blue-500\/25,
+.highcontrast-dark .bg-blue-950,
+.highcontrast-dark .bg-red-50,
+.highcontrast-dark .bg-red-100,
+.highcontrast-dark .bg-red-200,
+.highcontrast-dark .bg-red-500,
+.highcontrast-dark .bg-red-500\/10,
+.highcontrast-dark .bg-red-500\/15,
+.highcontrast-dark .bg-red-500\/20,
+.highcontrast-dark .bg-red-500\/25,
+.highcontrast-dark .bg-red-950,
+.highcontrast-dark .bg-yellow-50,
+.highcontrast-dark .bg-yellow-100,
+.highcontrast-dark .bg-yellow-200,
+.highcontrast-dark .bg-yellow-500\/10,
+.highcontrast-dark .bg-yellow-500\/15,
+.highcontrast-dark .bg-yellow-500\/20,
+.highcontrast-dark .bg-yellow-500\/25,
+.highcontrast-dark .bg-yellow-950,
+.highcontrast-dark .bg-purple-50,
+.highcontrast-dark .bg-purple-100,
+.highcontrast-dark .bg-purple-200,
+.highcontrast-dark .bg-purple-500\/10,
+.highcontrast-dark .bg-purple-500\/15,
+.highcontrast-dark .bg-purple-500\/20,
+.highcontrast-dark .bg-purple-500\/25,
+.highcontrast-dark .bg-purple-950,
+.highcontrast-dark .bg-orange-50,
+.highcontrast-dark .bg-orange-100,
+.highcontrast-dark .bg-orange-200,
+.highcontrast-dark .bg-orange-500,
+.highcontrast-dark .bg-orange-500\/10,
+.highcontrast-dark .bg-orange-500\/15,
+.highcontrast-dark .bg-orange-500\/20,
+.highcontrast-dark .bg-orange-500\/25,
+.highcontrast-dark .bg-orange-950,
+.highcontrast-dark .bg-pink-50,
+.highcontrast-dark .bg-pink-100,
+.highcontrast-dark .bg-pink-200,
+.highcontrast-dark .bg-emerald-50,
+.highcontrast-dark .bg-emerald-100,
+.highcontrast-dark .bg-emerald-200,
+.highcontrast-dark .bg-emerald-500,
+.highcontrast-dark .bg-amber-50,
+.highcontrast-dark .bg-amber-100,
+.highcontrast-dark .bg-amber-200,
+.highcontrast-dark .bg-amber-500,
+.highcontrast-dark .bg-amber-500\/5 {
+  background-color: oklch(0.12 0 0) !important;
+}
+
+/* High Contrast Dark: Force all colored borders to medium gray */
+.highcontrast-dark .border-green-200,
+.highcontrast-dark .border-green-300,
+.highcontrast-dark .border-green-500,
+.highcontrast-dark .border-green-500\/20,
+.highcontrast-dark .border-green-500\/30,
+.highcontrast-dark .border-green-500\/50,
+.highcontrast-dark .border-green-800,
+.highcontrast-dark .border-green-900,
+.highcontrast-dark .border-blue-200,
+.highcontrast-dark .border-blue-300,
+.highcontrast-dark .border-blue-500,
+.highcontrast-dark .border-blue-500\/20,
+.highcontrast-dark .border-blue-500\/30,
+.highcontrast-dark .border-blue-500\/50,
+.highcontrast-dark .border-blue-800,
+.highcontrast-dark .border-blue-900,
+.highcontrast-dark .border-red-200,
+.highcontrast-dark .border-red-300,
+.highcontrast-dark .border-red-500,
+.highcontrast-dark .border-red-500\/20,
+.highcontrast-dark .border-red-500\/30,
+.highcontrast-dark .border-red-500\/50,
+.highcontrast-dark .border-red-800,
+.highcontrast-dark .border-red-900,
+.highcontrast-dark .border-yellow-200,
+.highcontrast-dark .border-yellow-300,
+.highcontrast-dark .border-yellow-500,
+.highcontrast-dark .border-yellow-500\/20,
+.highcontrast-dark .border-yellow-500\/30,
+.highcontrast-dark .border-yellow-500\/50,
+.highcontrast-dark .border-yellow-800,
+.highcontrast-dark .border-yellow-900,
+.highcontrast-dark .border-purple-200,
+.highcontrast-dark .border-purple-300,
+.highcontrast-dark .border-purple-500,
+.highcontrast-dark .border-purple-500\/20,
+.highcontrast-dark .border-purple-500\/30,
+.highcontrast-dark .border-purple-500\/50,
+.highcontrast-dark .border-purple-800,
+.highcontrast-dark .border-purple-900,
+.highcontrast-dark .border-orange-200,
+.highcontrast-dark .border-orange-300,
+.highcontrast-dark .border-orange-500,
+.highcontrast-dark .border-orange-500\/20,
+.highcontrast-dark .border-orange-500\/30,
+.highcontrast-dark .border-orange-500\/50,
+.highcontrast-dark .border-orange-800,
+.highcontrast-dark .border-orange-900,
+.highcontrast-dark .border-amber-500,
+.highcontrast-dark .border-amber-500\/50 {
+  border-color: oklch(0.35 0 0) !important;
+}
+
+/* Remove gradients in high contrast themes */
+.highcontrast .bg-gradient-to-br,
+.highcontrast .bg-gradient-to-r,
+.highcontrast .bg-gradient-to-l,
+.highcontrast .bg-gradient-to-t,
+.highcontrast .bg-gradient-to-b,
+.highcontrast-dark .bg-gradient-to-br,
+.highcontrast-dark .bg-gradient-to-r,
+.highcontrast-dark .bg-gradient-to-l,
+.highcontrast-dark .bg-gradient-to-t,
+.highcontrast-dark .bg-gradient-to-b {
+  background-image: none !important;
 }

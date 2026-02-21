@@ -1275,3 +1275,13 @@
 - [x] Permitir editar: nome, código, notas
 - [x] Melhorar procedure plants.update (validação, atualização parcial)
 - [x] Criar testes unitários (7 testes passando)
+
+
+## Sistema de 4 Temas (21/02/2026) ✅
+- [x] Atualizar ThemeContext para suportar 4 temas (light, dark, highcontrast, highcontrast-dark)
+- [x] Criar seletor de tema com 4 opções no ThemeToggle
+- [x] Renomear para "Alto Contraste" conforme solicitado
+- [x] Criar CSS overrides para remover TODAS as cores (184 ocorrências)
+- [x] Forçar grayscale em text/bg/border coloridos nos temas highcontrast
+- [x] Criar tema Alto Contraste Escuro (invertido - fundo preto, texto branco)
+- [x] Remover gradientes nos temas de alto contraste
