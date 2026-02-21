@@ -134,6 +134,62 @@
   --sidebar-ring: var(--color-green-500);
 }
 
+.kindle {
+  /* Kindle theme - High contrast black and white, no colors */
+  --primary: oklch(0 0 0);
+  --primary-foreground: oklch(1 0 0);
+  --sidebar-primary: oklch(0 0 0);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  
+  /* Base colors - Pure white background, pure black text */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0 0 0);
+  
+  /* Card colors - Light gray for subtle separation */
+  --card: oklch(0.98 0 0);
+  --card-foreground: oklch(0 0 0);
+  
+  /* Popover colors - Same as cards */
+  --popover: oklch(0.98 0 0);
+  --popover-foreground: oklch(0 0 0);
+  
+  /* Secondary colors - Medium gray */
+  --secondary: oklch(0.95 0 0);
+  --secondary-foreground: oklch(0 0 0);
+  
+  /* Muted colors - Light gray for less important elements */
+  --muted: oklch(0.92 0 0);
+  --muted-foreground: oklch(0.4 0 0);
+  
+  /* Accent colors - Dark gray for highlights */
+  --accent: oklch(0.90 0 0);
+  --accent-foreground: oklch(0 0 0);
+  
+  /* Destructive colors - Pure black (no red) */
+  --destructive: oklch(0 0 0);
+  --destructive-foreground: oklch(1 0 0);
+  
+  /* Border and input colors - Medium gray for definition */
+  --border: oklch(0.70 0 0);
+  --input: oklch(0.95 0 0);
+  --ring: oklch(0 0 0);
+  
+  /* Chart colors - Grayscale gradient */
+  --chart-1: oklch(0.20 0 0);
+  --chart-2: oklch(0.35 0 0);
+  --chart-3: oklch(0.50 0 0);
+  --chart-4: oklch(0.65 0 0);
+  --chart-5: oklch(0.80 0 0);
+  
+  /* Sidebar colors - Pure black sidebar */
+  --sidebar: oklch(0 0 0);
+  --sidebar-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.15 0 0);
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: oklch(0.30 0 0);
+  --sidebar-ring: oklch(1 0 0);
+}
+
 @layer base {
   @keyframes shimmer {
     0% {

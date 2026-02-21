@@ -1191,22 +1191,22 @@
 - [x] Corrigir menu "Gerenciar Tarefas" aparecendo 2 vezes - Não encontrado, pode ter sido corrigido ✅
 
 ### Calculadora de Rega - Histórico
-- [ ] Adicionar indicação de semana e ciclo no histórico de rega
-- [ ] Mostrar "Semana X - Ciclo Y" junto com a receita
+- [x] Adicionar indicação de semana e ciclo no histórico de rega ✅
+- [x] Mostrar "🌱 Vega/Flora Semana X • Ciclo #Y" junto com a receita ✅
 
 ### Calculadora de Fertilização - Bugs e Melhorias
 - [x] Corrigir zero à esquerda no input de litros (sempre aparece um zero) ✅
-- [ ] Ajustar tamanho do input de litros para usar rem (responsivo desktop/mobile)
+- [x] Ajustar tamanho do input de litros para usar rem (responsivo desktop/mobile) - 1.5rem mobile, 2rem desktop ✅
 - [ ] Implementar salvamento de histórico de fertilização (atualmente não salva)
 
 ### Calculadora de pH - Redesign
-- [ ] Redesenhar calculadora de pH com design mais intuitivo (estilo app)
-- [ ] Manter mesmas funcionalidades mas melhorar visual
-- [ ] Sugestão de design: cards com ícones, sliders visuais, feedback colorido
+- [x] Redesenhar calculadora de pH com design mais intuitivo (estilo app) ✅
+- [x] Manter mesmas funcionalidades mas melhorar visual - Sliders com gradiente de cores ✅
+- [x] Sugestão de design: cards com ícones, sliders visuais, feedback colorido - Implementado com auto-cálculo ✅
 
 ### Calculadora de PPFD - Melhorar Destaque
-- [ ] Aumentar tamanho do input de valor PPFD (está muito pequeno)
-- [ ] Dar mais destaque visual ao campo principal
+- [x] Aumentar tamanho do input de valor PPFD (está muito pequeno) - text-2xl, h-16 ✅
+- [x] Dar mais destaque visual ao campo principal - Negrito, centralizado, padding aumentado ✅
 
 ### Strains - Limpar Dados de Teste
 - [ ] Excluir todas as strains de teste - Bloqueado por foreign key, fazer manualmente pela UI
@@ -1218,9 +1218,9 @@
 - [x] Reduzir espaço ocupado na página de configurações ✅
 
 ### Tema de Alto Contraste (Kindle Mode)
-- [ ] Criar terceiro tema: Alto Contraste (preto e branco)
-- [ ] Inspiração: e-readers Kindle (sem cores, máximo contraste)
-- [ ] Adicionar ao ThemeToggle: Claro → Escuro → Alto Contraste
+- [x] Criar terceiro tema: Alto Contraste (preto e branco) - Classe .kindle no CSS ✅
+- [x] Inspiração: e-readers Kindle (sem cores, máximo contraste) - OKLCH monocromático ✅
+- [x] Adicionar ao ThemeToggle: Claro → Escuro → Alto Contraste - Radio buttons com ícones ✅
 
 ### Favicon
 - [x] Trocar favicon atual pelo ícone da plantinha do menu do app - Já estava correto ✅

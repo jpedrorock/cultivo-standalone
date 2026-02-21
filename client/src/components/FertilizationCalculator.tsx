@@ -252,7 +252,7 @@ export function FertilizationCalculator() {
 
           {/* Volume */}
           <div>
-            <Label htmlFor="volume">Volume de Preparo (litros)</Label>
+            <Label htmlFor="volume" className="text-base font-semibold">Volume de Preparo (litros)</Label>
             <Input
               id="volume"
               type="number"
@@ -261,6 +261,7 @@ export function FertilizationCalculator() {
               placeholder="Ex: 10"
               min="0"
               step="0.1"
+              className="text-[1.5rem] sm:text-[2rem] h-14 sm:h-16 px-4 font-bold text-center"
             />
           </div>
 

@@ -3221,7 +3221,16 @@ export const appRouter = router({
         const database = await getDb();
         if (!database) throw new Error("Database not available");
 
-        let query = database.select().from(wateringApplications);
+        let query = database
+          .select({
+            ...wateringApplications,
+            cycleStartDate: cycles.startDate,
+            cycleFloraStartDate: cycles.floraStartDate,
+            tentName: tents.name,
+          })
+          .from(wateringApplications)
+          .leftJoin(cycles, eq(wateringApplications.cycleId, cycles.id))
+          .leftJoin(tents, eq(wateringApplications.tentId, tents.id));
 
         const conditions = [];
         if (input?.tentId) conditions.push(eq(wateringApplications.tentId, input.tentId));

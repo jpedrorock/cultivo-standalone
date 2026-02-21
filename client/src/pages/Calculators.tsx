@@ -667,8 +667,36 @@ function WateringRunoffCalculator() {
                       <CardTitle className="text-lg">
                         💧 {app.recipeName}
                       </CardTitle>
-                      <CardDescription>
-                        {new Date(app.applicationDate).toLocaleDateString('pt-BR')}
+                      <CardDescription className="space-y-1">
+                        <div>{new Date(app.applicationDate).toLocaleDateString('pt-BR')}</div>
+                        {app.cycleStartDate && (
+                          <div className="text-xs font-medium text-blue-600 dark:text-blue-400">
+                            {(() => {
+                              const appDate = new Date(app.applicationDate);
+                              const startDate = new Date(app.cycleStartDate);
+                              const floraDate = app.cycleFloraStartDate ? new Date(app.cycleFloraStartDate) : null;
+                              
+                              const daysSinceStart = Math.floor((appDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+                              const weekNumber = Math.floor(daysSinceStart / 7) + 1;
+                              
+                              let phase = "Vega";
+                              if (floraDate && appDate >= floraDate) {
+                                const daysSinceFlora = Math.floor((appDate.getTime() - floraDate.getTime()) / (1000 * 60 * 60 * 24));
+                                const floraWeek = Math.floor(daysSinceFlora / 7) + 1;
+                                phase = `Flora Semana ${floraWeek}`;
+                              } else {
+                                phase = `Vega Semana ${weekNumber}`;
+                              }
+                              
+                              return `🌱 ${phase} • Ciclo #${app.cycleId}`;
+                            })()}
+                          </div>
+                        )}
+                        {!app.cycleStartDate && app.tentName && (
+                          <div className="text-xs text-muted-foreground">
+                            🏚️ {app.tentName}
+                          </div>
+                        )}
                       </CardDescription>
                     </div>
                     <div className="text-right">
@@ -1272,13 +1300,14 @@ function LuxPPFDCalculator() {
           {conversionMode === "lux-to-ppfd" ? (
             <>
               <div className="space-y-2">
-                <Label htmlFor="lux">Leitura em Lux</Label>
+                <Label htmlFor="lux" className="text-base font-semibold">Leitura em Lux</Label>
                 <Input
                   id="lux"
                   type="number"
                   placeholder="Ex: 50000"
                   value={lux}
                   onChange={(e) => setLux(e.target.value)}
+                  className="text-2xl h-16 px-4 font-bold text-center"
                 />
               </div>
               
@@ -1332,13 +1361,14 @@ function LuxPPFDCalculator() {
           ) : (
             <>
               <div className="space-y-2">
-                <Label htmlFor="ppfd">Leitura em PPFD (µmol/m²/s)</Label>
+                <Label htmlFor="ppfd" className="text-base font-semibold">Leitura em PPFD (µmol/m²/s)</Label>
                 <Input
                   id="ppfd"
                   type="number"
                   placeholder="Ex: 750"
                   value={ppfd}
                   onChange={(e) => setPpfd(e.target.value)}
+                  className="text-2xl h-16 px-4 font-bold text-center"
                 />
               </div>
               
@@ -1618,7 +1648,10 @@ function PHAdjustCalculator() {
     const current = parseFloat(currentPH);
     const target = parseFloat(targetPH);
 
-    if (isNaN(volume) || isNaN(current) || isNaN(target) || volume <= 0) return;
+    if (isNaN(volume) || isNaN(current) || isNaN(target) || volume <= 0 || current < 0 || current > 14 || target < 0 || target > 14) {
+      setResult(null);
+      return;
+    }
 
     const phDifference = Math.abs(current - target);
     
@@ -1651,6 +1684,22 @@ function PHAdjustCalculator() {
     });
   };
 
+  // Auto-calculate on input change
+  useEffect(() => {
+    calculatePHAdjustment();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [waterVolume, currentPH, targetPH]);
+
+  // Helper to get pH color
+  const getPHColor = (ph: number) => {
+    if (ph < 4) return "#dc2626"; // red-600
+    if (ph < 5.5) return "#f97316"; // orange-500
+    if (ph < 6.5) return "#eab308"; // yellow-500
+    if (ph < 7.5) return "#22c55e"; // green-500
+    if (ph < 9) return "#3b82f6"; // blue-500
+    return "#8b5cf6"; // purple-500
+  };
+
   return (
     <Card className="bg-card/90 backdrop-blur-sm">
       <CardHeader>
@@ -1662,48 +1711,81 @@ function PHAdjustCalculator() {
           Calcule quanto ácido ou base adicionar para atingir o pH ideal
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <div className="space-y-2">
-            <Label htmlFor="waterVolumePH">Volume de Água (litros)</Label>
-            <Input
-              id="waterVolumePH"
-              type="number"
-              placeholder="Ex: 10"
-              value={waterVolume}
-              onChange={(e) => setWaterVolume(e.target.value)}
-            />
-          </div>
+      <CardContent className="space-y-8">
+        {/* Volume Input */}
+        <div className="space-y-3">
+          <Label htmlFor="waterVolumePH" className="text-base font-semibold">Volume de Água (litros)</Label>
+          <Input
+            id="waterVolumePH"
+            type="number"
+            placeholder="Ex: 10"
+            value={waterVolume}
+            onChange={(e) => setWaterVolume(e.target.value)}
+            className="text-xl h-14 px-4 font-bold text-center"
+          />
+        </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="currentPH">pH Atual</Label>
-            <Input
-              id="currentPH"
-              type="number"
-              step="0.1"
-              placeholder="Ex: 7.5"
-              value={currentPH}
-              onChange={(e) => setCurrentPH(e.target.value)}
-            />
+        {/* pH Atual Slider */}
+        <div className="space-y-3">
+          <div className="flex justify-between items-center">
+            <Label htmlFor="currentPH" className="text-base font-semibold">pH Atual</Label>
+            <span 
+              className="text-3xl font-bold px-4 py-2 rounded-lg"
+              style={{ color: currentPH ? getPHColor(parseFloat(currentPH)) : "#6b7280" }}
+            >
+              {currentPH || "--"}
+            </span>
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="targetPH">pH Alvo</Label>
-            <Input
-              id="targetPH"
-              type="number"
-              step="0.1"
-              placeholder="Ex: 6.0"
-              value={targetPH}
-              onChange={(e) => setTargetPH(e.target.value)}
-            />
+          <input
+            id="currentPH"
+            type="range"
+            min="0"
+            max="14"
+            step="0.1"
+            value={currentPH || 7}
+            onChange={(e) => setCurrentPH(e.target.value)}
+            className="w-full h-12 rounded-full appearance-none cursor-pointer"
+            style={{
+              background: "linear-gradient(to right, #dc2626 0%, #f97316 28.5%, #eab308 42.8%, #22c55e 50%, #3b82f6 64.2%, #8b5cf6 100%)",
+            }}
+          />
+          <div className="flex justify-between text-xs text-muted-foreground px-1">
+            <span>Ácido<br/>0</span>
+            <span>Neutro<br/>7</span>
+            <span>Alcalino<br/>14</span>
           </div>
         </div>
 
-        <Button onClick={calculatePHAdjustment} className="w-full">
-          <Calculator className="w-4 h-4 mr-2" />
-          Calcular Ajuste
-        </Button>
+        {/* pH Alvo Slider */}
+        <div className="space-y-3">
+          <div className="flex justify-between items-center">
+            <Label htmlFor="targetPH" className="text-base font-semibold">pH Alvo</Label>
+            <span 
+              className="text-3xl font-bold px-4 py-2 rounded-lg"
+              style={{ color: targetPH ? getPHColor(parseFloat(targetPH)) : "#6b7280" }}
+            >
+              {targetPH || "--"}
+            </span>
+          </div>
+          <input
+            id="targetPH"
+            type="range"
+            min="0"
+            max="14"
+            step="0.1"
+            value={targetPH || 6}
+            onChange={(e) => setTargetPH(e.target.value)}
+            className="w-full h-12 rounded-full appearance-none cursor-pointer"
+            style={{
+              background: "linear-gradient(to right, #dc2626 0%, #f97316 28.5%, #eab308 42.8%, #22c55e 50%, #3b82f6 64.2%, #8b5cf6 100%)",
+            }}
+          />
+          <div className="flex justify-between text-xs text-muted-foreground px-1">
+            <span>Ácido<br/>0</span>
+            <span>Neutro<br/>7</span>
+            <span>Alcalino<br/>14</span>
+          </div>
+        </div>
 
         {result && (
           <div className="bg-blue-500/100/10 border border-blue-500/20 rounded-lg p-6 space-y-3">

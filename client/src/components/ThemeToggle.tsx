@@ -1,51 +1,70 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Moon, Sun } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { BookOpen, Moon, Sun } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 
 export function ThemeToggle() {
-  const { theme, toggleTheme, switchable } = useTheme();
+  const { theme, setTheme, switchable } = useTheme();
 
   if (!switchable) {
     return null;
   }
 
-  const isDark = theme === "dark";
-
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          {isDark ? (
-            <Moon className="w-5 h-5 text-blue-600" />
-          ) : (
-            <Sun className="w-5 h-5 text-yellow-600" />
-          )}
+          {theme === "dark" && <Moon className="w-5 h-5 text-blue-600" />}
+          {theme === "light" && <Sun className="w-5 h-5 text-yellow-600" />}
+          {theme === "kindle" && <BookOpen className="w-5 h-5" />}
           Tema
         </CardTitle>
         <CardDescription>
-          Escolha entre tema claro ou escuro para melhor visualização
+          Escolha o tema que melhor se adapta ao seu ambiente
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center justify-between">
-          <div className="space-y-0.5">
-            <Label htmlFor="theme-toggle" className="text-base">
-              Modo Escuro
-            </Label>
-            <p className="text-sm text-muted-foreground">
-              {isDark
-                ? "Tema escuro ativo - ideal para uso noturno"
-                : "Tema claro ativo - melhor para ambientes iluminados"}
-            </p>
+        <RadioGroup value={theme} onValueChange={(value) => setTheme(value as "light" | "dark" | "kindle")}>
+          <div className="flex items-center space-x-3 space-y-0 rounded-md border p-4">
+            <RadioGroupItem value="light" id="light" />
+            <div className="flex-1">
+              <Label htmlFor="light" className="flex items-center gap-2 cursor-pointer">
+                <Sun className="w-4 h-4 text-yellow-600" />
+                <span className="font-medium">Claro</span>
+              </Label>
+              <p className="text-sm text-muted-foreground mt-1">
+                Melhor para ambientes bem iluminados
+              </p>
+            </div>
           </div>
-          <Switch
-            id="theme-toggle"
-            checked={isDark}
-            onCheckedChange={toggleTheme}
-          />
-        </div>
+          
+          <div className="flex items-center space-x-3 space-y-0 rounded-md border p-4 mt-3">
+            <RadioGroupItem value="dark" id="dark" />
+            <div className="flex-1">
+              <Label htmlFor="dark" className="flex items-center gap-2 cursor-pointer">
+                <Moon className="w-4 h-4 text-blue-600" />
+                <span className="font-medium">Escuro</span>
+              </Label>
+              <p className="text-sm text-muted-foreground mt-1">
+                Ideal para uso noturno e economia de bateria
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-3 space-y-0 rounded-md border p-4 mt-3">
+            <RadioGroupItem value="kindle" id="kindle" />
+            <div className="flex-1">
+              <Label htmlFor="kindle" className="flex items-center gap-2 cursor-pointer">
+                <BookOpen className="w-4 h-4" />
+                <span className="font-medium">Kindle (Alto Contraste)</span>
+              </Label>
+              <p className="text-sm text-muted-foreground mt-1">
+                Preto e branco puro para máxima legibilidade
+              </p>
+            </div>
+          </div>
+        </RadioGroup>
       </CardContent>
     </Card>
   );
