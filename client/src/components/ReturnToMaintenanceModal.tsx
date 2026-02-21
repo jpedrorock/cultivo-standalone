@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import {
   Dialog,
@@ -8,6 +9,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 interface ReturnToMaintenanceModalProps {
@@ -18,6 +21,7 @@ interface ReturnToMaintenanceModalProps {
 }
 
 export function ReturnToMaintenanceModal({ open, onClose, cycleId, cycleName }: ReturnToMaintenanceModalProps) {
+  const [clonesProduced, setClonesProduced] = useState<string>("");
   const utils = trpc.useUtils();
 
   const transitionToMaintenance = trpc.cycles.transitionToMaintenance.useMutation({
@@ -25,6 +29,7 @@ export function ReturnToMaintenanceModal({ open, onClose, cycleId, cycleName }: 
       toast.success("Retornado para manutenção!");
       utils.cycles.getActiveCyclesWithProgress.invalidate();
       utils.cycles.listActive.invalidate();
+      setClonesProduced("");
       onClose();
     },
     onError: (error) => {
@@ -33,8 +38,16 @@ export function ReturnToMaintenanceModal({ open, onClose, cycleId, cycleName }: 
   });
 
   const handleSubmit = () => {
+    const clones = clonesProduced ? parseInt(clonesProduced, 10) : undefined;
+    
+    if (clonesProduced && (isNaN(clones!) || clones! < 0)) {
+      toast.error("Quantidade de clones inválida");
+      return;
+    }
+
     transitionToMaintenance.mutate({
       cycleId,
+      clonesProduced: clones,
     });
   };
 
@@ -48,7 +61,22 @@ export function ReturnToMaintenanceModal({ open, onClose, cycleId, cycleName }: 
           </DialogDescription>
         </DialogHeader>
 
-        <div className="py-4">
+        <div className="space-y-4 py-4">
+          <div className="space-y-2">
+            <Label htmlFor="clonesProduced">Clones Produzidos (opcional)</Label>
+            <Input
+              id="clonesProduced"
+              type="number"
+              min="0"
+              placeholder="Ex: 10"
+              value={clonesProduced}
+              onChange={(e) => setClonesProduced(e.target.value)}
+            />
+            <p className="text-xs text-muted-foreground">
+              Quantos clones foram produzidos nesta rodada de clonagem?
+            </p>
+          </div>
+
           <p className="text-sm text-muted-foreground">
             O ciclo de clonagem será finalizado e as plantas mãe retornarão para o estado de manutenção contínua.
           </p>

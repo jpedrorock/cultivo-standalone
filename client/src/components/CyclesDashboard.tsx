@@ -104,14 +104,20 @@ export function CyclesDashboard() {
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
                   <span className="font-medium">
-                    Semana {cycle.currentWeek} de {cycle.totalWeeks}
+                    {cycle.phase === 'MAINTENANCE' && 'Manutenção'}
+                    {cycle.phase === 'CLONING' && `Clonagem - Semana ${cycle.currentWeek}`}
+                    {(cycle.phase === 'VEGA' || cycle.phase === 'FLORA') && `Semana ${cycle.currentWeek} de ${cycle.totalWeeks}`}
                   </span>
-                  <span className="text-muted-foreground">{cycle.progress}%</span>
+                  {(cycle.phase === 'VEGA' || cycle.phase === 'FLORA') && (
+                    <span className="text-muted-foreground">{cycle.progress}%</span>
+                  )}
                 </div>
-                <Progress value={cycle.progress} className="h-2" />
+                {(cycle.phase === 'VEGA' || cycle.phase === 'FLORA') && (
+                  <Progress value={cycle.progress} className="h-2" />
+                )}
               </div>
 
-              {/* Harvest Date (apenas para VEGA/FLORA) */}
+              {/* Harvest Date (apenas para VEGA/FLORA) ou Clones Produzidos (MAINTENANCE) */}
               {(cycle.phase === 'VEGA' || cycle.phase === 'FLORA') && (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="w-4 h-4" />
@@ -129,6 +135,17 @@ export function CyclesDashboard() {
                         ({cycle.daysUntilHarvest} dias)
                       </span>
                     )}
+                  </span>
+                </div>
+              )}
+              {cycle.phase === 'MAINTENANCE' && cycle.clonesProduced && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Scissors className="w-4 h-4" />
+                  <span>
+                    Última clonagem:{" "}
+                    <span className="font-medium text-foreground">
+                      {cycle.clonesProduced} clones produzidos
+                    </span>
                   </span>
                 </div>
               )}

@@ -87,6 +87,7 @@ export const cycles = mysqlTable(
     startDate: timestamp("startDate").notNull(),
     cloningStartDate: timestamp("cloningStartDate"),
     floraStartDate: timestamp("floraStartDate"),
+    clonesProduced: int("clonesProduced"), // Número de clones produzidos ao retornar de CLONING para MAINTENANCE
     status: mysqlEnum("status", ["ACTIVE", "FINISHED"]).default("ACTIVE").notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

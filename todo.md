@@ -1386,3 +1386,15 @@
 - [x] Esconder "Colheita estimada" para ciclos MAINTENANCE/CLONING
 - [x] Criar testes unitários (4 testes passando)
 - [x] Testar fluxo: MAINTENANCE → CLONING → MAINTENANCE (ciclo contínuo)
+
+
+### Contador de Clones Produzidos (21/02/2026) ✅
+- [x] Adicionar campo `clonesProduced` à tabela cycles (via SQL)
+- [x] Atualizar procedure `transitionToMaintenance` para aceitar e salvar clonesProduced (opcional)
+- [x] Adicionar input de quantidade de clones no ReturnToMaintenanceModal
+- [x] Exibir histórico de clonagens no card do ciclo MAINTENANCE ("Última clonagem: X clones")
+- [x] Ajustar exibição de semanas para MAINTENANCE/CLONING:
+  - MAINTENANCE: mostra "Manutenção" (sem barra de progresso)
+  - CLONING: mostra "Clonagem - Semana X" (sem barra de progresso)
+  - VEGA/FLORA: mostra "Semana X de Y" com barra de progresso
+- [x] Criar testes unitários para contador de clones (4 testes passando)

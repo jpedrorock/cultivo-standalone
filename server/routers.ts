@@ -749,6 +749,7 @@ export const appRouter = router({
       .input(
         z.object({
           cycleId: z.number(),
+          clonesProduced: z.number().min(0).optional(), // Número de clones produzidos
         })
       )
       .mutation(async ({ input }) => {
@@ -771,10 +772,13 @@ export const appRouter = router({
           throw new Error("Ciclo não está em clonagem");
         }
         
-        // Retornar para MAINTENANCE (remover cloningStartDate)
+        // Retornar para MAINTENANCE (remover cloningStartDate e salvar clonesProduced)
         await database
           .update(cycles)
-          .set({ cloningStartDate: null })
+          .set({ 
+            cloningStartDate: null,
+            clonesProduced: input.clonesProduced || null
+          })
           .where(eq(cycles.id, input.cycleId));
         
         return { success: true };
