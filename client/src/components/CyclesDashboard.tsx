@@ -4,16 +4,11 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Calendar, Leaf, Sprout, ArrowRight, Scissors } from "lucide-react";
-import { PhaseTransitionDialog } from "@/components/PhaseTransitionDialog";
+// PhaseTransitionDialog moved to tent cards
 
 export function CyclesDashboard() {
   const { data: cycles, isLoading } = trpc.cycles.getActiveCyclesWithProgress.useQuery();
-  const [transitionDialogOpen, setTransitionDialogOpen] = useState(false);
-  const [selectedCycle, setSelectedCycle] = useState<{
-    id: number;
-    name: string;
-    phase: "MAINTENANCE" | "CLONING" | "VEGA" | "FLORA";
-  } | null>(null);
+  // Phase transition moved to tent cards
 
   if (isLoading) {
     return (
@@ -93,15 +88,9 @@ export function CyclesDashboard() {
                     <p className="text-sm text-muted-foreground">{cycle.strainName}</p>
                   </div>
                 </div>
-                <button
-                  onClick={() => {
-                    setSelectedCycle({ id: cycle.id, name: cycle.tentName, phase: cycle.phase });
-                    setTransitionDialogOpen(true);
-                  }}
-                  className={`px-3 py-1 rounded-full text-xs font-medium ${phaseBg} ${phaseColor} hover:opacity-80 transition-opacity cursor-pointer`}
-                >
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${phaseBg} ${phaseColor}`}>
                   {phaseLabel}
-                </button>
+                </span>
               </div>
 
               {/* Progress */}
@@ -160,19 +149,7 @@ export function CyclesDashboard() {
         })}
       </div>
 
-      {/* Phase Transition Dialog */}
-      {selectedCycle && (
-        <PhaseTransitionDialog
-          open={transitionDialogOpen}
-          onOpenChange={(open) => {
-            setTransitionDialogOpen(open);
-            if (!open) setSelectedCycle(null);
-          }}
-          cycleId={selectedCycle.id}
-          currentPhase={selectedCycle.phase}
-          tentName={selectedCycle.name}
-        />
-      )}
+      {/* Phase transition moved to tent cards */}
     </div>
   );
 }

@@ -1450,3 +1450,13 @@
 - [x] Verificar badges, ícones, gráficos, bordas, sombras - todos em grayscale
 - [x] Testar ambos os temas de alto contraste
 - [x] Garantir 100% preto e branco (sem verde, azul, vermelho, etc.)
+
+
+## Mover Transição de Fase para Cards de Estufas (21/02/2026)
+- [ ] Remover PhaseTransitionDialog dos cards de ciclos
+- [ ] Adicionar badge clicável de fase nos cards de estufas na Home
+- [ ] Ao clicar na fase da estufa, abrir popup de transição
+- [ ] Popup permite mudar fase da estufa (VEGA→FLORA→SECAGEM, MAINTENANCE↔CLONING)
+- [ ] Opção de mover plantas para outra estufa ou manter na mesma
+- [ ] Atualizar categoria da estufa ao mudar fase
+- [ ] Testar transições a partir dos cards de estufas

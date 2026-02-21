@@ -247,7 +247,6 @@ export function PhaseTransitionDialog({
                 <SelectValue placeholder="Manter na estufa atual" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Manter na estufa atual</SelectItem>
                 {tents?.map((tent) => (
                   <SelectItem key={tent.id} value={tent.id.toString()}>
                     {tent.name}

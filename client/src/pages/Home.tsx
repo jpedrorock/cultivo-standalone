@@ -8,6 +8,7 @@ import { InitiateCycleModal } from "@/components/InitiateCycleModal";
 import { EditCycleModal } from "@/components/EditCycleModal";
 import { CreateTentModal } from "@/components/CreateTentModal";
 import { EditTentDialog } from "@/components/EditTentDialog";
+import { PhaseTransitionDialog } from "@/components/PhaseTransitionDialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -600,6 +601,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
   const [tasksExpanded, setTasksExpanded] = useState(false);
   const [hideCompleted, setHideCompleted] = useState(false);
   const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set());
+  const [phaseTransitionOpen, setPhaseTransitionOpen] = useState(false);
   
   const { data: tasks, isLoading: tasksLoading } = trpc.tasks.getTasksByTent.useQuery(
     { tentId: tent.id },
@@ -696,7 +698,10 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
           <div>
             <CardTitle className="text-xl flex items-center gap-2">
               {tent.name}
-              <Badge className={`${phaseInfo.color} text-white border-0`}>
+              <Badge 
+                className={`${phaseInfo.color} text-white border-0 cursor-pointer hover:opacity-80 transition-opacity`}
+                onClick={() => cycle && setPhaseTransitionOpen(true)}
+              >
                 <PhaseIcon className="w-3 h-3 mr-1" />
                 {phaseInfo.phase}
               </Badge>
@@ -974,6 +979,17 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
           </div>
         </div>
       </CardContent>
+      
+      {/* Phase Transition Dialog */}
+      {cycle && (
+        <PhaseTransitionDialog
+          open={phaseTransitionOpen}
+          onOpenChange={setPhaseTransitionOpen}
+          cycleId={cycle.id}
+          currentPhase={cycle.floraStartDate ? "FLORA" : (cycle.cloningStartDate ? "CLONING" : (tent.category === "MAINTENANCE" ? "MAINTENANCE" : "VEGA"))}
+          tentName={tent.name}
+        />
+      )}
     </Card>
   );
 }
