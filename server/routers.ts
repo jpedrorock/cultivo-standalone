@@ -458,6 +458,73 @@ export const appRouter = router({
       const allCycles = await db.getAllCycles();
       return allCycles.filter(c => c.status === "ACTIVE");
     }),
+    getActiveCyclesWithProgress: publicProcedure.query(async () => {
+      const database = await getDb();
+      if (!database) {
+        throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+      }
+      
+      // Buscar ciclos ativos com tent e strain
+      const activeCycles = await database
+        .select({
+          id: cycles.id,
+          tentId: cycles.tentId,
+          tentName: tents.name,
+          tentCategory: tents.category,
+          strainId: cycles.strainId,
+          strainName: strains.name,
+          startDate: cycles.startDate,
+          floraStartDate: cycles.floraStartDate,
+          status: cycles.status,
+          vegaWeeks: strains.vegaWeeks,
+          floraWeeks: strains.floraWeeks,
+        })
+        .from(cycles)
+        .leftJoin(tents, eq(cycles.tentId, tents.id))
+        .leftJoin(strains, eq(cycles.strainId, strains.id))
+        .where(eq(cycles.status, "ACTIVE"));
+      
+      const now = new Date();
+      
+      return activeCycles.map((cycle: any) => {
+        const startDate = new Date(cycle.startDate);
+        const daysSinceStart = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+        
+        let currentWeek = 1;
+        let totalWeeks = cycle.vegaWeeks || 4;
+        let phase: 'VEGA' | 'FLORA' = 'VEGA';
+        let daysUntilHarvest = 0;
+        
+        if (cycle.floraStartDate) {
+          // Ciclo em floração
+          const floraStartDate = new Date(cycle.floraStartDate);
+          const daysSinceFlora = Math.floor((now.getTime() - floraStartDate.getTime()) / (1000 * 60 * 60 * 24));
+          currentWeek = Math.floor(daysSinceFlora / 7) + 1;
+          totalWeeks = cycle.floraWeeks || 8;
+          phase = 'FLORA';
+          daysUntilHarvest = Math.max(0, (totalWeeks * 7) - daysSinceFlora);
+        } else {
+          // Ciclo em vegetação
+          currentWeek = Math.floor(daysSinceStart / 7) + 1;
+          totalWeeks = cycle.vegaWeeks || 4;
+          phase = 'VEGA';
+          daysUntilHarvest = ((cycle.vegaWeeks || 4) * 7) + ((cycle.floraWeeks || 8) * 7) - daysSinceStart;
+        }
+        
+        const progress = Math.min(100, (currentWeek / totalWeeks) * 100);
+        const estimatedHarvestDate = new Date(now.getTime() + (daysUntilHarvest * 24 * 60 * 60 * 1000));
+        
+        return {
+          ...cycle,
+          currentWeek,
+          totalWeeks,
+          phase,
+          progress: Math.round(progress),
+          daysUntilHarvest,
+          estimatedHarvestDate,
+        };
+      });
+    }),
     getByTent: publicProcedure.input(z.object({ tentId: z.number() })).query(async ({ input }) => {
       return db.getCycleByTentId(input.tentId);
     }),

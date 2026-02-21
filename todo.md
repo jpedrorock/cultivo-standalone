@@ -1335,3 +1335,16 @@
 - [x] Vincular strainId aos ciclos (24K Gold para VEGA, OG Kush para FLORA)
 - [x] Definir startDate e floraStartDate corretamente
 - [x] Executar seed e verificar ciclos no banco (2 ciclos ACTIVE criados)
+
+
+## Widget Dashboard de Ciclos na Home (21/02/2026) ✅
+- [x] Criar procedure backend `cycles.getActiveCyclesWithProgress`
+- [x] Calcular semana atual baseado em startDate e floraStartDate
+- [x] Criar componente CyclesDashboard com cards de ciclos ativos
+- [x] Mostrar progresso visual com barra (semana X de Y, %)
+- [x] Exibir strain, estufa, fase (VEGA/FLORA)
+- [x] Calcular e mostrar data estimada de colheita + dias restantes
+- [x] Badges coloridos por fase (verde para VEGA, roxo para FLORA)
+- [x] Ícones diferentes por fase (Sprout para VEGA, Leaf para FLORA)
+- [x] Integrar widget na home após seção de alertas
+- [x] Layout responsivo (grid 2 colunas em desktop)
