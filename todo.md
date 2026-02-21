@@ -1348,3 +1348,21 @@
 - [x] Ícones diferentes por fase (Sprout para VEGA, Leaf para FLORA)
 - [x] Integrar widget na home após seção de alertas
 - [x] Layout responsivo (grid 2 colunas em desktop)
+
+
+## Botões de Transição de Fase nos Cards de Ciclos (21/02/2026) ✅
+### Backend
+- [x] Criar procedure `cycles.transitionToFlora` (atualiza floraStartDate, opcional: move plantas)
+- [x] Criar procedure `cycles.transitionToDrying` (finaliza ciclo, cria ciclo DRYING, marca plantas HARVESTED, opcional: move plantas)
+- [x] Validar que apenas ciclos VEGA podem ir para FLORA (erro se já tem floraStartDate)
+- [x] Validar que apenas ciclos FLORA podem ir para DRYING (erro se não tem floraStartDate)
+- [x] Atualizar categoria da estufa de destino automaticamente
+- [x] Mover plantas apenas se targetTentId fornecido
+
+### Frontend
+- [x] Criar modal StartFloraModal com data e dropdown de estufa opcional
+- [x] Criar modal StartDryingModal com data, notas de colheita e dropdown de estufa opcional
+- [x] Adicionar botão "Iniciar Floração" em cards VEGA do CyclesDashboard
+- [x] Adicionar botão "Iniciar Secagem" em cards FLORA do CyclesDashboard
+- [x] Botões com ícone ArrowRight e layout full-width
+- [x] Invalidar queries após transições (cycles, tents, plants)

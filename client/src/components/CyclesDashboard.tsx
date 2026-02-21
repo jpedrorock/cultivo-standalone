@@ -1,10 +1,17 @@
+import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Calendar, Leaf, Sprout } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Calendar, Leaf, Sprout, ArrowRight } from "lucide-react";
+import { StartFloraModal } from "@/components/StartFloraModal";
+import { StartDryingModal } from "@/components/StartDryingModal";
 
 export function CyclesDashboard() {
   const { data: cycles, isLoading } = trpc.cycles.getActiveCyclesWithProgress.useQuery();
+  const [floraModalOpen, setFloraModalOpen] = useState(false);
+  const [dryingModalOpen, setDryingModalOpen] = useState(false);
+  const [selectedCycle, setSelectedCycle] = useState<{ id: number; name: string } | null>(null);
 
   if (isLoading) {
     return (
@@ -95,10 +102,65 @@ export function CyclesDashboard() {
                   )}
                 </span>
               </div>
+
+              {/* Transition Button */}
+              <div className="mt-4 pt-4 border-t border-border">
+                {isVega ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
+                    onClick={() => {
+                      setSelectedCycle({ id: cycle.id, name: cycle.tentName });
+                      setFloraModalOpen(true);
+                    }}
+                  >
+                    <ArrowRight className="w-4 h-4 mr-2" />
+                    Iniciar Floração
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
+                    onClick={() => {
+                      setSelectedCycle({ id: cycle.id, name: cycle.tentName });
+                      setDryingModalOpen(true);
+                    }}
+                  >
+                    <ArrowRight className="w-4 h-4 mr-2" />
+                    Iniciar Secagem
+                  </Button>
+                )}
+              </div>
             </Card>
           );
         })}
       </div>
+
+      {/* Modals */}
+      {selectedCycle && (
+        <>
+          <StartFloraModal
+            open={floraModalOpen}
+            onClose={() => {
+              setFloraModalOpen(false);
+              setSelectedCycle(null);
+            }}
+            cycleId={selectedCycle.id}
+            cycleName={selectedCycle.name}
+          />
+          <StartDryingModal
+            open={dryingModalOpen}
+            onClose={() => {
+              setDryingModalOpen(false);
+              setSelectedCycle(null);
+            }}
+            cycleId={selectedCycle.id}
+            cycleName={selectedCycle.name}
+          />
+        </>
+      )}
     </div>
   );
 }

@@ -131,7 +131,7 @@ export default function Home() {
   };
 
   const utils = trpc.useUtils();
-  const startFlora = trpc.cycles.startFlora.useMutation({
+  const startFlora = trpc.cycles.transitionToFlora.useMutation({
     onSuccess: () => {
       utils.cycles.listActive.invalidate();
       utils.tents.list.invalidate();

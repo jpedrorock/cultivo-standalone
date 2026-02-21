@@ -544,11 +544,12 @@ export const appRouter = router({
         await database.insert(cycles).values(input);
         return { success: true };
       }),
-    startFlora: publicProcedure
+    transitionToFlora: publicProcedure
       .input(
         z.object({
           cycleId: z.number(),
           floraStartDate: z.date(),
+          targetTentId: z.number().optional(),
         })
       )
       .mutation(async ({ input }) => {
@@ -556,10 +557,48 @@ export const appRouter = router({
         if (!database) {
           throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
         }
+        
+        // Buscar ciclo atual
+        const [cycle] = await database
+          .select()
+          .from(cycles)
+          .where(eq(cycles.id, input.cycleId));
+        
+        if (!cycle) {
+          throw new Error("Ciclo não encontrado");
+        }
+        
+        if (cycle.floraStartDate) {
+          throw new Error("Ciclo já está em floração");
+        }
+        
+        // Atualizar ciclo com floraStartDate
         await database
           .update(cycles)
           .set({ floraStartDate: input.floraStartDate })
           .where(eq(cycles.id, input.cycleId));
+        
+        // Se targetTentId fornecido, mover plantas e atualizar estufa do ciclo
+        if (input.targetTentId) {
+          // Mover todas as plantas do ciclo para nova estufa
+          await database
+            .update(plants)
+            .set({ currentTentId: input.targetTentId })
+            .where(eq(plants.currentTentId, cycle.tentId));
+          
+          // Atualizar estufa do ciclo
+          await database
+            .update(cycles)
+            .set({ tentId: input.targetTentId })
+            .where(eq(cycles.id, input.cycleId));
+          
+          // Atualizar categoria da estufa de destino para FLORA
+          await database
+            .update(tents)
+            .set({ category: "FLORA" })
+            .where(eq(tents.id, input.targetTentId));
+        }
+        
         return { success: true };
       }),
     finalize: publicProcedure
@@ -574,6 +613,82 @@ export const appRouter = router({
           .set({ status: "FINISHED" })
           .where(eq(cycles.id, input.cycleId));
         return { success: true };
+      }),
+    transitionToDrying: publicProcedure
+      .input(
+        z.object({
+          cycleId: z.number(),
+          dryingStartDate: z.date(),
+          targetTentId: z.number().optional(),
+          harvestNotes: z.string().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) {
+          throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
+        }
+        
+        // Buscar ciclo atual
+        const [cycle] = await database
+          .select()
+          .from(cycles)
+          .where(eq(cycles.id, input.cycleId));
+        
+        if (!cycle) {
+          throw new Error("Ciclo não encontrado");
+        }
+        
+        if (!cycle.floraStartDate) {
+          throw new Error("Ciclo não está em floração");
+        }
+        
+        // Finalizar ciclo atual
+        await database
+          .update(cycles)
+          .set({ status: "FINISHED" })
+          .where(eq(cycles.id, input.cycleId));
+        
+        // Buscar plantas do ciclo
+        const cyclePlants = await database
+          .select()
+          .from(plants)
+          .where(eq(plants.currentTentId, cycle.tentId));
+        
+        // Marcar plantas como HARVESTED e adicionar notas
+        await database
+          .update(plants)
+          .set({ 
+            status: "HARVESTED",
+            finishedAt: input.dryingStartDate,
+            finishReason: input.harvestNotes || "Colhida e iniciada secagem"
+          })
+          .where(eq(plants.currentTentId, cycle.tentId));
+        
+        // Se targetTentId fornecido, criar ciclo de secagem e mover plantas
+        if (input.targetTentId) {
+          // Criar novo ciclo de secagem
+          await database.insert(cycles).values({
+            tentId: input.targetTentId,
+            strainId: cycle.strainId,
+            startDate: input.dryingStartDate,
+            status: "ACTIVE",
+          });
+          
+          // Mover plantas para estufa de secagem
+          await database
+            .update(plants)
+            .set({ currentTentId: input.targetTentId })
+            .where(eq(plants.currentTentId, cycle.tentId));
+          
+          // Atualizar categoria da estufa de destino para DRYING
+          await database
+            .update(tents)
+            .set({ category: "DRYING" })
+            .where(eq(tents.id, input.targetTentId));
+        }
+        
+        return { success: true, plantsHarvested: cyclePlants.length };
       }),
     initiate: publicProcedure
       .input(
