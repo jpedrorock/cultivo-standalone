@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const connection = await mysql.createConnection(process.env.DATABASE_URL);
+const now = new Date();
 
 console.log('🗑️  Limpando banco de dados...');
 
@@ -133,10 +134,44 @@ for (const plant of plants) {
 }
 
 console.log('');
+console.log('🔄 Criando ciclos ativos...');
+
+// Criar ciclo para Estufa Vegetativa (iniciado 3 semanas atrás)
+const vegaTent = tentIds.find(t => t.category === 'VEGA');
+const vegaStrain = strainIds.find(s => s.name === '24K Gold');
+const vegaStartDate = new Date(now);
+vegaStartDate.setDate(vegaStartDate.getDate() - 21); // 3 semanas atrás
+vegaStartDate.setHours(0, 0, 0, 0);
+
+const [vegaCycleResult] = await connection.query(
+  `INSERT INTO cycles (tentId, strainId, startDate, status)
+   VALUES (?, ?, ?, 'ACTIVE')`,
+  [vegaTent.id, vegaStrain.id, vegaStartDate]
+);
+console.log(`  ✓ Ciclo VEGA criado (Estufa Vegetativa, 24K Gold, semana 3)`);
+
+// Criar ciclo para Estufa Floração (iniciado 5 semanas atrás em vega, floração há 5 semanas)
+const floraTent = tentIds.find(t => t.category === 'FLORA');
+const floraStrain = strainIds.find(s => s.name === 'OG Kush');
+const floraStartDate = new Date(now);
+floraStartDate.setDate(floraStartDate.getDate() - 70); // 10 semanas atrás (4 vega + 5 flora + 1 transição)
+floraStartDate.setHours(0, 0, 0, 0);
+
+const floraStartDateFlora = new Date(now);
+floraStartDateFlora.setDate(floraStartDateFlora.getDate() - 35); // 5 semanas atrás
+floraStartDateFlora.setHours(0, 0, 0, 0);
+
+const [floraCycleResult] = await connection.query(
+  `INSERT INTO cycles (tentId, strainId, startDate, floraStartDate, status)
+   VALUES (?, ?, ?, ?, 'ACTIVE')`,
+  [floraTent.id, floraStrain.id, floraStartDate, floraStartDateFlora]
+);
+console.log(`  ✓ Ciclo FLORA criado (Estufa Floração, OG Kush, semana 5 de floração)`);
+
+console.log('');
 console.log('📊 Gerando histórico de 7 dias (manhã e noite)...');
 
 // Gerar 7 dias de histórico para cada estufa (AM e PM)
-const now = new Date();
 let logCount = 0;
 
 for (let day = 6; day >= 0; day--) {
@@ -193,6 +228,7 @@ console.log('');
 console.log('📈 Resumo:');
 console.log(`  • ${strains.length} strains criadas`);
 console.log(`  • ${tents.length} estufas configuradas`);
+console.log(`  • 2 ciclos ativos (VEGA semana 3, FLORA semana 5)`);
 console.log(`  • ${plants.length} plantas ativas`);
 console.log(`  • ${logCount} registros de histórico (7 dias × 2 turnos × 3 estufas)`);
 console.log('');

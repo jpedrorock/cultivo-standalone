@@ -1326,3 +1326,12 @@
 - [x] Registros AM (8h) e PM (20h) com variações realistas
 - [x] Parâmetros por categoria: MAINTENANCE (24°C, 60% RH, 300 PPFD), VEGA (25°C, 65% RH, 500 PPFD), FLORA (23°C, 48% RH, 750 PPFD)
 - [x] Executar seed e verificar dados no app
+
+
+## Criar Ciclos Ativos (21/02/2026) ✅
+- [x] Atualizar seed-db.mjs para criar ciclos
+- [x] Criar ciclo VEGA para Estufa Vegetativa (iniciado 3 semanas atrás)
+- [x] Criar ciclo FLORA para Estufa Floração (iniciado 10 semanas atrás, floração há 5 semanas)
+- [x] Vincular strainId aos ciclos (24K Gold para VEGA, OG Kush para FLORA)
+- [x] Definir startDate e floraStartDate corretamente
+- [x] Executar seed e verificar ciclos no banco (2 ciclos ACTIVE criados)
