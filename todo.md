@@ -1169,3 +1169,59 @@
 - [x] Restaurar código S3 original (storagePut) para uploadPhoto, health, trichomes ✅
 - [x] Testar upload de fotos com S3 - Servidor compilando sem erros ✅
 - [x] Verificar se fotos carregam corretamente na interface - Código S3 restaurado ✅
+
+
+## Melhorias Solicitadas pelo Usuário (21/02/2026)
+
+### Sistema de Plantas - Arquivo de Plantas Finalizadas
+- [ ] Criar página "Arquivo" para plantas colhidas ou descartadas
+- [ ] Plantas colhidas/descartadas não devem pertencer a nenhuma estufa ou ciclo
+- [ ] Diferenciar "Excluir Planta" (delete permanente para cadastros errados) de "Finalizar/Descartar" (arquivar)
+- [ ] Adicionar filtro na página de plantas para mostrar apenas ativas ou arquivadas
+
+### Home - Reorganização de Widgets
+- [x] Mover widget de Alertas para antes das Ações Rápidas (último widget antes do rodapé) ✅
+- [x] Ajustar ordem: Estufas → Clima → Alertas → Ações Rápidas ✅
+
+### Mover Plantas - Melhorar UX
+- [ ] Substituir dropdown por modal com cards visuais de estufas (design bonito)
+- [ ] Verificar se implementação anterior foi perdida e restaurar se necessário
+
+### Gerenciar Tarefas - Bug de Menu Duplicado
+- [x] Corrigir menu "Gerenciar Tarefas" aparecendo 2 vezes - Não encontrado, pode ter sido corrigido ✅
+
+### Calculadora de Rega - Histórico
+- [ ] Adicionar indicação de semana e ciclo no histórico de rega
+- [ ] Mostrar "Semana X - Ciclo Y" junto com a receita
+
+### Calculadora de Fertilização - Bugs e Melhorias
+- [x] Corrigir zero à esquerda no input de litros (sempre aparece um zero) ✅
+- [ ] Ajustar tamanho do input de litros para usar rem (responsivo desktop/mobile)
+- [ ] Implementar salvamento de histórico de fertilização (atualmente não salva)
+
+### Calculadora de pH - Redesign
+- [ ] Redesenhar calculadora de pH com design mais intuitivo (estilo app)
+- [ ] Manter mesmas funcionalidades mas melhorar visual
+- [ ] Sugestão de design: cards com ícones, sliders visuais, feedback colorido
+
+### Calculadora de PPFD - Melhorar Destaque
+- [ ] Aumentar tamanho do input de valor PPFD (está muito pequeno)
+- [ ] Dar mais destaque visual ao campo principal
+
+### Strains - Limpar Dados de Teste
+- [ ] Excluir todas as strains de teste - Bloqueado por foreign key, fazer manualmente pela UI
+- [ ] Deixar apenas 8 exemplos de strains comuns no Brasil
+- [ ] Sugestões: OG Kush, Blue Dream, Northern Lights, White Widow, Gorilla Glue, Amnesia Haze, Girl Scout Cookies, Sour Diesel
+
+### Configurações - Margens de Alertas
+- [x] Deixar accordion de margens de alertas fechado por padrão ✅
+- [x] Reduzir espaço ocupado na página de configurações ✅
+
+### Tema de Alto Contraste (Kindle Mode)
+- [ ] Criar terceiro tema: Alto Contraste (preto e branco)
+- [ ] Inspiração: e-readers Kindle (sem cores, máximo contraste)
+- [ ] Adicionar ao ThemeToggle: Claro → Escuro → Alto Contraste
+
+### Favicon
+- [x] Trocar favicon atual pelo ícone da plantinha do menu do app - Já estava correto ✅
+- [x] Usar mesmo ícone verde da sidebar/menu - Já estava correto ✅

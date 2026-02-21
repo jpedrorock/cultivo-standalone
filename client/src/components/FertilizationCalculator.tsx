@@ -256,9 +256,11 @@ export function FertilizationCalculator() {
             <Input
               id="volume"
               type="number"
-              value={volume}
-              onChange={(e) => setVolume(parseFloat(e.target.value) || 0)}
+              value={volume || ''}
+              onChange={(e) => setVolume(e.target.value === '' ? 0 : parseFloat(e.target.value))}
               placeholder="Ex: 10"
+              min="0"
+              step="0.1"
             />
           </div>
 

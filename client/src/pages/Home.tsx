@@ -335,14 +335,14 @@ export default function Home() {
           })}
         </div>
 
-        {/* Alerts Widget */}
-        <div className="mt-8">
-          <AlertsWidget />
-        </div>
-
         {/* Weather Widget */}
         <div className="mt-8">
           <WeatherWidget />
+        </div>
+
+        {/* Alerts Widget */}
+        <div className="mt-8">
+          <AlertsWidget />
         </div>
 
         {/* Quick Actions */}

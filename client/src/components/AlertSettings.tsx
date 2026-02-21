@@ -132,7 +132,7 @@ export function AlertSettings() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Accordion type="multiple" className="w-full" defaultValue={["MAINTENANCE", "VEGA", "FLORA", "DRYING"]}>
+        <Accordion type="multiple" className="w-full">
           {(Object.keys(PHASE_INFO) as Phase[]).map((phase) => {
             const info = PHASE_INFO[phase];
             const margins = editedMargins[phase] || {};
