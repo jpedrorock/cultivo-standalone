@@ -1,18 +1,23 @@
 import { Home, Calculator, BarChart3, Bell, Sprout, Leaf, Settings, Droplets, CheckSquare, Beaker } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function Sidebar() {
   const [location] = useLocation();
 
   const navItems = [
-    { href: "/", icon: Home, label: "Home" },
-    { href: "/plants", icon: Sprout, label: "Plantas" },
-    { href: "/tarefas", icon: CheckSquare, label: "Tarefas" },
-    { href: "/calculators", icon: Calculator, label: "Calculadoras" },
-    { href: "/history", icon: BarChart3, label: "Histórico" },
-    { href: "/alerts", icon: Bell, label: "Alertas" },
-    { href: "/manage-strains", icon: Leaf, label: "Strains" },
+    { href: "/", icon: Home, label: "Home", enabled: true },
+    { href: "/plants", icon: Sprout, label: "Plantas", enabled: true },
+    { href: "/tarefas", icon: CheckSquare, label: "Tarefas", enabled: true },
+    { href: "/calculators", icon: Calculator, label: "Calculadoras", enabled: true },
+    { href: "/history", icon: BarChart3, label: "Histórico", enabled: true },
+    { href: "/alerts", icon: Bell, label: "Alertas", enabled: true },
+    { href: "/manage-strains", icon: Leaf, label: "Strains", enabled: true },
   ];
 
   return (
@@ -36,6 +41,29 @@ export function Sidebar() {
           const Icon = item.icon;
           const isActive = location === item.href;
           
+          // If link is disabled, wrap in tooltip
+          if (!item.enabled) {
+            return (
+              <Tooltip key={item.href}>
+                <TooltipTrigger asChild>
+                  <div
+                    className={cn(
+                      "flex items-center gap-3 px-4 py-3 rounded-lg transition-all",
+                      "opacity-50 cursor-not-allowed text-sidebar-foreground"
+                    )}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span>{item.label}</span>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>Em breve</p>
+                </TooltipContent>
+              </Tooltip>
+            );
+          }
+          
+          // Enabled link
           return (
             <Link
               key={item.href}

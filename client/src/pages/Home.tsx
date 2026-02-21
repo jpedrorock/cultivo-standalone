@@ -24,7 +24,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell, Trash2, EyeOff, Eye, Wrench, Scissors, Flower2 } from "lucide-react";
+import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell, Trash2, EyeOff, Eye, Wrench, Scissors, Flower2, Check, AlertTriangle, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
@@ -659,6 +659,33 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
     return "text-red-600 font-bold";
   };
 
+  // Função para determinar ícone de status
+  const getStatusIcon = (value: number | null | undefined, min: string | number | null | undefined, max: string | number | null | undefined) => {
+    if (!value || !min || !max) return null;
+    
+    const minNum = typeof min === 'string' ? parseFloat(min) : min;
+    const maxNum = typeof max === 'string' ? parseFloat(max) : max;
+    
+    if (isNaN(minNum) || isNaN(maxNum)) return null;
+    
+    // Verde: dentro da faixa ideal
+    if (value >= minNum && value <= maxNum) {
+      return <Check className="w-3 h-3 text-green-600" />;
+    }
+    
+    // Amarelo: próximo (±10% de tolerância)
+    const tolerance = 0.1;
+    const lowerBound = minNum * (1 - tolerance);
+    const upperBound = maxNum * (1 + tolerance);
+    
+    if (value >= lowerBound && value <= upperBound) {
+      return <AlertTriangle className="w-3 h-3 text-yellow-600" />;
+    }
+    
+    // Vermelho: fora da faixa
+    return <X className="w-3 h-3 text-red-600" />;
+  };
+
   const utils = trpc.useUtils();
   const toggleTask = trpc.tasks.toggleTask.useMutation({
     onSuccess: () => {
@@ -734,8 +761,8 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
         </div>
       </CardHeader>
 
-      <CardContent>
-        <div className="space-y-4">
+      <CardContent className="p-6">
+        <div className="space-y-5">
           {/* Cycle Info */}
           {cycle ? (
             <div 
@@ -872,67 +899,75 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
               </p>
             </div>
           )}
-          <div className="grid grid-cols-3 gap-2 pt-4 border-t">
+          <div className="grid grid-cols-3 gap-3 pt-5 border-t">
             <div className="text-center">
               <ThermometerSun className="w-5 h-5 mx-auto text-orange-500 mb-1" />
               <p className="text-xs text-muted-foreground">Temp</p>
-              <p className={`text-sm font-semibold ${
-                latestLog?.tempC 
-                  ? getValueColor(parseFloat(latestLog.tempC), targets?.tempMin, targets?.tempMax)
-                  : "text-foreground"
-              }`}>
-                {latestLog?.tempC ? `${latestLog.tempC}°C` : "--°C"}
-              </p>
+              <div className="flex items-center justify-center gap-1">
+                <p className={`text-sm font-semibold ${
+                  latestLog?.tempC 
+                    ? getValueColor(parseFloat(latestLog.tempC), targets?.tempMin, targets?.tempMax)
+                    : "text-foreground"
+                }`}>
+                  {latestLog?.tempC ? `${latestLog.tempC}°C` : "--°C"}
+                </p>
+                {latestLog?.tempC && getStatusIcon(parseFloat(latestLog.tempC), targets?.tempMin, targets?.tempMax)}
+              </div>
             </div>
             <div className="text-center">
               <Droplets className="w-5 h-5 mx-auto text-blue-500 mb-1" />
               <p className="text-xs text-muted-foreground">RH</p>
-              <p className={`text-sm font-semibold ${
-                latestLog?.rhPct 
-                  ? getValueColor(parseFloat(latestLog.rhPct), targets?.rhMin, targets?.rhMax)
-                  : "text-foreground"
-              }`}>
-                {latestLog?.rhPct ? `${latestLog.rhPct}%` : "--%"}
-              </p>
+              <div className="flex items-center justify-center gap-1">
+                <p className={`text-sm font-semibold ${
+                  latestLog?.rhPct 
+                    ? getValueColor(parseFloat(latestLog.rhPct), targets?.rhMin, targets?.rhMax)
+                    : "text-foreground"
+                }`}>
+                  {latestLog?.rhPct ? `${latestLog.rhPct}%` : "--%"}
+                </p>
+                {latestLog?.rhPct && getStatusIcon(parseFloat(latestLog.rhPct), targets?.rhMin, targets?.rhMax)}
+              </div>
             </div>
             <div className="text-center">
               <Sun className="w-5 h-5 mx-auto text-yellow-500 mb-1" />
               <p className="text-xs text-muted-foreground">PPFD</p>
-              <p className={`text-sm font-semibold ${
-                latestLog?.ppfd 
-                  ? getValueColor(latestLog.ppfd, targets?.ppfdMin, targets?.ppfdMax)
-                  : "text-foreground"
-              }`}>
-                {latestLog?.ppfd || "--"}
-              </p>
+              <div className="flex items-center justify-center gap-1">
+                <p className={`text-sm font-semibold ${
+                  latestLog?.ppfd 
+                    ? getValueColor(latestLog.ppfd, targets?.ppfdMin, targets?.ppfdMax)
+                    : "text-foreground"
+                }`}>
+                  {latestLog?.ppfd || "--"}
+                </p>
+                {latestLog?.ppfd && getStatusIcon(latestLog.ppfd, targets?.ppfdMin, targets?.ppfdMax)}
+              </div>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex flex-col gap-2 pt-4">
+          <div className="flex flex-col gap-2 pt-5">
             <div key={`actions-primary-${tent.id}`} className="flex gap-2">
-              <Link 
-                href={`/tent/${tent.id}`}
-                className="flex-1 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-              >
-                Ver Detalhes
-              </Link>
               {!cycle ? (
                 <Button
                   onClick={() => onInitiateCycle(tent.id, tent.name)}
-                  variant="outline"
-                  className="flex-1 border-green-500 text-green-600 hover:bg-primary/10"
+                  className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   Novo Ciclo
                 </Button>
               ) : (
                 <Link 
                   href={`/tent/${tent.id}/log`}
-                  className="flex-1 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                  className="flex-1 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
                 >
                   Registrar
                 </Link>
               )}
+              <Link 
+                href={`/tent/${tent.id}`}
+                className="flex-1 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+              >
+                Ver Detalhes
+              </Link>
             </div>
             {cycle && (
               <>
@@ -948,9 +983,9 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                 </div>
                 <Button
                   onClick={() => onFinalizeCycle(cycle.id, tent.name)}
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
-                  className="w-full border-red-500 text-red-600 hover:bg-red-50"
+                  className="w-full text-red-600 hover:bg-red-50 hover:text-red-700"
                 >
                   Finalizar Ciclo
                 </Button>

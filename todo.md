@@ -1487,3 +1487,25 @@
   - [x] Select aparece/desaparece conforme checkbox
   - [x] Estufa atual é excluída das opções de transferência
   - [x] Texto explicativo dinâmico
+
+## Melhorias UX/UI - Prioridade ALTA (21/02/2026)
+
+- [x] Desabilitar links de navegação para páginas não implementadas
+  - [x] Adicionar estado disabled visualmente (opacity-50, cursor-not-allowed)
+  - [x] Adicionar tooltip "Em breve" ou "Em desenvolvimento"
+  - [x] Manter apenas "Home" ativo na sidebar
+
+- [x] Adicionar indicadores de status nas métricas ambientais (Temp/RH/PPFD)
+  - [x] Criar função para verificar se valor está dentro da faixa ideal
+  - [x] Adicionar ícones: ✓ (verde), ⚠ (amarelo), ✗ (vermelho)
+  - [x] Mostrar faixa ideal ao hover
+
+- [x] Melhorar hierarquia visual dos botões nos cards de estufa
+  - [x] Botão primário: "Registrar" (solid green)
+  - [x] Botões secundários: "Ver Detalhes", "Editar Ciclo" (outline)
+  - [x] Botão destrutivo: "Finalizar Ciclo" (outline red ou ghost red)
+
+- [x] Reduzir densidade dos cards de estufa
+  - [x] Aumentar padding interno (p-5 ou p-6)
+  - [x] Aumentar espaçamento entre seções
+  - [x] Melhorar organização visual dos elementos
