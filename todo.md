@@ -1120,3 +1120,19 @@
 - [x] Mostrar seletor de estufa de destino no modal - Select com lista de estufas ✅
 - [x] Atualizar todas as plantas e histórico de movimentação - Loop com insert em plantTentHistory ✅
 - [x] Testar fluxo completo: mover plantas → excluir estufa - Teste unitário passando ✅
+
+## Feature: Movimentação em Lote de Plantas (20/02/2026)
+- [x] Adicionar checkboxes na lista de plantas para seleção múltipla ✅
+- [x] Adicionar botão "Mover Selecionadas" que aparece quando há plantas selecionadas - Botão flutuante ✅
+- [x] Criar modal/dialog para selecionar estufa de destino - Dialog com Select ✅
+- [x] Criar procedure backend para plantas específicas - plants.moveSelectedPlants ✅
+- [x] Adicionar feedback visual: contador de plantas selecionadas, toast de sucesso ✅
+- [x] Adicionar botão "Selecionar Todas" / "Desmarcar Todas" - No header de cada estufa ✅
+- [x] Testar fluxo completo: selecionar → mover → verificar histórico - Teste unitário passando ✅
+
+## Bug: Erro ao Excluir Estufa com Ciclo Ativo (20/02/2026)
+- [x] Adicionar validação de ciclos ativos antes de excluir estufa - Já implementado ✅
+- [x] Mensagem de erro clara: "Não é possível excluir uma estufa com ciclo ativo" - Já existe ✅
+- [x] Sugerir finalizar ciclo antes de excluir - Mensagem já sugere "Finalize o ciclo primeiro" ✅
+
+**Nota:** Não é um bug - comportamento correto. Usuário deve finalizar ciclo ativo antes de excluir estufa.

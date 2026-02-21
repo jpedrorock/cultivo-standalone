@@ -2064,6 +2064,49 @@ export const appRouter = router({
         return { success: true, movedCount: plantsToMove.length };
       }),
 
+    // Mover plantas específicas (seleção manual)
+    moveSelectedPlants: publicProcedure
+      .input(z.object({
+        plantIds: z.array(z.number()),
+        toTentId: z.number(),
+        reason: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        if (input.plantIds.length === 0) {
+          return { success: true, movedCount: 0 };
+        }
+        
+        // Mover cada planta e registrar histórico
+        for (const plantId of input.plantIds) {
+          // Buscar planta atual para pegar fromTentId
+          const [plant] = await database
+            .select()
+            .from(plants)
+            .where(eq(plants.id, plantId));
+          
+          if (!plant) continue; // Skip if plant not found
+          
+          // Registrar histórico
+          await database.insert(plantTentHistory).values({
+            plantId: plantId,
+            fromTentId: plant.currentTentId,
+            toTentId: input.toTentId,
+            reason: input.reason || "Movimentação em lote (seleção manual)",
+          });
+          
+          // Atualizar estufa atual
+          await database
+            .update(plants)
+            .set({ currentTentId: input.toTentId })
+            .where(eq(plants.id, plantId));
+        }
+        
+        return { success: true, movedCount: input.plantIds.length };
+      }),
+
     // Transplantar para Flora (encontra automaticamente estufa de Flora)
     transplantToFlora: publicProcedure
       .input(z.object({

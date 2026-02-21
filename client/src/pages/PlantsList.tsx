@@ -5,6 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -35,6 +37,9 @@ export default function PlantsList() {
     fromTentId?: number;
   }>({ open: false });
   const [targetTentId, setTargetTentId] = useState<number | undefined>();
+  const [selectedPlants, setSelectedPlants] = useState<Set<number>>(new Set());
+  const [batchMoveDialog, setBatchMoveDialog] = useState(false);
+  const [batchTargetTentId, setBatchTargetTentId] = useState<number | undefined>();
 
   const { data: plants, isLoading } = trpc.plants.list.useQuery({
     status: filterStatus,
@@ -44,6 +49,19 @@ export default function PlantsList() {
   const { data: strains } = trpc.strains.list.useQuery();
 
   const utils = trpc.useUtils();
+  const moveMultiplePlants = trpc.plants.moveSelectedPlants.useMutation({
+    onSuccess: (data) => {
+      utils.plants.list.invalidate();
+      toast.success(`✅ ${data.movedCount} planta(s) movida(s) com sucesso!`);
+      setBatchMoveDialog(false);
+      setSelectedPlants(new Set());
+      setBatchTargetTentId(undefined);
+    },
+    onError: (error) => {
+      toast.error(`Erro ao mover plantas: ${error.message}`);
+    },
+  });
+
   const movePlant = trpc.plants.moveTent.useMutation({
     onSuccess: () => {
       utils.plants.list.invalidate();
@@ -106,6 +124,49 @@ export default function PlantsList() {
       default:
         return status;
     }
+  };
+
+  const togglePlantSelection = (plantId: number) => {
+    setSelectedPlants(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(plantId)) {
+        newSet.delete(plantId);
+      } else {
+        newSet.add(plantId);
+      }
+      return newSet;
+    });
+  };
+
+  const selectAllInTent = (tentId: number) => {
+    const tentPlants = plantsByTent?.[tentId] || [];
+    setSelectedPlants(prev => {
+      const newSet = new Set(prev);
+      tentPlants.forEach((plant: any) => newSet.add(plant.id));
+      return newSet;
+    });
+  };
+
+  const deselectAllInTent = (tentId: number) => {
+    const tentPlants = plantsByTent?.[tentId] || [];
+    setSelectedPlants(prev => {
+      const newSet = new Set(prev);
+      tentPlants.forEach((plant: any) => newSet.delete(plant.id));
+      return newSet;
+    });
+  };
+
+  const handleBatchMove = () => {
+    if (!batchTargetTentId || selectedPlants.size === 0) {
+      toast.error("Selecione uma estufa de destino");
+      return;
+    }
+    
+    moveMultiplePlants.mutate({
+      plantIds: Array.from(selectedPlants),
+      toTentId: batchTargetTentId,
+      reason: "Movimentação em lote",
+    });
   };
 
   const toggleTent = (tentId: number) => {
@@ -216,12 +277,12 @@ export default function PlantsList() {
 
               return (
                 <Card key={tent.id} className="overflow-hidden">
-                  <CardHeader
-                    className="cursor-pointer hover:bg-muted/50 transition-colors"
-                    onClick={() => toggleTent(tent.id)}
-                  >
+                  <CardHeader className="hover:bg-muted/50 transition-colors">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
+                      <div 
+                        className="flex items-center gap-3 flex-1 cursor-pointer"
+                        onClick={() => toggleTent(tent.id)}
+                      >
                         {isExpanded ? (
                           <ChevronDown className="w-5 h-5 text-muted-foreground" />
                         ) : (
@@ -231,9 +292,35 @@ export default function PlantsList() {
                           <CardTitle className="text-xl">{tent.name}</CardTitle>
                           <CardDescription>
                             {tentPlants.length} {tentPlants.length === 1 ? "planta" : "plantas"}
+                            {tentPlants.filter((p: any) => selectedPlants.has(p.id)).length > 0 && (
+                              <span className="ml-2 text-primary font-medium">
+                                ({tentPlants.filter((p: any) => selectedPlants.has(p.id)).length} selecionada{tentPlants.filter((p: any) => selectedPlants.has(p.id)).length > 1 ? 's' : ''})
+                              </span>
+                            )}
                           </CardDescription>
                         </div>
                       </div>
+                      {isExpanded && tentPlants.length > 0 && (
+                        <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+                          {tentPlants.every((p: any) => selectedPlants.has(p.id)) ? (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => deselectAllInTent(tent.id)}
+                            >
+                              Desmarcar Todas
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => selectAllInTent(tent.id)}
+                            >
+                              Selecionar Todas
+                            </Button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </CardHeader>
 
@@ -241,9 +328,18 @@ export default function PlantsList() {
                     <CardContent className="pt-0">
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {tentPlants.map((plant: any) => (
-                          <Card key={plant.id} className="border-2 hover:border-primary/50 transition-all">
+                          <Card key={plant.id} className={`border-2 transition-all ${
+                            selectedPlants.has(plant.id) 
+                              ? "border-primary bg-primary/5" 
+                              : "hover:border-primary/50"
+                          }`}>
                             <CardHeader>
-                              <div className="flex items-start justify-between">
+                              <div className="flex items-start justify-between gap-2">
+                                <Checkbox
+                                  checked={selectedPlants.has(plant.id)}
+                                  onCheckedChange={() => togglePlantSelection(plant.id)}
+                                  className="mt-1"
+                                />
                                 <Link href={`/plants/${plant.id}`} className="flex-1">
                                   <CardTitle className="text-lg hover:text-primary transition-colors cursor-pointer">
                                     {plant.name}
@@ -403,6 +499,82 @@ export default function PlantsList() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Batch Move Dialog */}
+      <Dialog open={batchMoveDialog} onOpenChange={setBatchMoveDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Mover Plantas Selecionadas</DialogTitle>
+            <DialogDescription>
+              Mover {selectedPlants.size} planta{selectedPlants.size > 1 ? 's' : ''} para outra estufa
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="batchTargetTent">Estufa de Destino</Label>
+              <Select 
+                value={batchTargetTentId?.toString() || ""} 
+                onValueChange={(value) => setBatchTargetTentId(value ? Number(value) : undefined)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione uma estufa" />
+                </SelectTrigger>
+                <SelectContent>
+                  {tents?.map((tent) => (
+                    <SelectItem key={tent.id} value={tent.id.toString()}>
+                      {tent.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setBatchMoveDialog(false);
+                setBatchTargetTentId(undefined);
+              }}
+              disabled={moveMultiplePlants.isPending}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleBatchMove}
+              disabled={!batchTargetTentId || moveMultiplePlants.isPending}
+            >
+              {moveMultiplePlants.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Movendo...
+                </>
+              ) : (
+                <>
+                  <MoveRight className="w-4 h-4 mr-2" />
+                  Mover {selectedPlants.size} Planta{selectedPlants.size > 1 ? 's' : ''}
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Floating Action Button for Batch Move */}
+      {selectedPlants.size > 0 && (
+        <div className="fixed bottom-6 right-6 z-50">
+          <Button
+            size="lg"
+            onClick={() => setBatchMoveDialog(true)}
+            className="shadow-lg hover:shadow-xl transition-all"
+          >
+            <MoveRight className="w-5 h-5 mr-2" />
+            Mover {selectedPlants.size} Selecionada{selectedPlants.size > 1 ? 's' : ''}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
