@@ -28,6 +28,7 @@ import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCi
 import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
+import PullToRefresh from "react-simple-pull-to-refresh";
 
 
 export default function Home() {
@@ -132,6 +133,16 @@ export default function Home() {
   };
 
   const utils = trpc.useUtils();
+
+  // Pull-to-refresh handler
+  const handleRefresh = async () => {
+    await Promise.all([
+      utils.tents.list.invalidate(),
+      utils.cycles.listActive.invalidate(),
+      utils.cycles.getActiveCyclesWithProgress.invalidate(),
+    ]);
+  };
+
   const startFlora = trpc.cycles.transitionToFlora.useMutation({
     onSuccess: () => {
       utils.cycles.listActive.invalidate();
@@ -279,9 +290,10 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="min-h-screen bg-background">
+        {/* Header */}
+        <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
         <div className="container py-6">
           <div className="flex items-center justify-between">
             <div>
@@ -592,7 +604,8 @@ export default function Home() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+      </div>
+    </PullToRefresh>
   );
 }
 

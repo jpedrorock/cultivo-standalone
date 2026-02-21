@@ -1535,3 +1535,16 @@
   - [x] Salvar dados quando FLORA→DRYING for executado
 
 - [x] Testar fluxo completo de colheita
+
+## Pull-to-Refresh (Arrastar para Atualizar)
+
+- [x] Instalar biblioteca de pull-to-refresh (ex: react-simple-pull-to-refresh)
+- [x] Implementar pull-to-refresh na página Home
+  - [x] Envolver conteúdo principal com componente PullToRefresh
+  - [x] Configurar função de refresh que invalida queries tRPC
+  - [x] Adicionar feedback visual durante refresh (spinner, texto)
+  - [x] Garantir funcionamento em mobile e desktop
+- [x] Testar pull-to-refresh em diferentes dispositivos
+  - [x] Mobile (touch)
+  - [x] Desktop (scroll)
+  - [x] Verificar que dados são atualizados corretamente
