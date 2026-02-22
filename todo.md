@@ -1823,3 +1823,25 @@
 - Query de plantas carrega ao atingir step 9 (enabled: currentStep >= 9)
 - Salva via tRPC plantHealth.create com healthStatus enum (HEALTHY/STRESSED/SICK)
 - Após última planta ou skip all, retorna para Home com toast de sucesso
+
+
+## QuickLog - Expandir Formulário de Saúde das Plantas
+
+- [x] Adicionar upload de foto no formulário de saúde (mesmo componente da página de plantas)
+- [x] Adicionar seção de tricomas com status (clear/cloudy/amber/mixed) e percentuais
+- [x] Adicionar seção de LST com seletor visual de técnicas
+- [x] Manter layout compacto e mobile-friendly
+- [x] Todos os campos devem ser opcionais (exceto status de saúde)
+- [x] Testar upload de foto e salvamento de todos os dados
+- [x] Verificar que dados aparecem corretamente nas abas da página de detalhes da planta
+
+**Implementação Completa (22/02/2026):**
+- Accordion com 4 seções: Status de Saúde (aberto por padrão), Foto, Tricomas, LST
+- **Foto**: Upload via input file com accept="image/*" e capture="environment", preview da imagem base64, botão remover
+- **Tricomas**: 4 status (Clear, Cloudy, Amber, Mixed) com emojis, inputs de percentual aparecem apenas para Mixed
+- **LST**: Grid 2x4 com 8 técnicas (LST, Topping, FIM, Super Cropping, Lollipopping, Defoliação, Mainlining, ScrOG), seleção múltipla, textarea para resposta da planta
+- Salva foto via plantPhotos.upload (backend processa base64 e faz upload S3)
+- Salva tricomas via plantTrichomes.create com weekNumber=1 (default)
+- Salva LST via plantLST.create com técnicas concatenadas por vírgula
+- Design mantém consistência visual com gradientes, ícones grandes e animações do QuickLog
+- Layout responsivo mobile-first com accordion para economizar espaço
