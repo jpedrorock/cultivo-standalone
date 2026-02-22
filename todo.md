@@ -1548,3 +1548,25 @@
   - [x] Mobile (touch)
   - [x] Desktop (scroll)
   - [x] Verificar que dados são atualizados corretamente
+
+
+## Tema Visual Liquid Glass (Apple) - Apenas Estética
+
+- [x] Atualizar index.css com paleta de cores Liquid Glass
+  - [x] Forest Green (OKLCH format: 0.45/0.55 lightness, 0.12/0.14 chroma, 145 hue)
+  - [x] Neutrals light/dark mode (OKLCH with proper contrast)
+  - [x] Chart colors (5-shade green palette)
+- [x] Adicionar tipografia SF Pro
+  - [x] SF Pro Display (400, 500, 600, 700) via @font-face
+  - [x] Configurar font-family no body com fallbacks Apple
+  - [x] Font features: kerning, ligatures, antialiasing
+- [x] Aplicar glass effects via CSS
+  - [x] Toast notifications com backdrop-blur(30px) e 80% opacity
+  - [x] Hairline borders (0.5px, 15-20% opacity)
+  - [x] Soft shadows (multi-layer)
+  - [x] Success/error tints com glass effect
+- [x] Adicionar suporte a reduced motion
+  - [x] Desabilitar animações (0.01ms)
+  - [x] Reduzir blur (30px → 5px)
+- [x] Aumentar border radius para 1.5rem (24px) - Apple style
+- [x] Testar tema visual sem quebrar funcionalidades
