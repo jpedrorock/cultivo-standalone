@@ -349,9 +349,19 @@ export default function PlantsList() {
                                   className="mt-1"
                                 />
                                 <Link href={`/plants/${plant.id}`} className="flex-1">
-                                  <CardTitle className="text-lg hover:text-primary transition-colors cursor-pointer">
-                                    {plant.name}
-                                  </CardTitle>
+                                  <div className="flex items-center gap-2">
+                                    <CardTitle className="text-lg hover:text-primary transition-colors cursor-pointer">
+                                      {plant.name}
+                                    </CardTitle>
+                                    {/* Badge de Muda vs Planta */}
+                                    <span className={`px-2 py-0.5 rounded-md text-xs font-medium border ${
+                                      plant.plantStage === "SEEDLING" 
+                                        ? "bg-green-500/10 text-green-600 border-green-500/30" 
+                                        : "bg-emerald-500/10 text-emerald-600 border-emerald-500/30"
+                                    }`}>
+                                      {plant.plantStage === "SEEDLING" ? "🌱 Muda" : "🌿 Planta"}
+                                    </span>
+                                  </div>
                                   {plant.code && (
                                     <CardDescription className="text-sm font-mono">{plant.code}</CardDescription>
                                   )}

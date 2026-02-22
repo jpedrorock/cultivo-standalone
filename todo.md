@@ -1581,3 +1581,13 @@
 - [x] Verificar que abas aparecem corretamente após promoção
 
 **Resultado:** Funcionalidade 100% operacional. Mudas mostram apenas Saúde e Observações. Após promoção, abas Tricomas e LST aparecem automaticamente.
+
+
+## ✅ Badge Visual para Mudas vs Plantas
+
+- [x] Adicionar badge 🌱 para mudas (SEEDLING) na lista de plantas
+- [x] Adicionar badge 🌿 para plantas (PLANT) na lista de plantas
+- [x] Badge deve aparecer próximo ao nome da planta
+- [x] Testar visualização em diferentes estufas
+
+**Resultado:** Badges visuais implementados com sucesso. Mudas mostram "🌱 Muda" (verde claro) e plantas mostram "🌿 Planta" (verde escuro). Facilita identificação rápida na lista.
