@@ -2039,3 +2039,50 @@
   * DRYING → "Secagem"
 
 **Observação**: Os enums no banco de dados (schema.ts) permanecem em inglês (padrão de desenvolvimento). Apenas a exibição na UI foi traduzida para português.
+
+## Reorganizar Menu Mobile (BottomNav) - Priorizar Registro Rápido
+
+- [x] Analisar estrutura atual do BottomNav
+- [x] Redesenhar BottomNav com 4 itens principais:
+  * Home (ícone casa)
+  * Registro (ícone +, verde destaque)
+  * Calculadoras (ícone calculadora)
+  * Mais (ícone três pontos)
+- [x] Criar menu "Mais" com páginas secundárias:
+  * Plantas
+  * Tarefas
+  * Histórico
+  * Alertas
+  * Strains
+  * Configurações
+- [x] Aplicar cor verde ao botão Registro para destaque visual
+- [ ] Testar navegação no viewport mobile (requer dispositivo real)
+- [x] Verificar que menu "Mais" abre/fecha corretamente (Sheet já implementado)
+
+**Implementação Realizada (22/02/2026)**:
+
+**Menu Principal (BottomNav)**:
+1. 🏠 Home
+2. ➕ Registro (verde: text-green-600, hover:text-green-700, stroke-[2.5])
+3. 🧮 Calculadoras
+4. ⋯ Mais
+
+**Menu "Mais"** (Sheet deslizante de baixo):
+1. 🌿 Plantas
+2. ☑️ Tarefas
+3. 📊 Histórico
+4. 🔔 Alertas (com badge de contagem)
+5. 🌱 Strains
+6. ⚙️ Configurações
+
+**Destaque Visual do Botão Registro**:
+- Cor verde permanente: `text-green-600`
+- Hover: `hover:text-green-700` e `hover:bg-green-500/10`
+- Stroke mais grosso: `stroke-[2.5]` (sempre, mesmo quando não ativo)
+- Diferenciação visual clara dos outros botões (que usam text-muted-foreground)
+
+**Benefícios**:
+- Acesso direto ao QuickLog com 1 toque no menu inferior
+- Destaque visual do botão mais importante (verde)
+- Menu "Mais" organiza páginas secundárias sem poluir navegação principal
+- Fluxo de registro diário muito mais rápido e intuitivo

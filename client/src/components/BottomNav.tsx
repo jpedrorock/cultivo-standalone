@@ -1,4 +1,4 @@
-import { Home, Calculator, Bell, MoreHorizontal, BarChart3, Sprout, Settings, Leaf, CheckSquare } from "lucide-react";
+import { Home, Calculator, Bell, MoreHorizontal, BarChart3, Sprout, Settings, Leaf, CheckSquare, Plus } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -27,14 +27,15 @@ export function BottomNav() {
 
   const mainNavItems: NavItem[] = [
     { href: "/", icon: Home, label: "Home" },
-    { href: "/plants", icon: Leaf, label: "Plantas" },
+    { href: "/quicklog", icon: Plus, label: "Registro" },
     { href: "/calculators", icon: Calculator, label: "Calculadoras" },
   ];
 
   const moreMenuItems: NavItem[] = [
+    { href: "/plants", icon: Leaf, label: "Plantas" },
     { href: "/tarefas", icon: CheckSquare, label: "Tarefas" },
-    { href: "/alerts", icon: Bell, label: "Alertas", badge: alertCount || 0 },
     { href: "/history", icon: BarChart3, label: "Histórico" },
+    { href: "/alerts", icon: Bell, label: "Alertas", badge: alertCount || 0 },
     { href: "/manage-strains", icon: Sprout, label: "Strains" },
     { href: "/settings", icon: Settings, label: "Configurações" },
   ];
@@ -55,13 +56,23 @@ export function BottomNav() {
                 href={item.href}
                 className={cn(
                   "flex flex-col items-center justify-center gap-1 py-3 px-4 rounded-lg transition-colors relative",
-                  "hover:bg-primary/10",
+                  item.href === "/quicklog"
+                    ? "hover:bg-green-500/10"
+                    : "hover:bg-primary/10",
                   isActive
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-primary"
+                    ? item.href === "/quicklog"
+                      ? "text-green-600"
+                      : "text-primary"
+                    : item.href === "/quicklog"
+                      ? "text-green-600 hover:text-green-700"
+                      : "text-muted-foreground hover:text-primary"
                 )}
               >
-                <Icon className={cn("w-6 h-6", isActive && "stroke-[2.5]")} />
+                <Icon className={cn(
+                  "w-6 h-6",
+                  isActive && "stroke-[2.5]",
+                  item.href === "/quicklog" && "stroke-[2.5]"
+                )} />
                 <span className="text-xs font-medium">{item.label}</span>
                 {item.badge !== undefined && item.badge > 0 && (
                   <span className="absolute top-2 right-2 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center animate-pulse">
