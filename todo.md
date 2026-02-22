@@ -2103,3 +2103,31 @@
 - Border radius: `rounded-lg`
 
 **Resultado**: Botão Registro agora tem destaque visual muito maior com fundo verde e conteúdo branco, diferenciando-se completamente dos outros botões do menu.
+
+## Reordenar Menu Mobile - Sequência Mais Lógica
+
+- [x] Alterar ordem do mainNavItems no BottomNav
+- [x] Nova ordem: Home → Registro → Calculadoras → Mais
+- [x] Verificar que ordem está correta no código
+
+**Status**: Ordem já estava correta! A sequência atual é:
+1. 🏠 Home
+2. ➕ Registro (fundo verde)
+3. 🧮 Calculadoras
+4. ⋯ Mais
+
+Essa ordem é mais lógica e intuitiva - começa com Home, depois a ação principal (Registro), ferramentas úteis (Calculadoras) e por último o menu secundário (Mais).
+
+## Trocar Posição: Registro em Primeiro Lugar
+
+- [x] Trocar ordem de Home e Registro no mainNavItems
+- [x] Nova ordem: Registro → Home → Calculadoras → Mais
+- [x] Registro deve ser o primeiro item do menu mobile
+
+**Nova Ordem do Menu Mobile**:
+1. ➕ **Registro** (fundo verde, PRIMEIRO lugar - ação principal!)
+2. 🏠 Home
+3. 🧮 Calculadoras
+4. ⋯ Mais
+
+**Justificativa**: Registro é a funcionalidade mais importante do app (uso diário). Colocar em primeiro lugar facilita acesso imediato e reforça a prioridade da ação.

@@ -26,8 +26,8 @@ export function BottomNav() {
   const { data: alertCount } = trpc.alerts.getNewCount.useQuery({});
 
   const mainNavItems: NavItem[] = [
-    { href: "/", icon: Home, label: "Home" },
     { href: "/quicklog", icon: Plus, label: "Registro" },
+    { href: "/", icon: Home, label: "Home" },
     { href: "/calculators", icon: Calculator, label: "Calculadoras" },
   ];
 
