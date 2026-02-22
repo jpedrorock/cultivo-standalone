@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { eq, and, or, desc, sql, isNotNull } from "drizzle-orm";
+import { eq, and, or, desc, sql, isNotNull, inArray } from "drizzle-orm";
 import * as db from "./db";
 import { getDb } from "./db";
 import {
@@ -2650,6 +2650,108 @@ export const appRouter = router({
           .where(eq(plants.id, input.plantId));
         
         return { success: true };
+      }),
+
+    // Promover múltiplas mudas para plantas (ação em lote)
+    bulkPromote: publicProcedure
+      .input(z.object({
+        plantIds: z.array(z.number()),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Verificar se todas são mudas
+        const plantsToPromote = await database
+          .select()
+          .from(plants)
+          .where(inArray(plants.id, input.plantIds));
+        
+        const nonSeedlings = plantsToPromote.filter((p: any) => p.plantStage !== "SEEDLING");
+        if (nonSeedlings.length > 0) {
+          throw new Error(`${nonSeedlings.length} planta(s) não são mudas e não podem ser promovidas`);
+        }
+        
+        // Promover todas para PLANT
+        await database
+          .update(plants)
+          .set({ plantStage: "PLANT" })
+          .where(inArray(plants.id, input.plantIds));
+        
+        return { success: true, count: input.plantIds.length };
+      }),
+
+    // Mover múltiplas plantas para outra estufa (ação em lote)
+    bulkMove: publicProcedure
+      .input(z.object({
+        plantIds: z.array(z.number()),
+        targetTentId: z.number(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Verificar se estufa destino existe
+        const [targetTent] = await database
+          .select()
+          .from(tents)
+          .where(eq(tents.id, input.targetTentId));
+        
+        if (!targetTent) {
+          throw new Error("Estufa destino não encontrada");
+        }
+        
+        // Mover todas as plantas
+        await database
+          .update(plants)
+          .set({ currentTentId: input.targetTentId })
+          .where(inArray(plants.id, input.plantIds));
+        
+        return { success: true, count: input.plantIds.length };
+      }),
+
+    // Marcar múltiplas plantas como colhidas (ação em lote)
+    bulkHarvest: publicProcedure
+      .input(z.object({
+        plantIds: z.array(z.number()),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Marcar todas como colhidas
+        await database
+          .update(plants)
+          .set({ 
+            status: "HARVESTED",
+            finishedAt: new Date(),
+          })
+          .where(inArray(plants.id, input.plantIds));
+        
+        return { success: true, count: input.plantIds.length };
+      }),
+
+    // Descartar múltiplas plantas (ação em lote)
+    bulkDiscard: publicProcedure
+      .input(z.object({
+        plantIds: z.array(z.number()),
+        reason: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Descartar todas as plantas
+        await database
+          .update(plants)
+          .set({ 
+            status: "DISCARDED",
+            finishedAt: new Date(),
+            finishReason: input.reason,
+          })
+          .where(inArray(plants.id, input.plantIds));
+        
+        return { success: true, count: input.plantIds.length };
       }),
 
     // Descartar planta (doente ou com problemas)

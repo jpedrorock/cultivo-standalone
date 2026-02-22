@@ -62,6 +62,52 @@ export default function PlantsList() {
     },
   });
 
+  const bulkPromote = trpc.plants.bulkPromote.useMutation({
+    onSuccess: (data) => {
+      utils.plants.list.invalidate();
+      toast.success(`🌿 ${data.count} muda(s) promovida(s) para planta com sucesso!`);
+      setSelectedPlants(new Set());
+    },
+    onError: (error) => {
+      toast.error(`Erro ao promover mudas: ${error.message}`);
+    },
+  });
+
+  const bulkMove = trpc.plants.bulkMove.useMutation({
+    onSuccess: (data) => {
+      utils.plants.list.invalidate();
+      toast.success(`✅ ${data.count} planta(s) movida(s) com sucesso!`);
+      setBatchMoveDialog(false);
+      setSelectedPlants(new Set());
+      setBatchTargetTentId(undefined);
+    },
+    onError: (error) => {
+      toast.error(`Erro ao mover plantas: ${error.message}`);
+    },
+  });
+
+  const bulkHarvest = trpc.plants.bulkHarvest.useMutation({
+    onSuccess: (data) => {
+      utils.plants.list.invalidate();
+      toast.success(`✅ ${data.count} planta(s) colhida(s) com sucesso!`);
+      setSelectedPlants(new Set());
+    },
+    onError: (error) => {
+      toast.error(`Erro ao colher plantas: ${error.message}`);
+    },
+  });
+
+  const bulkDiscard = trpc.plants.bulkDiscard.useMutation({
+    onSuccess: (data) => {
+      utils.plants.list.invalidate();
+      toast.success(`✅ ${data.count} planta(s) descartada(s) com sucesso!`);
+      setSelectedPlants(new Set());
+    },
+    onError: (error) => {
+      toast.error(`Erro ao descartar plantas: ${error.message}`);
+    },
+  });
+
   const movePlant = trpc.plants.moveTent.useMutation({
     onSuccess: () => {
       utils.plants.list.invalidate();
@@ -162,10 +208,9 @@ export default function PlantsList() {
       return;
     }
     
-    moveMultiplePlants.mutate({
+    bulkMove.mutate({
       plantIds: Array.from(selectedPlants),
-      toTentId: batchTargetTentId,
-      reason: "Movimentação em lote",
+      targetTentId: batchTargetTentId,
     });
   };
 
@@ -586,17 +631,98 @@ export default function PlantsList() {
         </DialogContent>
       </Dialog>
 
-      {/* Floating Action Button for Batch Move */}
+      {/* Floating Action Bar for Bulk Operations */}
       {selectedPlants.size > 0 && (
-        <div className="fixed bottom-6 right-6 z-50">
-          <Button
-            size="lg"
-            onClick={() => setBatchMoveDialog(true)}
-            className="shadow-lg hover:shadow-xl transition-all"
-          >
-            <MoveRight className="w-5 h-5 mr-2" />
-            Mover {selectedPlants.size} Selecionada{selectedPlants.size > 1 ? 's' : ''}
-          </Button>
+        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+          <Card className="shadow-2xl border-2">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium text-muted-foreground">
+                  {selectedPlants.size} planta{selectedPlants.size > 1 ? 's' : ''} selecionada{selectedPlants.size > 1 ? 's' : ''}
+                </span>
+                <div className="h-6 w-px bg-border" />
+                
+                {/* Promover (apenas se todas forem mudas) */}
+                {filteredPlants?.filter(p => selectedPlants.has(p.id)).every(p => p.plantStage === "SEEDLING") && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      if (confirm(`Promover ${selectedPlants.size} muda(s) para planta?`)) {
+                        bulkPromote.mutate({ plantIds: Array.from(selectedPlants) });
+                      }
+                    }}
+                    disabled={bulkPromote.isPending}
+                  >
+                    {bulkPromote.isPending ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Sprout className="w-4 h-4 mr-2" />
+                    )}
+                    Promover
+                  </Button>
+                )}
+                
+                {/* Mover */}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setBatchMoveDialog(true)}
+                >
+                  <MoveRight className="w-4 h-4 mr-2" />
+                  Mover
+                </Button>
+                
+                {/* Colher */}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    if (confirm(`Marcar ${selectedPlants.size} planta(s) como colhida(s)?`)) {
+                      bulkHarvest.mutate({ plantIds: Array.from(selectedPlants) });
+                    }
+                  }}
+                  disabled={bulkHarvest.isPending}
+                >
+                  {bulkHarvest.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <span className="mr-2">🌾</span>
+                  )}
+                  Colher
+                </Button>
+                
+                {/* Descartar */}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    if (confirm(`Descartar ${selectedPlants.size} planta(s)? Esta ação não pode ser desfeita.`)) {
+                      bulkDiscard.mutate({ plantIds: Array.from(selectedPlants) });
+                    }
+                  }}
+                  disabled={bulkDiscard.isPending}
+                  className="text-destructive hover:text-destructive"
+                >
+                  {bulkDiscard.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <span className="mr-2">🗑️</span>
+                  )}
+                  Descartar
+                </Button>
+                
+                {/* Cancelar */}
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setSelectedPlants(new Set())}
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       )}
     </div>

@@ -1601,3 +1601,51 @@
 - [x] Testar com diferentes quantidades
 
 **Resultado:** Contador implementado com sucesso no header. Mostra "1 plantas • 9 mudas" dinamicamente. Atualiza automaticamente ao promover mudas ou adicionar plantas.
+
+
+## ✅ Falso Alarme: Sistema de Plantas/Mudas Funcionando Corretamente
+
+- [x] Investigar por que todas as plantas agora aparecem como mudas (plantStage = SEEDLING)
+- [x] Verificar banco de dados para confirmar valores de plantStage
+- [x] Identificar causa raiz (migration, código, etc.)
+- [x] Confirmar que plantas mantêm status correto
+
+**Resultado:** Não há bug! Sistema funcionando perfeitamente:
+- **3 plantas (PLANT):** 24K Gold Mãe, OG Kush Mãe, Clone 1 (promovido)
+- **7 mudas (SEEDLING):** 3 clones na Manutenção + 4 clones na Vega
+- Badges visuais 🌿 e 🌱 aparecem corretamente
+- Contador mostra "3 plantas • 7 mudas" corretamente
+
+
+## ✅ Ações em Lote para Plantas
+
+### Backend
+- [x] Criar mutation `plants.bulkPromote` (promover múltiplas mudas para plantas)
+- [x] Criar mutation `plants.bulkMove` (mover múltiplas plantas para outra estufa)
+- [x] Criar mutation `plants.bulkHarvest` (marcar múltiplas como colhidas)
+- [x] Criar mutation `plants.bulkDiscard` (descartar múltiplas plantas)
+- [x] Adicionar import inArray do drizzle-orm
+
+### Frontend
+- [x] Implementar estado de seleção múltipla (selectedPlantIds) - já existia
+- [x] Criar barra de ações flutuante centralizada que aparece quando há plantas selecionadas
+- [x] Adicionar botões na barra: Promover, Mover, Colher, Descartar, Cancelar
+- [x] Mostrar contador "X plantas selecionadas"
+- [x] Implementar confirmação via confirm() para ações destrutivas
+- [x] Limpar seleção após ação completada
+- [x] Adicionar loading states com Loader2 spinner
+
+### Validações
+- [x] "Promover" só aparece se todas selecionadas forem mudas (SEEDLING)
+- [x] "Mover" abre dialog existente para seleção de estufa destino
+- [x] Ações destrutivas (Colher, Descartar) pedem confirmação
+
+### Teste
+- [x] Barra de ações aparece ao selecionar plantas
+- [x] Contador atualiza corretamente (1, 2, 3 plantas selecionadas)
+- [x] Botão "Promover" aparece apenas quando todas são mudas
+- [ ] Testar promover 3 mudas simultaneamente (pending: confirm dialog)
+- [ ] Testar mover múltiplas plantas entre estufas
+- [ ] Testar colheita em lote
+
+**Resultado:** Funcionalidade 95% completa. Backend e frontend implementados. Barra de ações flutuante funcional com todos os botões. Falta apenas testar execução das ações.
