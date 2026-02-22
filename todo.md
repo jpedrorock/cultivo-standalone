@@ -1744,3 +1744,14 @@
 - [ ] Testar fluxo completo de registro guiado (navegação precisa ajuste)
 - [ ] Adicionar link "Registro Rápido" na Home ou menu principal
 - [ ] Adicionar suporte a swipe gestures para navegação mobile
+
+
+## ✅ Botão Registro Rápido na Home
+
+- [x] Adicionar botão "Registro Rápido" ⚡ na página Home
+- [x] Posicionar botão em destaque (header, ao lado do badge Sistema Ativo)
+- [x] Link direto para /quick-log
+- [x] Testar navegação para QuickLog
+- [x] Importar ícone Zap do lucide-react
+
+**Resultado:** Botão verde com ícone de raio posicionado no header da Home. Navegação funcional para /quick-log.

@@ -24,7 +24,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell, Trash2, EyeOff, Eye, Wrench, Scissors, Flower2, Check, AlertTriangle, X } from "lucide-react";
+import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell, Trash2, EyeOff, Eye, Wrench, Scissors, Flower2, Check, AlertTriangle, X, Zap } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
@@ -304,6 +304,12 @@ export default function Home() {
               <p className="text-muted-foreground mt-1">Gerenciamento de Estufas</p>
             </div>
             <div className="flex items-center gap-3">
+              <Link href="/quick-log">
+                <Button size="lg" className="gap-2">
+                  <Zap className="w-5 h-5" />
+                  Registro Rápido
+                </Button>
+              </Link>
               <Badge variant="outline" className="px-3 py-1.5 text-sm">
                 <Droplets className="w-4 h-4 mr-2" />
                 Sistema Ativo
