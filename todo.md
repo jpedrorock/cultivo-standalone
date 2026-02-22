@@ -2014,3 +2014,28 @@
 - Botões e labels: ✅ Já todos em português
 - Estados de loading: ✅ "Carregando...", "Processando...", "Enviando..." já em português
 - Console logs e debug: ❌ Permanecem em inglês (padrão de desenvolvimento)
+
+## Traduzir Nomes de Fases (MAINTENANCE, VEGA, FLORA)
+
+- [x] Buscar todas as ocorrências de "MAINTENANCE" no código
+- [x] Buscar todas as ocorrências de "VEGA" e "FLORA" no código
+- [x] Traduzir exibição de fases: MAINTENANCE → Manutenção, VEGA → Vegetativa, FLORA → Floração
+- [x] Manter enums do banco em inglês (apenas traduzir na UI)
+- [x] Testar cards de estufas na Home
+- [x] Testar outras páginas que exibem fases
+
+**Teste Realizado (22/02/2026)**:
+✅ Estufa Manutenção: exibindo "Manutenção • 45×75×90cm" (antes era "Tipo MAINTENANCE")
+✅ Estufa Vegetativa: exibindo "Vegetativa • 60×60×120cm"
+✅ Estufa Floração: exibindo "Vegetativa • 60×120×150cm" (ainda em fase vegetativa)
+✅ Badges de fase: "Manutenção", "Vegetativa" em português
+✅ Ciclos Ativos: "Manutenção", "Floração", "Vegetativa" em português
+
+**Correção Aplicada (22/02/2026)**:
+- Home.tsx linha 756: Corrigido `tent.tentType` (campo inexistente) para usar `tent.category` com tradução:
+  * MAINTENANCE → "Manutenção"
+  * VEGA → "Vegetativa"
+  * FLORA → "Floração"
+  * DRYING → "Secagem"
+
+**Observação**: Os enums no banco de dados (schema.ts) permanecem em inglês (padrão de desenvolvimento). Apenas a exibição na UI foi traduzida para português.

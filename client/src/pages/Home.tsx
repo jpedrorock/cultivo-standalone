@@ -753,7 +753,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
             </CardTitle>
             <CardDescription className="mt-2 space-y-1">
               <div className="flex items-center gap-3">
-                <span>Tipo {tent.tentType} • {tent.width}×{tent.depth}×{tent.height}cm</span>
+                <span>{tent.category === 'MAINTENANCE' ? 'Manutenção' : tent.category === 'VEGA' ? 'Vegetativa' : tent.category === 'FLORA' ? 'Floração' : 'Secagem'} • {tent.width}×{tent.depth}×{tent.height}cm</span>
                 {(tent.plantCount !== undefined || tent.seedlingCount !== undefined) && (
                   <Link href={`/plants?tent=${tent.id}`}>
                     <div className="flex items-center gap-2">
