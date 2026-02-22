@@ -1059,6 +1059,8 @@ export const appRouter = router({
           throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
         }
         
+
+        
         // Calcular runoffPercentage se ambos wateringVolume e runoffCollected foram fornecidos
         let runoffPercentage: string | undefined;
         if (input.wateringVolume && input.runoffCollected) {
@@ -1068,10 +1070,13 @@ export const appRouter = router({
           runoffPercentage = ((input.runoffCollected / input.wateringVolume) * 100).toFixed(2);
         }
         
-        await database.insert(dailyLogs).values({
+        const valuesToInsert = {
           ...input,
           runoffPercentage,
-        });
+        };
+
+        
+        const result = await database.insert(dailyLogs).values(valuesToInsert);
         
         // Verificar alertas automaticamente
         const { checkAndNotifyAlerts } = await import("./alertChecker");
@@ -1111,7 +1116,20 @@ export const appRouter = router({
         const database = await getDb();
         if (!database) throw new Error("Database not available");
         
-        let query = database
+        // Build filter conditions
+        const conditions = [];
+        if (input.tentId) {
+          conditions.push(eq(dailyLogs.tentId, input.tentId));
+        }
+        if (input.startDate) {
+          conditions.push(sql`${dailyLogs.logDate} >= ${input.startDate}`);
+        }
+        if (input.endDate) {
+          conditions.push(sql`${dailyLogs.logDate} <= ${input.endDate}`);
+        }
+        
+        // Build base query
+        let baseQuery = database
           .select({
             id: dailyLogs.id,
             tentId: dailyLogs.tentId,
@@ -1127,27 +1145,18 @@ export const appRouter = router({
           })
           .from(dailyLogs)
           .leftJoin(tents, eq(dailyLogs.tentId, tents.id))
-          .orderBy(desc(dailyLogs.logDate))
-          .limit(input.limit)
-          .offset(input.offset);
+          .$dynamic();
         
         // Apply filters
-        const conditions = [];
-        if (input.tentId) {
-          conditions.push(eq(dailyLogs.tentId, input.tentId));
-        }
-        if (input.startDate) {
-          conditions.push(sql`${dailyLogs.logDate} >= ${input.startDate}`);
-        }
-        if (input.endDate) {
-          conditions.push(sql`${dailyLogs.logDate} <= ${input.endDate}`);
-        }
-        
         if (conditions.length > 0) {
-          query = query.where(and(...conditions)) as any;
+          baseQuery = baseQuery.where(and(...conditions));
         }
         
-        const logs = await query;
+        // Apply ordering and pagination
+        const logs = await baseQuery
+          .orderBy(desc(dailyLogs.logDate), desc(dailyLogs.id))
+          .limit(input.limit)
+          .offset(input.offset);
         
         // Get total count for pagination
         const countQuery = database
