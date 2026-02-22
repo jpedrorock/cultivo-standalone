@@ -1798,3 +1798,28 @@
 - Espaçamento generoso e breathing room em todos os passos
 - Swipe gestures funcionando (react-swipeable)
 - Responsividade: `max-w-md mx-auto` para centralização mobile
+
+
+## QuickLog - Registro de Saúde das Plantas (Passo Opcional)
+
+### Requisito
+- [x] Adicionar passo opcional após o resumo do registro diário
+- [x] Permitir usuário escolher se deseja registrar saúde das plantas ou pular
+- [x] Listar todas as plantas da estufa selecionada
+- [x] Para cada planta, permitir registro rápido de saúde (status, sintomas, notas)
+- [x] Manter design minimalista e moderno do QuickLog
+- [x] Adicionar animações de transição
+- [x] Implementar navegação: Pular → Home, Registrar → Lista de plantas → Home
+- [x] Testar fluxo completo
+
+**Implementação Completa (22/02/2026):**
+- Passo 9: Pergunta "Deseja registrar saúde das plantas?" com ícone Heart (pink/rose gradient)
+- Botões: "Registrar Saúde das Plantas" (pink gradient) e "Pular e Finalizar" (outline)
+- Passos 10+: Formulário individual por planta com Activity icon (emerald gradient)
+- Progress indicator: "Planta X de Y" em card com borda emerald-500
+- Status buttons: ✓ Saudável (green), ⚠️ Atenção (yellow/orange), ✗ Doente (red)
+- Campos opcionais: Sintomas (input) e Notas (textarea)
+- Navegação: "Pular" (skip plant) ou "Próxima Planta"/"Finalizar" (save & advance)
+- Query de plantas carrega ao atingir step 9 (enabled: currentStep >= 9)
+- Salva via tRPC plantHealth.create com healthStatus enum (HEALTHY/STRESSED/SICK)
+- Após última planta ou skip all, retorna para Home com toast de sucesso
