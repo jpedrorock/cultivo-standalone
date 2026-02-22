@@ -22,7 +22,6 @@ export default function TentLog() {
   const [tempC, setTempC] = useState("");
   const [rhPct, setRhPct] = useState("");
   const [ppfd, setPpfd] = useState("");
-  const [photoperiod, setPhotoperiod] = useState("");
   const [ph, setPh] = useState("");
   const [ec, setEc] = useState("");
   const [wateringVolume, setWateringVolume] = useState("");
@@ -130,7 +129,6 @@ export default function TentLog() {
       setTempC("");
       setRhPct("");
       setPpfd("");
-      setPhotoperiod("");
       setPh("");
       setEc("");
       setWateringVolume("");
@@ -480,27 +478,6 @@ export default function TentLog() {
                   {currentTargets && (
                     <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">
                       ✓ Ideal: {currentTargets.ppfdMin}-{currentTargets.ppfdMax}
-                    </p>
-                  )}
-                </div>
-
-                {/* Photoperiod */}
-                <div className="space-y-2">
-                  <Label htmlFor="photoperiod" className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-cyan-600" />
-                    Fotoperíodo
-                  </Label>
-                  <Input
-                    id="photoperiod"
-                    type="text"
-                    placeholder="Ex: 18/6"
-                    value={photoperiod}
-                    onChange={(e) => setPhotoperiod(e.target.value)}
-                    className="text-lg"
-                  />
-                  {currentTargets && (
-                    <p className="text-xs text-blue-600 font-medium">
-                      ✓ Ideal: {currentTargets.photoperiod}
                     </p>
                   )}
                 </div>

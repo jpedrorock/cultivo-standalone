@@ -12,6 +12,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import TentLog from "./pages/TentLog";
 import TentDetails from "./pages/TentDetails";
+import QuickLog from "./pages/QuickLog";
 
 
 import Tarefas from "./pages/Tarefas";
@@ -67,6 +68,7 @@ function Router() {
 
       <Route path={"/tent/:id"} component={TentDetails} />
       <Route path={"/tent/:id/log"} component={TentLog} />
+      <Route path={"/quick-log"} component={QuickLog} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

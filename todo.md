@@ -1706,3 +1706,41 @@
 - [ ] Documentar problemas encontrados
 - [ ] Implementar correções prioritárias
 - [ ] Testar em diferentes tamanhos de tela (320px, 375px, 414px)
+
+
+## Fotoperíodo Automático por Fase
+
+- [x] Remover campo "Fotoperíodo" do formulário de registro diário (TentLog.tsx)
+- [x] Remover estado photoperiod e setPhotoperiod
+- [x] Remover input field completo do formulário
+- [ ] Remover campo photoperiod do schema dailyLogs (backend)
+- [ ] Atrelar fotoperíodo automaticamente à fase da estufa no backend:
+  - MAINTENANCE/CLONING/VEGA → "18/6"
+  - FLOWERING → "12/12"
+- [ ] Adicionar indicador visual de fotoperíodo no card da estufa (Home.tsx)
+- [ ] Testar que fotoperíodo é salvo automaticamente baseado na fase
+
+## Registro Rápido Guiado (Quick Log)
+
+### Backend
+- [x] Verificar se mutation dailyLogs.create já suporta todos os campos necessários (sim, todos os campos estão implementados)
+
+### Frontend - Página QuickLog
+- [x] Criar página /quick-log com fluxo horizontal de 9 passos (adicionado passo 0 para seleção de estufa)
+- [x] Implementar navegação horizontal (botões Próximo/Voltar)
+- [x] Implementar indicador de progresso (barra visual 1/9, 2/9, etc.)
+- [x] Passo 0: Seleção de Estufa (🏠)
+- [x] Passo 1: Temperatura (input number + ícone 🌡️ + seleção AM/PM)
+- [x] Passo 2: Umidade (input number + ícone 💧)
+- [x] Passo 3: Volume Regado (input number + ícone 🚿)
+- [x] Passo 4: Runoff Coletado (input number + ícone 💦 + cálculo automático %)
+- [x] Passo 5: pH (input number + ícone 🧪)
+- [x] Passo 6: EC (input number + ícone ⚡)
+- [x] Passo 7: PPFD (slider + ícone ☀️)
+- [x] Passo 8: Resumo (mostrar todos os dados em cards coloridos + botão Salvar)
+- [x] Adicionar rota /quick-log no App.tsx
+- [x] Implementar save mutation com redirect para home após sucesso
+- [ ] Adicionar animações de transição entre passos (CSS transitions)
+- [ ] Testar fluxo completo de registro guiado (navegação precisa ajuste)
+- [ ] Adicionar link "Registro Rápido" na Home ou menu principal
+- [ ] Adicionar suporte a swipe gestures para navegação mobile
