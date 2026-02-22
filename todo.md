@@ -2086,3 +2086,20 @@
 - Destaque visual do botão mais importante (verde)
 - Menu "Mais" organiza páginas secundárias sem poluir navegação principal
 - Fluxo de registro diário muito mais rápido e intuitivo
+
+## Botão Registro com Fundo Verde e Conteúdo Branco
+
+- [x] Alterar estilo do botão Registro no BottomNav
+- [x] Aplicar fundo verde: bg-green-600 (ativo e inativo)
+- [x] Aplicar texto e ícone brancos: text-white
+- [x] Ajustar hover: bg-green-700
+- [ ] Testar contraste e legibilidade (requer dispositivo real)
+
+**Estilo Aplicado**:
+- Fundo verde sólido: `bg-green-600`
+- Hover verde escuro: `hover:bg-green-700`
+- Texto e ícone brancos: `text-white`
+- Stroke mais grosso: `stroke-[2.5]`
+- Border radius: `rounded-lg`
+
+**Resultado**: Botão Registro agora tem destaque visual muito maior com fundo verde e conteúdo branco, diferenciando-se completamente dos outros botões do menu.

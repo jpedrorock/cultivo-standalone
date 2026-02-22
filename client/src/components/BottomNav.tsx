@@ -57,15 +57,10 @@ export function BottomNav() {
                 className={cn(
                   "flex flex-col items-center justify-center gap-1 py-3 px-4 rounded-lg transition-colors relative",
                   item.href === "/quicklog"
-                    ? "hover:bg-green-500/10"
-                    : "hover:bg-primary/10",
-                  isActive
-                    ? item.href === "/quicklog"
-                      ? "text-green-600"
-                      : "text-primary"
-                    : item.href === "/quicklog"
-                      ? "text-green-600 hover:text-green-700"
-                      : "text-muted-foreground hover:text-primary"
+                    ? "bg-green-600 hover:bg-green-700 text-white"
+                    : isActive
+                      ? "text-primary hover:bg-primary/10"
+                      : "text-muted-foreground hover:text-primary hover:bg-primary/10"
                 )}
               >
                 <Icon className={cn(
