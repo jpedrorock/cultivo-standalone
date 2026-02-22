@@ -1747,8 +1747,15 @@
 - [x] Implementar save mutation com redirect para home após sucesso
 - [ ] Adicionar animações de transição entre passos (CSS transitions)
 - [ ] Testar fluxo completo de registro guiado (navegação precisa ajuste)
-- [ ] Adicionar link "Registro Rápido" na Home ou menu principal
-- [ ] Adicionar suporte a swipe gestures para navegação mobile
+- [x] Adicionar link "Registro Rápido" na Home ou menu principal (botão no header)
+- [x] Adicionar suporte a swipe gestures para navegação mobile
+  - [x] Instalar biblioteca react-swipeable (v7.0.2)
+  - [x] Implementar swipe left (próximo passo)
+  - [x] Implementar swipe right (passo anterior)
+  - [x] Adicionar trackMouse para testes no desktop
+  - [x] Configurar delta mínimo de 50px
+  - [x] Corrigir erro de validação ao enviar campos vazios
+  - [ ] Testar gestos em dispositivo mobile ou DevTools
 
 
 ## ✅ Botão Registro Rápido na Home

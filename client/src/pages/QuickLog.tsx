@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useSwipeable } from "react-swipeable";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,25 @@ export default function QuickLog() {
   const [ph, setPh] = useState("");
   const [ec, setEc] = useState("");
   const [ppfd, setPpfd] = useState(0);
+
+  // Swipe handlers for touch navigation
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      // Swipe left = next step
+      if (currentStep < steps.length - 1 && canGoNext()) {
+        setCurrentStep(currentStep + 1);
+      }
+    },
+    onSwipedRight: () => {
+      // Swipe right = previous step
+      if (currentStep > 0) {
+        setCurrentStep(currentStep - 1);
+      }
+    },
+    preventScrollOnSwipe: true,
+    trackMouse: true, // Enable mouse swipe for desktop testing
+    delta: 50, // Minimum swipe distance
+  });
 
   // Fetch tents for selection
   const { data: tents = [], isLoading: tentsLoading } = trpc.tents.list.useQuery();
@@ -67,13 +87,13 @@ export default function QuickLog() {
       tentId,
       logDate: new Date(),
       turn,
-      tempC: tempC || undefined,
-      rhPct: rhPct || undefined,
-      ppfd: ppfd || undefined,
-      ph: ph || undefined,
-      ec: ec || undefined,
-      wateringVolume: wateringVolume ? parseInt(wateringVolume) : undefined,
-      runoffCollected: runoffCollected ? parseInt(runoffCollected) : undefined,
+      tempC: tempC && tempC.trim() !== "" ? tempC : undefined,
+      rhPct: rhPct && rhPct.trim() !== "" ? rhPct : undefined,
+      ppfd: ppfd > 0 ? ppfd : undefined,
+      ph: ph && ph.trim() !== "" ? ph : undefined,
+      ec: ec && ec.trim() !== "" ? ec : undefined,
+      wateringVolume: wateringVolume && wateringVolume.trim() !== "" ? parseInt(wateringVolume) : undefined,
+      runoffCollected: runoffCollected && runoffCollected.trim() !== "" ? parseInt(runoffCollected) : undefined,
       notes: undefined,
     });
   };
@@ -358,7 +378,7 @@ export default function QuickLog() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div {...swipeHandlers} className="min-h-screen bg-background pb-20">
       {/* Header */}
       <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
         <div className="container py-4">
