@@ -1873,3 +1873,19 @@
 - [ ] Priorizar correções críticas
 - [ ] Implementar correções
 - [ ] Testar novamente em mobile
+
+
+## PWA - Ocultar Botão "Instalar App" em Modo Standalone
+
+- [x] Adicionar detecção de modo standalone usando `window.matchMedia('(display-mode: standalone)')`
+- [x] Verificar também `window.navigator.standalone` para iOS
+- [x] Ocultar botão "Instalar App" quando app já está instalado
+- [x] Testar em navegador (botão visível) e em modo standalone (botão oculto)
+- [x] Aplicar lógica em todos os componentes que renderizam o botão de instalação
+
+**Implementação Completa (22/02/2026):**
+- Componente InstallPWA já possuía detecção de standalone mode
+- Adicionada verificação adicional para iOS: `window.navigator.standalone`
+- Lógica: `if (isStandalone || isIOSStandalone) { setIsInstalled(true); return null; }`
+- Botão de instalação (flutuante e banner) não aparecem quando app já instalado
+- Funciona em Chrome, Edge, Firefox (display-mode) e iOS Safari (navigator.standalone)

@@ -13,8 +13,13 @@ export function InstallPWA() {
   const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
-    // Verificar se já está instalado
-    if (window.matchMedia('(display-mode: standalone)').matches) {
+    // Verificar se já está instalado (Chrome/Edge/Firefox)
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    
+    // Verificar se já está instalado (iOS Safari)
+    const isIOSStandalone = (window.navigator as any).standalone === true;
+    
+    if (isStandalone || isIOSStandalone) {
       setIsInstalled(true);
       return;
     }
