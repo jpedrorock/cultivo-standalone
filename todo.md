@@ -1717,7 +1717,12 @@
 - [ ] Atrelar fotoperíodo automaticamente à fase da estufa no backend:
   - MAINTENANCE/CLONING/VEGA → "18/6"
   - FLOWERING → "12/12"
-- [ ] Adicionar indicador visual de fotoperíodo no card da estufa (Home.tsx)
+- [x] Adicionar indicador visual de fotoperíodo no card da estufa (Home.tsx)
+  - [x] Mostrar "18/6" para MAINTENANCE, CLONING, VEGA
+  - [x] Mostrar "12/12" para FLOWERING
+  - [x] Posicionar ao lado dos indicadores de temperatura/umidade/PPFD (4ª coluna)
+  - [x] Ícone Clock (relógio roxo) para representação visual
+  - [x] Mudar grid de 3 colunas para 4 colunas
 - [ ] Testar que fotoperíodo é salvo automaticamente baseado na fase
 
 ## Registro Rápido Guiado (Quick Log)

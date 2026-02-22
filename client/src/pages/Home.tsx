@@ -24,7 +24,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell, Trash2, EyeOff, Eye, Wrench, Scissors, Flower2, Check, AlertTriangle, X, Zap } from "lucide-react";
+import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell, Trash2, EyeOff, Eye, Wrench, Scissors, Flower2, Check, AlertTriangle, X, Zap, Clock } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
@@ -928,7 +928,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
               </p>
             </div>
           )}
-          <div className="grid grid-cols-3 gap-3 pt-5 border-t">
+          <div className="grid grid-cols-4 gap-3 pt-5 border-t">
             <div className="text-center">
               <ThermometerSun className="w-5 h-5 mx-auto text-orange-500 mb-1" />
               <p className="text-xs text-muted-foreground">Temp</p>
@@ -970,6 +970,13 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                 </p>
                 {latestLog?.ppfd && getStatusIcon(latestLog.ppfd, targets?.ppfdMin, targets?.ppfdMax)}
               </div>
+            </div>
+            <div className="text-center">
+              <Clock className="w-5 h-5 mx-auto text-purple-500 mb-1" />
+              <p className="text-xs text-muted-foreground">Foto</p>
+              <p className="text-sm font-semibold text-foreground">
+                {cycle?.currentPhase === "FLOWERING" ? "12/12" : "18/6"}
+              </p>
             </div>
           </div>
 
