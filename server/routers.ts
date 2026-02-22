@@ -755,6 +755,7 @@ export const appRouter = router({
         z.object({
           cycleId: z.number(),
           clonesProduced: z.number().min(0).optional(), // Número de clones produzidos
+          targetTentId: z.number().optional(), // Estufa destino para as mudas
         })
       )
       .mutation(async ({ input }) => {
@@ -788,12 +789,17 @@ export const appRouter = router({
         
         // Se clones foram produzidos, criar mudas (SEEDLING)
         if (input.clonesProduced && input.clonesProduced > 0) {
+          // Validar que targetTentId foi fornecido
+          if (!input.targetTentId) {
+            throw new Error("Estufa destino é obrigatória ao criar mudas");
+          }
+          
           const seedlings = [];
           for (let i = 1; i <= input.clonesProduced; i++) {
             seedlings.push({
               name: `Clone ${i} - ${cycle.strainName || 'Sem strain'}`,
               strainId: cycle.strainId,
-              currentTentId: cycle.tentId,
+              currentTentId: input.targetTentId, // Mudas vão para estufa selecionada
               plantStage: "SEEDLING" as const,
               status: "ACTIVE" as const,
             });

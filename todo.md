@@ -1548,3 +1548,24 @@
   - [x] Mobile (touch)
   - [x] Desktop (scroll)
   - [x] Verificar que dados são atualizados corretamente
+
+
+## ✅ Bug Corrigido: Transição CLONAGEM → MANUTENÇÃO e Criação de Mudas
+
+### Problema 1: Erro na transição CLONAGEM → MANUTENÇÃO
+- [x] Investigar erro ao tentar voltar de CLONAGEM para MANUTENÇÃO
+- [x] Corrigir lógica de transição no backend (routers.ts)
+- [x] Testar transição CLONAGEM → MANUTENÇÃO
+
+### Problema 2: Mudas precisam de seleção de estufa destino
+- [x] Ao voltar de CLONAGEM → MANUTENÇÃO, usuário deve selecionar estufa destino para as mudas
+- [x] Adicionar campo obrigatório no dialog: "Estufa destino para as mudas"
+- [x] Mudas (SEEDLING) vão para a estufa selecionada (Vega ou Floração)
+- [x] Estufa mãe volta para MANUTENÇÃO (apenas plantas mãe ficam lá)
+- [x] Modificar backend transitionToMaintenance para receber targetTentId
+- [x] Modificar frontend PhaseTransitionDialog para mostrar seletor de estufa
+
+### Teste Completo
+- [x] Testar fluxo: MANUTENÇÃO → CLONAGEM → MANUTENÇÃO (com mudas indo para VEGA)
+
+**Resultado:** Funcionalidade 100% operacional. Mudas são criadas na estufa selecionada pelo usuário.

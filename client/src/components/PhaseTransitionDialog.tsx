@@ -152,6 +152,7 @@ export function PhaseTransitionDialog({
         transitionToMaintenance.mutate({
           cycleId,
           clonesProduced: clonesProduced ? parseInt(clonesProduced) : undefined,
+          targetTentId: targetTentId ? parseInt(targetTentId) : undefined,
         });
         break;
 
@@ -287,19 +288,45 @@ export function PhaseTransitionDialog({
 
           {/* Clones Produced Input (for CLONING → MAINTENANCE) */}
           {currentPhase === "CLONING" && (
-            <div className="space-y-2">
-              <Label htmlFor="clonesProduced">
-                Quantidade de Clones Produzidos (opcional)
-              </Label>
-              <Input
-                id="clonesProduced"
-                type="number"
-                min="0"
-                placeholder="Ex: 18"
-                value={clonesProduced}
-                onChange={(e) => setClonesProduced(e.target.value)}
-              />
-            </div>
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="clonesProduced">
+                  Quantidade de Clones Produzidos
+                </Label>
+                <Input
+                  id="clonesProduced"
+                  type="number"
+                  min="0"
+                  placeholder="Ex: 18"
+                  value={clonesProduced}
+                  onChange={(e) => setClonesProduced(e.target.value)}
+                />
+              </div>
+              
+              {/* Target Tent for Seedlings */}
+              {clonesProduced && parseInt(clonesProduced) > 0 && (
+                <div className="space-y-2">
+                  <Label htmlFor="seedlingTent">
+                    Estufa Destino para as Mudas *
+                  </Label>
+                  <Select value={targetTentId} onValueChange={setTargetTentId}>
+                    <SelectTrigger id="seedlingTent">
+                      <SelectValue placeholder="Selecione a estufa" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableTents.map((tent) => (
+                        <SelectItem key={tent.id} value={tent.id.toString()}>
+                          {tent.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-muted-foreground">
+                    As mudas serão criadas na estufa selecionada. A estufa mãe permanecerá apenas com as plantas mãe.
+                  </p>
+                </div>
+              )}
+            </>
           )}
 
           {/* Notes Input (for FLORA → DRYING) */}
@@ -373,7 +400,11 @@ export function PhaseTransitionDialog({
           <Button
             onClick={handleTransition}
             className="flex-1"
-            disabled={isLoading || (transferPlants && !targetTentId)}
+            disabled={
+              isLoading || 
+              (transferPlants && !targetTentId) ||
+              (currentPhase === "CLONING" && !!clonesProduced && parseInt(clonesProduced) > 0 && !targetTentId)
+            }
           >
             {isLoading ? (
               "Processando..."
