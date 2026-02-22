@@ -1570,3 +1570,13 @@
   - [x] Reduzir blur (30px → 5px)
 - [x] Aumentar border radius para 1.5rem (24px) - Apple style
 - [x] Testar tema visual sem quebrar funcionalidades
+
+
+## Corrigir Temas de Alto Contraste
+
+- [x] Investigar por que temas de alto contraste (preto e branco) pararam de funcionar
+- [x] Restaurar variáveis CSS para tema High Contrast Black (.highcontrast-dark)
+- [x] Restaurar variáveis CSS para tema High Contrast White (.highcontrast)
+- [x] Adicionar filter: grayscale(100%) para forçar escala de cinza
+- [x] Testar troca entre todos os temas (Liquid Glass, High Contrast Black, High Contrast White)
+- [x] Verificar que cores têm contraste adequado (WCAG AA)
