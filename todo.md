@@ -2165,3 +2165,41 @@ Essa ordem é mais lógica e intuitiva - começa com Home, depois a ação princ
 - Registro fica mais rápido e intuitivo
 
 **Objetivo**: Tornar o registro mais intuitivo - usuário vê a estufa e registra dados dela diretamente do card.
+
+## Adicionar Badge "Última Leitura há X Horas" nos Cards de Estufa
+
+- [x] Analisar estrutura atual dos cards de estufa na Home
+- [x] Criar query no backend para buscar último registro de cada estufa
+- [x] Calcular diferença de tempo entre agora e última leitura
+- [x] Adicionar badge visual no card mostrando tempo decorrido
+- [x] Definir cores do badge baseado no tempo (verde < 6h, amarelo 6-12h, vermelho > 12h)
+- [x] Testar badge em cards com e sem registros
+- [x] Traduzir textos para português ("há X horas", "há X minutos")
+
+**Implementação Realizada (22/02/2026)**:
+
+**Backend (server/db.ts linhas 162-175)**:
+- Adicionado campo `lastReadingAt` ao retorno de `getAllTents()`
+- Query busca último registro (`dailyLogs`) de cada estufa ordenado por `logDate`
+- Converte timestamp para milissegundos (compatibilidade JavaScript)
+
+**Frontend (client/src/pages/Home.tsx linhas 753-788)**:
+- Badge exibe tempo decorrido desde última leitura
+- Cores dinâmicas baseadas no tempo:
+  * 🟢 Verde (< 6h): `bg-green-500/10 text-green-700 border-green-300`
+  * 🟡 Amarelo (6-12h): `bg-yellow-500/10 text-yellow-700 border-yellow-300`
+  * 🔴 Vermelho (> 12h): `bg-red-500/10 text-red-700 border-red-300`
+- Formato de texto:
+  * Menos de 1h: "há Xmin"
+  * Mais de 1h: "há Xh"
+  * Sem registros: "Sem registros" (cinza)
+- Ícone Clock do lucide-react
+
+**Teste Realizado**:
+✅ Estufa Manutenção: "há 20h" (badge vermelho)
+✅ Estufa Vegetativa: "há 9h" (badge amarelo)
+✅ Estufa Floração: "há 9h" (badge amarelo)
+
+**Benefício**: Usuário identifica rapidamente quais estufas precisam de atenção (não foram monitoradas recentemente).
+
+**Objetivo**: Ajudar usuário a identificar rapidamente quais estufas precisam de atenção (não foram monitoradas recentemente).

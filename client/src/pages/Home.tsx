@@ -742,7 +742,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
       <CardHeader>
         <div className="flex items-start justify-between">
           <div>
-            <CardTitle className="text-xl flex items-center gap-2">
+            <CardTitle className="text-xl flex items-center gap-2 flex-wrap">
               {tent.name}
               <Badge 
                 className={`${phaseInfo.color} text-white border-0`}
@@ -750,6 +750,42 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                 <PhaseIcon className="w-3 h-3 mr-1" />
                 {phaseInfo.phase}
               </Badge>
+              {(() => {
+                if (!tent.lastReadingAt) {
+                  return (
+                    <Badge variant="outline" className="text-gray-500 border-gray-300">
+                      <Clock className="w-3 h-3 mr-1" />
+                      Sem registros
+                    </Badge>
+                  );
+                }
+                const now = Date.now();
+                const diffMs = now - tent.lastReadingAt;
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                
+                let badgeColor = "bg-green-500/10 text-green-700 border-green-300";
+                let timeText = "";
+                
+                if (diffHours === 0) {
+                  timeText = `há ${diffMinutes}min`;
+                } else if (diffHours < 6) {
+                  timeText = `há ${diffHours}h`;
+                } else if (diffHours < 12) {
+                  badgeColor = "bg-yellow-500/10 text-yellow-700 border-yellow-300";
+                  timeText = `há ${diffHours}h`;
+                } else {
+                  badgeColor = "bg-red-500/10 text-red-700 border-red-300";
+                  timeText = `há ${diffHours}h`;
+                }
+                
+                return (
+                  <Badge variant="outline" className={badgeColor}>
+                    <Clock className="w-3 h-3 mr-1" />
+                    {timeText}
+                  </Badge>
+                );
+              })()}
             </CardTitle>
             <CardDescription className="mt-2 space-y-1">
               <div className="flex items-center gap-3">

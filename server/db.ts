@@ -142,13 +142,13 @@ export async function getUserByOpenId(openId: string) {
   }
 }
 
-export async function getAllTents(): Promise<(Tent & { plantCount: number; seedlingCount: number })[]> {
+export async function getAllTents(): Promise<(Tent & { plantCount: number; seedlingCount: number; lastReadingAt: number | null })[]> {
   const db = await getDb();
   if (!db) return [];
   
   const allTents = await db.select().from(tents).orderBy(tents.id);
   
-  // Para cada estufa, contar plantas e mudas ativas separadamente
+  // Para cada estufa, contar plantas e mudas ativas separadamente + buscar última leitura
   const tentsWithPlantCount = await Promise.all(
     allTents.map(async (tent: Tent) => {
       const plantsList = await db
@@ -159,10 +159,19 @@ export async function getAllTents(): Promise<(Tent & { plantCount: number; seedl
       const plantsOnly = plantsList.filter((p: any) => p.plantStage === 'PLANT');
       const seedlingsOnly = plantsList.filter((p: any) => p.plantStage === 'SEEDLING');
       
+      // Buscar último registro (daily log) desta estufa
+      const lastLog = await db
+        .select()
+        .from(dailyLogs)
+        .where(eq(dailyLogs.tentId, tent.id))
+        .orderBy(desc(dailyLogs.logDate))
+        .limit(1);
+      
       return {
         ...tent,
         plantCount: plantsOnly.length,
         seedlingCount: seedlingsOnly.length,
+        lastReadingAt: lastLog[0]?.logDate ? new Date(lastLog[0].logDate).getTime() : null,
       };
     })
   );
