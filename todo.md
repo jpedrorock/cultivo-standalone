@@ -1845,3 +1845,31 @@
 - Salva LST via plantLST.create com técnicas concatenadas por vírgula
 - Design mantém consistência visual com gradientes, ícones grandes e animações do QuickLog
 - Layout responsivo mobile-first com accordion para economizar espaço
+
+
+## Revisão Completa Mobile (22/02/2026)
+
+### QuickLog - Problemas Reportados
+- [x] Botão "Próximo" sumindo no mobile (pb-24 → pb-32)
+- [x] Testar navegação entre todos os passos (1-9)
+- [x] Verificar botões fixos na parte inferior
+- [x] Testar formulário expandido de saúde das plantas
+- [x] Verificar accordion de foto/tricomas/LST no mobile
+- [ ] Testar swipe gestures (funciona, mas não testado extensivamente)
+
+### Revisão Geral do App Mobile
+- [x] Home - cards de estufas, tarefas, navegação (OK)
+- [x] Plantas - lista, filtros, cards, detalhes (OK)
+- [x] Calculadoras - inputs, resultados, presets (OK)
+- [ ] Histórico - tabela/cards, gráficos
+- [ ] Alertas - lista, configurações
+- [ ] Tarefas - checklist, gerenciador
+- [ ] Strains - lista, detalhes
+- [ ] Configurações - formulários
+- [ ] Detalhes de Planta - abas (Saúde, Tricomas, LST, Observações)
+
+### Correções Necessárias
+- [ ] Listar todos os problemas encontrados
+- [ ] Priorizar correções críticas
+- [ ] Implementar correções
+- [ ] Testar novamente em mobile
