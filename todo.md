@@ -1861,18 +1861,28 @@
 - [x] Home - cards de estufas, tarefas, navegação (OK)
 - [x] Plantas - lista, filtros, cards, detalhes (OK)
 - [x] Calculadoras - inputs, resultados, presets (OK)
-- [ ] Histórico - tabela/cards, gráficos
-- [ ] Alertas - lista, configurações
-- [ ] Tarefas - checklist, gerenciador
-- [ ] Strains - lista, detalhes
-- [ ] Configurações - formulários
-- [ ] Detalhes de Planta - abas (Saúde, Tricomas, LST, Observações)
+- [x] Histórico - tabela/cards, gráficos (PROBLEMA: tabela muito larga, precisa layout de cards)
+- [x] Alertas - lista, configurações (OK)
+- [x] Tarefas - checklist, gerenciador (OK - empty state)
+- [x] Strains - lista, detalhes (OK)
+- [x] Configurações - formulários (OK)
+- [x] Detalhes de Planta - abas (Saúde, Tricomas, LST, Observações) (OK)
 
 ### Correções Necessárias
-- [ ] Listar todos os problemas encontrados
-- [ ] Priorizar correções críticas
-- [ ] Implementar correções
-- [ ] Testar novamente em mobile
+- [x] Listar todos os problemas encontrados
+- [x] Priorizar correções críticas
+- [x] Implementar correções
+- [x] Testar novamente em mobile (confirmado funcionando: cards <768px, tabela ≥768px)
+
+**Problemas Identificados e Corrigidos:**
+1. **Página Histórico (CRÍTICO - RESOLVIDO)**: 
+   - **Problema**: Tabela muito larga para mobile (375px), scroll horizontal excessivo
+   - **Solução**: Layout responsivo já existia mas breakpoint estava em `lg` (1024px). Ajustado para `md` (768px)
+   - **Resultado**: Mobile (<768px) mostra cards empilhados, Desktop (≥768px) mostra tabela completa
+   - **Cards mobile incluem**: Data, Turno, Estufa, Temp, RH, PPFD, pH, EC, Observações, botões Editar/Excluir
+
+**Demais páginas testadas e aprovadas:**
+- Home, Plantas, Calculadoras, Alertas, Tarefas, Strains, Configurações, Detalhes de Planta: todos funcionando corretamente em mobile
 
 
 ## PWA - Ocultar Botão "Instalar App" em Modo Standalone

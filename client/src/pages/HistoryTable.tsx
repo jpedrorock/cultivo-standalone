@@ -398,7 +398,7 @@ export default function HistoryTable() {
             ) : (
               <>
                 {/* Mobile Card Layout */}
-                <div className="lg:hidden space-y-6">
+                <div className="md:hidden space-y-6">
                   {logsData.logs.map((log: any) => (
                     <Card key={log.id} className="overflow-hidden shadow-sm">
                       <CardHeader className="pb-4 bg-muted/30">
@@ -475,7 +475,7 @@ export default function HistoryTable() {
                 </div>
 
                 {/* Desktop Table Layout */}
-                <div className="hidden lg:block overflow-x-auto">
+                <div className="hidden md:block overflow-x-auto">
                   <Table className="min-w-full">
                     <TableHeader>
                       <TableRow>
