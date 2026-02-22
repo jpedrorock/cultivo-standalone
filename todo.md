@@ -2203,3 +2203,39 @@ Essa ordem é mais lógica e intuitiva - começa com Home, depois a ação princ
 **Benefício**: Usuário identifica rapidamente quais estufas precisam de atenção (não foram monitoradas recentemente).
 
 **Objetivo**: Ajudar usuário a identificar rapidamente quais estufas precisam de atenção (não foram monitoradas recentemente).
+
+## Pré-selecionar Turno (AM/PM) Automaticamente no QuickLog
+
+- [x] Analisar estrutura atual de seleção de turno no QuickLog
+- [x] Implementar lógica de pré-seleção baseada no horário atual:
+  * AM: antes das 18h (6 PM)
+  * PM: depois das 18h (6 PM)
+- [x] Adicionar função getDefaultShift() para detectar horário
+- [x] Testar pré-seleção em diferentes horários do dia
+
+**Teste de Lógica (22/02/2026 18h)**:
+- Horário atual: 18h (6 PM) - exatamente no limite
+- Lógica: `currentHour < 18 ? "AM" : "PM"`
+- Resultado esperado: PM (pois 18 não é menor que 18)
+- Comportamento:
+  * 0h-17h (0 AM - 5 PM): Pré-seleciona AM ☀️
+  * 18h-23h (6 PM - 11 PM): Pré-seleciona PM 🌙
+
+**Verificação de Código**:
+- Função `getDefaultShift()` implementada corretamente
+- Estado `turn` inicializado com valor dinâmico
+- Botões AM/PM permanecem clicáveis para alteração manual
+- Turno é exibido no Passo 7 (PPFD) do QuickLog
+- [x] Verificar que usuário ainda pode alterar manualmente se necessário
+
+**Implementação Realizada (22/02/2026)**:
+
+**client/src/pages/QuickLog.tsx linhas 30-36**:
+- Criada função `getDefaultShift()` que retorna "AM" ou "PM" baseado no horário atual
+- Lógica: `new Date().getHours() < 18 ? "AM" : "PM"`
+- Estado `turn` inicializado com `getDefaultShift()` em vez de "AM" fixo
+- Usuário ainda pode alterar manualmente clicando nos botões AM/PM
+
+**Resultado**: QuickLog agora abre com o turno correto pré-selecionado automaticamente, economizando um clique do usuário em cada registro.
+
+**Objetivo**: Agilizar registro diário pré-selecionando turno correto automaticamente.

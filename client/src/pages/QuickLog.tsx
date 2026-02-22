@@ -26,7 +26,14 @@ type TrichomeStatus = "clear" | "cloudy" | "amber" | "mixed";
 export default function QuickLog() {
   const [, setLocation] = useLocation();
   const [currentStep, setCurrentStep] = useState(0);
-  const [turn, setTurn] = useState<"AM" | "PM">("AM");
+  
+  // Auto-detect shift based on current time (AM before 6 PM, PM after 6 PM)
+  const getDefaultShift = (): "AM" | "PM" => {
+    const currentHour = new Date().getHours();
+    return currentHour < 18 ? "AM" : "PM";
+  };
+  
+  const [turn, setTurn] = useState<"AM" | "PM">(getDefaultShift());
   
   // Form state - Daily Log
   const [tentId, setTentId] = useState<number | null>(null);
