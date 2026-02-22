@@ -1591,3 +1591,13 @@
 - [x] Testar visualização em diferentes estufas
 
 **Resultado:** Badges visuais implementados com sucesso. Mudas mostram "🌱 Muda" (verde claro) e plantas mostram "🌿 Planta" (verde escuro). Facilita identificação rápida na lista.
+
+
+## ✅ Contador de Plantas e Mudas no Header
+
+- [x] Calcular total de plantas (plantStage === "PLANT")
+- [x] Calcular total de mudas (plantStage === "SEEDLING")
+- [x] Adicionar contador no header: "X plantas • Y mudas"
+- [x] Testar com diferentes quantidades
+
+**Resultado:** Contador implementado com sucesso no header. Mostra "1 plantas • 9 mudas" dinamicamente. Atualiza automaticamente ao promover mudas ou adicionar plantas.

@@ -206,7 +206,13 @@ export default function PlantsList() {
               </div>
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-foreground">Minhas Plantas</h1>
-                <p className="text-sm text-muted-foreground">Agrupadas por estufa</p>
+                <p className="text-sm text-muted-foreground">
+                  {filteredPlants && (
+                    <>
+                      {filteredPlants.filter(p => p.plantStage === "PLANT").length} plantas • {filteredPlants.filter(p => p.plantStage === "SEEDLING").length} mudas
+                    </>
+                  )}
+                </p>
               </div>
             </div>
             <div className="flex gap-2">
