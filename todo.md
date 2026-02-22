@@ -2131,3 +2131,37 @@ Essa ordem é mais lógica e intuitiva - começa com Home, depois a ação princ
 4. ⋯ Mais
 
 **Justificativa**: Registro é a funcionalidade mais importante do app (uso diário). Colocar em primeiro lugar facilita acesso imediato e reforça a prioridade da ação.
+
+## Integrar QuickLog com Botões "Registrar" dos Cards de Estufa
+
+- [x] Analisar implementação atual dos botões "Registrar" nos cards
+- [x] Modificar botões "Registrar" para redirecionar para `/quicklog?tentId=X`
+- [x] Atualizar QuickLog para detectar parâmetro `tentId` na URL
+- [x] Pré-selecionar estufa no QuickLog quando `tentId` estiver presente
+- [x] Manter botão "Novo Registro" na página de Histórico (sem pré-seleção)
+- [x] Testar fluxo: Card da estufa → Registrar → QuickLog com estufa pré-selecionada
+- [x] Verificar que seleção manual de estufa ainda funciona
+- [x] Traduzir categorias de estufa no QuickLog (MAINTENANCE → Manutenção, etc.)
+
+**Teste Realizado (22/02/2026)**:
+✅ Clicou em "Registrar" no card da Estufa Manutenção
+✅ QuickLog abriu com URL `/quick-log?tentId=1`
+✅ Estufa Manutenção já estava pré-selecionada (card verde)
+✅ Categorias traduzidas: "Manutenção", "Vegetativa" (antes: "MAINTENANCE", "VEGA")
+✅ Seleção manual de outras estufas continua funcionando
+
+**Resultado**: Fluxo de registro ficou muito mais intuitivo - usuário vê a estufa, clica em Registrar e já começa a registrar dados dela sem precisar selecionar novamente!
+
+**Implementação Realizada**:
+1. **Home.tsx linha 995**: Botão "Registrar" agora redireciona para `/quicklog?tentId=${tent.id}`
+2. **QuickLog.tsx linhas 35-44**: useEffect detecta parâmetro `tentId` na URL e pré-seleciona a estufa automaticamente
+3. **Import adicionado**: `useEffect` importado do React
+
+**Fluxo Implementado**:
+- Usuário vê card da estufa na Home
+- Clica em "Registrar"
+- QuickLog abre com aquela estufa já selecionada
+- Usuário pula a etapa de seleção de estufa
+- Registro fica mais rápido e intuitivo
+
+**Objetivo**: Tornar o registro mais intuitivo - usuário vê a estufa e registra dados dela diretamente do card.

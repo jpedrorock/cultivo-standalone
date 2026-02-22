@@ -26,7 +26,7 @@ export function BottomNav() {
   const { data: alertCount } = trpc.alerts.getNewCount.useQuery({});
 
   const mainNavItems: NavItem[] = [
-    { href: "/quicklog", icon: Plus, label: "Registro" },
+    { href: "/quick-log", icon: Plus, label: "Registro" },
     { href: "/", icon: Home, label: "Home" },
     { href: "/calculators", icon: Calculator, label: "Calculadoras" },
   ];
@@ -56,7 +56,7 @@ export function BottomNav() {
                 href={item.href}
                 className={cn(
                   "flex flex-col items-center justify-center gap-1 py-3 px-4 rounded-lg transition-colors relative",
-                  item.href === "/quicklog"
+                  item.href === "/quick-log"
                     ? "bg-green-600 hover:bg-green-700 text-white"
                     : isActive
                       ? "text-primary hover:bg-primary/10"
@@ -66,7 +66,7 @@ export function BottomNav() {
                 <Icon className={cn(
                   "w-6 h-6",
                   isActive && "stroke-[2.5]",
-                  item.href === "/quicklog" && "stroke-[2.5]"
+                  item.href === "/quick-log" && "stroke-[2.5]"
                 )} />
                 <span className="text-xs font-medium">{item.label}</span>
                 {item.badge !== undefined && item.badge > 0 && (

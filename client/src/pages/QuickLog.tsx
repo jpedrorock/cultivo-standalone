@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSwipeable } from "react-swipeable";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,18 @@ export default function QuickLog() {
   
   // Form state - Daily Log
   const [tentId, setTentId] = useState<number | null>(null);
+  
+  // Detect tentId from URL parameter and pre-select tent
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tentIdParam = params.get('tentId');
+    if (tentIdParam) {
+      const parsedTentId = parseInt(tentIdParam, 10);
+      if (!isNaN(parsedTentId)) {
+        setTentId(parsedTentId);
+      }
+    }
+  }, []);
   const [tempC, setTempC] = useState("");
   const [rhPct, setRhPct] = useState("");
   const [wateringVolume, setWateringVolume] = useState("");
@@ -443,7 +455,12 @@ export default function QuickLog() {
                     }`}
                   >
                     <div className="font-bold text-xl">{tent.name}</div>
-                    <div className="text-sm opacity-90">{tent.category} • {tent.width}×{tent.depth}×{tent.height}cm</div>
+                    <div className="text-sm opacity-90">
+                      {tent.category === "MAINTENANCE" ? "Manutenção" : 
+                       tent.category === "VEGA" ? "Vegetativa" : 
+                       tent.category === "FLORA" ? "Floração" : 
+                       tent.category === "DRYING" ? "Secagem" : tent.category} • {tent.width}×{tent.depth}×{tent.height}cm
+                    </div>
                   </button>
                 ))}
               </div>
