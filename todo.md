@@ -1767,3 +1767,34 @@
 - [x] Importar ícone Zap do lucide-react
 
 **Resultado:** Botão verde com ícone de raio posicionado no header da Home. Navegação funcional para /quick-log.
+
+
+## QuickLog Design Enhancement v2
+
+### Melhorias Visuais Baseadas em Referências
+- [x] Adicionar gradiente verde suave no background (mantendo cores do app)
+- [x] Usar ícones line-art ao invés de ícones sólidos
+- [x] Adicionar sombras suaves (shadow-xl) nos cards brancos
+- [x] Implementar progress dots na parte inferior ao invés de barra no topo
+- [x] Cards brancos flutuantes sobre gradiente
+- [x] Melhorar animações de transição entre passos
+- [x] Adicionar ilustrações minimalistas com line-art (círculos decorativos animados)
+- [x] Aumentar espaçamento entre elementos (mais breathing room)
+- [x] Melhorar tipografia (títulos mais bold, descrições mais light)
+- [x] Testar design aprimorado
+
+**Implementação Completa:**
+- Gradiente multi-camada: `from-green-50 via-emerald-50 to-teal-50`
+- Ícones grandes (128px) em círculos coloridos com gradientes específicos por passo
+- Círculo decorativo pontilhado animado (20s rotation) em volta do ícone
+- Progress dots na base (9 dots, ativo em verde escuro, completados em verde claro)
+- Cards brancos com `shadow-lg hover:shadow-xl` e `rounded-2xl`
+- Animações `fade-in` e `slide-in-from-bottom` com durations escalonados
+- Typography: `text-3xl font-bold` para títulos, `text-lg text-gray-500` para subtítulos
+- Inputs grandes: `text-4xl h-20` centralizados com unidades à direita
+- Toggle AM/PM com gradientes vibrantes (amarelo/laranja e índigo/roxo)
+- Slider PPFD com gradiente amarelo visual
+- Resumo com cards coloridos usando `border-l-4` para categorização
+- Espaçamento generoso e breathing room em todos os passos
+- Swipe gestures funcionando (react-swipeable)
+- Responsividade: `max-w-md mx-auto` para centralização mobile
