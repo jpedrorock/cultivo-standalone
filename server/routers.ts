@@ -2620,6 +2620,38 @@ export const appRouter = router({
         return { success: true };
       }),
 
+    // Promover muda para planta (SEEDLING → PLANT)
+    promoteToPlant: publicProcedure
+      .input(z.object({
+        plantId: z.number(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Buscar planta atual
+        const [plant] = await database
+          .select()
+          .from(plants)
+          .where(eq(plants.id, input.plantId));
+        
+        if (!plant) {
+          throw new Error("Planta não encontrada");
+        }
+        
+        if (plant.plantStage !== "SEEDLING") {
+          throw new Error("Apenas mudas podem ser promovidas para plantas");
+        }
+        
+        // Promover para PLANT
+        await database
+          .update(plants)
+          .set({ plantStage: "PLANT" })
+          .where(eq(plants.id, input.plantId));
+        
+        return { success: true };
+      }),
+
     // Descartar planta (doente ou com problemas)
     discard: publicProcedure
       .input(z.object({

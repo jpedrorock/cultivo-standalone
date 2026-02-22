@@ -1569,3 +1569,15 @@
 - [x] Testar fluxo: MANUTENÇÃO → CLONAGEM → MANUTENÇÃO (com mudas indo para VEGA)
 
 **Resultado:** Funcionalidade 100% operacional. Mudas são criadas na estufa selecionada pelo usuário.
+
+
+## ✅ Promoção de Mudas para Plantas (UX/UI)
+
+- [x] Criar mutation backend para promover muda (SEEDLING) para planta (PLANT)
+- [x] Adicionar botão "Promover para Planta" na página PlantDetail.tsx (visível apenas para mudas)
+- [x] Esconder abas Tricomas e LST quando plantStage === "SEEDLING"
+- [x] Manter abas Fotos, Saúde e Observações para mudas
+- [x] Testar promoção de muda para planta
+- [x] Verificar que abas aparecem corretamente após promoção
+
+**Resultado:** Funcionalidade 100% operacional. Mudas mostram apenas Saúde e Observações. Após promoção, abas Tricomas e LST aparecem automaticamente.

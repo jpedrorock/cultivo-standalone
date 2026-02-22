@@ -97,6 +97,16 @@ export default function PlantDetail() {
     },
   });
 
+  const promoteToPlantMutation = trpc.plants.promoteToPlant.useMutation({
+    onSuccess: () => {
+      toast.success('🌱 Muda promovida para planta com sucesso!');
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(`Erro ao promover muda: ${error.message}`);
+    },
+  });
+
   const updateMutation = trpc.plants.update.useMutation({
     onSuccess: () => {
       toast.success('✅ Planta atualizada com sucesso!');
@@ -141,6 +151,11 @@ export default function PlantDetail() {
         finishReason: reason || undefined
       });
     }
+  };
+
+  const handlePromoteToPlant = () => {
+    if (!plant) return;
+    promoteToPlantMutation.mutate({ plantId: plant.id });
   };
 
   const handleEditClick = () => {
@@ -262,7 +277,26 @@ export default function PlantDetail() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  {tent?.category === "VEGA" && (
+                  {plant.plantStage === "SEEDLING" && (
+                    <DropdownMenuItem 
+                      onClick={handlePromoteToPlant}
+                      disabled={promoteToPlantMutation.isPending}
+                      className="text-green-600"
+                    >
+                      {promoteToPlantMutation.isPending ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Promovendo...
+                        </>
+                      ) : (
+                        <>
+                          <Sprout className="w-4 h-4 mr-2" />
+                          Promover para Planta
+                        </>
+                      )}
+                    </DropdownMenuItem>
+                  )}
+                  {tent?.category === "VEGA" && plant.plantStage === "PLANT" && (
                     <DropdownMenuItem 
                       onClick={handleTransplantToFlora}
                       disabled={transplantMutation.isPending}
@@ -382,14 +416,18 @@ export default function PlantDetail() {
               <Heart className="w-4 h-4 mr-2" />
               Saúde
             </TabsTrigger>
-            <TabsTrigger value="trichomes">
-              <Sparkles className="w-4 h-4 mr-2" />
-              Tricomas
-            </TabsTrigger>
-            <TabsTrigger value="lst">
-              <Scissors className="w-4 h-4 mr-2" />
-              LST
-            </TabsTrigger>
+            {plant.plantStage === "PLANT" && (
+              <TabsTrigger value="trichomes">
+                <Sparkles className="w-4 h-4 mr-2" />
+                Tricomas
+              </TabsTrigger>
+            )}
+            {plant.plantStage === "PLANT" && (
+              <TabsTrigger value="lst">
+                <Scissors className="w-4 h-4 mr-2" />
+                LST
+              </TabsTrigger>
+            )}
             <TabsTrigger value="observations">
               <FileText className="w-4 h-4 mr-2" />
               Observações
