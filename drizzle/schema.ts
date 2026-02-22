@@ -201,6 +201,9 @@ export const dailyLogs = mysqlTable(
     ppfd: int("ppfd"),
     ph: decimal("ph", { precision: 3, scale: 1 }),
     ec: decimal("ec", { precision: 4, scale: 2 }),
+    wateringVolume: int("wateringVolume"), // Volume regado em ml
+    runoffCollected: int("runoffCollected"), // Runoff coletado em ml
+    runoffPercentage: decimal("runoffPercentage", { precision: 5, scale: 2 }), // Calculado: (runoffCollected / wateringVolume) * 100
     notes: text("notes"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },

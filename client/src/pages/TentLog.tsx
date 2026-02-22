@@ -25,6 +25,8 @@ export default function TentLog() {
   const [photoperiod, setPhotoperiod] = useState("");
   const [ph, setPh] = useState("");
   const [ec, setEc] = useState("");
+  const [wateringVolume, setWateringVolume] = useState("");
+  const [runoffCollected, setRunoffCollected] = useState("");
   const [notes, setNotes] = useState("");
 
   // Função de validação em tempo real
@@ -109,6 +111,16 @@ export default function TentLog() {
   const rhValidation = getValidationState(rhPct, currentTargets?.rhMin, currentTargets?.rhMax);
   const phValidation = getValidationState(ph, currentTargets?.phMin, currentTargets?.phMax);
   const ecValidation = getValidationState(ec, currentTargets?.ecMin, currentTargets?.ecMax);
+  
+  // Calcular runoff percentage em tempo real
+  const runoffPercentage = useMemo(() => {
+    const watering = parseFloat(wateringVolume);
+    const runoff = parseFloat(runoffCollected);
+    if (!isNaN(watering) && !isNaN(runoff) && watering > 0) {
+      return ((runoff / watering) * 100).toFixed(1);
+    }
+    return null;
+  }, [wateringVolume, runoffCollected]);
 
   const utils = trpc.useUtils();
   const createLog = trpc.dailyLogs.create.useMutation({
@@ -121,6 +133,8 @@ export default function TentLog() {
       setPhotoperiod("");
       setPh("");
       setEc("");
+      setWateringVolume("");
+      setRunoffCollected("");
       setNotes("");
       // Invalidar cache
       utils.dailyLogs.list.invalidate();
@@ -159,6 +173,8 @@ export default function TentLog() {
       tempC: tempC ? tempC : undefined,
       rhPct: rhPct ? rhPct : undefined,
       ppfd: ppfd ? parseInt(ppfd) : undefined,
+      wateringVolume: wateringVolume ? parseInt(wateringVolume) : undefined,
+      runoffCollected: runoffCollected ? parseInt(runoffCollected) : undefined,
       notes: notes || undefined,
     });
   };
@@ -571,6 +587,60 @@ export default function TentLog() {
                       ✓ Ideal: {currentTargets.ecMin}-{currentTargets.ecMax}
                     </p>
                   )}
+                </div>
+
+                {/* Runoff Section */}
+                <div className="col-span-2 border-t border-border pt-4 mt-2">
+                  <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+                    <Droplets className="w-4 h-4 text-cyan-600" />
+                    Runoff (Drenagem)
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Volume Regado */}
+                    <div className="space-y-2">
+                      <Label htmlFor="wateringVolume" className="text-sm">
+                        Volume Regado (ml)
+                      </Label>
+                      <Input
+                        id="wateringVolume"
+                        type="number"
+                        placeholder="Ex: 1000"
+                        value={wateringVolume}
+                        onChange={(e) => setWateringVolume(e.target.value)}
+                        className="text-lg"
+                        min="0"
+                      />
+                    </div>
+
+                    {/* Runoff Coletado */}
+                    <div className="space-y-2">
+                      <Label htmlFor="runoffCollected" className="text-sm">
+                        Runoff Coletado (ml)
+                      </Label>
+                      <Input
+                        id="runoffCollected"
+                        type="number"
+                        placeholder="Ex: 200"
+                        value={runoffCollected}
+                        onChange={(e) => setRunoffCollected(e.target.value)}
+                        className="text-lg"
+                        min="0"
+                      />
+                    </div>
+
+                    {/* Runoff Percentage (Calculado) */}
+                    <div className="space-y-2">
+                      <Label htmlFor="runoffPercentage" className="text-sm">
+                        Runoff (%)
+                      </Label>
+                      <div className="h-10 px-3 py-2 bg-muted rounded-md border border-input flex items-center text-lg font-semibold">
+                        {runoffPercentage ? `${runoffPercentage}%` : "--"}
+                      </div>
+                      <p className="text-xs text-blue-600 font-medium">
+                        ✓ Ideal: 10-20%
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
 

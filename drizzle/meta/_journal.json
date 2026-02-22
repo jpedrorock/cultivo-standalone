@@ -71,6 +71,13 @@
       "when": 1770509852446,
       "tag": "0009_groovy_ravenous",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1771728462878,
+      "tag": "0010_known_iron_monger",
+      "breakpoints": true
     }
   ]
 }

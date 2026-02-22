@@ -451,6 +451,39 @@ export default function TentDetails() {
                         </div>
                       </div>
 
+                      {/* Runoff Section */}
+                      {(log.wateringVolume || log.runoffCollected || log.runoffPercentage) && (
+                        <div className="grid grid-cols-3 gap-4 mb-4">
+                          <div className="bg-cyan-500/10 rounded-lg p-3">
+                            <p className="text-xs text-muted-foreground flex items-center gap-1 mb-1">
+                              <Droplets className="w-3 h-3" />
+                              Volume Regado
+                            </p>
+                            <p className="text-lg font-bold text-foreground">
+                              {log.wateringVolume ? `${log.wateringVolume}ml` : "--"}
+                            </p>
+                          </div>
+                          <div className="bg-cyan-500/10 rounded-lg p-3">
+                            <p className="text-xs text-muted-foreground flex items-center gap-1 mb-1">
+                              <Droplets className="w-3 h-3" />
+                              Runoff Coletado
+                            </p>
+                            <p className="text-lg font-bold text-foreground">
+                              {log.runoffCollected ? `${log.runoffCollected}ml` : "--"}
+                            </p>
+                          </div>
+                          <div className="bg-cyan-500/10 rounded-lg p-3">
+                            <p className="text-xs text-muted-foreground flex items-center gap-1 mb-1">
+                              <Droplets className="w-3 h-3" />
+                              Runoff (%)
+                            </p>
+                            <p className="text-lg font-bold text-foreground">
+                              {log.runoffPercentage ? `${log.runoffPercentage}%` : "--"}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
                       {log.notes && (
                         <div className="bg-muted rounded-lg p-3">
                           <p className="text-xs text-muted-foreground mb-1">Observações</p>

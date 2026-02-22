@@ -1042,6 +1042,14 @@ export const appRouter = router({
             (val) => !val || (parseFloat(val) >= 0 && parseFloat(val) <= 5),
             { message: "EC deve estar entre 0 e 5 mS/cm" }
           ),
+          wateringVolume: z.number().optional().refine(
+            (val) => !val || val >= 0,
+            { message: "Volume regado deve ser maior ou igual a 0" }
+          ),
+          runoffCollected: z.number().optional().refine(
+            (val) => !val || val >= 0,
+            { message: "Runoff coletado deve ser maior ou igual a 0" }
+          ),
           notes: z.string().optional(),
         })
       )
@@ -1050,7 +1058,20 @@ export const appRouter = router({
         if (!database) {
           throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
         }
-        await database.insert(dailyLogs).values(input);
+        
+        // Calcular runoffPercentage se ambos wateringVolume e runoffCollected foram fornecidos
+        let runoffPercentage: string | undefined;
+        if (input.wateringVolume && input.runoffCollected) {
+          if (input.runoffCollected > input.wateringVolume) {
+            throw new Error("Runoff coletado não pode ser maior que o volume regado");
+          }
+          runoffPercentage = ((input.runoffCollected / input.wateringVolume) * 100).toFixed(2);
+        }
+        
+        await database.insert(dailyLogs).values({
+          ...input,
+          runoffPercentage,
+        });
         
         // Verificar alertas automaticamente
         const { checkAndNotifyAlerts } = await import("./alertChecker");

@@ -1649,3 +1649,60 @@
 - [ ] Testar colheita em lote
 
 **Resultado:** Funcionalidade 95% completa. Backend e frontend implementados. Barra de ações flutuante funcional com todos os botões. Falta apenas testar execução das ações.
+
+
+## ✅ Registro de Runoff por Estufa
+
+### Database Schema
+- [x] Adicionar campo `wateringVolume` (ml) na tabela dailyLogs
+- [x] Adicionar campo `runoffCollected` (ml) na tabela dailyLogs
+- [x] Adicionar campo calculado `runoffPercentage` (%) na tabela dailyLogs
+- [x] Executar SQL ALTER TABLE para aplicar mudanças
+
+### Backend
+- [x] Atualizar mutation `dailyLogs.create` para aceitar wateringVolume e runoffCollected
+- [x] Calcular runoffPercentage automaticamente: (runoffCollected / wateringVolume) × 100
+- [x] Adicionar schema fields no routers.ts (z.number().optional())
+
+### Frontend
+- [x] Adicionar campos no formulário de registro diário (TentLog.tsx):
+  - Input "Volume Regado (ml)"
+  - Input "Runoff Coletado (ml)"
+  - Display calculado "Runoff (%)" (read-only, atualiza em tempo real com useMemo)
+- [x] Mostrar runoff no histórico de logs (TentDetails.tsx - 3 cards cyan com ícone Droplets)
+- [x] Indicador visual "✓ Ideal: 10-20%"
+
+### Teste
+- [x] Testar registro com valores: Regado 1000ml, Coletado 200ml → Runoff 20%
+- [x] Testar cálculo automático em tempo real (20.0% calculado corretamente)
+- [x] Verificar exibição no histórico (3 cards mostrando 1000ml, 200ml, 20.00%)
+
+**Resultado:** Funcionalidade 100% operacional. Sistema calcula runoff automaticamente e exibe no histórico com cards visuais.
+
+## Revisão Mobile - UX/UI
+
+### Páginas para Revisar
+- [ ] Home / Dashboard
+- [ ] Lista de Estufas
+- [ ] Detalhes da Estufa
+- [ ] Registro Diário
+- [ ] Lista de Plantas
+- [ ] Detalhes da Planta
+- [ ] Transição de Fase
+- [ ] Calculadoras
+- [ ] Tarefas
+
+### Pontos de Atenção
+- [ ] Botões muito pequenos para toque (mínimo 44x44px)
+- [ ] Textos ilegíveis em telas pequenas
+- [ ] Formulários difíceis de preencher
+- [ ] Tabelas que não cabem na tela
+- [ ] Navegação confusa
+- [ ] Barra de ações em lote (verificar se cabe na tela)
+- [ ] Dialogs que ultrapassam viewport
+- [ ] Espaçamento inadequado entre elementos tocáveis
+
+### Melhorias Planejadas
+- [ ] Documentar problemas encontrados
+- [ ] Implementar correções prioritárias
+- [ ] Testar em diferentes tamanhos de tela (320px, 375px, 414px)
