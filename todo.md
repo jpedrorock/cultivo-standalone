@@ -2434,3 +2434,51 @@ Essa ordem é mais lógica e intuitiva - começa com Home, depois a ação princ
 - Botão "Não, voltar": Reseta formulário e volta para Home
 - Sistema sempre pergunta, mesmo se usuário desmarcou opção inicialmente
 - Se não houver plantas na estufa, pula direto para Home
+
+## Consolidar Configurações de Lembrete Diário
+
+**Problema**: Existem duas páginas diferentes com configurações de lembrete:
+1. **Settings** (`/settings`): Lembrete Diário com horário único (18:00)
+2. **AlertSettings** (`/settings/alerts`): Sistema novo com múltiplos horários
+
+Usuário está confuso - não sabe onde configurar os múltiplos horários.
+
+**Solução**: Consolidar tudo em uma única página ou adicionar navegação clara.
+
+- [x] Analisar página Settings atual
+- [x] Analisar página AlertSettings atual (NotificationSettings.tsx)
+- [x] Decidir: mover tudo para AlertSettings OU adicionar link de navegação (escolhido: link de navegação)
+- [x] Implementar solução escolhida
+- [x] Remover configuração duplicada
+- [x] Testar fluxo de configuração
+
+**Teste Realizado (23/02/2026)**:
+✅ Página NotificationSettings agora mostra card "Lembrete Diário" com botão "Configurar Lembretes"
+✅ Botão redireciona para `/settings/alerts`
+✅ AlertSettings contém sistema completo de múltiplos horários
+✅ Botão preset "☀️ AM (8h) + 🌙 PM (20h)" disponível
+✅ Sem duplicação de funcionalidade
+
+**Nota**: Usuário deve fazer hard refresh no navegador para ver as mudanças (limpar cache).
+
+**Solução Implementada (23/02/2026)**:
+
+**Problema Identificado**:
+- NotificationSettings.tsx tinha "Lembrete Diário" com horário único (18:00)
+- AlertSettings.tsx tinha sistema novo com múltiplos horários
+- Usuário confuso sobre onde configurar
+
+**Mudanças Aplicadas**:
+1. NotificationSettings.tsx:
+   - Removida seção completa de "Lembrete Diário" com horário único
+   - Adicionado card com botão "Configurar Lembretes" que redireciona para `/settings/alerts`
+   - Texto explicativo: "Você pode configurar múltiplos horários de lembrete diário (por exemplo: 8h AM e 20h PM) na página de Alertas."
+   - Removidas variáveis de estado não utilizadas (dailyReminderEnabled, reminderHour, reminderMinute)
+   - Removidos useEffects e funções relacionadas ao lembrete diário
+
+2. AlertSettings.tsx:
+   - Mantém sistema completo de múltiplos horários
+   - Botão preset "☀️ AM (8h) + 🌙 PM (20h)"
+   - Interface para adicionar/remover horários
+
+**Resultado**: Agora há apenas uma página para configurar lembretes diários (AlertSettings), eliminando confusão.

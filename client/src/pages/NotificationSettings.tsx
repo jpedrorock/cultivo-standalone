@@ -11,14 +11,10 @@ import {
   getNotificationPermission,
   requestNotificationPermission,
   showNotification,
-  scheduleDailyReminder,
 } from "@/lib/notifications";
 
 export default function NotificationSettings() {
   const [permission, setPermission] = useState<string>(getNotificationPermission());
-  const [dailyReminderEnabled, setDailyReminderEnabled] = useState(false);
-  const [reminderHour, setReminderHour] = useState("18");
-  const [reminderMinute, setReminderMinute] = useState("00");
   const [alertsEnabled, setAlertsEnabled] = useState(false);
 
   // Load settings from localStorage
@@ -26,9 +22,6 @@ export default function NotificationSettings() {
     const savedSettings = localStorage.getItem('notificationSettings');
     if (savedSettings) {
       const settings = JSON.parse(savedSettings);
-      setDailyReminderEnabled(settings.dailyReminderEnabled || false);
-      setReminderHour(settings.reminderHour || "18");
-      setReminderMinute(settings.reminderMinute || "00");
       setAlertsEnabled(settings.alertsEnabled || false);
     }
   }, []);
@@ -36,21 +29,12 @@ export default function NotificationSettings() {
   // Save settings to localStorage
   const saveSettings = () => {
     const settings = {
-      dailyReminderEnabled,
-      reminderHour,
-      reminderMinute,
       alertsEnabled,
     };
     localStorage.setItem('notificationSettings', JSON.stringify(settings));
   };
 
-  // Schedule reminder when settings change
-  useEffect(() => {
-    if (dailyReminderEnabled && permission === 'granted') {
-      const cleanup = scheduleDailyReminder(parseInt(reminderHour), parseInt(reminderMinute));
-      return cleanup;
-    }
-  }, [dailyReminderEnabled, reminderHour, reminderMinute, permission]);
+
 
   const handleRequestPermission = async () => {
     const result = await requestNotificationPermission();
@@ -76,13 +60,7 @@ export default function NotificationSettings() {
     toast.success('Configurações salvas!');
   };
 
-  const handleToggleDailyReminder = (enabled: boolean) => {
-    setDailyReminderEnabled(enabled);
-    if (enabled && permission !== 'granted') {
-      toast.error('Ative as notificações primeiro!');
-      setDailyReminderEnabled(false);
-    }
-  };
+
 
   const handleToggleAlerts = (enabled: boolean) => {
     setAlertsEnabled(enabled);
@@ -156,54 +134,23 @@ export default function NotificationSettings() {
         </CardContent>
       </Card>
 
-      {/* Daily Reminder Card */}
+      {/* Daily Reminder Card - Redirects to AlertSettings */}
       <Card>
         <CardHeader>
           <CardTitle>Lembrete Diário</CardTitle>
           <CardDescription>
-            Receba um lembrete para registrar os dados das estufas todos os dias
+            Receba um lembrete para registrar os dados das estufas - configure múltiplos horários
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="daily-reminder">Ativar lembrete diário</Label>
-            <Switch
-              id="daily-reminder"
-              checked={dailyReminderEnabled}
-              onCheckedChange={handleToggleDailyReminder}
-              disabled={permission !== 'granted'}
-            />
-          </div>
-
-          {dailyReminderEnabled && (
-            <div className="space-y-2">
-              <Label>Horário do lembrete</Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  type="number"
-                  min="0"
-                  max="23"
-                  value={reminderHour}
-                  onChange={(e) => setReminderHour(e.target.value)}
-                  className="w-20"
-                  placeholder="HH"
-                />
-                <span>:</span>
-                <Input
-                  type="number"
-                  min="0"
-                  max="59"
-                  value={reminderMinute}
-                  onChange={(e) => setReminderMinute(e.target.value)}
-                  className="w-20"
-                  placeholder="MM"
-                />
-                <span className="text-sm text-muted-foreground ml-2">
-                  ({reminderHour}:{reminderMinute.padStart(2, '0')})
-                </span>
-              </div>
-            </div>
-          )}
+        <CardContent>
+          <p className="text-sm text-muted-foreground mb-4">
+            Você pode configurar múltiplos horários de lembrete diário (por exemplo: 8h AM e 20h PM) na página de Alertas.
+          </p>
+          <Button asChild>
+            <a href="/settings/alerts">
+              Configurar Lembretes
+            </a>
+          </Button>
         </CardContent>
       </Card>
 
