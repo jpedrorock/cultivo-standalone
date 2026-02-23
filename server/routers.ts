@@ -3141,21 +3141,41 @@ export const appRouter = router({
     upload: publicProcedure
       .input(z.object({
         plantId: z.number(),
-        photoUrl: z.string(),
+        photoBase64: z.string(), // Base64 data URL
         description: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
         const database = await getDb();
         if (!database) throw new Error("Database not available");
         
+        let photoUrl: string | undefined;
+        let photoKey: string | undefined;
+
+        // Upload foto para storage
+        try {
+          // Remover prefixo data:image/...;base64,
+          const base64Data = input.photoBase64.replace(/^data:image\/\w+;base64,/, "");
+          const buffer = Buffer.from(base64Data, 'base64');
+          
+          // Upload para storage local
+          const { storagePut } = await import("./storage");
+          photoKey = `plants/${input.plantId}/${Date.now()}.jpg`;
+          const result = await storagePut(photoKey, buffer, "image/jpeg");
+          photoUrl = result.url;
+        } catch (error) {
+          console.error('Erro ao fazer upload da foto:', error);
+          throw new Error('Falha ao salvar foto');
+        }
+        
         await database.insert(plantPhotos).values({
           plantId: input.plantId,
-          photoUrl: input.photoUrl,
+          photoUrl,
+          photoKey,
           description: input.description,
           photoDate: new Date(),
         });
         
-        return { success: true };
+        return { success: true, photoUrl };
       }),
     
     delete: publicProcedure

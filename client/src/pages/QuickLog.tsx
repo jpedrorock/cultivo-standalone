@@ -270,7 +270,7 @@ export default function QuickLog() {
         // The backend will handle S3 upload
         await uploadPhotoMutation.mutateAsync({
           plantId: plant.id,
-          photoUrl: record.photoBase64, // Backend will process base64
+          photoBase64: record.photoBase64, // Backend will process base64
           description: "Foto do QuickLog",
         });
       }

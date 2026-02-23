@@ -567,8 +567,8 @@ export const plantPhotos = mysqlTable(
     plantId: int("plantId")
       .notNull()
       .references(() => plants.id, { onDelete: "cascade" }),
-    photoUrl: varchar("photoUrl", { length: 500 }).notNull(), // URL S3
-    photoKey: varchar("photoKey", { length: 500 }).notNull(), // S3 key
+    photoUrl: varchar("photoUrl", { length: 500 }).notNull(), // URL local ou S3
+    photoKey: varchar("photoKey", { length: 500 }), // S3 key (opcional para uploads locais)
     description: text("description"),
     photoDate: timestamp("photoDate").defaultNow().notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),

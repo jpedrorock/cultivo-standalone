@@ -2711,3 +2711,12 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] 5. Corrigir upload de fotos - não carrega e não sobe (File5.PNG mostra ícone ? ao invés da foto)
 - [x] 6. Verificar tarefas perdidas - sistema de criar/excluir tarefas (File6.PNG mostra vazio)
 - [x] 7. Implementar alertas de registro com 2 horários (manhã e noite) ao invés de apenas 1 (File7.PNG mostra só 18:00)
+
+## Bug Crítico - Upload de Fotos (23/02/2026)
+
+- [x] Corrigir backend: está inserindo base64 direto no photoUrl ao invés de salvar no storage primeiro
+- [x] Verificar procedure de criação de health log com foto (createHealthLog em routers.ts)
+- [x] Garantir que foto seja salva em /uploads antes de inserir URL no banco
+- [x] Corrigir QuickLog.tsx para usar photoBase64 ao invés de photoUrl
+- [x] Tornar photoKey nullable no schema para compatibilidade
+- [ ] Testar upload de foto após correção
