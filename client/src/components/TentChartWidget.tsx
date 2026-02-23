@@ -232,11 +232,11 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
               fontSize: "11px",
             }}
             labelStyle={{ color: "hsl(var(--foreground))", fontSize: "10px" }}
-            formatter={(value: number | undefined, name: string | undefined) => {
+            formatter={(value: number | undefined, name: string | undefined, payload: any) => {
               if (value === undefined || !name) return ['--', name || ''];
               const param = name as keyof typeof parameterConfig;
               const config = parameterConfig[param];
-              const rawValue = normalizedData[0]?.[`${param}Raw` as keyof typeof normalizedData[0]];
+              const rawValue = payload?.payload?.[`${param}Raw`];
               if (rawValue !== undefined && typeof rawValue === 'number') {
                 return [`${rawValue.toFixed(1)}${config.unit} (${value.toFixed(0)}%)`, config.label];
               }

@@ -2696,3 +2696,8 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] Calcular min/max dos valores NORMALIZADOS (não absolutos)
 - [x] Aplicar eixo Y dinâmico aos valores normalizados
 - [x] Manter tooltip mostrando valores reais + porcentagem normalizada
+
+## Widget de Gráficos - Correção do Tooltip
+
+- [x] Corrigir tooltip para mostrar valores de todos os parâmetros (não só temperatura)
+- [x] Ajustar acesso aos valores raw no formatter do tooltip
