@@ -2496,3 +2496,9 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 ## Correções UI - QuickLog (22/02/2026)
 
 - [x] Remover botão "Registro Rápido" do canto superior direito do QuickLog (redundante - usuário pode voltar clicando em "Estufas" no BottomNav)
+
+## Correções UI - QuickLog Header (22/02/2026 - Parte 2)
+
+- [x] Remover header branco completo do QuickLog (título "Registro Rápido" + "Passo X de 9")
+- [x] Corrigir sobreposição do ícone azul com o header
+- [x] Deixar página começar direto no conteúdo (card de seleção)

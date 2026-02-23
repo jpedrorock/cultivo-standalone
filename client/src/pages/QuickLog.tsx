@@ -374,24 +374,6 @@ export default function QuickLog() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 pb-32" {...swipeHandlers}>
-      {/* Header */}
-      <div className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Registro Rápido</h1>
-            {currentStep < 9 && (
-              <p className="text-sm text-gray-500">Passo {currentStep + 1} de 9</p>
-            )}
-            {currentStep >= 9 && recordPlantHealth === null && (
-              <p className="text-sm text-gray-500">Passo 10 de 9</p>
-            )}
-            {currentStep >= 9 && recordPlantHealth === true && plants[currentPlantIndex] && (
-              <p className="text-sm text-gray-500">Passo {10 + currentPlantIndex} de {9 + plants.length}</p>
-            )}
-          </div>
-        </div>
-      </div>
-
       {/* Content */}
       <div className="container mx-auto px-4 py-8 max-w-md">
         <div className="bg-white rounded-2xl shadow-lg p-6 space-y-6 min-h-[500px] relative overflow-hidden">
