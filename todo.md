@@ -2302,16 +2302,16 @@ Essa ordem é mais lógica e intuitiva - começa com Home, depois a ação princ
 
 **Contexto**: Usuário quer ser lembrado de fazer registro às 8h (turno AM) e às 20h (turno PM) todos os dias.
 
-## Notificação Automática - Badge Vermelho (12h sem registro)
+## Notificação Automática - Badge Vermelho (24h sem registro)
 
-**Objetivo**: Enviar notificação push automática quando uma estufa ficar 12+ horas sem registro (badge vermelho).
+**Objetivo**: Enviar notificação push automática quando uma estufa ficar 24+ horas sem registro.
 
 - [x] Projetar lógica de verificação periódica de estufas
 - [x] Implementar função para checar última leitura de cada estufa
 - [x] Calcular tempo decorrido desde última leitura
-- [x] Disparar notificação quando ultrapassar 12h
+- [x] Disparar notificação quando ultrapassar 24h (atualizado de 12h)
 - [x] Adicionar configuração on/off para este tipo de alerta (usa configuração "Alertas Automáticos")
-- [x] Evitar notificações duplicadas (apenas uma por estufa a cada 12h)
+- [x] Evitar notificações duplicadas (apenas uma por estufa a cada 24h)
 
 **Implementação Realizada (22/02/2026)**:
 
@@ -2330,7 +2330,7 @@ Essa ordem é mais lógica e intuitiva - começa com Home, depois a ação princ
 
 **Mensagem da Notificação**: "⚠️ [Nome da Estufa] - Sem Registro! - Sem registro há [X]h. Clique para registrar agora."
 
-**Verificação**: A cada 1 hora, sistema checa todas as estufas e notifica apenas aquelas com 12h+ sem registro que ainda não foram notificadas.
+**Verificação**: A cada 1 hora, sistema checa todas as estufas e notifica apenas aquelas com 24h+ sem registro que ainda não foram notificadas.
 - [x] Testar sistema de alerta de badge vermelho
 - [ ] Registrar alerta no histórico de alertas (funcionalidade futura)
 
@@ -2338,13 +2338,15 @@ Essa ordem é mais lógica e intuitiva - começa com Home, depois a ação princ
 ✅ Monitor inicia automaticamente quando Home carrega
 ✅ Verificação periódica a cada 1 hora implementada
 ✅ Cálculo de tempo decorrido correto (usa lastReadingAt do banco)
-✅ Notificação dispara quando estufa > 12h sem registro
+✅ Notificação dispara quando estufa > 24h sem registro (atualizado de 12h)
 ✅ Sistema de rastreamento de notificações enviadas (localStorage) funciona
 ✅ Reset automático quando estufa recebe novo registro
 ✅ Integrado com configuração "Alertas Automáticos" (on/off)
 
-**Nota**: Teste completo requer dispositivo real com permissões ativadas e aguardar 12h sem registro em alguma estufa. A implementação está correta e funcionará conforme esperado.
+**Nota**: Teste completo requer dispositivo real com permissões ativadas e aguardar 24h sem registro em alguma estufa. A implementação está correta e funcionará conforme esperado.
 
-**Contexto**: Usuário quer ser notificado automaticamente quando esquecer de registrar dados de alguma estufa por mais de 12 horas.
+**Justificativa da mudança (12h → 24h)**: Usuário trabalha e pode chegar após horário da primeira leitura. 24h dá margem de um dia completo para fazer o registro sem alertas desnecessários.
+
+**Contexto**: Usuário quer ser notificado automaticamente quando esquecer de registrar dados de alguma estufa por mais de 24 horas (um dia completo).
 
 **Mensagem da Notificação**: "⚠️ Estufa [Nome] - Sem registro há [X] horas! Clique para registrar agora."

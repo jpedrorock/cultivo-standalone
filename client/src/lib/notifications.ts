@@ -204,7 +204,7 @@ export async function checkAndNotifyMissingReadings(
   tents: Array<{ id: number; name: string; lastReadingAt: number | null }>
 ): Promise<void> {
   const now = Date.now();
-  const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000;
+  const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
   const notifiedKey = 'notifiedMissingReadings';
 
   // Get list of already notified tents (to avoid duplicates)
@@ -216,14 +216,14 @@ export async function checkAndNotifyMissingReadings(
     const timeSinceReading = now - tent.lastReadingAt;
     const hoursSince = Math.floor(timeSinceReading / (60 * 60 * 1000));
 
-    // If more than 12h and not notified yet
-    if (timeSinceReading > TWELVE_HOURS_MS && !notified[tent.id]) {
+    // If more than 24h and not notified yet
+    if (timeSinceReading > TWENTY_FOUR_HOURS_MS && !notified[tent.id]) {
       await showMissingReadingAlert(tent.name, hoursSince);
       notified[tent.id] = now; // Mark as notified
     }
 
-    // Reset notification flag if reading was updated (less than 12h)
-    if (timeSinceReading <= TWELVE_HOURS_MS && notified[tent.id]) {
+    // Reset notification flag if reading was updated (less than 24h)
+    if (timeSinceReading <= TWENTY_FOUR_HOURS_MS && notified[tent.id]) {
       delete notified[tent.id];
     }
   }
