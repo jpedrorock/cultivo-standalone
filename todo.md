@@ -2545,3 +2545,11 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] Garantir que apenas o card de conteúdo tenha scroll (overflow-y-auto)
 - [x] Suavizar cor vermelha no dark mode (muito gritante) - trocar por tom rosa/vinho (rose-300 ou rose-400)
 - [x] Testar no iPhone que página não sobe mais quando digitar
+
+## Feedback Visual e Tátil - QuickLog (23/02/2026)
+
+- [x] Adicionar borda verde (ring-2 ring-green-500) nos inputs ativos/focados
+- [x] Implementar vibração tátil (haptic feedback) ao completar preenchimento de campo
+- [x] Adicionar vibração ao avançar para próximo passo
+- [x] Adicionar vibração ao voltar para passo anterior
+- [x] Testar no iPhone que vibrações funcionam corretamente

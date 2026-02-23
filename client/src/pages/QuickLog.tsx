@@ -27,6 +27,14 @@ export default function QuickLog() {
   const [, setLocation] = useLocation();
   const [currentStep, setCurrentStep] = useState(0);
   
+  // Haptic feedback helper
+  const triggerHaptic = (type: 'light' | 'medium' | 'heavy' = 'light') => {
+    if ('vibrate' in navigator) {
+      const duration = type === 'light' ? 10 : type === 'medium' ? 20 : 50;
+      navigator.vibrate(duration);
+    }
+  };
+  
   // Auto-detect shift based on current time (AM before 6 PM, PM after 6 PM)
   const getDefaultShift = (): "AM" | "PM" => {
     const currentHour = new Date().getHours();
@@ -355,11 +363,13 @@ export default function QuickLog() {
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
       if (currentStep < 8 && canGoNext()) {
+        triggerHaptic('medium');
         setCurrentStep(currentStep + 1);
       }
     },
     onSwipedRight: () => {
       if (currentStep > 0 && currentStep < 9) {
+        triggerHaptic('light');
         setCurrentStep(currentStep - 1);
       }
     },
@@ -479,9 +489,17 @@ export default function QuickLog() {
                     inputMode="numeric"
                     pattern="[0-9]*"
                     value={tempC}
-                    onChange={(e) => setTempC(e.target.value)}
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                      if (newValue && !tempC) triggerHaptic('light');
+                      setTempC(newValue);
+                    }}
                     placeholder="25"
-                    className="text-center text-4xl h-20 border-2 border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg focus:ring-4 focus:ring-orange-100"
+                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg transition-all duration-200 ${
+                      tempC
+                        ? 'border-green-500 dark:border-green-400 ring-2 ring-green-200 dark:ring-green-900'
+                        : 'border-gray-300 dark:border-gray-600 focus:ring-4 focus:ring-orange-100'
+                    }`}
                   />
                   <span className="text-4xl font-bold text-gray-400">°C</span>
                 </div>
@@ -497,9 +515,17 @@ export default function QuickLog() {
                     inputMode="numeric"
                     pattern="[0-9]*"
                     value={rhPct}
-                    onChange={(e) => setRhPct(e.target.value)}
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                      if (newValue && !rhPct) triggerHaptic('light');
+                      setRhPct(newValue);
+                    }}
                     placeholder="60"
-                    className="text-center text-4xl h-20 border-2 border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg focus:ring-4 focus:ring-blue-100"
+                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg transition-all duration-200 ${
+                      rhPct
+                        ? 'border-green-500 dark:border-green-400 ring-2 ring-green-200 dark:ring-green-900'
+                        : 'border-gray-300 dark:border-gray-600 focus:ring-4 focus:ring-blue-100'
+                    }`}
                   />
                   <span className="text-4xl font-bold text-gray-400">%</span>
                 </div>
@@ -515,9 +541,17 @@ export default function QuickLog() {
                     inputMode="numeric"
                     pattern="[0-9]*"
                     value={wateringVolume}
-                    onChange={(e) => setWateringVolume(e.target.value)}
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                      if (newValue && !wateringVolume) triggerHaptic('light');
+                      setWateringVolume(newValue);
+                    }}
                     placeholder="2000"
-                    className="text-center text-4xl h-20 border-2 border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg focus:ring-4 focus:ring-green-100"
+                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg transition-all duration-200 ${
+                      wateringVolume
+                        ? 'border-green-500 dark:border-green-400 ring-2 ring-green-200 dark:ring-green-900'
+                        : 'border-gray-300 dark:border-gray-600 focus:ring-4 focus:ring-green-100'
+                    }`}
                   />
                   <span className="text-4xl font-bold text-gray-400">ml</span>
                 </div>
@@ -533,9 +567,17 @@ export default function QuickLog() {
                     inputMode="numeric"
                     pattern="[0-9]*"
                     value={runoffCollected}
-                    onChange={(e) => setRunoffCollected(e.target.value)}
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                      if (newValue && !runoffCollected) triggerHaptic('light');
+                      setRunoffCollected(newValue);
+                    }}
                     placeholder="300"
-                    className="text-center text-4xl h-20 border-2 border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg focus:ring-4 focus:ring-teal-100"
+                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg transition-all duration-200 ${
+                      runoffCollected
+                        ? 'border-green-500 dark:border-green-400 ring-2 ring-green-200 dark:ring-green-900'
+                        : 'border-gray-300 dark:border-gray-600 focus:ring-4 focus:ring-teal-100'
+                    }`}
                   />
                   <span className="text-4xl font-bold text-gray-400">ml</span>
                 </div>
@@ -564,9 +606,17 @@ export default function QuickLog() {
                     inputMode="decimal"
                     step="0.1"
                     value={ph}
-                    onChange={(e) => setPh(e.target.value)}
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                      if (newValue && !ph) triggerHaptic('light');
+                      setPh(newValue);
+                    }}
                     placeholder="6.0"
-                    className="text-center text-4xl h-20 border-2 border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg focus:ring-4 focus:ring-purple-100"
+                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg transition-all duration-200 ${
+                      ph
+                        ? 'border-green-500 dark:border-green-400 ring-2 ring-green-200 dark:ring-green-900'
+                        : 'border-gray-300 dark:border-gray-600 focus:ring-4 focus:ring-purple-100'
+                    }`}
                   />
                   <span className="text-4xl font-bold text-gray-400">pH</span>
                 </div>
@@ -582,9 +632,17 @@ export default function QuickLog() {
                     inputMode="decimal"
                     step="0.1"
                     value={ec}
-                    onChange={(e) => setEc(e.target.value)}
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                      if (newValue && !ec) triggerHaptic('light');
+                      setEc(newValue);
+                    }}
                     placeholder="1.5"
-                    className="text-center text-4xl h-20 border-2 border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg focus:ring-4 focus:ring-yellow-100"
+                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg transition-all duration-200 ${
+                      ec
+                        ? 'border-green-500 dark:border-green-400 ring-2 ring-green-200 dark:ring-green-900'
+                        : 'border-gray-300 dark:border-gray-600 focus:ring-4 focus:ring-yellow-100'
+                    }`}
                   />
                   <span className="text-4xl font-bold text-gray-400">mS/cm</span>
                 </div>
@@ -1050,7 +1108,10 @@ export default function QuickLog() {
         {currentStep > 0 && currentStep < 9 && (
           <Button
             variant="outline"
-            onClick={() => setCurrentStep(currentStep - 1)}
+            onClick={() => {
+              triggerHaptic('light');
+              setCurrentStep(currentStep - 1);
+            }}
             className="flex-1 h-14 text-lg font-medium rounded-xl"
           >
             <ArrowLeft className="mr-2 h-5 w-5" />
@@ -1061,7 +1122,10 @@ export default function QuickLog() {
         {/* Next/Save button for daily log */}
         {currentStep < 8 && (
           <Button
-            onClick={() => setCurrentStep(currentStep + 1)}
+            onClick={() => {
+              triggerHaptic('medium');
+              setCurrentStep(currentStep + 1);
+            }}
             disabled={!canGoNext()}
             className="flex-1 h-14 text-lg font-medium rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
           >
@@ -1073,7 +1137,10 @@ export default function QuickLog() {
         {/* Continue button on summary */}
         {currentStep === 8 && (
           <Button
-            onClick={() => setCurrentStep(9)}
+            onClick={() => {
+              triggerHaptic('medium');
+              setCurrentStep(9);
+            }}
             className="flex-1 h-14 text-lg font-medium rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
           >
             <Check className="mr-2 h-5 w-5" />
