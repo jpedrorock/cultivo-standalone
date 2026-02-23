@@ -1102,6 +1102,45 @@ export const appRouter = router({
         return result[0] || null;
       }),
     
+    getWeeklyData: publicProcedure
+      .input(z.object({ tentId: z.number() }))
+      .query(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new Error("Database not available");
+        
+        // Get logs from last 7 days
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        
+        const logs = await database
+          .select({
+            logDate: dailyLogs.logDate,
+            tempC: dailyLogs.tempC,
+            rhPct: dailyLogs.rhPct,
+            ppfd: dailyLogs.ppfd,
+            ph: dailyLogs.ph,
+            ec: dailyLogs.ec,
+          })
+          .from(dailyLogs)
+          .where(
+            and(
+              eq(dailyLogs.tentId, input.tentId),
+              sql`${dailyLogs.logDate} >= ${sevenDaysAgo}`
+            )
+          )
+          .orderBy(dailyLogs.logDate);
+        
+        // Format data for chart
+        return logs.map((log: any) => ({
+          date: new Date(log.logDate).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+          temp: log.tempC ? parseFloat(log.tempC) : undefined,
+          rh: log.rhPct ? parseFloat(log.rhPct) : undefined,
+          ppfd: log.ppfd || undefined,
+          ph: log.ph ? parseFloat(log.ph) : undefined,
+          ec: log.ec ? parseFloat(log.ec) : undefined,
+        }));
+      }),
+    
     listAll: publicProcedure
       .input(
         z.object({

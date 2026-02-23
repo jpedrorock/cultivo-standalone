@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { WeatherWidget } from "@/components/WeatherWidget";
 import { AlertsWidget } from "@/components/AlertsWidget";
 import { CyclesDashboard } from "@/components/CyclesDashboard";
+import { TentChartWidget } from "@/components/TentChartWidget";
 import StartCycleModal from "@/components/StartCycleModal";
 import { InitiateCycleModal } from "@/components/InitiateCycleModal";
 import { EditCycleModal } from "@/components/EditCycleModal";
@@ -396,37 +397,7 @@ export default function Home() {
           <CyclesDashboard />
         </div>
 
-        {/* Quick Actions */}
-        <div className="mt-8 bg-card/80 backdrop-blur-sm rounded-lg border border-border p-6">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Ações Rápidas</h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2">
-              <Link href="/manage-strains">
-                <Sprout className="w-6 h-6" />
-                <span>Gerenciar Strains</span>
-              </Link>
-            </Button>
-            <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2">
-              <Link href="/calculators">
-                <Calculator className="w-6 h-6" />
-                <span>Calculadoras</span>
-              </Link>
-            </Button>
-            <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2">
-              <Link href="/history">
-                <Wind className="w-6 h-6" />
-                <span>Histórico</span>
-              </Link>
-            </Button>
-            <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2">
-              <Link href="/alerts">
-                <Bell className="w-6 h-6" />
-                <span>Alertas</span>
-              </Link>
-            </Button>
 
-          </div>
-        </div>
       </main>
 
       {/* Start Cycle Modal */}
@@ -639,6 +610,15 @@ export default function Home() {
       </div>
     </PullToRefresh>
   );
+}
+
+// Wrapper component to fetch weekly data
+function TentChartWidgetWrapper({ tentId, tentName }: { tentId: number; tentName: string }) {
+  const { data: weeklyData = [], isLoading } = trpc.dailyLogs.getWeeklyData.useQuery({ tentId });
+  
+  if (isLoading) return null;
+  
+  return <TentChartWidget tentId={tentId.toString()} tentName={tentName} data={weeklyData} />;
 }
 
 // Separate component for Tent Card with Tasks
@@ -1117,6 +1097,9 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
           </div>
         </div>
       </CardContent>
+      
+      {/* Weekly Chart Widget */}
+      {cycle && <TentChartWidgetWrapper tentId={tent.id} tentName={tent.name} />}
       
       {/* Phase Transition Dialog */}
       {cycle && (

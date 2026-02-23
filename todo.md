@@ -2631,3 +2631,24 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] Ajustar QuickLog para melhor contraste em modo alto contraste
 - [x] Substituir bg-white/bg-gray por bg-card para suporte automático de temas
 - [x] Testar legibilidade em todos os 3 temas (light, dark, highcontrast)
+
+## Widget de Gráficos na Home (23/02/2026)
+
+### Remover Menu de Ações Rápidas
+- [x] Remover menu de ações rápidas (redundante - tudo está no menu inferior)
+
+### Implementar Widget de Gráficos por Estufa
+- [x] Instalar biblioteca de gráficos (Recharts ou Chart.js)
+- [x] Criar componente TentChartWidget
+- [ ] Buscar dados da última semana para cada estufa (Temp, RH, PPFD, pH, EC)
+- [ ] Implementar multi-line chart com todas as métricas
+- [ ] Adicionar seletor de parâmetro (tabs ou dropdown)
+- [ ] Definir cores consistentes:
+  - 🟠 Temperatura: Laranja (orange-500)
+  - 🔵 Umidade: Azul (blue-500)
+  - 🟡 PPFD: Amarelo (yellow-500)
+  - 🟣 pH: Roxo (purple-500)
+  - 🟢 EC: Verde (green-500)
+- [ ] Design moderno com gradientes e animações
+- [ ] Tooltips interativos ao hover
+- [ ] Card colapsável abaixo de cada estufa na Home
