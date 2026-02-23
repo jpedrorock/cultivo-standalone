@@ -473,6 +473,8 @@ export default function QuickLog() {
                 <div className="flex items-center justify-center gap-4">
                   <Input
                     type="number"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={tempC}
                     onChange={(e) => setTempC(e.target.value)}
                     placeholder="25"
@@ -489,6 +491,8 @@ export default function QuickLog() {
                 <div className="flex items-center justify-center gap-4">
                   <Input
                     type="number"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={rhPct}
                     onChange={(e) => setRhPct(e.target.value)}
                     placeholder="60"
@@ -505,6 +509,8 @@ export default function QuickLog() {
                 <div className="flex items-center justify-center gap-4">
                   <Input
                     type="number"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={wateringVolume}
                     onChange={(e) => setWateringVolume(e.target.value)}
                     placeholder="2000"
@@ -521,6 +527,8 @@ export default function QuickLog() {
                 <div className="flex items-center justify-center gap-4">
                   <Input
                     type="number"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={runoffCollected}
                     onChange={(e) => setRunoffCollected(e.target.value)}
                     placeholder="300"
@@ -550,6 +558,7 @@ export default function QuickLog() {
                 <div className="flex items-center justify-center gap-4">
                   <Input
                     type="number"
+                    inputMode="decimal"
                     step="0.1"
                     value={ph}
                     onChange={(e) => setPh(e.target.value)}
@@ -567,6 +576,7 @@ export default function QuickLog() {
                 <div className="flex items-center justify-center gap-4">
                   <Input
                     type="number"
+                    inputMode="decimal"
                     step="0.1"
                     value={ec}
                     onChange={(e) => setEc(e.target.value)}

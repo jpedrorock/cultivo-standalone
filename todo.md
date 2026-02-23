@@ -2509,3 +2509,10 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] Adaptar QuickLog para respeitar tema escuro (atualmente fica sempre com fundo branco)
 - [x] Revisar contraste de todos os badges e alertas no tema escuro
 - [x] Testar legibilidade de textos em fundos coloridos (verde, amarelo, vermelho)
+
+## Melhorias UX Mobile - Teclado Numérico (22/02/2026)
+
+- [x] Adicionar inputMode="numeric" em campos de números inteiros (temperatura, umidade, volume de rega, runoff)
+- [x] Adicionar inputMode="decimal" em campos com casas decimais (pH, EC)
+- [x] Adicionar pattern="[0-9]*" para compatibilidade com iOS
+- [x] Testar no iPhone que teclado numérico abre corretamente
