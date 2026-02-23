@@ -2678,3 +2678,7 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] Adicionar indicador visual quando não há dados suficientes (menos de 3 dias)
 - [x] Adicionar linhas de referência (pontilhadas) mostrando valores ideais de cada parâmetro
 - [x] Definir valores ideais para cada métrica (Temp, RH, PPFD, pH, EC)
+
+## Widget de Gráficos - Ajuste de Altura
+
+- [x] Aumentar altura do gráfico de 200px para 320px para melhor visualização
