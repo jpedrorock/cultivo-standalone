@@ -2502,3 +2502,10 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] Remover header branco completo do QuickLog (título "Registro Rápido" + "Passo X de 9")
 - [x] Corrigir sobreposição do ícone azul com o header
 - [x] Deixar página começar direto no conteúdo (card de seleção)
+
+## Correções Dark Mode (22/02/2026)
+
+- [x] Ajustar vermelho no tema escuro (muito saturado, dificulta leitura - precisa ser mais claro e menos intenso)
+- [x] Adaptar QuickLog para respeitar tema escuro (atualmente fica sempre com fundo branco)
+- [x] Revisar contraste de todos os badges e alertas no tema escuro
+- [x] Testar legibilidade de textos em fundos coloridos (verde, amarelo, vermelho)

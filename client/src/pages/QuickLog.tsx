@@ -373,13 +373,13 @@ export default function QuickLog() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 pb-32" {...swipeHandlers}>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pb-32" {...swipeHandlers}>
       {/* Content */}
       <div className="container mx-auto px-4 py-8 max-w-md">
-        <div className="bg-white rounded-2xl shadow-lg p-6 space-y-6 min-h-[500px] relative overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 space-y-6 min-h-[500px] relative overflow-hidden">
           {/* Decorative animated circle */}
           {currentStep < 9 && currentStepData && (
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-4 border-dashed border-gray-200 rounded-full opacity-30 animate-[spin_20s_linear_infinite] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-4 border-dashed border-gray-200 dark:border-gray-600 rounded-full opacity-30 animate-[spin_20s_linear_infinite] pointer-events-none" />
           )}
 
           {/* Step content */}
@@ -412,7 +412,7 @@ export default function QuickLog() {
             {/* Title */}
             {currentStep < 9 && currentStepData && (
               <div className="text-center space-y-2 animate-[slide-in-from-bottom_0.7s_ease-out]">
-                <h2 className="text-3xl font-bold text-gray-900">{currentStepData.title}</h2>
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{currentStepData.title}</h2>
                 <p className="text-lg text-gray-500">
                   {currentStep === 0 && "Selecione a estufa"}
                   {currentStep === 1 && "Qual a temperatura atual?"}
@@ -429,7 +429,7 @@ export default function QuickLog() {
 
             {currentStep === 9 && recordPlantHealth === null && (
               <div className="text-center space-y-2 animate-[slide-in-from-bottom_0.7s_ease-out]">
-                <h2 className="text-3xl font-bold text-gray-900">Saúde das Plantas</h2>
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Saúde das Plantas</h2>
                 <p className="text-lg text-gray-500">Deseja registrar a saúde das plantas?</p>
                 <p className="text-sm text-gray-400">Você pode registrar a saúde das plantas desta estufa agora ou pular esta etapa.</p>
               </div>
@@ -437,7 +437,7 @@ export default function QuickLog() {
 
             {currentStep >= 9 && recordPlantHealth === true && plants[currentPlantIndex] && (
               <div className="text-center space-y-2 animate-[slide-in-from-bottom_0.7s_ease-out]">
-                <h2 className="text-3xl font-bold text-gray-900">{plants[currentPlantIndex].name}</h2>
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{plants[currentPlantIndex].name}</h2>
                 <p className="text-lg text-gray-500">Como está a saúde?</p>
               </div>
             )}
@@ -452,7 +452,7 @@ export default function QuickLog() {
                     className={`w-full p-6 rounded-2xl border-2 transition-all duration-300 text-left ${
                       tentId === tent.id
                         ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-green-500 shadow-xl scale-105"
-                        : "bg-white text-gray-700 border-gray-200 hover:border-green-300 hover:shadow-lg"
+                        : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-600 hover:border-green-300 hover:shadow-lg"
                     }`}
                   >
                     <div className="font-bold text-xl">{tent.name}</div>
@@ -476,7 +476,7 @@ export default function QuickLog() {
                     value={tempC}
                     onChange={(e) => setTempC(e.target.value)}
                     placeholder="25"
-                    className="text-center text-4xl h-20 border-2 border-gray-300 rounded-2xl bg-white shadow-lg focus:ring-4 focus:ring-orange-100"
+                    className="text-center text-4xl h-20 border-2 border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg focus:ring-4 focus:ring-orange-100"
                   />
                   <span className="text-4xl font-bold text-gray-400">°C</span>
                 </div>
@@ -492,7 +492,7 @@ export default function QuickLog() {
                     value={rhPct}
                     onChange={(e) => setRhPct(e.target.value)}
                     placeholder="60"
-                    className="text-center text-4xl h-20 border-2 border-gray-300 rounded-2xl bg-white shadow-lg focus:ring-4 focus:ring-blue-100"
+                    className="text-center text-4xl h-20 border-2 border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg focus:ring-4 focus:ring-blue-100"
                   />
                   <span className="text-4xl font-bold text-gray-400">%</span>
                 </div>
@@ -508,7 +508,7 @@ export default function QuickLog() {
                     value={wateringVolume}
                     onChange={(e) => setWateringVolume(e.target.value)}
                     placeholder="2000"
-                    className="text-center text-4xl h-20 border-2 border-gray-300 rounded-2xl bg-white shadow-lg focus:ring-4 focus:ring-green-100"
+                    className="text-center text-4xl h-20 border-2 border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg focus:ring-4 focus:ring-green-100"
                   />
                   <span className="text-4xl font-bold text-gray-400">ml</span>
                 </div>
@@ -524,7 +524,7 @@ export default function QuickLog() {
                     value={runoffCollected}
                     onChange={(e) => setRunoffCollected(e.target.value)}
                     placeholder="300"
-                    className="text-center text-4xl h-20 border-2 border-gray-300 rounded-2xl bg-white shadow-lg focus:ring-4 focus:ring-teal-100"
+                    className="text-center text-4xl h-20 border-2 border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg focus:ring-4 focus:ring-teal-100"
                   />
                   <span className="text-4xl font-bold text-gray-400">ml</span>
                 </div>
@@ -554,7 +554,7 @@ export default function QuickLog() {
                     value={ph}
                     onChange={(e) => setPh(e.target.value)}
                     placeholder="6.0"
-                    className="text-center text-4xl h-20 border-2 border-gray-300 rounded-2xl bg-white shadow-lg focus:ring-4 focus:ring-purple-100"
+                    className="text-center text-4xl h-20 border-2 border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg focus:ring-4 focus:ring-purple-100"
                   />
                   <span className="text-4xl font-bold text-gray-400">pH</span>
                 </div>
@@ -571,7 +571,7 @@ export default function QuickLog() {
                     value={ec}
                     onChange={(e) => setEc(e.target.value)}
                     placeholder="1.5"
-                    className="text-center text-4xl h-20 border-2 border-gray-300 rounded-2xl bg-white shadow-lg focus:ring-4 focus:ring-yellow-100"
+                    className="text-center text-4xl h-20 border-2 border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg focus:ring-4 focus:ring-yellow-100"
                   />
                   <span className="text-4xl font-bold text-gray-400">mS/cm</span>
                 </div>
@@ -588,7 +588,7 @@ export default function QuickLog() {
                     className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${
                       turn === "AM"
                         ? "bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg scale-105"
-                        : "bg-white text-gray-600 border-2 border-gray-200"
+                        : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-200 border-2 border-gray-200 dark:border-gray-600"
                     }`}
                   >
                     ☀️ AM
@@ -598,7 +598,7 @@ export default function QuickLog() {
                     className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${
                       turn === "PM"
                         ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg scale-105"
-                        : "bg-white text-gray-600 border-2 border-gray-200"
+                        : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-200 border-2 border-gray-200 dark:border-gray-600"
                     }`}
                   >
                     🌙 PM
@@ -608,7 +608,7 @@ export default function QuickLog() {
                 {/* PPFD Slider */}
                 <div className="space-y-4">
                   <div className="text-center">
-                    <div className="text-5xl font-bold text-gray-900">{ppfd}</div>
+                    <div className="text-5xl font-bold text-gray-900 dark:text-gray-100">{ppfd}</div>
                     <div className="text-sm text-gray-500">μmol/m²/s</div>
                   </div>
                   <div className="relative">
@@ -635,43 +635,43 @@ export default function QuickLog() {
                 {tempC && (
                   <div className="p-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl border-l-4 border-orange-500">
                     <div className="text-sm text-gray-600">Temperatura</div>
-                    <div className="text-2xl font-bold text-gray-900">{tempC}°C</div>
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{tempC}°C</div>
                   </div>
                 )}
                 {rhPct && (
                   <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border-l-4 border-blue-500">
                     <div className="text-sm text-gray-600">Umidade</div>
-                    <div className="text-2xl font-bold text-gray-900">{rhPct}%</div>
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{rhPct}%</div>
                   </div>
                 )}
                 {wateringVolume && (
                   <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-l-4 border-green-500">
                     <div className="text-sm text-gray-600">Volume de Rega</div>
-                    <div className="text-2xl font-bold text-gray-900">{wateringVolume} ml</div>
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{wateringVolume} ml</div>
                   </div>
                 )}
                 {runoffCollected && (
                   <div className="p-4 bg-gradient-to-r from-teal-50 to-cyan-50 rounded-xl border-l-4 border-teal-500">
                     <div className="text-sm text-gray-600">Runoff Coletado</div>
-                    <div className="text-2xl font-bold text-gray-900">{runoffCollected} ml ({runoffPercentage}%)</div>
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{runoffCollected} ml ({runoffPercentage}%)</div>
                   </div>
                 )}
                 {ph && (
                   <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border-l-4 border-purple-500">
                     <div className="text-sm text-gray-600">pH</div>
-                    <div className="text-2xl font-bold text-gray-900">{ph}</div>
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{ph}</div>
                   </div>
                 )}
                 {ec && (
                   <div className="p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border-l-4 border-yellow-500">
                     <div className="text-sm text-gray-600">EC</div>
-                    <div className="text-2xl font-bold text-gray-900">{ec} mS/cm</div>
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{ec} mS/cm</div>
                   </div>
                 )}
                 {ppfd > 0 && (
                   <div className="p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border-l-4 border-amber-500">
                     <div className="text-sm text-gray-600">PPFD ({turn})</div>
-                    <div className="text-2xl font-bold text-gray-900">{ppfd} μmol/m²/s</div>
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{ppfd} μmol/m²/s</div>
                   </div>
                 )}
               </div>
@@ -712,15 +712,15 @@ export default function QuickLog() {
             {currentStep >= 9 && recordPlantHealth === true && plants[currentPlantIndex] && (
               <div className="space-y-4">
                 {/* Plant info */}
-                <div className="p-4 bg-white rounded-xl shadow-lg border-l-4 border-emerald-500 mb-6">
+                <div className="p-4 bg-white dark:bg-gray-700 rounded-xl shadow-lg border-l-4 border-emerald-500 mb-6">
                   <div className="text-sm text-gray-500">Planta {currentPlantIndex + 1} de {plants.length}</div>
-                  <div className="font-bold text-lg text-gray-900">{plants[currentPlantIndex].name}</div>
+                  <div className="font-bold text-lg text-gray-900 dark:text-gray-100">{plants[currentPlantIndex].name}</div>
                   <div className="text-sm text-gray-600">{plants[currentPlantIndex].code}</div>
                 </div>
 
                 <Accordion type="multiple" defaultValue={["health"]} className="space-y-3">
                   {/* Health Status Section */}
-                  <AccordionItem value="health" className="border rounded-xl bg-white shadow-sm">
+                  <AccordionItem value="health" className="border dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 shadow-sm">
                     <AccordionTrigger className="px-4 py-3 hover:no-underline">
                       <div className="flex items-center gap-2">
                         <Activity className="h-5 w-5 text-emerald-600" />
@@ -743,7 +743,7 @@ export default function QuickLog() {
                                     : status === "attention"
                                     ? "bg-gradient-to-r from-yellow-500 to-orange-600 text-white shadow-lg"
                                     : "bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-lg"
-                                  : "bg-white text-gray-600 border-2 border-gray-200"
+                                  : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-200 border-2 border-gray-200 dark:border-gray-600"
                               }`}
                             >
                               {status === "healthy" ? "✓ Saudável" : status === "attention" ? "⚠️ Atenção" : "✗ Doente"}
@@ -759,7 +759,7 @@ export default function QuickLog() {
                           value={plantHealthRecords.get(plants[currentPlantIndex].id)?.symptoms || ""}
                           onChange={(e) => updatePlantHealthRecord(plants[currentPlantIndex].id, "symptoms", e.target.value)}
                           placeholder="Ex: Folhas amareladas, manchas..."
-                          className="h-12 border-2 border-gray-300 rounded-xl bg-white shadow-sm"
+                          className="h-12 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-sm"
                         />
                       </div>
 
@@ -770,14 +770,14 @@ export default function QuickLog() {
                           value={plantHealthRecords.get(plants[currentPlantIndex].id)?.notes || ""}
                           onChange={(e) => updatePlantHealthRecord(plants[currentPlantIndex].id, "notes", e.target.value)}
                           placeholder="Observações gerais..."
-                          className="min-h-[80px] border-2 border-gray-300 rounded-xl bg-white shadow-sm"
+                          className="min-h-[80px] border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-sm"
                         />
                       </div>
                     </AccordionContent>
                   </AccordionItem>
 
                   {/* Photo Section */}
-                  <AccordionItem value="photo" className="border rounded-xl bg-white shadow-sm">
+                  <AccordionItem value="photo" className="border dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 shadow-sm">
                     <AccordionTrigger className="px-4 py-3 hover:no-underline">
                       <div className="flex items-center gap-2">
                         <Camera className="h-5 w-5 text-blue-600" />
@@ -820,7 +820,7 @@ export default function QuickLog() {
                   </AccordionItem>
 
                   {/* Trichomes Section */}
-                  <AccordionItem value="trichomes" className="border rounded-xl bg-white shadow-sm">
+                  <AccordionItem value="trichomes" className="border dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 shadow-sm">
                     <AccordionTrigger className="px-4 py-3 hover:no-underline">
                       <div className="flex items-center gap-2">
                         <Zap className="h-5 w-5 text-purple-600" />
@@ -839,7 +839,7 @@ export default function QuickLog() {
                               className={`py-3 px-4 rounded-xl font-semibold transition-all duration-300 ${
                                 plantHealthRecords.get(plants[currentPlantIndex].id)?.trichomeStatus === status
                                   ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg"
-                                  : "bg-white text-gray-600 border-2 border-gray-200"
+                                  : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-200 border-2 border-gray-200 dark:border-gray-600"
                               }`}
                             >
                               {status === "clear" ? "💧 Clear" : status === "cloudy" ? "☁️ Cloudy" : status === "amber" ? "🟠 Amber" : "🌈 Mixed"}
@@ -893,7 +893,7 @@ export default function QuickLog() {
                   </AccordionItem>
 
                   {/* LST Section */}
-                  <AccordionItem value="lst" className="border rounded-xl bg-white shadow-sm">
+                  <AccordionItem value="lst" className="border dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 shadow-sm">
                     <AccordionTrigger className="px-4 py-3 hover:no-underline">
                       <div className="flex items-center gap-2">
                         <Sprout className="h-5 w-5 text-green-600" />
@@ -962,7 +962,7 @@ export default function QuickLog() {
       )}
 
       {/* Navigation buttons */}
-      <div className="fixed bottom-0 left-0 right-0 p-6 pb-24 md:pb-6 bg-white border-t border-gray-200 flex gap-3">
+      <div className="fixed bottom-0 left-0 right-0 p-6 pb-24 md:pb-6 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex gap-3">
         {/* Back button - only for daily log steps */}
         {currentStep > 0 && currentStep < 9 && (
           <Button

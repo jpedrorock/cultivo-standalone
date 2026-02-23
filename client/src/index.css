@@ -109,8 +109,8 @@
   --accent: oklch(0.22 0.006 285);
   --accent-foreground: oklch(0.98 0.005 285);
   
-  /* Destructive colors - More vibrant red/pink for delete actions */
-  --destructive: oklch(0.58 0.24 20);
+  /* Destructive colors - Softer red for better readability in dark mode */
+  --destructive: oklch(0.65 0.18 25);
   --destructive-foreground: oklch(0.98 0 0);
   
   /* Border and input colors - More visible */
