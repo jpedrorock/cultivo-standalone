@@ -285,39 +285,33 @@ export default function Home() {
     if (category === "MAINTENANCE") {
       return {
         phase: "Manutenção",
-        color: "bg-gray-500",
+        color: "bg-blue-500 dark:bg-blue-600",
         icon: Wrench,
-      };
-    }
-
-    if (category === "VEGA") {
-      return {
-        phase: "Vegetativa",
-        color: "bg-primary/100",
-        icon: Sprout,
-      };
-    }
-
-    if (category === "FLORA") {
-      return {
-        phase: "Floração",
-        color: "bg-purple-500",
-        icon: Flower2,
       };
     }
 
     if (category === "DRYING") {
       return {
         phase: "Secagem",
-        color: "bg-amber-500",
+        color: "bg-yellow-800 dark:bg-yellow-700",
         icon: Wind,
       };
     }
 
+    // Check actual cycle phase, not just tent category
+    if (cycle.floraStartDate) {
+      return {
+        phase: "Floração",
+        color: "bg-purple-500 dark:bg-purple-600",
+        icon: Flower2,
+      };
+    }
+
+    // If cycle is active but no floraStartDate, it's vegetative
     return {
-      phase: "Inativo",
-      color: "bg-muted0",
-      icon: Wind,
+      phase: "Vegetativa",
+        color: "bg-green-500 dark:bg-green-600",
+      icon: Sprout,
     };
   };
 

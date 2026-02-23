@@ -2597,3 +2597,23 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 
 ### Problemas Encontrados:
 (Será preenchido durante auditoria)
+
+## Correção Urgente - Badges de Fase e Paleta de Cores (23/02/2026)
+
+### Bug Crítico
+- [x] Corrigir lógica de detecção de fase - Estufa "Floração" mostra badge "Vegetativa" (verde) mesmo estando em floração
+- [x] Investigar função que determina qual badge exibir no card da estufa
+
+### Paleta de Cores CORRETA (conforme especificação do usuário)
+- [x] 🔵 Manutenção: Azul (`blue-500`)
+- [ ] 🟠 Clone: Laranja (`orange-500`) - ainda não implementado (fase futura)
+- [x] 🟢 Vegetativa: Verde (`green-500`)
+- [x] 🟣 Floração: Roxo (`purple-500`)
+- [x] 🟤 Colheita/Secagem: Marrom (`yellow-800`)
+
+### Reversão da Auditoria Anterior
+- [x] Restaurar azul para badges de Manutenção (foi removido incorretamente)
+- [x] Restaurar roxo para badges de Floração (foi removido incorretamente)
+- [x] Adicionar marrom para Colheita/Secagem
+- [x] Manter verde para Vegetativa
+- [x] Adicionar dark mode variants para todas as cores de fase

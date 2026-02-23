@@ -219,14 +219,18 @@ export default function TentLog() {
     }
 
     if (tent.category === "MAINTENANCE") {
-      return { phase: "Manutenção", color: "bg-gray-500" };
+      return { phase: "Manutenção", color: "bg-blue-500 dark:bg-blue-600" };
+    }
+
+    if (tent.category === "DRYING") {
+      return { phase: "Secagem", color: "bg-yellow-800 dark:bg-yellow-700" };
     }
 
     if (cycle.floraStartDate) {
-      return { phase: "Floração", color: "bg-orange-500" };
+      return { phase: "Floração", color: "bg-purple-500 dark:bg-purple-600" };
     }
 
-    return { phase: "Vegetativa", color: "bg-primary/100" };
+    return { phase: "Vegetativa", color: "bg-green-500 dark:bg-green-600" };
   };
 
   const phaseInfo = getPhaseInfo();
