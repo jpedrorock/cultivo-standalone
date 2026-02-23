@@ -219,11 +219,11 @@ export default function TentLog() {
     }
 
     if (tent.category === "MAINTENANCE") {
-      return { phase: "Manutenção", color: "bg-blue-500/100" };
+      return { phase: "Manutenção", color: "bg-gray-500" };
     }
 
     if (cycle.floraStartDate) {
-      return { phase: "Floração", color: "bg-purple-500" };
+      return { phase: "Floração", color: "bg-orange-500" };
     }
 
     return { phase: "Vegetativa", color: "bg-primary/100" };
@@ -295,8 +295,8 @@ export default function TentLog() {
         {currentTargets && (
           <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 border-blue-500/20 mb-6">
             <CardHeader>
-              <CardTitle className="text-blue-900 dark:text-blue-300">📊 Valores Ideais da Semana</CardTitle>
-              <CardDescription className="text-blue-700 dark:text-blue-400">
+              <CardTitle className="text-green-900 dark:text-green-300">📊 Valores Ideais da Semana</CardTitle>
+              <CardDescription className="text-green-700 dark:text-green-400">
                 Targets de referência para comparação com suas medições
               </CardDescription>
             </CardHeader>
@@ -304,7 +304,7 @@ export default function TentLog() {
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <div className="bg-card/80 p-3 rounded-lg border border-blue-500/20">
                   <div className="flex items-center gap-2 mb-1">
-                    <Sun className="w-4 h-4 text-orange-600" />
+                    <Sun className="w-4 h-4 text-orange-600 dark:text-orange-400" />
                     <p className="text-xs font-medium text-foreground">PPFD</p>
                   </div>
                   <p className="text-sm font-bold text-foreground">
@@ -315,7 +315,7 @@ export default function TentLog() {
 
                 <div className="bg-card/80 p-3 rounded-lg border border-blue-500/20">
                   <div className="flex items-center gap-2 mb-1">
-                    <Clock className="w-4 h-4 text-cyan-600" />
+                    <Clock className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                     <p className="text-xs font-medium text-foreground">Fotoperíodo</p>
                   </div>
                   <p className="text-sm font-bold text-foreground">{currentTargets.photoperiod}</p>
@@ -324,7 +324,7 @@ export default function TentLog() {
 
                 <div className="bg-card/80 p-3 rounded-lg border border-blue-500/20">
                   <div className="flex items-center gap-2 mb-1">
-                    <ThermometerSun className="w-4 h-4 text-red-600" />
+                    <ThermometerSun className="w-4 h-4 text-red-600 dark:text-red-400" />
                     <p className="text-xs font-medium text-foreground">Temperatura</p>
                   </div>
                   <p className="text-sm font-bold text-foreground">
@@ -335,7 +335,7 @@ export default function TentLog() {
 
                 <div className="bg-card/80 p-3 rounded-lg border border-blue-500/20">
                   <div className="flex items-center gap-2 mb-1">
-                    <Droplets className="w-4 h-4 text-blue-600" />
+                    <Droplets className="w-4 h-4 text-teal-600 dark:text-teal-400" />
                     <p className="text-xs font-medium text-foreground">Umidade</p>
                   </div>
                   <p className="text-sm font-bold text-foreground">
@@ -346,7 +346,7 @@ export default function TentLog() {
 
                 <div className="bg-card/80 p-3 rounded-lg border border-blue-500/20">
                   <div className="flex items-center gap-2 mb-1">
-                    <Beaker className="w-4 h-4 text-purple-600" />
+                    <Beaker className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                     <p className="text-xs font-medium text-foreground">pH</p>
                   </div>
                   <p className="text-sm font-bold text-foreground">
@@ -357,7 +357,7 @@ export default function TentLog() {
 
                 <div className="bg-card/80 p-3 rounded-lg border border-blue-500/20">
                   <div className="flex items-center gap-2 mb-1">
-                    <FlaskConical className="w-4 h-4 text-pink-600" />
+                    <FlaskConical className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                     <p className="text-xs font-medium text-foreground">EC</p>
                   </div>
                   <p className="text-sm font-bold text-foreground">
@@ -460,7 +460,7 @@ export default function TentLog() {
                 <div className="space-y-2">
                   <Label htmlFor="ppfd" className="flex items-center gap-2 justify-between">
                     <span className="flex items-center gap-2">
-                      <Sun className="w-4 h-4 text-orange-600" />
+                      <Sun className="w-4 h-4 text-orange-600 dark:text-orange-400" />
                       PPFD (µmol/m²/s)
                     </span>
                     <span className="text-lg font-bold">{ppfd || '0'}</span>
@@ -476,7 +476,7 @@ export default function TentLog() {
                     className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-orange-600 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-orange-600 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0"
                   />
                   {currentTargets && (
-                    <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                    <p className="text-xs text-green-600 dark:text-green-400 font-medium">
                       ✓ Ideal: {currentTargets.ppfdMin}-{currentTargets.ppfdMax}
                     </p>
                   )}
@@ -485,7 +485,7 @@ export default function TentLog() {
                 {/* Temperature */}
                 <div className="space-y-2">
                   <Label htmlFor="temp" className="flex items-center gap-2">
-                    <ThermometerSun className="w-4 h-4 text-red-600" />
+                    <ThermometerSun className="w-4 h-4 text-red-600 dark:text-red-400" />
                     Temperatura (°C)
                   </Label>
                   <Input
@@ -497,7 +497,7 @@ export default function TentLog() {
                     className={`text-lg ${getValidationClasses(tempValidation)}`}
                   />
                   {currentTargets && (
-                    <p className="text-xs text-blue-600 font-medium">
+                    <p className="text-xs text-green-600 dark:text-green-400 font-medium">
                       ✓ Ideal: {currentTargets.tempMin}-{currentTargets.tempMax}°C
                     </p>
                   )}
@@ -506,7 +506,7 @@ export default function TentLog() {
                 {/* Humidity */}
                 <div className="space-y-2">
                   <Label htmlFor="rh" className="flex items-center gap-2">
-                    <Droplets className="w-4 h-4 text-blue-600" />
+                    <Droplets className="w-4 h-4 text-teal-600 dark:text-teal-400" />
                     Umidade Relativa (%)
                   </Label>
                   <Input
@@ -518,7 +518,7 @@ export default function TentLog() {
                     className={`text-lg ${getValidationClasses(rhValidation)}`}
                   />
                   {currentTargets && (
-                    <p className="text-xs text-blue-600 font-medium">
+                    <p className="text-xs text-green-600 dark:text-green-400 font-medium">
                       ✓ Ideal: {currentTargets.rhMin}-{currentTargets.rhMax}%
                     </p>
                   )}
@@ -527,7 +527,7 @@ export default function TentLog() {
                 {/* pH */}
                 <div className="space-y-2">
                   <Label htmlFor="ph" className="flex items-center gap-2">
-                    <Beaker className="w-4 h-4 text-purple-600" />
+                    <Beaker className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                     pH
                   </Label>
                   <Input
@@ -539,7 +539,7 @@ export default function TentLog() {
                     className={`text-lg ${getValidationClasses(phValidation)}`}
                   />
                   {currentTargets && (
-                    <p className="text-xs text-blue-600 font-medium">
+                    <p className="text-xs text-green-600 dark:text-green-400 font-medium">
                       ✓ Ideal: {currentTargets.phMin}-{currentTargets.phMax}
                     </p>
                   )}
@@ -548,7 +548,7 @@ export default function TentLog() {
                 {/* EC */}
                 <div className="space-y-2">
                   <Label htmlFor="ec" className="flex items-center gap-2">
-                    <FlaskConical className="w-4 h-4 text-pink-600" />
+                    <FlaskConical className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                     EC (mS/cm)
                   </Label>
                   <Input
@@ -560,7 +560,7 @@ export default function TentLog() {
                     className={`text-lg ${getValidationClasses(ecValidation)}`}
                   />
                   {currentTargets && (
-                    <p className="text-xs text-blue-600 font-medium">
+                    <p className="text-xs text-green-600 dark:text-green-400 font-medium">
                       ✓ Ideal: {currentTargets.ecMin}-{currentTargets.ecMax}
                     </p>
                   )}
@@ -569,7 +569,7 @@ export default function TentLog() {
                 {/* Runoff Section */}
                 <div className="col-span-2 border-t border-border pt-4 mt-2">
                   <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
-                    <Droplets className="w-4 h-4 text-cyan-600" />
+                    <Droplets className="w-4 h-4 text-teal-600 dark:text-teal-400" />
                     Runoff (Drenagem)
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -613,7 +613,7 @@ export default function TentLog() {
                       <div className="h-10 px-3 py-2 bg-muted rounded-md border border-input flex items-center text-lg font-semibold">
                         {runoffPercentage ? `${runoffPercentage}%` : "--"}
                       </div>
-                      <p className="text-xs text-blue-600 font-medium">
+                      <p className="text-xs text-green-600 dark:text-green-400 font-medium">
                         ✓ Ideal: 10-20%
                       </p>
                     </div>
@@ -658,10 +658,10 @@ export default function TentLog() {
         </Card>
 
         {/* Quick Tips */}
-        <Card className="mt-6 bg-blue-500/10/80 backdrop-blur-sm border-blue-100">
+        <Card className="mt-6 bg-green-500/10 backdrop-blur-sm border-green-200 dark:border-green-700">
           <CardContent className="p-6">
-            <h3 className="font-semibold text-blue-900 mb-3">💡 Dicas de Medição</h3>
-            <ul className="space-y-2 text-sm text-blue-400">
+            <h3 className="font-semibold text-green-900 dark:text-green-300 mb-3">💡 Dicas de Medição</h3>
+            <ul className="space-y-2 text-sm text-green-700 dark:text-green-400">
               <li>• Realize medições sempre nos mesmos horários para consistência</li>
               <li>• Aguarde alguns minutos após abrir a estufa para medições precisas</li>
               <li>• Compare seus valores com os ideais exibidos acima</li>

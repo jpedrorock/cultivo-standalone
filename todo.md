@@ -2553,3 +2553,47 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] Adicionar vibração ao avançar para próximo passo
 - [x] Adicionar vibração ao voltar para passo anterior
 - [x] Testar no iPhone que vibrações funcionam corretamente
+
+## Auditoria Completa de Temas - Todas as Páginas (23/02/2026)
+
+### Critérios de Auditoria:
+1. **Contraste WCAG AA**: Texto deve ter contraste mínimo 4.5:1 com fundo
+2. **Harmonia de Cores**: Paleta consistente (verde primário, sem azul no dark mode)
+3. **Legibilidade**: Texto legível em fundos coloridos (badges, cards, alertas)
+4. **Dark Mode**: Todos os elementos adaptam corretamente (preto/cinza puro, sem azul)
+5. **Transições**: Mudanças suaves entre temas (transition-colors)
+
+### Páginas para Auditar:
+
+#### Home e Navegação
+- [x] Home.tsx - Cards de estufa (badges de tempo, status)
+- [x] Home.tsx - Bottom navigation (ícones, labels)
+- [x] Home.tsx - Header e botões de ação
+- [x] BottomNav.tsx - Estados ativo/inativo em light/dark
+
+#### QuickLog
+- [x] QuickLog.tsx - Todos os 9 passos de input
+- [x] QuickLog.tsx - Resumo (Step 8) - cards coloridos
+- [x] QuickLog.tsx - Saúde das plantas (Step 9+)
+- [x] QuickLog.tsx - Botões de navegação
+- [x] QuickLog.tsx - Indicadores de progresso (dots)
+
+#### Calculadoras
+- [x] CalculatorMenu.tsx - Cards de calculadoras, ícones, gradientes
+- [x] Páginas individuais de calculadoras (se existirem)
+
+#### Outras Páginas
+- [x] TentLog.tsx - Cards de referência, badges
+- [x] Settings.tsx - Switches, inputs, seções
+- [x] NotFound.tsx - Gradientes, botões
+- [x] Outras páginas restantests e notificações
+
+#### Componentes Globais
+- [ ] index.css - Variáveis CSS de tema (light/dark/highcontrast)
+- [ ] Buttons - Todas as variantes (default, outline, ghost, destructive)
+- [ ] Inputs - Estados (default, focus, filled, disabled, error)
+- [ ] Cards - Fundos e bordas em light/dark
+- [ ] Badges - Cores semânticas (success, warning, error, info)
+
+### Problemas Encontrados:
+(Será preenchido durante auditoria)

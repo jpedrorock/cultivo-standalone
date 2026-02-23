@@ -285,7 +285,7 @@ export default function Home() {
     if (category === "MAINTENANCE") {
       return {
         phase: "Manutenção",
-        color: "bg-blue-500/100",
+        color: "bg-gray-500",
         icon: Wrench,
       };
     }
@@ -628,7 +628,7 @@ export default function Home() {
             <AlertDialogAction
               onClick={confirmDeleteTent}
               disabled={deleteTent.isPending || moveAllPlants.isPending || (deletePreview && !deletePreview.canDelete)}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800"
             >
               {deleteTent.isPending ? (
                 <>
@@ -721,7 +721,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
     
     // Verde: dentro da faixa ideal
     if (value >= minNum && value <= maxNum) {
-      return <Check className="w-3 h-3 text-green-600" />;
+      return <Check className="w-3 h-3 text-green-600 dark:text-green-400" />;
     }
     
     // Amarelo: próximo (±10% de tolerância)
@@ -730,11 +730,11 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
     const upperBound = maxNum * (1 + tolerance);
     
     if (value >= lowerBound && value <= upperBound) {
-      return <AlertTriangle className="w-3 h-3 text-yellow-600" />;
+      return <AlertTriangle className="w-3 h-3 text-yellow-600 dark:text-yellow-400" />;
     }
     
     // Vermelho: fora da faixa
-    return <X className="w-3 h-3 text-red-600" />;
+    return <X className="w-3 h-3 text-red-600 dark:text-red-400" />;
   };
 
   const utils = trpc.useUtils();
@@ -835,7 +835,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                         </Badge>
                       )}
                       {tent.seedlingCount > 0 && (
-                        <Badge variant="outline" className="gap-1 cursor-pointer hover:bg-cyan-10 hover:border-cyan-50 transition-colors bg-cyan-50/50 text-cyan-700 border-cyan-200">
+                        <Badge variant="outline" className="gap-1 cursor-pointer hover:bg-cyan-10 hover:border-cyan-50 transition-colors bg-cyan-50/50 text-cyan-700 border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-700 dark:hover:bg-cyan-900/50">
                           <Scissors className="w-3 h-3" />
                           {tent.seedlingCount} {tent.seedlingCount === 1 ? 'muda' : 'mudas'}
                         </Badge>
@@ -1029,7 +1029,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
               </div>
             </div>
             <div className="text-center">
-              <Sun className="w-5 h-5 mx-auto text-yellow-500 mb-1" />
+              <Sun className="w-5 h-5 mx-auto text-yellow-500 dark:text-yellow-400 mb-1" />
               <p className="text-xs text-muted-foreground">PPFD</p>
               <div className="flex items-center justify-center gap-1">
                 <p className={`text-sm font-semibold ${
@@ -1092,7 +1092,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                   onClick={() => onFinalizeCycle(cycle.id, tent.name)}
                   variant="ghost"
                   size="sm"
-                  className="w-full text-red-600 hover:bg-red-50 hover:text-red-700"
+                  className="w-full text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-950 dark:hover:text-red-300"
                 >
                   Finalizar Ciclo
                 </Button>
@@ -1104,7 +1104,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                   onClick={() => onEditTent(tent)}
                   variant="outline"
                   size="sm"
-                  className="border-blue-500 text-blue-600 hover:bg-blue-50 flex items-center justify-center gap-2"
+                  className="border-gray-500 text-gray-600 hover:bg-gray-50 dark:border-gray-400 dark:text-gray-300 dark:hover:bg-gray-800 flex items-center justify-center gap-2"
                 >
                   <Wrench className="w-4 h-4" />
                   Editar
@@ -1113,7 +1113,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                   onClick={() => onDeleteTent(tent.id, tent.name)}
                   variant="outline"
                   size="sm"
-                  className="border-red-500 text-red-600 hover:bg-red-50 flex items-center justify-center gap-2"
+                  className="border-red-500 text-red-600 hover:bg-red-50 dark:border-red-600 dark:text-red-400 dark:hover:bg-red-950 flex items-center justify-center gap-2"
                 >
                   <Trash2 className="w-4 h-4" />
                   Excluir

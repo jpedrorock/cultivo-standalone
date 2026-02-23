@@ -10,9 +10,9 @@ export default function CalculatorMenu() {
       title: "Rega e Runoff",
       description: "Calcule volume ideal de rega e meça runoff real",
       icon: Droplets,
-      color: "from-blue-500 to-cyan-500",
-      bgColor: "bg-blue-500/10",
-      iconColor: "text-blue-600",
+      color: "from-teal-500 to-cyan-500",
+      bgColor: "bg-teal-500/10",
+      iconColor: "text-teal-600 dark:text-teal-400",
       badge: "Popular",
     },
     {
@@ -33,25 +33,25 @@ export default function CalculatorMenu() {
       icon: Sun,
       color: "from-yellow-500 to-orange-500",
       bgColor: "bg-yellow-500/10",
-      iconColor: "text-yellow-600",
+      iconColor: "text-yellow-600 dark:text-yellow-400",
     },
     {
       id: "ppm-ec",
       title: "Conversor PPM ↔ EC",
       description: "Converta entre PPM e EC bidirecionalmente",
       icon: Calculator,
-      color: "from-purple-500 to-pink-500",
-      bgColor: "bg-purple-500/10",
-      iconColor: "text-purple-600",
+      color: "from-gray-500 to-gray-600",
+      bgColor: "bg-gray-500/10",
+      iconColor: "text-gray-600 dark:text-gray-400",
     },
     {
       id: "ph-adjust",
       title: "Calculadora de pH",
       description: "Calcule ajustes necessários de pH",
       icon: TestTube,
-      color: "from-red-500 to-rose-500",
+      color: "from-red-600 to-red-700",
       bgColor: "bg-red-500/10",
-      iconColor: "text-red-600",
+      iconColor: "text-red-600 dark:text-red-400",
       badge: "Novo",
     },
   ];
@@ -121,7 +121,7 @@ export default function CalculatorMenu() {
         <Card className="mt-4 md:mt-8 bg-primary/10 border-primary/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Beaker className="w-5 h-5 text-green-600" />
+              <Beaker className="w-5 h-5 text-green-600 dark:text-green-400" />
               Sobre as Calculadoras
             </CardTitle>
           </CardHeader>

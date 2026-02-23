@@ -584,7 +584,7 @@ export default function QuickLog() {
                 {runoffPercentage && (
                   <div className="text-center p-4 bg-gradient-to-r from-teal-50 to-cyan-50 rounded-xl border border-teal-200 animate-[slide-in-from-bottom_0.9s_ease-out]">
                     <div className="text-sm text-gray-600">Porcentagem de Runoff</div>
-                    <div className="text-3xl font-bold text-teal-600">{runoffPercentage}%</div>
+                    <div className="text-3xl font-bold text-teal-600 dark:text-teal-400">{runoffPercentage}%</div>
                     <div className="text-xs text-gray-500 mt-1">
                       {parseFloat(runoffPercentage) >= 15 && parseFloat(runoffPercentage) <= 20
                         ? "✓ Ideal"
@@ -920,7 +920,7 @@ export default function QuickLog() {
                   <AccordionItem value="photo" className="border dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 shadow-sm">
                     <AccordionTrigger className="px-4 py-3 hover:no-underline">
                       <div className="flex items-center gap-2">
-                        <Camera className="h-5 w-5 text-blue-600" />
+                        <Camera className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                         <span className="font-semibold">Foto (opcional)</span>
                       </div>
                     </AccordionTrigger>
@@ -943,7 +943,7 @@ export default function QuickLog() {
                             </Button>
                           </div>
                         ) : (
-                          <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-colors">
+                          <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl cursor-pointer hover:border-green-400 hover:bg-green-50 dark:hover:bg-green-950 transition-colors">
                             <Upload className="h-8 w-8 text-gray-400 mb-2" />
                             <span className="text-sm text-gray-500">Tirar foto ou selecionar</span>
                             <input
@@ -963,7 +963,7 @@ export default function QuickLog() {
                   <AccordionItem value="trichomes" className="border dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 shadow-sm">
                     <AccordionTrigger className="px-4 py-3 hover:no-underline">
                       <div className="flex items-center gap-2">
-                        <Zap className="h-5 w-5 text-purple-600" />
+                        <Zap className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                         <span className="font-semibold">Tricomas (opcional)</span>
                       </div>
                     </AccordionTrigger>

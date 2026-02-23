@@ -104,8 +104,8 @@ function KeyboardShortcuts() {
             </div>
           ))}
         </div>
-        <div className="mt-4 p-3 bg-blue-500/100/10 border border-blue-500/20 rounded-md">
-          <p className="text-xs text-blue-400">
+        <div className="mt-4 p-3 bg-gray-500/10 border border-gray-500/20 dark:border-gray-600 rounded-md">
+          <p className="text-xs text-gray-600 dark:text-gray-400">
             <strong>Dica:</strong> Os atalhos não funcionam quando você está digitando em campos de texto.
           </p>
         </div>
