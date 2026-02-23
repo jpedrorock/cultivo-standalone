@@ -2350,3 +2350,20 @@ Essa ordem é mais lógica e intuitiva - começa com Home, depois a ação princ
 **Contexto**: Usuário quer ser notificado automaticamente quando esquecer de registrar dados de alguma estufa por mais de 24 horas (um dia completo).
 
 **Mensagem da Notificação**: "⚠️ Estufa [Nome] - Sem registro há [X] horas! Clique para registrar agora."
+
+## Ocultar Botão "Registro Rápido" no Mobile
+
+**Objetivo**: Remover botão "Registro Rápido" do cabeçalho da Home no mobile, pois já existe botão verde de Registro no BottomNav.
+
+- [x] Localizar botão "Registro Rápido" no cabeçalho da Home.tsx
+- [x] Adicionar classe `hidden md:inline-block` para ocultar no mobile e mostrar no desktop
+- [ ] Testar que botão aparece apenas no desktop (>= 768px)
+- [x] Verificar que BottomNav continua funcionando no mobile
+
+**Implementação Realizada (22/02/2026)**:
+- Home.tsx linha 339: Adicionada classe `hidden md:inline-block` ao Link do botão "Registro Rápido"
+- Botão oculto em telas < 768px (mobile)
+- Botão visível em telas ≥ 768px (tablet/desktop)
+- BottomNav com botão verde de Registro permanece no mobile
+
+**Justificativa**: Evitar redundância - no mobile o botão verde de Registro já está sempre visível no menu inferior.
