@@ -389,14 +389,6 @@ export default function QuickLog() {
               <p className="text-sm text-gray-500">Passo {10 + currentPlantIndex} de {9 + plants.length}</p>
             )}
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setLocation("/")}
-            className="rounded-full"
-          >
-            <Home className="h-5 w-5" />
-          </Button>
         </div>
       </div>
 

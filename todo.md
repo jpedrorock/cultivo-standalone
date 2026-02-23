@@ -2482,3 +2482,17 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
    - Interface para adicionar/remover horários
 
 **Resultado**: Agora há apenas uma página para configurar lembretes diários (AlertSettings), eliminando confusão.
+
+## Correções UI - QuickLog Mobile
+
+**Problemas Reportados**:
+1. Ícone de casa (Home) grande e azul vazando no topo da página QuickLog
+2. Botão "Registro Rápido" no canto superior direito é redundante (usuário pode clicar em "Estufas" no BottomNav)
+
+- [ ] Localizar e remover ícone de casa vazando no QuickLog
+- [ ] Remover botão "Registro Rápido" do header do QuickLog
+- [ ] Testar QuickLog no mobile sem os elementos removidos
+
+## Correções UI - QuickLog (22/02/2026)
+
+- [x] Remover botão "Registro Rápido" do canto superior direito do QuickLog (redundante - usuário pode voltar clicando em "Estufas" no BottomNav)
