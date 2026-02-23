@@ -28,6 +28,23 @@ interface TentChartWidgetProps {
   data: DataPoint[];
 }
 
+// Normalization ranges for each parameter
+const normalizationRanges = {
+  temp: { min: 15, max: 35 }, // °C
+  rh: { min: 30, max: 90 }, // %
+  ppfd: { min: 0, max: 1000 }, // µmol/m²/s
+  ph: { min: 5, max: 8 },
+  ec: { min: 0, max: 3 }, // mS/cm
+};
+
+// Normalize value to 0-100% scale
+function normalizeValue(value: number | undefined, param: keyof typeof normalizationRanges): number | undefined {
+  if (value === undefined || value === null) return undefined;
+  const range = normalizationRanges[param];
+  const normalized = ((value - range.min) / (range.max - range.min)) * 100;
+  return Math.max(0, Math.min(100, normalized)); // Clamp to 0-100
+}
+
 const parameterConfig = {
   temp: {
     key: "temp",
@@ -68,6 +85,22 @@ const parameterConfig = {
 
 export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps) {
   const [selectedParam, setSelectedParam] = useState<Parameter>("all");
+
+  // Normalize data for better visualization
+  const normalizedData = data.map(point => ({
+    date: point.date,
+    temp: normalizeValue(point.temp, 'temp'),
+    rh: normalizeValue(point.rh, 'rh'),
+    ppfd: normalizeValue(point.ppfd, 'ppfd'),
+    ph: normalizeValue(point.ph, 'ph'),
+    ec: normalizeValue(point.ec, 'ec'),
+    // Keep original values for tooltip
+    tempRaw: point.temp,
+    rhRaw: point.rh,
+    ppfdRaw: point.ppfd,
+    phRaw: point.ph,
+    ecRaw: point.ec,
+  }));
 
   const visibleParams =
     selectedParam === "all"
@@ -116,7 +149,7 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
 
       {/* Chart */}
       <ResponsiveContainer width="100%" height={200}>
-        <LineChart data={data} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+        <LineChart data={normalizedData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
           <XAxis
             dataKey="date"
@@ -137,6 +170,27 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
               fontSize: "12px",
             }}
             labelStyle={{ color: "hsl(var(--foreground))" }}
+            formatter={(value: number | undefined, name: string | undefined, props: any) => {
+              if (value === undefined || name === undefined) return ['--', name || ''];
+              // Extract parameter key from name (e.g., "Temperatura (°C)" -> "temp")
+              const paramKey = Object.entries(parameterConfig).find(
+                ([_, config]) => name.startsWith(config.label)
+              )?.[0] as keyof typeof parameterConfig | undefined;
+              
+              if (!paramKey) return [value.toFixed(1) + '%', name];
+              
+              const rawValue = props.payload[`${paramKey}Raw`];
+              const config = parameterConfig[paramKey];
+              
+              if (rawValue !== undefined && rawValue !== null) {
+                return [
+                  `${rawValue.toFixed(1)}${config.unit} (${value.toFixed(0)}%)`,
+                  config.label
+                ];
+              }
+              
+              return [value.toFixed(1) + '%', name];
+            }}
           />
           <Legend
             wrapperStyle={{ fontSize: "11px" }}

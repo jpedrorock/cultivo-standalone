@@ -2652,3 +2652,23 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [ ] Design moderno com gradientes e animações
 - [ ] Tooltips interativos ao hover
 - [ ] Card colapsável abaixo de cada estufa na Home
+
+## Melhorias Widget de Gráficos (23/02/2026)
+
+### Reposicionamento
+- [x] Mover widgets de gráfico para DEPOIS da seção "Ciclos Ativos"
+- [x] Criar seção separada "Resumo Semanal" para agrupar todos os widgets
+- [x] Organizar layout: Estufas → Ciclos Ativos → Resumo Semanal
+
+### Normalização de Dados
+- [ ] Implementar normalização de dados para escala 0-100%
+- [ ] Definir ranges típicos para cada métrica:
+  - Temperatura: 15-35°C
+  - Umidade: 30-90%
+  - PPFD: 0-1000 µmol/m²/s
+  - pH: 5-8
+  - EC: 0-3 mS/cm
+- [ ] Transformar valores reais para percentual do range
+- [ ] Atualizar eixo Y para mostrar "0-100%" ao invés de valores absolutos
+- [ ] Adicionar tooltip mostrando valor real + percentual
+- [ ] Testar visualização com todas as métricas visíveis

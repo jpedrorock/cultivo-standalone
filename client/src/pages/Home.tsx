@@ -397,6 +397,20 @@ export default function Home() {
           <CyclesDashboard />
         </div>
 
+        {/* Weekly Summary Section */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold text-foreground mb-6">Resumo Semanal</h2>
+          <div className="space-y-6">
+            {tents?.filter(tent => getTentCycle(tent.id)).map((tent) => {
+              const cycle = getTentCycle(tent.id);
+              return (
+                <div key={tent.id}>
+                  <TentChartWidgetWrapper tentId={tent.id} tentName={tent.name} />
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
       </main>
 
@@ -1097,9 +1111,6 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
           </div>
         </div>
       </CardContent>
-      
-      {/* Weekly Chart Widget */}
-      {cycle && <TentChartWidgetWrapper tentId={tent.id} tentName={tent.name} />}
       
       {/* Phase Transition Dialog */}
       {cycle && (
