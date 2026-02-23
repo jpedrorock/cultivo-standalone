@@ -85,37 +85,37 @@
   --sidebar-primary: var(--color-green-500);
   --sidebar-primary-foreground: oklch(0.98 0 0);
   
-  /* Base colors - Pure black for dark mode */
-  --background: oklch(0.10 0 0);
+  /* Base colors - Blue-tinted dark mode (slate-900) */
+  --background: oklch(0.15 0.015 255);
   --foreground: oklch(0.98 0 0);
   
-  /* Card colors - Pure dark gray */
-  --card: oklch(0.15 0 0);
+  /* Card colors - Slightly lighter blue-gray */
+  --card: oklch(0.20 0.015 255);
   --card-foreground: oklch(0.98 0 0);
   
   /* Popover colors - Same as cards for consistency */
-  --popover: oklch(0.15 0 0);
+  --popover: oklch(0.20 0.015 255);
   --popover-foreground: oklch(0.98 0 0);
   
   /* Secondary colors - For hover states and secondary actions */
-  --secondary: oklch(0.20 0 0);
+  --secondary: oklch(0.22 0.015 255);
   --secondary-foreground: oklch(0.98 0 0);
   
   /* Muted colors - For disabled or less important elements */
-  --muted: oklch(0.18 0 0);
-  --muted-foreground: oklch(0.60 0 0);
+  --muted: oklch(0.18 0.015 255);
+  --muted-foreground: oklch(0.60 0.01 255);
   
   /* Accent colors - For highlights and important elements */
-  --accent: oklch(0.22 0 0);
+  --accent: oklch(0.25 0.015 255);
   --accent-foreground: oklch(0.98 0 0);
   
   /* Destructive colors - Softer rose/wine tone for better readability in dark mode */
   --destructive: oklch(0.68 0.14 15); /* Softer rose-wine tone */
   --destructive-foreground: oklch(0.98 0 0);
   
-  /* Border and input colors - More visible */
-  --border: oklch(0.30 0 0);
-  --input: oklch(0.18 0 0);
+  /* Border and input colors - More visible with blue tint */
+  --border: oklch(0.30 0.015 255);
+  --input: oklch(0.18 0.015 255);
   --ring: var(--color-green-500);
   
   /* Chart colors - Vibrant for visibility */
@@ -125,8 +125,8 @@
   --chart-4: var(--color-orange-400);
   --chart-5: var(--color-pink-400);
   
-  /* Sidebar colors - Pure black for maximum contrast */
-  --sidebar: oklch(0.08 0 0);
+  /* Sidebar colors - Darker blue-gray for contrast */
+  --sidebar: oklch(0.12 0.015 255);
   --sidebar-foreground: oklch(0.98 0 0);
   --sidebar-accent: oklch(0.18 0 0);
   --sidebar-accent-foreground: oklch(0.98 0 0);

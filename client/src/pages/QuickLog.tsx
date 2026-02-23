@@ -389,7 +389,7 @@ export default function QuickLog() {
       {/* Content */}
       <div className="flex-1 flex items-center justify-center overflow-hidden">
         <div className="container mx-auto px-4 max-w-md h-full flex items-center">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 space-y-6 relative max-h-[85vh] overflow-y-auto w-full">
+          <div className="bg-card dark:bg-card rounded-2xl shadow-lg p-6 space-y-6 relative max-h-[85vh] overflow-y-auto w-full">
           {/* Decorative animated circle */}
           {currentStep < 9 && currentStepData && (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-4 border-dashed border-gray-200 dark:border-gray-600 rounded-full opacity-30 animate-[spin_20s_linear_infinite] pointer-events-none" />
@@ -495,7 +495,7 @@ export default function QuickLog() {
                       setTempC(newValue);
                     }}
                     placeholder="25"
-                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg transition-all duration-200 ${
+                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-card dark:bg-card text-foreground shadow-lg transition-all duration-200 ${
                       tempC
                         ? 'border-green-500 dark:border-green-400 ring-2 ring-green-200 dark:ring-green-900'
                         : 'border-gray-300 dark:border-gray-600 focus:ring-4 focus:ring-orange-100'
@@ -521,7 +521,7 @@ export default function QuickLog() {
                       setRhPct(newValue);
                     }}
                     placeholder="60"
-                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg transition-all duration-200 ${
+                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-card dark:bg-card text-foreground shadow-lg transition-all duration-200 ${
                       rhPct
                         ? 'border-green-500 dark:border-green-400 ring-2 ring-green-200 dark:ring-green-900'
                         : 'border-gray-300 dark:border-gray-600 focus:ring-4 focus:ring-blue-100'
@@ -547,7 +547,7 @@ export default function QuickLog() {
                       setWateringVolume(newValue);
                     }}
                     placeholder="2000"
-                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg transition-all duration-200 ${
+                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-card dark:bg-card text-foreground shadow-lg transition-all duration-200 ${
                       wateringVolume
                         ? 'border-green-500 dark:border-green-400 ring-2 ring-green-200 dark:ring-green-900'
                         : 'border-gray-300 dark:border-gray-600 focus:ring-4 focus:ring-green-100'
@@ -573,7 +573,7 @@ export default function QuickLog() {
                       setRunoffCollected(newValue);
                     }}
                     placeholder="300"
-                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg transition-all duration-200 ${
+                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-card dark:bg-card text-foreground shadow-lg transition-all duration-200 ${
                       runoffCollected
                         ? 'border-green-500 dark:border-green-400 ring-2 ring-green-200 dark:ring-green-900'
                         : 'border-gray-300 dark:border-gray-600 focus:ring-4 focus:ring-teal-100'
@@ -612,7 +612,7 @@ export default function QuickLog() {
                       setPh(newValue);
                     }}
                     placeholder="6.0"
-                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg transition-all duration-200 ${
+                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-card dark:bg-card text-foreground shadow-lg transition-all duration-200 ${
                       ph
                         ? 'border-green-500 dark:border-green-400 ring-2 ring-green-200 dark:ring-green-900'
                         : 'border-gray-300 dark:border-gray-600 focus:ring-4 focus:ring-purple-100'
@@ -638,7 +638,7 @@ export default function QuickLog() {
                       setEc(newValue);
                     }}
                     placeholder="1.5"
-                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-lg transition-all duration-200 ${
+                    className={`text-center text-4xl h-20 border-2 rounded-2xl bg-card dark:bg-card text-foreground shadow-lg transition-all duration-200 ${
                       ec
                         ? 'border-green-500 dark:border-green-400 ring-2 ring-green-200 dark:ring-green-900'
                         : 'border-gray-300 dark:border-gray-600 focus:ring-4 focus:ring-yellow-100'
@@ -852,7 +852,7 @@ export default function QuickLog() {
             {currentStep >= 9 && recordPlantHealth === true && plants[currentPlantIndex] && (
               <div className="space-y-4">
                 {/* Plant info */}
-                <div className="p-4 bg-white dark:bg-gray-700 rounded-xl shadow-lg border-l-4 border-emerald-500 mb-6">
+                <div className="p-4 bg-card rounded-xl shadow-lg border-l-4 border-emerald-500 mb-6">
                   <div className="text-sm text-gray-500">Planta {currentPlantIndex + 1} de {plants.length}</div>
                   <div className="font-bold text-lg text-gray-900 dark:text-gray-100">{plants[currentPlantIndex].name}</div>
                   <div className="text-sm text-gray-600">{plants[currentPlantIndex].code}</div>
@@ -860,7 +860,7 @@ export default function QuickLog() {
 
                 <Accordion type="multiple" defaultValue={["health"]} className="space-y-3">
                   {/* Health Status Section */}
-                  <AccordionItem value="health" className="border dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 shadow-sm">
+                  <AccordionItem value="health" className="border border-border rounded-xl bg-card shadow-sm">
                     <AccordionTrigger className="px-4 py-3 hover:no-underline">
                       <div className="flex items-center gap-2">
                         <Activity className="h-5 w-5 text-emerald-600" />
@@ -899,7 +899,7 @@ export default function QuickLog() {
                           value={plantHealthRecords.get(plants[currentPlantIndex].id)?.symptoms || ""}
                           onChange={(e) => updatePlantHealthRecord(plants[currentPlantIndex].id, "symptoms", e.target.value)}
                           placeholder="Ex: Folhas amareladas, manchas..."
-                          className="h-12 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-sm"
+                          className="h-12 border-2 border-input rounded-xl bg-card text-foreground shadow-sm"
                         />
                       </div>
 
@@ -910,14 +910,14 @@ export default function QuickLog() {
                           value={plantHealthRecords.get(plants[currentPlantIndex].id)?.notes || ""}
                           onChange={(e) => updatePlantHealthRecord(plants[currentPlantIndex].id, "notes", e.target.value)}
                           placeholder="Observações gerais..."
-                          className="min-h-[80px] border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-gray-100 shadow-sm"
+                          className="min-h-[80px] border-2 border-input rounded-xl bg-card text-foreground shadow-sm"
                         />
                       </div>
                     </AccordionContent>
                   </AccordionItem>
 
                   {/* Photo Section */}
-                  <AccordionItem value="photo" className="border dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 shadow-sm">
+                  <AccordionItem value="photo" className="border border-border rounded-xl bg-card shadow-sm">
                     <AccordionTrigger className="px-4 py-3 hover:no-underline">
                       <div className="flex items-center gap-2">
                         <Camera className="h-5 w-5 text-gray-600 dark:text-gray-400" />
@@ -960,7 +960,7 @@ export default function QuickLog() {
                   </AccordionItem>
 
                   {/* Trichomes Section */}
-                  <AccordionItem value="trichomes" className="border dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 shadow-sm">
+                  <AccordionItem value="trichomes" className="border border-border rounded-xl bg-card shadow-sm">
                     <AccordionTrigger className="px-4 py-3 hover:no-underline">
                       <div className="flex items-center gap-2">
                         <Zap className="h-5 w-5 text-gray-600 dark:text-gray-400" />
@@ -1033,7 +1033,7 @@ export default function QuickLog() {
                   </AccordionItem>
 
                   {/* LST Section */}
-                  <AccordionItem value="lst" className="border dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 shadow-sm">
+                  <AccordionItem value="lst" className="border border-border rounded-xl bg-card shadow-sm">
                     <AccordionTrigger className="px-4 py-3 hover:no-underline">
                       <div className="flex items-center gap-2">
                         <Sprout className="h-5 w-5 text-green-600" />
@@ -1103,7 +1103,7 @@ export default function QuickLog() {
       )}
 
       {/* Navigation buttons */}
-      <div className="fixed bottom-0 left-0 right-0 p-6 pb-24 md:pb-6 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex gap-3">
+      <div className="fixed bottom-0 left-0 right-0 p-6 pb-24 md:pb-6 bg-background border-t border-border flex gap-3">
         {/* Back button - only for daily log steps */}
         {currentStep > 0 && currentStep < 9 && (
           <Button

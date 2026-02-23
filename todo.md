@@ -2617,3 +2617,17 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] Adicionar marrom para Colheita/Secagem
 - [x] Manter verde para Vegetativa
 - [x] Adicionar dark mode variants para todas as cores de fase
+
+## Melhorias de Tema - Dark Mode Azul + Alto Contraste (23/02/2026)
+
+### Problema Identificado
+- QuickLog com contraste ruim no modo alto contraste (card branco muito gritante sobre fundo preto)
+- Tema escuro atual usa preto puro, mas usuário prefere azul escuro (slate-900)
+- Alto contraste deve ser reservado para preto/branco puro
+
+### Implementação
+- [x] Criar tema "dark" com background azul escuro (slate-900/blue-950)
+- [x] Manter tema "highcontrast" separado com preto puro (#000000)
+- [x] Ajustar QuickLog para melhor contraste em modo alto contraste
+- [x] Substituir bg-white/bg-gray por bg-card para suporte automático de temas
+- [x] Testar legibilidade em todos os 3 temas (light, dark, highcontrast)
