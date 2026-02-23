@@ -633,10 +633,10 @@ export default function PlantsList() {
 
       {/* Floating Action Bar for Bulk Operations */}
       {selectedPlants.size > 0 && (
-        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+        <div className="fixed bottom-20 md:bottom-6 left-1/2 transform -translate-x-1/2 z-50 max-w-[95vw]">
           <Card className="shadow-2xl border-2">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
+            <CardContent className="p-3 md:p-4">
+              <div className="flex flex-wrap items-center gap-2 md:gap-3 justify-center">
                 <span className="text-sm font-medium text-muted-foreground">
                   {selectedPlants.size} planta{selectedPlants.size > 1 ? 's' : ''} selecionada{selectedPlants.size > 1 ? 's' : ''}
                 </span>
@@ -647,6 +647,7 @@ export default function PlantsList() {
                   <Button
                     size="sm"
                     variant="outline"
+                    className="text-xs px-2 md:px-3"
                     onClick={() => {
                       if (confirm(`Promover ${selectedPlants.size} muda(s) para planta?`)) {
                         bulkPromote.mutate({ plantIds: Array.from(selectedPlants) });
@@ -667,6 +668,7 @@ export default function PlantsList() {
                 <Button
                   size="sm"
                   variant="outline"
+                  className="text-xs px-2 md:px-3"
                   onClick={() => setBatchMoveDialog(true)}
                 >
                   <MoveRight className="w-4 h-4 mr-2" />
@@ -677,6 +679,7 @@ export default function PlantsList() {
                 <Button
                   size="sm"
                   variant="outline"
+                  className="text-xs px-2 md:px-3"
                   onClick={() => {
                     if (confirm(`Marcar ${selectedPlants.size} planta(s) como colhida(s)?`)) {
                       bulkHarvest.mutate({ plantIds: Array.from(selectedPlants) });
@@ -702,7 +705,7 @@ export default function PlantsList() {
                     }
                   }}
                   disabled={bulkDiscard.isPending}
-                  className="text-destructive hover:text-destructive"
+                  className="text-destructive hover:text-destructive text-xs px-2 md:px-3"
                 >
                   {bulkDiscard.isPending ? (
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -716,6 +719,7 @@ export default function PlantsList() {
                 <Button
                   size="sm"
                   variant="ghost"
+                  className="text-xs px-2 md:px-3"
                   onClick={() => setSelectedPlants(new Set())}
                 >
                   Cancelar

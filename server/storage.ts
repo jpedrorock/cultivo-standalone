@@ -7,7 +7,8 @@ import { join, dirname } from 'path';
 import { randomBytes } from 'crypto';
 
 const UPLOADS_DIR = join(process.cwd(), 'uploads');
-const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
+// Use relative URLs to work with any domain
+const BASE_URL = '';
 
 // Ensure uploads directory exists
 async function ensureUploadsDir() {
@@ -54,9 +55,9 @@ export async function storagePut(
   const buffer = typeof data === 'string' ? Buffer.from(data) : Buffer.from(data);
   await writeFile(filePath, buffer);
   
-  // Return key and public URL
+  // Return key and public URL (relative path)
   const key = join(subDir, fileName).replace(/\\/g, '/');
-  const url = `${BASE_URL}/uploads/${key}`;
+  const url = `/uploads/${key}`;
   
   return { key, url };
 }
@@ -68,7 +69,7 @@ export async function storagePut(
  */
 export async function storageGet(relKey: string): Promise<{ key: string; url: string }> {
   const normalizedKey = relKey.replace(/^\/+/, '');
-  const url = `${BASE_URL}/uploads/${normalizedKey}`;
+  const url = `/uploads/${normalizedKey}`;
   
   return {
     key: normalizedKey,

@@ -736,9 +736,8 @@ export const appRouter = router({
           throw new Error("Ciclo não encontrado");
         }
         
-        if (cycle.cloningStartDate) {
-          throw new Error("Ciclo já está em clonagem");
-        }
+        // Permitir retornar para clonagem mesmo se já esteve em clonagem antes
+        // (usuário pode voltar de MAINTENANCE para CLONING múltiplas vezes)
         
         // Atualizar ciclo para CLONING
         await database

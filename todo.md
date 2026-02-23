@@ -2701,3 +2701,13 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 
 - [x] Corrigir tooltip para mostrar valores de todos os parâmetros (não só temperatura)
 - [x] Ajustar acesso aos valores raw no formatter do tooltip
+
+## Correções Críticas - Lista do Usuário
+
+- [x] 1. Ajustar outline branco nos cards de ciclos ativos no dark mode (File1.PNG)
+- [x] 2. Permitir voltar de Clonagem para Manutenção (atualmente bloqueia, File2.PNG)
+- [x] 3. Adicionar campo "Meia Rega" na calculadora de rega (para regar 2x/dia, File3.PNG)
+- [x] 4. Corrigir menu de ações no mobile que está quebrado/invisível (File4.PNG mostra seleção mas menu não aparece direito)
+- [x] 5. Corrigir upload de fotos - não carrega e não sobe (File5.PNG mostra ícone ? ao invés da foto)
+- [x] 6. Verificar tarefas perdidas - sistema de criar/excluir tarefas (File6.PNG mostra vazio)
+- [x] 7. Implementar alertas de registro com 2 horários (manhã e noite) ao invés de apenas 1 (File7.PNG mostra só 18:00)

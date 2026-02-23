@@ -428,6 +428,10 @@ function WateringRunoffCalculator() {
                     <span className="text-sm font-semibold">Rega Diária ({numPlants} plantas):</span>
                     <span className="font-bold text-lg text-blue-600">{wateringResult.totalVolume}L</span>
                   </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-muted-foreground ml-4">→ Meia Rega (2x/dia):</span>
+                    <span className="text-sm font-medium text-blue-500">{(parseFloat(wateringResult.totalVolume) / 2).toFixed(2)}L por vez</span>
+                  </div>
                   <div className="flex justify-between pt-2 border-t">
                     <span className="text-sm font-semibold">Rega Semanal (7 dias):</span>
                     <span className="font-bold text-lg text-green-600">{(parseFloat(wateringResult.totalVolume) * 7).toFixed(2)}L</span>
@@ -443,6 +447,10 @@ function WateringRunoffCalculator() {
                   <div className="flex justify-between pt-2 border-t">
                     <span className="text-sm font-semibold">Rega Diária ({numPlants} plantas):</span>
                     <span className="font-bold text-lg text-blue-600">{wateringResult.totalVolume}L</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-muted-foreground ml-4">→ Meia Rega (2x/dia):</span>
+                    <span className="text-sm font-medium text-blue-500">{(parseFloat(wateringResult.totalVolume) / 2).toFixed(2)}L por vez</span>
                   </div>
                   <div className="flex justify-between pt-2 border-t">
                     <span className="text-sm font-semibold">Rega Semanal (7 dias):</span>

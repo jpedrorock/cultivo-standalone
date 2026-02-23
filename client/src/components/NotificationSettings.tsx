@@ -266,48 +266,24 @@ export function NotificationSettings() {
 
       {permission === "granted" && (
         <>
-          {/* Daily Reminder Card */}
+          {/* Daily Reminder Card - Redirects to AlertSettings */}
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    <Clock className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-base">Lembrete Diário</CardTitle>
-                    <CardDescription className="text-sm">
-                      Receba um lembrete para registrar os dados das estufas
-                    </CardDescription>
-                  </div>
-                </div>
-                <Switch
-                  checked={config.dailyReminderEnabled}
-                  onCheckedChange={handleToggleDailyReminder}
-                />
-              </div>
+              <CardTitle>Lembrete Diário</CardTitle>
+              <CardDescription>
+                Receba um lembrete para registrar os dados das estufas - configure múltiplos horários
+              </CardDescription>
             </CardHeader>
-            {config.dailyReminderEnabled && (
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="reminder-time" className="text-sm font-medium">
-                      Horário do Lembrete
-                    </Label>
-                    <Input
-                      id="reminder-time"
-                      type="time"
-                      value={config.reminderTime}
-                      onChange={(e) => handleTimeChange(e.target.value)}
-                      className="max-w-xs"
-                    />
-                    <p className="text-xs text-muted-foreground">
-                      Você receberá um lembrete todos os dias às {config.reminderTime}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            )}
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                Você pode configurar múltiplos horários de lembrete diário (por exemplo: 8h AM e 20h PM) na página de Alertas.
+              </p>
+              <Button asChild>
+                <a href="/settings/alerts">
+                  Configurar Lembretes
+                </a>
+              </Button>
+            </CardContent>
           </Card>
 
           {/* Alerts Card */}
