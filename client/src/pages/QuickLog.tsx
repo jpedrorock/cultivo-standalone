@@ -373,10 +373,11 @@ export default function QuickLog() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pb-32" {...swipeHandlers}>
+    <div className="h-screen overflow-hidden bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex flex-col" {...swipeHandlers}>
       {/* Content */}
-      <div className="container mx-auto px-4 py-8 max-w-md">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 space-y-6 min-h-[500px] relative overflow-hidden">
+      <div className="flex-1 overflow-y-auto">
+        <div className="container mx-auto px-4 py-8 max-w-md">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 space-y-6 relative">
           {/* Decorative animated circle */}
           {currentStep < 9 && currentStepData && (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-4 border-dashed border-gray-200 dark:border-gray-600 rounded-full opacity-30 animate-[spin_20s_linear_infinite] pointer-events-none" />
@@ -949,6 +950,7 @@ export default function QuickLog() {
                 </Accordion>
               </div>
             )}
+          </div>
           </div>
         </div>
       </div>

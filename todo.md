@@ -2516,3 +2516,11 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] Adicionar inputMode="decimal" em campos com casas decimais (pH, EC)
 - [x] Adicionar pattern="[0-9]*" para compatibilidade com iOS
 - [x] Testar no iPhone que teclado numérico abre corretamente
+
+## Correções QuickLog Mobile - Layout e Dark Mode (23/02/2026)
+
+- [x] Remover tons de azul do dark mode (usar apenas preto/cinza puro)
+- [x] Implementar altura fixa (100vh) no container principal do QuickLog
+- [x] Adicionar scroll apenas no card de conteúdo interno (overflow-y-auto)
+- [x] Garantir que teclado mobile não mude altura dos elementos CSS
+- [x] Testar no iPhone que layout permanece estável quando teclado abre

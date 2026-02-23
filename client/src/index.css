@@ -85,37 +85,37 @@
   --sidebar-primary: var(--color-green-500);
   --sidebar-primary-foreground: oklch(0.98 0 0);
   
-  /* Base colors - Much darker for better contrast */
-  --background: oklch(0.12 0.005 285);
-  --foreground: oklch(0.96 0.005 285);
+  /* Base colors - Pure black for dark mode */
+  --background: oklch(0.10 0 0);
+  --foreground: oklch(0.98 0 0);
   
-  /* Card colors - Dark gray with good separation from background */
-  --card: oklch(0.16 0.006 285);
-  --card-foreground: oklch(0.96 0.005 285);
+  /* Card colors - Pure dark gray */
+  --card: oklch(0.15 0 0);
+  --card-foreground: oklch(0.98 0 0);
   
   /* Popover colors - Same as cards for consistency */
-  --popover: oklch(0.16 0.006 285);
-  --popover-foreground: oklch(0.96 0.005 285);
+  --popover: oklch(0.15 0 0);
+  --popover-foreground: oklch(0.98 0 0);
   
   /* Secondary colors - For hover states and secondary actions */
-  --secondary: oklch(0.20 0.006 285);
-  --secondary-foreground: oklch(0.96 0.005 285);
+  --secondary: oklch(0.20 0 0);
+  --secondary-foreground: oklch(0.98 0 0);
   
   /* Muted colors - For disabled or less important elements */
-  --muted: oklch(0.18 0.006 285);
-  --muted-foreground: oklch(0.60 0.015 285);
+  --muted: oklch(0.18 0 0);
+  --muted-foreground: oklch(0.60 0 0);
   
   /* Accent colors - For highlights and important elements */
-  --accent: oklch(0.22 0.006 285);
-  --accent-foreground: oklch(0.98 0.005 285);
+  --accent: oklch(0.22 0 0);
+  --accent-foreground: oklch(0.98 0 0);
   
   /* Destructive colors - Softer red for better readability in dark mode */
   --destructive: oklch(0.65 0.18 25);
   --destructive-foreground: oklch(0.98 0 0);
   
   /* Border and input colors - More visible */
-  --border: oklch(0.30 0.005 285);
-  --input: oklch(0.18 0.006 285);
+  --border: oklch(0.30 0 0);
+  --input: oklch(0.18 0 0);
   --ring: var(--color-green-500);
   
   /* Chart colors - Vibrant for visibility */
@@ -125,12 +125,12 @@
   --chart-4: var(--color-orange-400);
   --chart-5: var(--color-pink-400);
   
-  /* Sidebar colors - Almost black for maximum contrast */
-  --sidebar: oklch(0.10 0.006 285);
-  --sidebar-foreground: oklch(0.96 0.005 285);
-  --sidebar-accent: oklch(0.18 0.006 285);
+  /* Sidebar colors - Pure black for maximum contrast */
+  --sidebar: oklch(0.08 0 0);
+  --sidebar-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.18 0 0);
   --sidebar-accent-foreground: oklch(0.98 0 0);
-  --sidebar-border: oklch(0.25 0.005 285);
+  --sidebar-border: oklch(0.25 0 0);
   --sidebar-ring: var(--color-green-500);
 }
 
