@@ -29,7 +29,16 @@ interface TentChartWidgetProps {
   data: DataPoint[];
 }
 
-// Ideal values for each parameter
+// Normalization ranges for each parameter
+const normalizationRanges = {
+  temp: { min: 15, max: 35 }, // °C
+  rh: { min: 30, max: 90 }, // %
+  ppfd: { min: 0, max: 1000 }, // µmol/m²/s
+  ph: { min: 5, max: 8 },
+  ec: { min: 0, max: 3 }, // mS/cm
+};
+
+// Ideal values for each parameter (will be normalized for display)
 const idealValues = {
   temp: 24, // °C - ideal temperature
   rh: 60, // % - ideal humidity
@@ -37,6 +46,14 @@ const idealValues = {
   ph: 6.0, // ideal pH
   ec: 1.8, // mS/cm - ideal EC
 };
+
+// Normalize value to 0-100% scale
+function normalizeValue(value: number | undefined, param: keyof typeof normalizationRanges): number | undefined {
+  if (value === undefined || value === null) return undefined;
+  const range = normalizationRanges[param];
+  const normalized = ((value - range.min) / (range.max - range.min)) * 100;
+  return Math.max(0, Math.min(100, normalized)); // Clamp to 0-100
+}
 
 const parameterConfig = {
   temp: {
@@ -79,20 +96,36 @@ const parameterConfig = {
 export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps) {
   const [selectedParam, setSelectedParam] = useState<Parameter>("all");
 
+  // Normalize data for better visualization
+  const normalizedData = data.map(point => ({
+    date: point.date,
+    temp: normalizeValue(point.temp, 'temp'),
+    rh: normalizeValue(point.rh, 'rh'),
+    ppfd: normalizeValue(point.ppfd, 'ppfd'),
+    ph: normalizeValue(point.ph, 'ph'),
+    ec: normalizeValue(point.ec, 'ec'),
+    // Keep original values for tooltip
+    tempRaw: point.temp,
+    rhRaw: point.rh,
+    ppfdRaw: point.ppfd,
+    phRaw: point.ph,
+    ecRaw: point.ec,
+  }));
+
   const visibleParams =
     selectedParam === "all"
       ? (["temp", "rh", "ppfd", "ph", "ec"] as const)
       : [selectedParam];
 
-  // Calculate dynamic Y-axis domain based on visible data
+  // Calculate dynamic Y-axis domain based on NORMALIZED visible data
   const yAxisDomain = useMemo(() => {
-    if (data.length === 0) return [0, 100];
+    if (normalizedData.length === 0) return [0, 100];
 
     let min = Infinity;
     let max = -Infinity;
 
-    // Collect all values from visible parameters
-    data.forEach(point => {
+    // Collect all NORMALIZED values from visible parameters
+    normalizedData.forEach(point => {
       visibleParams.forEach(param => {
         const value = point[param];
         if (value !== undefined && value !== null) {
@@ -102,12 +135,13 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
       });
     });
 
-    // Include ideal values in the range calculation
+    // Include NORMALIZED ideal values in the range calculation
     visibleParams.forEach(param => {
-      const ideal = idealValues[param];
-      if (ideal !== undefined) {
-        min = Math.min(min, ideal);
-        max = Math.max(max, ideal);
+      const idealRaw = idealValues[param];
+      const idealNormalized = normalizeValue(idealRaw, param);
+      if (idealNormalized !== undefined) {
+        min = Math.min(min, idealNormalized);
+        max = Math.max(max, idealNormalized);
       }
     });
 
@@ -119,10 +153,10 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
     const padding = range * 0.1;
     
     return [
-      Math.floor((min - padding) * 10) / 10, // Round down to 1 decimal
-      Math.ceil((max + padding) * 10) / 10,  // Round up to 1 decimal
+      Math.max(0, Math.floor(min - padding)), // Don't go below 0
+      Math.min(100, Math.ceil(max + padding)),  // Don't go above 100
     ];
-  }, [data, visibleParams]);
+  }, [normalizedData, visibleParams]);
 
   // Check if there's insufficient data
   const hasInsufficientData = data.length > 0 && data.length < 3;
@@ -175,7 +209,7 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
 
       {/* Chart */}
       <ResponsiveContainer width="100%" height={320}>
-        <LineChart data={data} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+        <LineChart data={normalizedData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
           <XAxis
             dataKey="date"
@@ -188,6 +222,7 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
             tick={{ fontSize: 11 }}
             stroke="currentColor"
             className="text-muted-foreground"
+            label={{ value: '%', angle: 0, position: 'top', offset: 10, fontSize: 10 }}
           />
           <Tooltip
             contentStyle={{
@@ -201,7 +236,11 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
               if (value === undefined || !name) return ['--', name || ''];
               const param = name as keyof typeof parameterConfig;
               const config = parameterConfig[param];
-              return [`${value.toFixed(1)}${config.unit}`, config.label];
+              const rawValue = normalizedData[0]?.[`${param}Raw` as keyof typeof normalizedData[0]];
+              if (rawValue !== undefined && typeof rawValue === 'number') {
+                return [`${rawValue.toFixed(1)}${config.unit} (${value.toFixed(0)}%)`, config.label];
+              }
+              return [`${value.toFixed(0)}%`, config.label];
             }}
           />
           <Legend
@@ -212,14 +251,16 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
             }}
           />
 
-          {/* Ideal Reference Lines */}
+          {/* Ideal Reference Lines (normalized) */}
           {visibleParams.map((param) => {
             const config = parameterConfig[param];
-            const ideal = idealValues[param];
+            const idealRaw = idealValues[param];
+            const idealNormalized = normalizeValue(idealRaw, param);
+            if (idealNormalized === undefined) return null;
             return (
               <ReferenceLine
                 key={`ideal-${param}`}
-                y={ideal}
+                y={idealNormalized}
                 stroke={config.color}
                 strokeDasharray="5 5"
                 strokeOpacity={0.4}

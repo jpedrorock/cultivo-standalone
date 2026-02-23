@@ -2689,3 +2689,10 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] Ajustar eixo Y para usar range dinâmico (min a max) ao invés de 0-100%
 - [x] Adicionar padding nos limites (5-10%) para evitar linhas coladas nas bordas
 - [x] Atualizar tooltip para mostrar valores reais ao invés de porcentagens
+
+## Widget de Gráficos - Correção: Normalização + Eixo Y Dinâmico
+
+- [x] Restaurar normalização 0-100% dos dados
+- [x] Calcular min/max dos valores NORMALIZADOS (não absolutos)
+- [x] Aplicar eixo Y dinâmico aos valores normalizados
+- [x] Manter tooltip mostrando valores reais + porcentagem normalizada
