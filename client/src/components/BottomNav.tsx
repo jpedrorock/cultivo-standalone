@@ -1,4 +1,4 @@
-import { Home, Calculator, Bell, MoreHorizontal, BarChart3, Sprout, Settings, Leaf, CheckSquare, Plus } from "lucide-react";
+import { Warehouse, Calculator, Bell, MoreHorizontal, BarChart3, Sprout, Settings, Leaf, CheckSquare, Plus } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -27,7 +27,7 @@ export function BottomNav() {
 
   const mainNavItems: NavItem[] = [
     { href: "/quick-log", icon: Plus, label: "Registro" },
-    { href: "/", icon: Home, label: "Home" },
+    { href: "/", icon: Warehouse, label: "Estufas" },
     { href: "/calculators", icon: Calculator, label: "Calculadoras" },
   ];
 

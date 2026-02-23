@@ -2367,3 +2367,27 @@ Essa ordem é mais lógica e intuitiva - começa com Home, depois a ação princ
 - BottomNav com botão verde de Registro permanece no mobile
 
 **Justificativa**: Evitar redundância - no mobile o botão verde de Registro já está sempre visível no menu inferior.
+
+## Renomear "Home" para "Estufas" com Ícone Warehouse
+
+**Objetivo**: Renomear página "Home" para "Estufas" e substituir ícone Home por Warehouse (mais representativo de estrutura de estufa).
+
+- [ ] Atualizar DashboardLayout.tsx (sidebar desktop) - NÃO APLICÁVEL (layout genérico não usado)
+- [x] Atualizar BottomNav.tsx (menu mobile):
+  * ✅ Alterar texto "Home" para "Estufas" (linha 30)
+  * ✅ Substituir ícone Home por Warehouse (linha 1 e 30)
+- [x] Atualizar título da página Home.tsx (não necessário - título interno da página pode permanecer genérico)
+- [x] Verificar outras referências a "Home" no código (apenas BottomNav precisa mudança)
+- [x] Testar navegação e exibição do ícone
+
+**Teste Realizado (22/02/2026)**:
+✅ BottomNav agora exibe "🏭 Estufas" em vez de "🏠 Home"
+✅ Ícone Warehouse (🏭) representa melhor estrutura de estufa/galpão
+✅ Navegação para "/" continua funcionando normalmente
+✅ Menu mobile mais descritivo e contextual
+
+**Implementação Realizada (22/02/2026)**:
+- BottomNav.tsx linha 1: Import alterado de `Home` para `Warehouse`
+- BottomNav.tsx linha 30: Label alterado de "Home" para "Estufas" e icon de `Home` para `Warehouse`
+
+**Justificativa**: "Estufas" é mais descritivo do conteúdo da página. Ícone Warehouse representa melhor uma estrutura de estufa/galpão.
