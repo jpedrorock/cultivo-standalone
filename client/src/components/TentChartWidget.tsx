@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   LineChart,
   Line,
@@ -29,16 +29,7 @@ interface TentChartWidgetProps {
   data: DataPoint[];
 }
 
-// Normalization ranges for each parameter
-const normalizationRanges = {
-  temp: { min: 15, max: 35 }, // °C
-  rh: { min: 30, max: 90 }, // %
-  ppfd: { min: 0, max: 1000 }, // µmol/m²/s
-  ph: { min: 5, max: 8 },
-  ec: { min: 0, max: 3 }, // mS/cm
-};
-
-// Ideal values for each parameter (will be normalized for display)
+// Ideal values for each parameter
 const idealValues = {
   temp: 24, // °C - ideal temperature
   rh: 60, // % - ideal humidity
@@ -46,14 +37,6 @@ const idealValues = {
   ph: 6.0, // ideal pH
   ec: 1.8, // mS/cm - ideal EC
 };
-
-// Normalize value to 0-100% scale
-function normalizeValue(value: number | undefined, param: keyof typeof normalizationRanges): number | undefined {
-  if (value === undefined || value === null) return undefined;
-  const range = normalizationRanges[param];
-  const normalized = ((value - range.min) / (range.max - range.min)) * 100;
-  return Math.max(0, Math.min(100, normalized)); // Clamp to 0-100
-}
 
 const parameterConfig = {
   temp: {
@@ -96,26 +79,50 @@ const parameterConfig = {
 export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps) {
   const [selectedParam, setSelectedParam] = useState<Parameter>("all");
 
-  // Normalize data for better visualization
-  const normalizedData = data.map(point => ({
-    date: point.date,
-    temp: normalizeValue(point.temp, 'temp'),
-    rh: normalizeValue(point.rh, 'rh'),
-    ppfd: normalizeValue(point.ppfd, 'ppfd'),
-    ph: normalizeValue(point.ph, 'ph'),
-    ec: normalizeValue(point.ec, 'ec'),
-    // Keep original values for tooltip
-    tempRaw: point.temp,
-    rhRaw: point.rh,
-    ppfdRaw: point.ppfd,
-    phRaw: point.ph,
-    ecRaw: point.ec,
-  }));
-
   const visibleParams =
     selectedParam === "all"
       ? (["temp", "rh", "ppfd", "ph", "ec"] as const)
       : [selectedParam];
+
+  // Calculate dynamic Y-axis domain based on visible data
+  const yAxisDomain = useMemo(() => {
+    if (data.length === 0) return [0, 100];
+
+    let min = Infinity;
+    let max = -Infinity;
+
+    // Collect all values from visible parameters
+    data.forEach(point => {
+      visibleParams.forEach(param => {
+        const value = point[param];
+        if (value !== undefined && value !== null) {
+          min = Math.min(min, value);
+          max = Math.max(max, value);
+        }
+      });
+    });
+
+    // Include ideal values in the range calculation
+    visibleParams.forEach(param => {
+      const ideal = idealValues[param];
+      if (ideal !== undefined) {
+        min = Math.min(min, ideal);
+        max = Math.max(max, ideal);
+      }
+    });
+
+    // If no valid data found, return default
+    if (!isFinite(min) || !isFinite(max)) return [0, 100];
+
+    // Add 10% padding to avoid lines touching edges
+    const range = max - min;
+    const padding = range * 0.1;
+    
+    return [
+      Math.floor((min - padding) * 10) / 10, // Round down to 1 decimal
+      Math.ceil((max + padding) * 10) / 10,  // Round up to 1 decimal
+    ];
+  }, [data, visibleParams]);
 
   // Check if there's insufficient data
   const hasInsufficientData = data.length > 0 && data.length < 3;
@@ -130,20 +137,23 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
           </h3>
           <span className="text-xs text-muted-foreground">Última Semana</span>
         </div>
-        
-        {/* Parameter Selector */}
+      </div>
+
+      {/* Parameter Selector */}
+      <div className="mb-3 flex items-center gap-2">
+        <button
+          onClick={() => setSelectedParam("all")}
+          className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+            selectedParam === "all"
+              ? "bg-primary text-primary-foreground"
+              : "bg-muted text-muted-foreground hover:bg-muted/80"
+          }`}
+        >
+          Todos
+        </button>
         <div className="flex gap-1">
-          <button
-            onClick={() => setSelectedParam("all")}
-            className={`px-2 py-1 text-xs rounded-md transition-colors ${
-              selectedParam === "all"
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-muted-foreground hover:bg-muted/80"
-            }`}
-          >
-            Todos
-          </button>
-          {Object.entries(parameterConfig).map(([key, config]) => {
+          {(Object.keys(parameterConfig) as Array<keyof typeof parameterConfig>).map((key) => {
+            const config = parameterConfig[key];
             const Icon = config.icon;
             return (
               <button
@@ -165,7 +175,7 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
 
       {/* Chart */}
       <ResponsiveContainer width="100%" height={320}>
-        <LineChart data={normalizedData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+        <LineChart data={data} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
           <XAxis
             dataKey="date"
@@ -174,6 +184,7 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
             className="text-muted-foreground"
           />
           <YAxis
+            domain={yAxisDomain}
             tick={{ fontSize: 11 }}
             stroke="currentColor"
             className="text-muted-foreground"
@@ -182,53 +193,42 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
             contentStyle={{
               backgroundColor: "hsl(var(--card))",
               border: "1px solid hsl(var(--border))",
-              borderRadius: "8px",
-              fontSize: "12px",
+              borderRadius: "6px",
+              fontSize: "11px",
             }}
-            labelStyle={{ color: "hsl(var(--foreground))" }}
-            formatter={(value: number | undefined, name: string | undefined, props: any) => {
-              if (value === undefined || name === undefined) return ['--', name || ''];
-              // Extract parameter key from name (e.g., "Temperatura (°C)" -> "temp")
-              const paramKey = Object.entries(parameterConfig).find(
-                ([_, config]) => name.startsWith(config.label)
-              )?.[0] as keyof typeof parameterConfig | undefined;
-              
-              if (!paramKey) return [value.toFixed(1) + '%', name];
-              
-              const rawValue = props.payload[`${paramKey}Raw`];
-              const config = parameterConfig[paramKey];
-              
-              if (rawValue !== undefined && rawValue !== null) {
-                return [
-                  `${rawValue.toFixed(1)}${config.unit} (${value.toFixed(0)}%)`,
-                  config.label
-                ];
-              }
-              
-              return [value.toFixed(1) + '%', name];
+            labelStyle={{ color: "hsl(var(--foreground))", fontSize: "10px" }}
+            formatter={(value: number | undefined, name: string | undefined) => {
+              if (value === undefined || !name) return ['--', name || ''];
+              const param = name as keyof typeof parameterConfig;
+              const config = parameterConfig[param];
+              return [`${value.toFixed(1)}${config.unit}`, config.label];
             }}
           />
           <Legend
             wrapperStyle={{ fontSize: "11px" }}
-            iconType="line"
+            formatter={(value) => {
+              const param = value as keyof typeof parameterConfig;
+              return parameterConfig[param]?.label || value;
+            }}
           />
-          
+
           {/* Ideal Reference Lines */}
           {visibleParams.map((param) => {
-            const idealNormalized = normalizeValue(idealValues[param], param);
-            if (idealNormalized === undefined) return null;
+            const config = parameterConfig[param];
+            const ideal = idealValues[param];
             return (
               <ReferenceLine
                 key={`ideal-${param}`}
-                y={idealNormalized}
-                stroke={parameterConfig[param].color}
+                y={ideal}
+                stroke={config.color}
                 strokeDasharray="5 5"
                 strokeOpacity={0.4}
                 strokeWidth={1.5}
               />
             );
           })}
-          
+
+          {/* Data Lines */}
           {visibleParams.map((param) => {
             const config = parameterConfig[param];
             return (
@@ -236,11 +236,11 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
                 key={param}
                 type="monotone"
                 dataKey={config.key}
+                name={config.key}
                 stroke={config.color}
                 strokeWidth={2}
-                dot={{ r: 3 }}
+                dot={{ r: 3, fill: config.color }}
                 activeDot={{ r: 5 }}
-                name={`${config.label} (${config.unit})`}
                 connectNulls
               />
             );
@@ -250,7 +250,7 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
 
       {/* No Data Message */}
       {data.length === 0 && (
-        <div className="text-center py-8 text-muted-foreground text-sm">
+        <div className="text-center py-4 text-muted-foreground text-sm">
           Nenhum registro na última semana
         </div>
       )}

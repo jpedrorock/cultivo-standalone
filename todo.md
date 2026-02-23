@@ -2682,3 +2682,10 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 ## Widget de Gráficos - Ajuste de Altura
 
 - [x] Aumentar altura do gráfico de 200px para 320px para melhor visualização
+
+## Widget de Gráficos - Escala Dinâmica do Eixo Y
+
+- [x] Implementar cálculo automático de min/max dos dados reais
+- [x] Ajustar eixo Y para usar range dinâmico (min a max) ao invés de 0-100%
+- [x] Adicionar padding nos limites (5-10%) para evitar linhas coladas nas bordas
+- [x] Atualizar tooltip para mostrar valores reais ao invés de porcentagens
