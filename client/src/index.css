@@ -109,8 +109,8 @@
   --accent: oklch(0.22 0 0);
   --accent-foreground: oklch(0.98 0 0);
   
-  /* Destructive colors - Softer red for better readability in dark mode */
-  --destructive: oklch(0.65 0.18 25);
+  /* Destructive colors - Softer rose/wine tone for better readability in dark mode */
+  --destructive: oklch(0.68 0.14 15); /* Softer rose-wine tone */
   --destructive-foreground: oklch(0.98 0 0);
   
   /* Border and input colors - More visible */

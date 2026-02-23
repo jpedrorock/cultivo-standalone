@@ -2537,3 +2537,11 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
   - Vermelho: > 20h desde último registro
 - [x] Revisar dark mode em TODAS as páginas do app
 - [x] Ajustar cores inconsistentes após mudanças recentes
+
+## Correções QuickLog - Scroll e Cor Vermelha (23/02/2026)
+
+- [x] Corrigir scroll do QuickLog - página inteira sobe quando teclado abre
+- [x] Implementar overflow-hidden no container principal para bloquear scroll da página
+- [x] Garantir que apenas o card de conteúdo tenha scroll (overflow-y-auto)
+- [x] Suavizar cor vermelha no dark mode (muito gritante) - trocar por tom rosa/vinho (rose-300 ou rose-400)
+- [x] Testar no iPhone que página não sobe mais quando digitar
