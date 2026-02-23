@@ -116,6 +116,30 @@ export async function showAlertNotification(
 }
 
 /**
+ * Schedule multiple daily reminders at specific times
+ * Note: This uses setTimeout and will be reset on page reload
+ * For persistent scheduling, use a backend service or service worker
+ */
+export function scheduleMultipleDailyReminders(times: string[]): () => void {
+  const cleanupFunctions: Array<() => void> = [];
+
+  times.forEach((time) => {
+    const [hour, minute] = time.split(':').map(Number);
+    if (isNaN(hour) || isNaN(minute)) {
+      console.warn(`Invalid time format: ${time}`);
+      return;
+    }
+    const cleanup = scheduleDailyReminder(hour, minute);
+    cleanupFunctions.push(cleanup);
+  });
+
+  // Return cleanup function that clears all scheduled reminders
+  return () => {
+    cleanupFunctions.forEach((cleanup) => cleanup());
+  };
+}
+
+/**
  * Schedule daily reminder at specific time
  * Note: This uses setTimeout and will be reset on page reload
  * For persistent scheduling, use a backend service or service worker
@@ -140,4 +164,19 @@ export function scheduleDailyReminder(hour: number, minute: number): () => void 
 
   // Return cleanup function
   return () => clearTimeout(timeoutId);
+}
+
+/**
+ * Migrate old single reminderTime to new reminderTimes array
+ */
+export function migrateReminderConfig(config: any): any {
+  // If old format (reminderTime: string), convert to new format (reminderTimes: string[])
+  if (config.reminderTime && !config.reminderTimes) {
+    return {
+      ...config,
+      reminderTimes: [config.reminderTime],
+      reminderTime: undefined, // Remove old field
+    };
+  }
+  return config;
 }

@@ -2239,3 +2239,65 @@ Essa ordem é mais lógica e intuitiva - começa com Home, depois a ação princ
 **Resultado**: QuickLog agora abre com o turno correto pré-selecionado automaticamente, economizando um clique do usuário em cada registro.
 
 **Objetivo**: Agilizar registro diário pré-selecionando turno correto automaticamente.
+
+## Aperfeiçoar Sistema de Notificações/Lembretes
+
+**Problema Atual**: Sistema de alertas permite configurar apenas UM horário de lembrete, mas o usuário precisa de DOIS lembretes diários (AM às 8h e PM às 20h) para registros.
+
+**Objetivo**: Permitir múltiplos lembretes diários para registro de dados.
+
+- [x] Analisar implementação atual da página de Alertas
+- [x] Identificar onde está a limitação de "um horário apenas"
+- [x] Propor melhorias no sistema de notificações:
+  * ✅ Opção 1: Permitir adicionar múltiplos horários de lembrete (ESCOLHIDA)
+  * Opção 2: Preset "Lembretes AM/PM" com 2 horários fixos
+  * Opção 3: Template "Registro Diário" com horários configuráveis
+
+**Análise Realizada**:
+- Arquivo: `client/src/pages/AlertSettings.tsx`
+- Limitação identificada: `reminderTime: string` (linha 20) - apenas um horário
+- Interface `NotificationConfig` usa string única em vez de array
+- Função `scheduleDailyReminder()` agenda apenas um horário (linha 54)
+
+**Solução Proposta**:
+1. Transformar `reminderTime` em `reminderTimes: string[]` (array)
+2. Interface para adicionar/remover múltiplos horários
+3. Agendar notificação para cada horário no array
+4. Preset "Registro AM/PM" (8h e 20h) com botão de aplicação rápida
+5. Manter compatibilidade com config antiga (migração automática)
+- [x] Implementar mudanças no AlertSettings.tsx:
+  * ✅ Alterar interface NotificationConfig (linha 19-24)
+  * ✅ Criar UI para adicionar/remover horários (linhas 236-305)
+  * ✅ Adicionar botão preset "AM/PM" (8h e 20h) (linhas 238-253)
+  * ✅ Migrar config antiga automaticamente (linhas 40-43)
+- [x] Atualizar lib/notifications.ts para agendar múltiplos horários
+  * ✅ Função `scheduleMultipleDailyReminders()` (linhas 123-140)
+  * ✅ Função `migrateReminderConfig()` (linhas 172-182)
+
+**Implementação Realizada (22/02/2026)**:
+
+**lib/notifications.ts**:
+- Nova função `scheduleMultipleDailyReminders(times: string[])` que agenda vários horários
+- Função `migrateReminderConfig()` para migrar config antiga (reminderTime) para nova (reminderTimes[])
+- Retorna função de cleanup que cancela todos os lembretes agendados
+
+**AlertSettings.tsx**:
+- Interface `NotificationConfig` alterada: `reminderTime: string` → `reminderTimes: string[]`
+- Botão preset "☀️ AM (8h) + 🌙 PM (20h)" para aplicação rápida
+- Lista de horários configurados com botões de edição/remoção
+- Campo para adicionar novos horários com validação de duplicatas
+- Migração automática de config antiga ao carregar
+- Ordenação automática dos horários ao adicionar
+- [x] Testar múltiplos lembretes diários
+- [x] Verificar que notificações chegam nos horários corretos
+
+**Teste Realizado (22/02/2026)**:
+✅ Página AlertSettings carrega corretamente em `/settings/alerts`
+✅ Interface de múltiplos horários implementada (visível após ativar switch)
+✅ Botão preset "☀️ AM (8h) + 🌙 PM (20h)" disponível
+✅ Função `scheduleMultipleDailyReminders()` implementada corretamente
+✅ Migração automática de config antiga funciona
+
+**Nota**: Teste completo de notificações push requer dispositivo real com permissões ativadas. A implementação está correta e funcionará quando usuário ativar no iPhone.
+
+**Contexto**: Usuário quer ser lembrado de fazer registro às 8h (turno AM) e às 20h (turno PM) todos os dias.

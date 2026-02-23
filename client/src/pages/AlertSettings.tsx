@@ -12,12 +12,13 @@ import {
   getNotificationPermission,
   requestNotificationPermission,
   showNotification,
-  scheduleDailyReminder,
+  scheduleMultipleDailyReminders,
+  migrateReminderConfig,
 } from "@/lib/notifications";
 
 interface NotificationConfig {
   dailyReminderEnabled: boolean;
-  reminderTime: string;
+  reminderTimes: string[]; // Changed from reminderTime to support multiple times
   alertsEnabled: boolean;
   taskRemindersEnabled: boolean;
 }
@@ -25,17 +26,21 @@ interface NotificationConfig {
 export default function AlertSettings() {
   const [config, setConfig] = useState<NotificationConfig>({
     dailyReminderEnabled: false,
-    reminderTime: "18:00",
+    reminderTimes: [], // Empty array by default
     alertsEnabled: false,
     taskRemindersEnabled: false,
   });
+  const [newReminderTime, setNewReminderTime] = useState<string>("08:00");
   const [permission, setPermission] = useState<string>(getNotificationPermission());
 
   useEffect(() => {
     const saved = localStorage.getItem("notificationConfig");
     if (saved) {
       try {
-        setConfig(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        // Migrate old format to new format
+        const migrated = migrateReminderConfig(parsed);
+        setConfig(migrated);
       } catch (e) {
         console.error("Error parsing notification config:", e);
       }
@@ -49,9 +54,8 @@ export default function AlertSettings() {
   useEffect(() => {
     localStorage.setItem("notificationConfig", JSON.stringify(config));
 
-    if (config.dailyReminderEnabled && permission === "granted" && config.reminderTime) {
-      const [hour, minute] = config.reminderTime.split(":").map(Number);
-      scheduleDailyReminder(hour, minute);
+    if (config.dailyReminderEnabled && permission === "granted" && config.reminderTimes.length > 0) {
+      scheduleMultipleDailyReminders(config.reminderTimes);
     }
   }, [config, permission]);
 
@@ -230,18 +234,86 @@ export default function AlertSettings() {
               </div>
 
               {config.dailyReminderEnabled && (
-                <div className="space-y-2 pl-4 border-l-2 border-primary/20">
-                  <Label htmlFor="reminder-time">Horário do lembrete</Label>
-                  <Input
-                    id="reminder-time"
-                    type="time"
-                    value={config.reminderTime}
-                    onChange={(e) => setConfig({ ...config, reminderTime: e.target.value })}
-                    className="max-w-xs"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Você receberá um lembrete todos os dias às {config.reminderTime}
-                  </p>
+                <div className="space-y-4 pl-4 border-l-2 border-primary/20">
+                  {/* Preset Button */}
+                  <div className="space-y-2">
+                    <Label>Configuração Rápida</Label>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setConfig({ ...config, reminderTimes: ["08:00", "20:00"] })}
+                      className="w-full"
+                    >
+                      ☀️ AM (8h) + 🌙 PM (20h)
+                    </Button>
+                    <p className="text-xs text-muted-foreground">
+                      Aplica lembretes para turno da manhã e noite
+                    </p>
+                  </div>
+
+                  {/* List of Reminder Times */}
+                  <div className="space-y-2">
+                    <Label>Horários Configurados ({config.reminderTimes.length})</Label>
+                    {config.reminderTimes.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">Nenhum horário configurado</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {config.reminderTimes.map((time, index) => (
+                          <div key={index} className="flex items-center gap-2">
+                            <Input
+                              type="time"
+                              value={time}
+                              onChange={(e) => {
+                                const newTimes = [...config.reminderTimes];
+                                newTimes[index] = e.target.value;
+                                setConfig({ ...config, reminderTimes: newTimes });
+                              }}
+                              className="flex-1"
+                            />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => {
+                                const newTimes = config.reminderTimes.filter((_, i) => i !== index);
+                                setConfig({ ...config, reminderTimes: newTimes });
+                              }}
+                            >
+                              Remover
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Add New Reminder Time */}
+                  <div className="space-y-2">
+                    <Label htmlFor="new-reminder-time">Adicionar Novo Horário</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="new-reminder-time"
+                        type="time"
+                        value={newReminderTime}
+                        onChange={(e) => setNewReminderTime(e.target.value)}
+                        className="flex-1"
+                      />
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          if (newReminderTime && !config.reminderTimes.includes(newReminderTime)) {
+                            setConfig({ ...config, reminderTimes: [...config.reminderTimes, newReminderTime].sort() });
+                            toast.success(`Lembrete adicionado: ${newReminderTime}`);
+                          } else if (config.reminderTimes.includes(newReminderTime)) {
+                            toast.error("Este horário já está configurado");
+                          }
+                        }}
+                      >
+                        Adicionar
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               )}
             </CardContent>
