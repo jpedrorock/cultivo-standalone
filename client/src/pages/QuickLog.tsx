@@ -96,13 +96,33 @@ export default function QuickLog() {
   // Save daily log mutation
   const saveDailyLogMutation = trpc.dailyLogs.create.useMutation({
     onSuccess: () => {
-      if (recordPlantHealth === false || plants.length === 0) {
-        // Skip plant health or no plants
-        toast.success("✅ Registro salvo com sucesso!");
+      if (plants.length === 0) {
+        // No plants in tent
+        toast.success("✅ Registro da estufa salvo com sucesso!");
         resetForm();
         setTimeout(() => setLocation("/"), 1500);
+      } else if (recordPlantHealth === false) {
+        // User initially said no, but ask again
+        toast.success("✅ Registro da estufa salvo!", {
+          description: "Deseja registrar saúde das plantas agora?",
+          action: {
+            label: "Sim, registrar",
+            onClick: () => {
+              setRecordPlantHealth(true);
+              setCurrentStep(9); // Go to plant health
+            },
+          },
+          cancel: {
+            label: "Não, voltar",
+            onClick: () => {
+              resetForm();
+              setLocation("/");
+            },
+          },
+        });
       } else {
         // Continue to plant health
+        toast.success("✅ Registro da estufa salvo!");
         setCurrentStep(9); // Go to first plant health step
       }
     },
@@ -968,7 +988,7 @@ export default function QuickLog() {
       )}
 
       {/* Navigation buttons */}
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200 flex gap-3">
+      <div className="fixed bottom-0 left-0 right-0 p-6 pb-24 md:pb-6 bg-white border-t border-gray-200 flex gap-3">
         {/* Back button - only for daily log steps */}
         {currentStep > 0 && currentStep < 9 && (
           <Button

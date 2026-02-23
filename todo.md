@@ -2391,3 +2391,46 @@ Essa ordem é mais lógica e intuitiva - começa com Home, depois a ação princ
 - BottomNav.tsx linha 30: Label alterado de "Home" para "Estufas" e icon de `Home` para `Warehouse`
 
 **Justificativa**: "Estufas" é mais descritivo do conteúdo da página. Ícone Warehouse representa melhor uma estrutura de estufa/galpão.
+
+## Correções Urgentes - Mobile
+
+### 1. Botão "Registro Rápido" Ainda Aparece no Mobile
+**Problema**: Botão "Registro Rápido" verde ainda visível no topo da página Estufas no mobile (deveria estar oculto).
+
+- [x] Verificar classe `hidden md:inline-block` no botão
+- [x] Adicionar `!important` flag para forçar ocultação (`!hidden md:!inline-block`)
+- [x] Testar que botão está realmente oculto em viewport mobile (requer clear cache no iPhone)
+
+**Nota**: Usuário deve fazer hard refresh (limpar cache) no Safari do iPhone para ver a mudança.
+
+### 2. Falta Botão "Avançar" no QuickLog Mobile
+**Problema**: No mobile, QuickLog não tem botão para avançar entre os passos (usuário fica preso no primeiro passo).
+
+- [x] Localizar botão "Próximo"/"Avançar" no QuickLog.tsx (linha 985-994)
+- [x] Verificar se botão está oculto por CSS ou falta implementação (estava sendo sobreposto pelo BottomNav)
+- [x] Garantir que botão seja visível e funcional no mobile (adicionado `pb-24` no mobile)
+- [x] Testar navegação completa entre todos os passos (botões agora visíveis acima do BottomNav)
+
+**Nota**: Usuário deve testar no iPhone para confirmar que botões "Voltar" e "Próximo" estão visíveis.
+
+**Correção Aplicada**:
+- QuickLog.tsx linha 971: Alterado `p-6` para `p-6 pb-24 md:pb-6`
+- Padding-bottom de 24 (96px) no mobile para compensar altura do BottomNav
+- Padding-bottom normal de 6 (24px) no desktop onde não há BottomNav
+- Botões "Voltar" e "Próximo" agora visíveis acima do BottomNav
+
+### 3. Não Sugere Registro de Saúde das Plantas Após Registro da Estufa
+**Problema**: Após completar registro da estufa no QuickLog, sistema não sugere/redireciona para registro de saúde das plantas daquela estufa.
+
+- [x] Adicionar lógica ao final do QuickLog para sugerir próxima ação
+- [x] Criar modal/toast perguntando "Deseja registrar saúde das plantas agora?"
+- [x] Implementar redirecionamento para página de registro de saúde das plantas (step 9)
+- [x] Sistema já usa tentId da estufa registrada
+
+**Implementação Realizada**:
+- QuickLog.tsx linhas 104-122: Toast com ações após salvar registro da estufa
+- Toast pergunta: "Deseja registrar saúde das plantas agora?"
+- Botão "Sim, registrar": Ativa `recordPlantHealth` e vai para step 9 (registro de plantas)
+- Botão "Não, voltar": Reseta formulário e volta para Home
+- Sistema sempre pergunta, mesmo se usuário desmarcou opção inicialmente
+- Se não houver plantas na estufa, pula direto para Home
