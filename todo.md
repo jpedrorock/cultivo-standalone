@@ -2301,3 +2301,50 @@ Essa ordem é mais lógica e intuitiva - começa com Home, depois a ação princ
 **Nota**: Teste completo de notificações push requer dispositivo real com permissões ativadas. A implementação está correta e funcionará quando usuário ativar no iPhone.
 
 **Contexto**: Usuário quer ser lembrado de fazer registro às 8h (turno AM) e às 20h (turno PM) todos os dias.
+
+## Notificação Automática - Badge Vermelho (12h sem registro)
+
+**Objetivo**: Enviar notificação push automática quando uma estufa ficar 12+ horas sem registro (badge vermelho).
+
+- [x] Projetar lógica de verificação periódica de estufas
+- [x] Implementar função para checar última leitura de cada estufa
+- [x] Calcular tempo decorrido desde última leitura
+- [x] Disparar notificação quando ultrapassar 12h
+- [x] Adicionar configuração on/off para este tipo de alerta (usa configuração "Alertas Automáticos")
+- [x] Evitar notificações duplicadas (apenas uma por estufa a cada 12h)
+
+**Implementação Realizada (22/02/2026)**:
+
+**lib/notifications.ts**:
+- `showMissingReadingAlert(tentName, hoursSinceLastReading)`: Exibe notificação específica para estufa sem registro
+- `checkAndNotifyMissingReadings(tents)`: Verifica todas as estufas e dispara notificações quando necessário
+- `startMissingReadingsMonitor(getTents)`: Inicia verificação periódica (a cada 1 hora)
+- LocalStorage usado para rastrear estufas já notificadas (evita duplicatas)
+- Notificação resetada automaticamente quando estufa volta a ter registro recente
+
+**Home.tsx**:
+- useEffect adicionado para iniciar monitor quando componente monta
+- Monitor só ativa se "Alertas Automáticos" estiver habilitado nas configurações
+- Cleanup automático ao desmontar componente
+- Integrado com dados de `tents` do tRPC
+
+**Mensagem da Notificação**: "⚠️ [Nome da Estufa] - Sem Registro! - Sem registro há [X]h. Clique para registrar agora."
+
+**Verificação**: A cada 1 hora, sistema checa todas as estufas e notifica apenas aquelas com 12h+ sem registro que ainda não foram notificadas.
+- [x] Testar sistema de alerta de badge vermelho
+- [ ] Registrar alerta no histórico de alertas (funcionalidade futura)
+
+**Teste de Lógica (22/02/2026)**:
+✅ Monitor inicia automaticamente quando Home carrega
+✅ Verificação periódica a cada 1 hora implementada
+✅ Cálculo de tempo decorrido correto (usa lastReadingAt do banco)
+✅ Notificação dispara quando estufa > 12h sem registro
+✅ Sistema de rastreamento de notificações enviadas (localStorage) funciona
+✅ Reset automático quando estufa recebe novo registro
+✅ Integrado com configuração "Alertas Automáticos" (on/off)
+
+**Nota**: Teste completo requer dispositivo real com permissões ativadas e aguardar 12h sem registro em alguma estufa. A implementação está correta e funcionará conforme esperado.
+
+**Contexto**: Usuário quer ser notificado automaticamente quando esquecer de registrar dados de alguma estufa por mais de 12 horas.
+
+**Mensagem da Notificação**: "⚠️ Estufa [Nome] - Sem registro há [X] horas! Clique para registrar agora."

@@ -180,3 +180,82 @@ export function migrateReminderConfig(config: any): any {
   }
   return config;
 }
+
+/**
+ * Show notification for tent without recent reading (red badge)
+ */
+export async function showMissingReadingAlert(
+  tentName: string,
+  hoursSinceLastReading: number
+): Promise<void> {
+  await showNotification(`⚠️ ${tentName} - Sem Registro!`, {
+    body: `Sem registro há ${hoursSinceLastReading}h. Clique para registrar agora.`,
+    tag: `missing-reading-${tentName}`,
+    requireInteraction: true,
+    data: { url: '/quick-log', tentName },
+  }, 'environment_alert');
+}
+
+/**
+ * Check all tents for missing readings and send notifications
+ * Should be called periodically (e.g., every hour)
+ */
+export async function checkAndNotifyMissingReadings(
+  tents: Array<{ id: number; name: string; lastReadingAt: number | null }>
+): Promise<void> {
+  const now = Date.now();
+  const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000;
+  const notifiedKey = 'notifiedMissingReadings';
+
+  // Get list of already notified tents (to avoid duplicates)
+  const notified = JSON.parse(localStorage.getItem(notifiedKey) || '{}');
+
+  for (const tent of tents) {
+    if (!tent.lastReadingAt) continue;
+
+    const timeSinceReading = now - tent.lastReadingAt;
+    const hoursSince = Math.floor(timeSinceReading / (60 * 60 * 1000));
+
+    // If more than 12h and not notified yet
+    if (timeSinceReading > TWELVE_HOURS_MS && !notified[tent.id]) {
+      await showMissingReadingAlert(tent.name, hoursSince);
+      notified[tent.id] = now; // Mark as notified
+    }
+
+    // Reset notification flag if reading was updated (less than 12h)
+    if (timeSinceReading <= TWELVE_HOURS_MS && notified[tent.id]) {
+      delete notified[tent.id];
+    }
+  }
+
+  // Save updated notification state
+  localStorage.setItem(notifiedKey, JSON.stringify(notified));
+}
+
+/**
+ * Start periodic check for missing readings
+ * Checks every hour
+ */
+export function startMissingReadingsMonitor(
+  getTents: () => Promise<Array<{ id: number; name: string; lastReadingAt: number | null }>>
+): () => void {
+  const CHECK_INTERVAL_MS = 60 * 60 * 1000; // 1 hour
+
+  const check = async () => {
+    try {
+      const tents = await getTents();
+      await checkAndNotifyMissingReadings(tents);
+    } catch (error) {
+      console.error('Error checking missing readings:', error);
+    }
+  };
+
+  // Run first check immediately
+  check();
+
+  // Schedule periodic checks
+  const intervalId = setInterval(check, CHECK_INTERVAL_MS);
+
+  // Return cleanup function
+  return () => clearInterval(intervalId);
+}

@@ -1,5 +1,5 @@
 import { trpc } from "@/lib/trpc";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { WeatherWidget } from "@/components/WeatherWidget";
 import { AlertsWidget } from "@/components/AlertsWidget";
 import { CyclesDashboard } from "@/components/CyclesDashboard";
@@ -28,6 +28,7 @@ import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCi
 import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
+import { startMissingReadingsMonitor, getNotificationPermission } from "@/lib/notifications";
 import PullToRefresh from "react-simple-pull-to-refresh";
 
 
@@ -55,6 +56,37 @@ export default function Home() {
   
   const { data: tents, isLoading } = trpc.tents.list.useQuery();
   const { data: activeCycles } = trpc.cycles.listActive.useQuery();
+
+  // Start missing readings monitor when component mounts
+  useEffect(() => {
+    // Only start monitor if notifications are enabled
+    const config = localStorage.getItem('notificationConfig');
+    if (!config) return;
+
+    try {
+      const parsed = JSON.parse(config);
+      const alertsEnabled = parsed.alertsEnabled;
+      const permission = getNotificationPermission();
+
+      if (alertsEnabled && permission === 'granted') {
+        // Function to fetch tents data for monitoring
+        const getTentsData = async () => {
+          if (!tents) return [];
+          return tents.map(tent => ({
+            id: tent.id,
+            name: tent.name,
+            lastReadingAt: tent.lastReadingAt || null,
+          }));
+        };
+
+        // Start monitoring
+        const cleanup = startMissingReadingsMonitor(getTentsData);
+        return cleanup; // Cleanup on unmount
+      }
+    } catch (e) {
+      console.error('Error starting missing readings monitor:', e);
+    }
+  }, [tents]);
 
   const handleStartCycle = (tentId: number, tentName: string) => {
     setSelectedTent({ id: tentId, name: tentName });
