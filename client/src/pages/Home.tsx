@@ -796,19 +796,22 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                 const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
                 const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
                 
-                let badgeColor = "bg-green-500/10 text-green-700 border-green-300";
+                let badgeColor = "bg-green-500/10 text-green-700 border-green-300 dark:bg-green-500/20 dark:text-green-400 dark:border-green-600";
                 let timeText = "";
                 
+                // Smart time-based colors: green <6h, yellow 6-20h, red >20h
                 if (diffHours === 0) {
                   timeText = `há ${diffMinutes}min`;
+                  badgeColor = "bg-green-500/10 text-green-700 border-green-300 dark:bg-green-500/20 dark:text-green-400 dark:border-green-600";
                 } else if (diffHours < 6) {
                   timeText = `há ${diffHours}h`;
-                } else if (diffHours < 12) {
-                  badgeColor = "bg-yellow-500/10 text-yellow-700 border-yellow-300";
+                  badgeColor = "bg-green-500/10 text-green-700 border-green-300 dark:bg-green-500/20 dark:text-green-400 dark:border-green-600";
+                } else if (diffHours < 20) {
                   timeText = `há ${diffHours}h`;
+                  badgeColor = "bg-yellow-500/10 text-yellow-700 border-yellow-300 dark:bg-yellow-500/20 dark:text-yellow-400 dark:border-yellow-600";
                 } else {
-                  badgeColor = "bg-red-500/10 text-red-700 border-red-300";
                   timeText = `há ${diffHours}h`;
+                  badgeColor = "bg-red-500/10 text-red-700 border-red-300 dark:bg-red-500/20 dark:text-red-400 dark:border-red-600";
                 }
                 
                 return (

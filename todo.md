@@ -2524,3 +2524,16 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] Adicionar scroll apenas no card de conteúdo interno (overflow-y-auto)
 - [x] Garantir que teclado mobile não mude altura dos elementos CSS
 - [x] Testar no iPhone que layout permanece estável quando teclado abre
+
+## Melhorias QuickLog e Temas (23/02/2026 - Parte 2)
+
+- [x] Adicionar toggle Lux/PPFD no Step 7 do QuickLog
+- [x] Implementar conversão automática Lux → PPFD (fórmula: PPFD ≈ Lux × 0.0185)
+- [x] Salvar sempre em PPFD no banco de dados
+- [x] Revisar dark mode no resumo do QuickLog (Step 8) - cards coloridos precisam de melhor contraste
+- [x] Implementar lógica inteligente para badge de tempo nas estufas:
+  - Verde: < 6h desde último registro
+  - Amarelo: 6h-20h desde último registro
+  - Vermelho: > 20h desde último registro
+- [x] Revisar dark mode em TODAS as páginas do app
+- [x] Ajustar cores inconsistentes após mudanças recentes

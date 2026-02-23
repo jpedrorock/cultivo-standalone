@@ -56,6 +56,8 @@ export default function QuickLog() {
   const [ph, setPh] = useState("");
   const [ec, setEc] = useState("");
   const [ppfd, setPpfd] = useState(0);
+  const [lightUnit, setLightUnit] = useState<"ppfd" | "lux">("ppfd"); // Toggle between Lux and PPFD
+  const [luxValue, setLuxValue] = useState(0);
 
   // Plant health state - expanded
   const [recordPlantHealth, setRecordPlantHealth] = useState<boolean | null>(null);
@@ -592,6 +594,42 @@ export default function QuickLog() {
             {/* Step 7: PPFD */}
             {currentStep === 7 && (
               <div className="space-y-6 animate-[slide-in-from-bottom_0.8s_ease-out]">
+                {/* Toggle Lux/PPFD */}
+                <div className="flex gap-3 justify-center">
+                  <button
+                    onClick={() => {
+                      setLightUnit("ppfd");
+                      // Convert lux to ppfd when switching
+                      if (luxValue > 0) {
+                        setPpfd(Math.round(luxValue * 0.0185));
+                      }
+                    }}
+                    className={`px-6 py-2 rounded-lg font-medium transition-all duration-300 ${
+                      lightUnit === "ppfd"
+                        ? "bg-gradient-to-r from-amber-400 to-yellow-500 text-white shadow-md scale-105"
+                        : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
+                    }`}
+                  >
+                    PPFD
+                  </button>
+                  <button
+                    onClick={() => {
+                      setLightUnit("lux");
+                      // Convert ppfd to lux when switching
+                      if (ppfd > 0) {
+                        setLuxValue(Math.round(ppfd / 0.0185));
+                      }
+                    }}
+                    className={`px-6 py-2 rounded-lg font-medium transition-all duration-300 ${
+                      lightUnit === "lux"
+                        ? "bg-gradient-to-r from-amber-400 to-yellow-500 text-white shadow-md scale-105"
+                        : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
+                    }`}
+                  >
+                    Lux
+                  </button>
+                </div>
+
                 {/* Toggle AM/PM */}
                 <div className="flex gap-3 justify-center">
                   <button
@@ -616,26 +654,59 @@ export default function QuickLog() {
                   </button>
                 </div>
 
-                {/* PPFD Slider */}
+                {/* Light Intensity Slider */}
                 <div className="space-y-4">
-                  <div className="text-center">
-                    <div className="text-5xl font-bold text-gray-900 dark:text-gray-100">{ppfd}</div>
-                    <div className="text-sm text-gray-500">μmol/m²/s</div>
-                  </div>
-                  <div className="relative">
-                    <input
-                      type="range"
-                      min="0"
-                      max="1500"
-                      step="10"
-                      value={ppfd}
-                      onChange={(e) => setPpfd(parseInt(e.target.value))}
-                      className="w-full h-10 rounded-full appearance-none cursor-pointer"
-                      style={{
-                        background: `linear-gradient(to right, #fbbf24 0%, #f59e0b ${(ppfd / 1500) * 100}%, #e5e7eb ${(ppfd / 1500) * 100}%, #e5e7eb 100%)`,
-                      }}
-                    />
-                  </div>
+                  {lightUnit === "ppfd" ? (
+                    <>
+                      <div className="text-center">
+                        <div className="text-5xl font-bold text-gray-900 dark:text-gray-100">{ppfd}</div>
+                        <div className="text-sm text-gray-500">μmol/m²/s</div>
+                      </div>
+                      <div className="relative">
+                        <input
+                          type="range"
+                          min="0"
+                          max="1500"
+                          step="10"
+                          value={ppfd}
+                          onChange={(e) => setPpfd(parseInt(e.target.value))}
+                          className="w-full h-10 rounded-full appearance-none cursor-pointer"
+                          style={{
+                            background: `linear-gradient(to right, #fbbf24 0%, #f59e0b ${(ppfd / 1500) * 100}%, #e5e7eb ${(ppfd / 1500) * 100}%, #e5e7eb 100%)`,
+                          }}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-center">
+                        <div className="text-5xl font-bold text-gray-900 dark:text-gray-100">{luxValue}</div>
+                        <div className="text-sm text-gray-500">Lux</div>
+                        {luxValue > 0 && (
+                          <div className="text-xs text-gray-400 mt-1">≈ {Math.round(luxValue * 0.0185)} μmol/m²/s</div>
+                        )}
+                      </div>
+                      <div className="relative">
+                        <input
+                          type="range"
+                          min="0"
+                          max="80000"
+                          step="500"
+                          value={luxValue}
+                          onChange={(e) => {
+                            const lux = parseInt(e.target.value);
+                            setLuxValue(lux);
+                            // Auto-convert to PPFD for storage
+                            setPpfd(Math.round(lux * 0.0185));
+                          }}
+                          className="w-full h-10 rounded-full appearance-none cursor-pointer"
+                          style={{
+                            background: `linear-gradient(to right, #fbbf24 0%, #f59e0b ${(luxValue / 80000) * 100}%, #e5e7eb ${(luxValue / 80000) * 100}%, #e5e7eb 100%)`,
+                          }}
+                        />
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             )}
@@ -644,44 +715,44 @@ export default function QuickLog() {
             {currentStep === 8 && (
               <div className="space-y-3 animate-[slide-in-from-bottom_0.8s_ease-out]">
                 {tempC && (
-                  <div className="p-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl border-l-4 border-orange-500">
-                    <div className="text-sm text-gray-600">Temperatura</div>
+                  <div className="p-4 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950 dark:to-red-950 rounded-xl border-l-4 border-orange-500">
+                    <div className="text-sm text-gray-600 dark:text-gray-300">Temperatura</div>
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{tempC}°C</div>
                   </div>
                 )}
                 {rhPct && (
-                  <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border-l-4 border-blue-500">
-                    <div className="text-sm text-gray-600">Umidade</div>
+                  <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 rounded-xl border-l-4 border-blue-500">
+                    <div className="text-sm text-gray-600 dark:text-gray-300">Umidade</div>
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{rhPct}%</div>
                   </div>
                 )}
                 {wateringVolume && (
-                  <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-l-4 border-green-500">
-                    <div className="text-sm text-gray-600">Volume de Rega</div>
+                  <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 rounded-xl border-l-4 border-green-500">
+                    <div className="text-sm text-gray-600 dark:text-gray-300">Volume de Rega</div>
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{wateringVolume} ml</div>
                   </div>
                 )}
                 {runoffCollected && (
-                  <div className="p-4 bg-gradient-to-r from-teal-50 to-cyan-50 rounded-xl border-l-4 border-teal-500">
-                    <div className="text-sm text-gray-600">Runoff Coletado</div>
+                  <div className="p-4 bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-950 dark:to-cyan-950 rounded-xl border-l-4 border-teal-500">
+                    <div className="text-sm text-gray-600 dark:text-gray-300">Runoff Coletado</div>
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{runoffCollected} ml ({runoffPercentage}%)</div>
                   </div>
                 )}
                 {ph && (
-                  <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border-l-4 border-purple-500">
-                    <div className="text-sm text-gray-600">pH</div>
+                  <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 rounded-xl border-l-4 border-purple-500">
+                    <div className="text-sm text-gray-600 dark:text-gray-300">pH</div>
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{ph}</div>
                   </div>
                 )}
                 {ec && (
-                  <div className="p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border-l-4 border-yellow-500">
-                    <div className="text-sm text-gray-600">EC</div>
+                  <div className="p-4 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950 dark:to-orange-950 rounded-xl border-l-4 border-yellow-500">
+                    <div className="text-sm text-gray-600 dark:text-gray-300">EC</div>
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{ec} mS/cm</div>
                   </div>
                 )}
                 {ppfd > 0 && (
-                  <div className="p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border-l-4 border-amber-500">
-                    <div className="text-sm text-gray-600">PPFD ({turn})</div>
+                  <div className="p-4 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950 dark:to-yellow-950 rounded-xl border-l-4 border-amber-500">
+                    <div className="text-sm text-gray-600 dark:text-gray-300">PPFD ({turn})</div>
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{ppfd} μmol/m²/s</div>
                   </div>
                 )}

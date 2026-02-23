@@ -293,10 +293,10 @@ export default function TentLog() {
 
         {/* Valores de Referência */}
         {currentTargets && (
-          <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-500/20 mb-6">
+          <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 border-blue-500/20 mb-6">
             <CardHeader>
-              <CardTitle className="text-blue-900">📊 Valores Ideais da Semana</CardTitle>
-              <CardDescription className="text-blue-700">
+              <CardTitle className="text-blue-900 dark:text-blue-300">📊 Valores Ideais da Semana</CardTitle>
+              <CardDescription className="text-blue-700 dark:text-blue-400">
                 Targets de referência para comparação com suas medições
               </CardDescription>
             </CardHeader>
