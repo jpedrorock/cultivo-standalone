@@ -110,10 +110,13 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
   return (
     <div className="bg-card rounded-xl shadow-lg border border-border p-4 mt-4">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <h4 className="text-sm font-semibold text-foreground">
-          Última Semana
-        </h4>
+      <div className="mb-4">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-lg font-bold text-foreground">
+            {tentName}
+          </h3>
+          <span className="text-xs text-muted-foreground">Última Semana</span>
+        </div>
         
         {/* Parameter Selector */}
         <div className="flex gap-1">
