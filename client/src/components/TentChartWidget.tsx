@@ -8,6 +8,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  ReferenceLine,
 } from "recharts";
 import { Thermometer, Droplets, Sun, Beaker, Zap } from "lucide-react";
 
@@ -35,6 +36,15 @@ const normalizationRanges = {
   ppfd: { min: 0, max: 1000 }, // µmol/m²/s
   ph: { min: 5, max: 8 },
   ec: { min: 0, max: 3 }, // mS/cm
+};
+
+// Ideal values for each parameter (will be normalized for display)
+const idealValues = {
+  temp: 24, // °C - ideal temperature
+  rh: 60, // % - ideal humidity
+  ppfd: 600, // µmol/m²/s - ideal light intensity
+  ph: 6.0, // ideal pH
+  ec: 1.8, // mS/cm - ideal EC
 };
 
 // Normalize value to 0-100% scale
@@ -106,6 +116,9 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
     selectedParam === "all"
       ? (["temp", "rh", "ppfd", "ph", "ec"] as const)
       : [selectedParam];
+
+  // Check if there's insufficient data
+  const hasInsufficientData = data.length > 0 && data.length < 3;
 
   return (
     <div className="bg-card rounded-xl shadow-lg border border-border p-4 mt-4">
@@ -200,6 +213,22 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
             iconType="line"
           />
           
+          {/* Ideal Reference Lines */}
+          {visibleParams.map((param) => {
+            const idealNormalized = normalizeValue(idealValues[param], param);
+            if (idealNormalized === undefined) return null;
+            return (
+              <ReferenceLine
+                key={`ideal-${param}`}
+                y={idealNormalized}
+                stroke={parameterConfig[param].color}
+                strokeDasharray="5 5"
+                strokeOpacity={0.4}
+                strokeWidth={1.5}
+              />
+            );
+          })}
+          
           {visibleParams.map((param) => {
             const config = parameterConfig[param];
             return (
@@ -223,6 +252,44 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
       {data.length === 0 && (
         <div className="text-center py-8 text-muted-foreground text-sm">
           Nenhum registro na última semana
+        </div>
+      )}
+
+      {/* Insufficient Data Warning */}
+      {hasInsufficientData && (
+        <div className="mt-3 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+          <p className="text-xs text-yellow-600 dark:text-yellow-500 text-center">
+            ⚠️ Dados insuficientes ({data.length} {data.length === 1 ? 'dia' : 'dias'}). Recomendado pelo menos 3 dias para análise confiável.
+          </p>
+        </div>
+      )}
+
+      {/* Ideal Values Legend */}
+      {data.length > 0 && (
+        <div className="mt-3 pt-3 border-t border-border">
+          <p className="text-xs text-muted-foreground mb-2 font-medium">Valores Ideais (linhas pontilhadas):</p>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
+            <div className="flex items-center gap-1.5">
+              <Thermometer className="w-3.5 h-3.5" style={{ color: parameterConfig.temp.color }} />
+              <span className="text-muted-foreground">{idealValues.temp}°C</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Droplets className="w-3.5 h-3.5" style={{ color: parameterConfig.rh.color }} />
+              <span className="text-muted-foreground">{idealValues.rh}%</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Sun className="w-3.5 h-3.5" style={{ color: parameterConfig.ppfd.color }} />
+              <span className="text-muted-foreground">{idealValues.ppfd}µmol</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Beaker className="w-3.5 h-3.5" style={{ color: parameterConfig.ph.color }} />
+              <span className="text-muted-foreground">pH {idealValues.ph}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Zap className="w-3.5 h-3.5" style={{ color: parameterConfig.ec.color }} />
+              <span className="text-muted-foreground">{idealValues.ec}mS/cm</span>
+            </div>
+          </div>
         </div>
       )}
     </div>
