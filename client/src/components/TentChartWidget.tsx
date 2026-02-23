@@ -224,25 +224,27 @@ export function TentChartWidget({ tentId, tentName, data }: TentChartWidgetProps
             className="text-muted-foreground"
             label={{ value: '%', angle: 0, position: 'top', offset: 10, fontSize: 10 }}
           />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: "hsl(var(--card))",
-              border: "1px solid hsl(var(--border))",
-              borderRadius: "6px",
-              fontSize: "11px",
-            }}
-            labelStyle={{ color: "hsl(var(--foreground))", fontSize: "10px" }}
-            formatter={(value: number | undefined, name: string | undefined, payload: any) => {
-              if (value === undefined || !name) return ['--', name || ''];
-              const param = name as keyof typeof parameterConfig;
-              const config = parameterConfig[param];
-              const rawValue = payload?.payload?.[`${param}Raw`];
-              if (rawValue !== undefined && typeof rawValue === 'number') {
-                return [`${rawValue.toFixed(1)}${config.unit} (${value.toFixed(0)}%)`, config.label];
-              }
-              return [`${value.toFixed(0)}%`, config.label];
-            }}
-          />
+          {selectedParam !== "all" && (
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "hsl(var(--card))",
+                border: "1px solid hsl(var(--border))",
+                borderRadius: "6px",
+                fontSize: "11px",
+              }}
+              labelStyle={{ color: "hsl(var(--foreground))", fontSize: "10px" }}
+              formatter={(value: number | undefined, name: string | undefined, payload: any) => {
+                if (value === undefined || !name) return ['--', name || ''];
+                const param = name as keyof typeof parameterConfig;
+                const config = parameterConfig[param];
+                const rawValue = payload?.payload?.[`${param}Raw`];
+                if (rawValue !== undefined && typeof rawValue === 'number') {
+                  return [`${rawValue.toFixed(1)}${config.unit} (${value.toFixed(0)}%)`, config.label];
+                }
+                return [`${value.toFixed(0)}%`, config.label];
+              }}
+            />
+          )}
           <Legend
             wrapperStyle={{ fontSize: "11px" }}
             formatter={(value) => {
