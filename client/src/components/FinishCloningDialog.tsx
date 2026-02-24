@@ -23,6 +23,7 @@ interface FinishCloningDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   cycleId: number;
+  motherPlantId: number;
   motherPlantName: string;
   clonesCount: number;
 }
@@ -31,6 +32,7 @@ export function FinishCloningDialog({
   open,
   onOpenChange,
   cycleId,
+  motherPlantId,
   motherPlantName,
   clonesCount,
 }: FinishCloningDialogProps) {
@@ -71,6 +73,8 @@ export function FinishCloningDialog({
     finishCloningMutation.mutate({
       cycleId,
       targetTentId: parseInt(selectedTentId),
+      motherPlantId,
+      clonesProduced: seedlingCount,
       seedlingCount,
     });
   };

@@ -2877,3 +2877,20 @@ Remover fase CLONING e adicionar botão "Tirar Clones" direto na MANUTENÇÃO
 - [x] Atualizar backend cycles.finishCloning para aceitar seedlingCount
 - [x] Testar geração de mudas a partir de MANUTENÇÃO - FUNCIONANDO!
 - [x] Verificar fluxo completo: botão → selecionar mãe → confirmar → selecionar estufa → gerar mudas
+
+## Bug: motherPlantId não enviado ao backend (24/02/2026)
+
+- [ ] Investigar por que FinishCloningDialog não está enviando motherPlantId
+- [ ] Verificar se selectedMotherId está sendo passado corretamente do TentCard
+- [ ] Corrigir mutation para incluir motherPlantId e seedlingCount
+- [ ] Testar fluxo completo: Tirar Clones → Selecionar Mãe → Finalizar Clonagem
+
+## Bug: motherPlantId não enviado ao backend (24/02/2026) - RESOLVIDO
+
+- [x] Investigar por que motherPlantId não estava sendo enviado - backend esperava no ciclo, mas não era salvo
+- [x] Atualizar FinishCloningDialog para aceitar motherPlantId nas props
+- [x] Atualizar backend finishCloning para aceitar motherPlantId e clonesProduced como parâmetros diretos
+- [x] Atualizar Home.tsx para passar motherPlantId (selectedMotherId) ao FinishCloningDialog
+- [x] Testar fluxo completo: Tirar Clones → Selecionar Mãe → Finalizar Clonagem - FUNCIONANDO!
+- [x] Modal abre corretamente com dados da planta-mãe selecionada
+- [x] Campo de quantidade de mudas editável (1-50)

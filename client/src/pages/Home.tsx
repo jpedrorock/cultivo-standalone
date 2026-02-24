@@ -1184,6 +1184,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
           open={finishCloningOpen}
           onOpenChange={setFinishCloningOpen}
           cycleId={cycle.id}
+          motherPlantId={selectedMotherId || 0}
           motherPlantName={selectedMotherName || "Planta Mãe"}
           clonesCount={selectedClonesCount}
         />

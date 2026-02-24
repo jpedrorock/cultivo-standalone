@@ -964,7 +964,9 @@ export const appRouter = router({
         z.object({
           cycleId: z.number(),
           targetTentId: z.number(), // Estufa destino para as mudas
-          seedlingCount: z.number().min(1).max(50).optional(), // Quantidade de mudas a gerar
+          motherPlantId: z.number(), // Planta-mãe selecionada
+          clonesProduced: z.number().min(1).max(50), // Quantidade de mudas a gerar
+          seedlingCount: z.number().min(1).max(50).optional(), // Alias para clonesProduced (compatibilidade)
         })
       )
       .mutation(async ({ input }) => {
@@ -983,15 +985,15 @@ export const appRouter = router({
           throw new Error("Ciclo não encontrado");
         }
         
-        if (!cycle.motherPlantId || !cycle.clonesProduced) {
-          throw new Error("Planta-mãe ou quantidade de clones não definida");
-        }
+        // Usar motherPlantId e clonesProduced dos inputs
+        const motherPlantId = input.motherPlantId;
+        const clonesProduced = input.clonesProduced || input.seedlingCount || 10;
         
         // Buscar planta-mãe
         const [motherPlant] = await database
           .select()
           .from(plants)
-          .where(eq(plants.id, cycle.motherPlantId));
+          .where(eq(plants.id, motherPlantId));
         
         if (!motherPlant) {
           throw new Error("Planta-mãe não encontrada");
