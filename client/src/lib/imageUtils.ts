@@ -11,7 +11,10 @@ export interface ProcessImageOptions {
 }
 
 /**
- * Processa imagem de forma simples - apenas redimensiona se muito grande
+ * Processa imagem com compressão otimizada
+ * - Redimensiona para max 1920px (mantém aspect ratio)
+ * - Comprime com qualidade 85% para reduzir tamanho
+ * - Converte para PNG (mais confiável que JPEG)
  * @param file - Arquivo de imagem original
  * @param options - Opções de processamento
  * @returns Promise com Blob da imagem processada
@@ -23,7 +26,7 @@ export async function processImage(
   const {
     maxWidth = 1920,
     maxHeight = 1920,
-    quality = 0.9
+    quality = 0.85
   } = options;
 
   return new Promise((resolve, reject) => {

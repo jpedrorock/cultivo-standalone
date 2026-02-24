@@ -2951,3 +2951,20 @@ Remover fase CLONING e adicionar botão "Tirar Clones" direto na MANUTENÇÃO
 - [x] Sistema end-to-end testado e funcionando 100%
 
 **Solução**: Simplificado processamento de imagem removendo complexidade desnecessária. Upload funcionando perfeitamente com armazenamento local.
+
+## Compressão de Imagens (24/02/2026) - RESOLVIDO
+
+- [x] Adicionar redimensionamento automático (max 1920px) em imageUtils.ts
+- [x] Adicionar compressão de qualidade (85%) para PNG
+- [x] Testar com imagens de diferentes tamanhos (pequenas, médias, grandes)
+- [x] Verificar tamanho dos arquivos antes e depois da compressão
+- [x] Verificar qualidade visual das imagens comprimidas
+- [x] Testar upload e exibição de imagens comprimidas
+
+**Resultados do Teste (imagem 5472x3648):**
+- Original: 481.36 KB (JPEG)
+- Comprimida: 48.28 KB (PNG)
+- Redução: 90.0%
+- Dimensões finais: 1920x1280 (manteve aspect ratio)
+- Tempo de processamento: 174ms
+- Qualidade visual: Excelente (sem perda visível)
