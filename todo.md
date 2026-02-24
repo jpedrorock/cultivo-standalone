@@ -2720,3 +2720,19 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] Corrigir QuickLog.tsx para usar photoBase64 ao invés de photoUrl
 - [x] Tornar photoKey nullable no schema para compatibilidade
 - [ ] Testar upload de foto após correção
+
+## Bugs Críticos - Ciclos e Fotoperíodo (23/02/2026)
+
+### Bug 1: Edição de Semana do Ciclo
+- [x] Investigar por que não é possível editar manualmente a semana do ciclo (ex: mudar de Semana 1 para Semana 5)
+- [x] Verificar código de edição de ciclos no frontend (modal de edição)
+- [x] Verificar procedure de atualização de ciclos no backend
+- [x] Corrigido: adicionada invalidação de `getActiveCyclesWithProgress` para atualizar cálculo de semana
+- [ ] Testar edição de semana após correção
+
+### Bug 2: Fotoperíodo não Atualiza na Floração
+- [x] Verificar lógica de exibição de fotoperíodo no card da estufa
+- [x] Garantir que fotoperíodo mude automaticamente de 18/6 para 12/12 ao entrar em floração
+- [x] Verificar se está usando a fase atual do ciclo para determinar fotoperíodo
+- [x] Corrigido: agora verifica `cycle?.floraStartDate` ao invés de `currentPhase` inexistente
+- [ ] Testar transição de vegetativa → floração e verificar se fotoperíodo atualiza

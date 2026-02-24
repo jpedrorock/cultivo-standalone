@@ -1034,7 +1034,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
               <Clock className="w-5 h-5 mx-auto text-purple-500 mb-1" />
               <p className="text-xs text-muted-foreground">Foto</p>
               <p className="text-sm font-semibold text-foreground">
-                {cycle?.currentPhase === "FLOWERING" ? "12/12" : "18/6"}
+                {cycle?.floraStartDate ? "12/12" : "18/6"}
               </p>
             </div>
           </div>

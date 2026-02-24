@@ -54,6 +54,7 @@ export function EditCycleModal({
     onSuccess: () => {
       toast.success("Ciclo atualizado com sucesso!");
       utils.cycles.listActive.invalidate();
+      utils.cycles.getActiveCyclesWithProgress.invalidate();
       utils.cycles.getByTent.invalidate();
       utils.tents.list.invalidate();
       onOpenChange(false);
