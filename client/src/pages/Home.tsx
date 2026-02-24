@@ -10,6 +10,7 @@ import { EditCycleModal } from "@/components/EditCycleModal";
 import { CreateTentModal } from "@/components/CreateTentModal";
 import { EditTentDialog } from "@/components/EditTentDialog";
 
+import { SelectMotherPlantDialog } from "@/components/SelectMotherPlantDialog";
 import { FinishCloningDialog } from "@/components/FinishCloningDialog";
 import { PromotePhaseDialog } from "@/components/PromotePhaseDialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -643,6 +644,10 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
   const [hideCompleted, setHideCompleted] = useState(false);
   const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set());
 
+  const [selectMotherOpen, setSelectMotherOpen] = useState(false);
+  const [selectedMotherId, setSelectedMotherId] = useState<number | null>(null);
+  const [selectedMotherName, setSelectedMotherName] = useState<string>("");
+  const [selectedClonesCount, setSelectedClonesCount] = useState<number>(10);
   const [finishCloningOpen, setFinishCloningOpen] = useState(false);
   const [promotePhaseOpen, setPromotePhaseOpen] = useState(false);
   
@@ -1081,7 +1086,21 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                 </div>
                 
                 {/* Botões de ação baseados na fase */}
-                         {/* Botão único "Avançar Fase" - apenas para fases lineares */}
+                
+                {/* Botão "Tirar Clones" para MANUTENÇÃO */}
+                {cycle && tent.category === "MAINTENANCE" && (
+                  <Button
+                    onClick={() => setSelectMotherOpen(true)}
+                    variant="default"
+                    size="sm"
+                    className="w-full bg-green-600 hover:bg-green-700"
+                  >
+                    <Sprout className="w-4 h-4 mr-2" />
+                    Tirar Clones
+                  </Button>
+                )}
+                
+                {/* Botão "Avançar Fase" - apenas para fases lineares */}
                 {cycle && tent.category !== "MAINTENANCE" && (
                   <Button
                     onClick={() => {
@@ -1143,14 +1162,30 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
       </CardContent>
       
 
+      {/* Select Mother Plant Dialog */}
+      <SelectMotherPlantDialog
+        open={selectMotherOpen}
+        onOpenChange={setSelectMotherOpen}
+        tentId={tent.id}
+        onMotherSelected={(plantId: number, plantName: string, clonesCount: number) => {
+          // Salvar dados temporários
+          setSelectedMotherId(plantId);
+          setSelectedMotherName(plantName);
+          setSelectedClonesCount(clonesCount);
+          setSelectMotherOpen(false);
+          // Abrir FinishCloningDialog
+          setFinishCloningOpen(true);
+        }}
+      />
+      
       {/* Finish Cloning Dialog */}
-      {cycle && cycle.motherPlantId && cycle.clonesProduced && (
+      {cycle && (
         <FinishCloningDialog
           open={finishCloningOpen}
           onOpenChange={setFinishCloningOpen}
           cycleId={cycle.id}
-          motherPlantName={"Planta Mãe"}
-          clonesCount={cycle.clonesProduced}
+          motherPlantName={selectedMotherName || "Planta Mãe"}
+          clonesCount={selectedClonesCount}
         />
       )}
       

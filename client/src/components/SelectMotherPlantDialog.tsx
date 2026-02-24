@@ -17,8 +17,8 @@ interface SelectMotherPlantDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   tentId: number;
-  cycleId: number;
-  onMotherSelected: (motherPlantId: number, clonesCount: number) => void;
+  cycleId?: number; // Optional agora, pois pode ser chamado de MAINTENANCE
+  onMotherSelected: (motherPlantId: number, motherPlantName: string, clonesCount: number) => void;
 }
 
 export function SelectMotherPlantDialog({
@@ -29,6 +29,7 @@ export function SelectMotherPlantDialog({
   onMotherSelected,
 }: SelectMotherPlantDialogProps) {
   const [selectedMotherId, setSelectedMotherId] = useState<number | null>(null);
+  const [selectedMotherName, setSelectedMotherName] = useState<string>("");
   const [clonesCount, setClonesCount] = useState<number>(10);
 
   // Buscar plantas-mãe disponíveis na estufa (status ACTIVE)
@@ -46,7 +47,7 @@ export function SelectMotherPlantDialog({
       toast.error("Número de clones deve ser maior que zero");
       return;
     }
-    onMotherSelected(selectedMotherId, clonesCount);
+    onMotherSelected(selectedMotherId, selectedMotherName, clonesCount);
     onOpenChange(false);
   };
 
@@ -76,7 +77,10 @@ export function SelectMotherPlantDialog({
               {motherPlants.map((plant: any) => (
                 <button
                   key={plant.id}
-                  onClick={() => setSelectedMotherId(plant.id)}
+                  onClick={() => {
+                    setSelectedMotherId(plant.id);
+                    setSelectedMotherName(plant.name || plant.strain || "Planta Mãe");
+                  }}
                   className={`
                     relative p-4 rounded-lg border-2 transition-all text-left
                     ${

@@ -109,7 +109,7 @@ export function EditCycleModal({
     });
   };
   
-  const handleMotherSelected = (selectedMotherId: number, selectedClonesCount: number) => {
+  const handleMotherSelected = (selectedMotherId: number, selectedMotherName: string, selectedClonesCount: number) => {
     setMotherPlantId(selectedMotherId);
     setClonesCount(selectedClonesCount);
     setShowMotherSelector(false);

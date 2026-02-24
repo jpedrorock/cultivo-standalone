@@ -2862,3 +2862,18 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] Remover PhaseTransitionDialog antigo e seus imports
 - [x] Esconder botão "Avançar Fase" para MAINTENANCE (usa Editar Ciclo ao invés)
 - [x] Testar UI simplificada - botão aparece apenas em VEGA, FLORA e CLONING
+
+## Simplificação do Fluxo de Clonagem (24/02/2026)
+
+### Objetivo
+Remover fase CLONING e adicionar botão "Tirar Clones" direto na MANUTENÇÃO
+
+### Tarefas
+- [x] Adicionar botão "Tirar Clones" (verde) quando tent.category === "MAINTENANCE"
+- [x] Criar fluxo: clicar botão → SelectMotherPlantDialog → FinishCloningDialog
+- [x] Atualizar SelectMotherPlantDialog para passar motherPlantName no callback
+- [x] Adicionar estados temporários (selectedMotherId, selectedMotherName, selectedClonesCount) no TentCard
+- [x] Atualizar FinishCloningDialog para aceitar seedlingCount (1-50)
+- [x] Atualizar backend cycles.finishCloning para aceitar seedlingCount
+- [x] Testar geração de mudas a partir de MANUTENÇÃO - FUNCIONANDO!
+- [x] Verificar fluxo completo: botão → selecionar mãe → confirmar → selecionar estufa → gerar mudas
