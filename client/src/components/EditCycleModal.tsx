@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
+import { SelectMotherPlantDialog } from "@/components/SelectMotherPlantDialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -47,6 +48,9 @@ export function EditCycleModal({
   const [phase, setPhase] = useState<"CLONING" | "MAINTENANCE" | "VEGA" | "FLORA" | "DRYING">("VEGA");
   const [weekNumber, setWeekNumber] = useState(1);
   const [strainId, setStrainId] = useState<number | null>(null);
+  const [motherPlantId, setMotherPlantId] = useState<number | null>(null);
+  const [clonesCount, setClonesCount] = useState<number>(10);
+  const [showMotherSelector, setShowMotherSelector] = useState(false);
 
   const utils = trpc.useUtils();
   const { data: strains } = trpc.strains.list.useQuery();
@@ -87,12 +91,38 @@ export function EditCycleModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Se mudou para CLONING, abrir seletor de planta-mãe
+    if (phase === "CLONING" && !motherPlantId) {
+      setShowMotherSelector(true);
+      return;
+    }
+    
     edit.mutate({
       cycleId,
       strainId: strainId || undefined,
       startDate: new Date(startDate),
       phase,
       weekNumber,
+      motherPlantId: motherPlantId || undefined,
+      clonesProduced: phase === "CLONING" ? clonesCount : undefined,
+    });
+  };
+  
+  const handleMotherSelected = (selectedMotherId: number, selectedClonesCount: number) => {
+    setMotherPlantId(selectedMotherId);
+    setClonesCount(selectedClonesCount);
+    setShowMotherSelector(false);
+    
+    // Submeter automaticamente após seleção
+    edit.mutate({
+      cycleId,
+      strainId: strainId || undefined,
+      startDate: new Date(startDate),
+      phase,
+      weekNumber,
+      motherPlantId: selectedMotherId,
+      clonesProduced: selectedClonesCount, // Usar o parâmetro, não o estado
     });
   };
 
@@ -216,6 +246,15 @@ export function EditCycleModal({
           </DialogFooter>
         </form>
       </DialogContent>
+      
+      {/* Modal de seleção de planta-mãe */}
+      <SelectMotherPlantDialog
+        open={showMotherSelector}
+        onOpenChange={setShowMotherSelector}
+        tentId={tentId}
+        cycleId={cycleId}
+        onMotherSelected={handleMotherSelected}
+      />
     </Dialog>
   );
 }

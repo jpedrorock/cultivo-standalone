@@ -868,6 +868,8 @@ export const appRouter = router({
           floraStartDate: z.date().optional().nullable(),
           phase: z.enum(["CLONING", "MAINTENANCE", "VEGA", "FLORA", "DRYING"]).optional(),
           weekNumber: z.number().min(1).optional(),
+          motherPlantId: z.number().optional(),
+          clonesProduced: z.number().optional(),
         })
       )
       .mutation(async ({ input }) => {
@@ -906,6 +908,14 @@ export const appRouter = router({
         
         if (input.strainId) {
           updates.strainId = input.strainId;
+        }
+        
+        if (input.motherPlantId) {
+          updates.motherPlantId = input.motherPlantId;
+        }
+        
+        if (input.clonesProduced) {
+          updates.clonesProduced = input.clonesProduced;
         }
         
         await database

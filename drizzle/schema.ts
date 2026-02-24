@@ -87,6 +87,8 @@ export const cycles = mysqlTable(
     startDate: timestamp("startDate").notNull(),
     cloningStartDate: timestamp("cloningStartDate"),
     floraStartDate: timestamp("floraStartDate"),
+    motherPlantId: int("motherPlantId")
+      .references(() => plants.id), // Planta-mãe usada para clonagem (quando fase = CLONING)
     clonesProduced: int("clonesProduced"), // Número de clones produzidos ao retornar de CLONING para MAINTENANCE
     harvestWeight: decimal("harvestWeight", { precision: 10, scale: 2 }), // Peso estimado da colheita em gramas
     harvestNotes: text("harvestNotes"), // Notas sobre a colheita

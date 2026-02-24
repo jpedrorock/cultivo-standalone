@@ -2750,3 +2750,18 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] Limpar tarefas antigas do banco
 - [x] Inserir novo conjunto de 84 tarefas
 - [x] Testar exibição de tarefas no app - FUNCIONANDO!
+
+## Sistema de Seleção de Planta-Mãe para Clonagem (24/02/2026)
+
+- [x] Atualizar schema: adicionar campo `motherPlantId` na tabela cycles
+- [x] Criar migration para adicionar coluna ao banco (ALTER TABLE via SQL)
+- [x] Criar modal SelectMotherPlantDialog com:
+  - [x] Listagem de plantas-mãe disponíveis (filtra por tentId)
+  - [x] Card com foto, nome, strain, saúde, fase
+  - [x] Campo para número de clones a produzir (default: 10)
+  - [x] Botão de seleção com feedback visual (borda verde + checkmark)
+- [x] Atualizar procedure cycles.edit para aceitar motherPlantId e clonesProduced
+- [x] Atualizar EditCycleModal para mostrar seletor de planta-mãe quando fase = CLONING
+- [x] Testar com múltiplas plantas-mãe de strains diferentes - FUNCIONANDO!
+- [x] Validar que erro não ocorre mais ao mudar para CLONING - RESOLVIDO!
+- [x] Corrigir bug: usar selectedClonesCount ao invés de clonesCount no handleMotherSelected
