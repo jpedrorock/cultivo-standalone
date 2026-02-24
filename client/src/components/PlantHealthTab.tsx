@@ -197,7 +197,7 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
 
   const handleSubmit = () => {
     if (!photoFile && !symptoms && !treatment && !notes) {
-      toast.error("Adicione pelo menos uma foto ou informação");
+      toast.error("Adicione pelo menos uma foto ou informa\u00e7\u00e3o");
       return;
     }
 

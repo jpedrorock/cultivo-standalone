@@ -2902,3 +2902,15 @@ Remover fase CLONING e adicionar botão "Tirar Clones" direto na MANUTENÇÃO
 - [x] Atualizar Home.tsx para não passar clonesCount inicial ao FinishCloningDialog
 - [x] Testar fluxo: Tirar Clones → Selecionar Mãe → Definir Quantidade (apenas no 2º modal)
 - [x] Fluxo simplificado funcionando 100%: Modal 1 apenas seleciona planta-mãe, Modal 2 define quantidade + estufa destino
+
+## Bug: Upload de Fotos de Saúde Não Funciona (24/02/2026)
+
+- [x] Investigar por que fotos fazem upload mas não aparecem em links externos
+- [x] Verificar configuração de servir arquivos estáticos da pasta /uploads
+- [x] Servidor Express está configurado corretamente para servir /uploads
+- [x] Backend processa photoBase64 e salva em storage local
+- [ ] Descobrir por que foto selecionada pelo usuário não é enviada ao backend
+- [ ] Adicionar logs de debug para rastrear fluxo completo do upload
+- [ ] Testar upload com diferentes tipos de imagem (JPG, PNG, HEIC)
+
+**Status**: Sistema de storage funciona (foto 24k Gold está visível). Problema é que quando usuário seleciona foto no formulário de saúde, ela não é enviada/processada corretamente. Precisa investigar handlePhotoSelect e handleSubmit no PlantHealthTab.tsx.
