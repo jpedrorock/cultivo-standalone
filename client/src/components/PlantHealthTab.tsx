@@ -181,6 +181,11 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
       const processedFile = new File([processedBlob], file.name, {
         type: "image/jpeg",
       });
+      console.log('[PlantHealthTab] Photo processed:', {
+        name: processedFile.name,
+        size: processedFile.size,
+        type: processedFile.type
+      });
       setPhotoFile(processedFile);
 
       const base64 = await blobToBase64(processedBlob);
@@ -196,12 +201,22 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
   };
 
   const handleSubmit = () => {
+    console.log('[PlantHealthTab] handleSubmit called:', {
+      hasPhoto: !!photoFile,
+      photoName: photoFile?.name,
+      photoSize: photoFile?.size,
+      hasSymptoms: !!symptoms,
+      hasTreatment: !!treatment,
+      hasNotes: !!notes
+    });
+    
     if (!photoFile && !symptoms && !treatment && !notes) {
       toast.error("Adicione pelo menos uma foto ou informa\u00e7\u00e3o");
       return;
     }
 
     if (photoFile) {
+      console.log('[PlantHealthTab] Reading photo file...');
       const reader = new FileReader();
       reader.onloadend = () => {
         createHealthLog.mutate({

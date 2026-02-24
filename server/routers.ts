@@ -3531,11 +3531,18 @@ export const appRouter = router({
         const database = await getDb();
         if (!database) throw new Error("Database not available");
         
+        console.log('[PlantHealth.create] Request received:', {
+          plantId: input.plantId,
+          hasPhoto: !!input.photoBase64,
+          photoSize: input.photoBase64 ? input.photoBase64.length : 0
+        });
+        
         let photoUrl: string | undefined;
         let photoKey: string | undefined;
 
         // Se tem foto, fazer upload S3
         if (input.photoBase64) {
+          console.log('[PlantHealth.create] Processing photo upload...');
           try {
             // Converter base64 para buffer
             const base64Data = input.photoBase64.replace(/^data:image\/\w+;base64,/, "");
@@ -3546,9 +3553,13 @@ export const appRouter = router({
             photoKey = `health/${input.plantId}/${Date.now()}.jpg`;
             const result = await storagePut(photoKey, buffer, "image/jpeg");
             photoUrl = result.url;
-          } catch (error) {
-            console.error('Erro ao fazer upload da foto:', error);
-            // Continua sem a foto se o upload falhar
+          } catch (error: any) {
+            console.error('[PlantHealth] Upload failed:', {
+              error: error.message,
+              stack: error.stack,
+              plantId: input.plantId
+            });
+            // Continue without photo if upload fails
           }
         }
         
@@ -3670,11 +3681,18 @@ export const appRouter = router({
         const database = await getDb();
         if (!database) throw new Error("Database not available");
         
+        console.log('[PlantHealth.create] Request received:', {
+          plantId: input.plantId,
+          hasPhoto: !!input.photoBase64,
+          photoSize: input.photoBase64 ? input.photoBase64.length : 0
+        });
+        
         let photoUrl: string | undefined;
         let photoKey: string | undefined;
 
         // Se tem foto, fazer upload S3
         if (input.photoBase64) {
+          console.log('[PlantHealth.create] Processing photo upload...');
           try {
             // Converter base64 para buffer
             const base64Data = input.photoBase64.replace(/^data:image\/\w+;base64,/, "");
@@ -3685,9 +3703,13 @@ export const appRouter = router({
             photoKey = `trichomes/${input.plantId}/${Date.now()}.jpg`;
             const result = await storagePut(photoKey, buffer, "image/jpeg");
             photoUrl = result.url;
-          } catch (error) {
-            console.error('Erro ao fazer upload da foto:', error);
-            // Continua sem a foto se o upload falhar
+          } catch (error: any) {
+            console.error('[PlantHealth] Upload failed:', {
+              error: error.message,
+              stack: error.stack,
+              plantId: input.plantId
+            });
+            // Continue without photo if upload fails
           }
         }
         

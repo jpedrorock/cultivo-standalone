@@ -2927,3 +2927,14 @@ Remover fase CLONING e adicionar botão "Tirar Clones" direto na MANUTENÇÃO
 - [ ] Testar upload de nova foto no app e verificar se aparece no site publicado
 
 **Solução**: Fotos agora são enviadas para Manus CDN via `manus-upload-file` CLI. URLs públicas são retornadas e salvas no banco. Sistema testado e funcionando.
+
+## Bug: Upload de Fotos pelo Celular Não Funciona (24/02/2026)
+
+- [ ] Verificar logs do servidor para erros de upload
+- [ ] Verificar registros de saúde recentes no banco de dados
+- [ ] Identificar se photoBase64 está sendo enviado pelo frontend mobile
+- [ ] Verificar se manus-upload-file CLI está funcionando no servidor
+- [ ] Corrigir problema de upload
+- [ ] Testar upload pelo celular novamente
+
+**Problema**: Usuário tentou adicionar 2 fotos de saúde pelo celular mas nenhuma foi salva. Fotos não aparecem nos registros.

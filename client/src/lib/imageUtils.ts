@@ -41,6 +41,12 @@ export async function processImage(
       const img = new Image();
       
       img.onload = () => {
+        console.log('[processImage] Image loaded:', {
+          width: img.width,
+          height: img.height,
+          aspectRatio: img.width / img.height
+        });
+        
         // Calcular dimensões mantendo aspect ratio
         let targetWidth = img.width;
         let targetHeight = img.height;
@@ -76,6 +82,15 @@ export async function processImage(
           targetWidth = maxHeight * aspectRatio;
         }
 
+        console.log('[processImage] Target dimensions:', {
+          targetWidth,
+          targetHeight,
+          sourceX,
+          sourceY,
+          sourceWidth,
+          sourceHeight
+        });
+        
         // Criar canvas e desenhar imagem processada
         const canvas = document.createElement('canvas');
         canvas.width = targetWidth;
@@ -101,16 +116,33 @@ export async function processImage(
         );
 
         // Converter para blob
+        console.log('[processImage] Converting to blob:', { format, quality });
+        
+        // Tentar converter com formato especificado
         canvas.toBlob(
           (blob) => {
+            console.log('[processImage] toBlob result:', { blob: !!blob, size: blob?.size });
             if (blob) {
               resolve(blob);
             } else {
-              reject(new Error('Erro ao converter imagem'));
+              // Fallback: tentar com PNG se JPEG falhar
+              console.warn('[processImage] JPEG conversion failed, trying PNG...');
+              canvas.toBlob(
+                (pngBlob) => {
+                  if (pngBlob) {
+                    console.log('[processImage] PNG fallback successful:', pngBlob.size);
+                    resolve(pngBlob);
+                  } else {
+                    console.error('[processImage] Both JPEG and PNG conversion failed!');
+                    reject(new Error('Erro ao converter imagem'));
+                  }
+                },
+                'image/png'
+              );
             }
           },
           format,
-          quality
+          Math.max(0, Math.min(1, quality)) // Garantir quality entre 0 e 1
         );
       };
 
