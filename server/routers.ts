@@ -957,6 +957,271 @@ export const appRouter = router({
         
         return { success: true };
       }),
+    
+    // Finalizar clonagem e gerar mudas
+    finishCloning: publicProcedure
+      .input(
+        z.object({
+          cycleId: z.number(),
+          targetTentId: z.number(), // Estufa destino para as mudas
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) {
+          throw new Error("Banco de dados não inicializado.");
+        }
+        
+        // Buscar ciclo atual
+        const [cycle] = await database
+          .select()
+          .from(cycles)
+          .where(eq(cycles.id, input.cycleId));
+        
+        if (!cycle) {
+          throw new Error("Ciclo não encontrado");
+        }
+        
+        if (!cycle.motherPlantId || !cycle.clonesProduced) {
+          throw new Error("Planta-mãe ou quantidade de clones não definida");
+        }
+        
+        // Buscar planta-mãe
+        const [motherPlant] = await database
+          .select()
+          .from(plants)
+          .where(eq(plants.id, cycle.motherPlantId));
+        
+        if (!motherPlant) {
+          throw new Error("Planta-mãe não encontrada");
+        }
+        
+        // Buscar estufa destino
+        const [targetTent] = await database
+          .select()
+          .from(tents)
+          .where(eq(tents.id, input.targetTentId));
+        
+        if (!targetTent) {
+          throw new Error("Estufa destino não encontrada");
+        }
+        
+        // Verificar se estufa destino está vazia (sem ciclo ativo)
+        const [existingCycle] = await database
+          .select()
+          .from(cycles)
+          .where(and(
+            eq(cycles.tentId, input.targetTentId),
+            eq(cycles.status, "ACTIVE")
+          ));
+        
+        if (existingCycle) {
+          throw new Error(`Estufa ${targetTent.name} já possui um ciclo ativo. Finalize o ciclo atual antes de criar mudas.`);
+        }
+        
+        // Criar mudas
+        const seedlings = [];
+        for (let i = 1; i <= cycle.clonesProduced; i++) {
+          const [newSeedling] = await database
+            .insert(plants)
+            .values({
+              name: `${motherPlant.name} Clone #${i}`,
+              code: `${motherPlant.code || 'CL'}-${String(i).padStart(3, '0')}`,
+              strainId: motherPlant.strainId,
+              currentTentId: input.targetTentId,
+              plantStage: "SEEDLING",
+              status: "ACTIVE",
+            });
+          
+          seedlings.push(newSeedling);
+          
+          // Registrar histórico de movimentação
+          await database
+            .insert(plantTentHistory)
+            .values({
+              plantId: newSeedling.insertId,
+              fromTentId: null, // Primeira entrada
+              toTentId: input.targetTentId,
+              reason: `Clonagem finalizada - mãe: ${motherPlant.name}`,
+            });
+        }
+        
+        // Criar novo ciclo na estufa destino (fase VEGA)
+        await database
+          .insert(cycles)
+          .values({
+            tentId: input.targetTentId,
+            strainId: motherPlant.strainId,
+            startDate: new Date(),
+            status: "ACTIVE",
+          });
+        
+        // Atualizar categoria da estufa destino para VEGA
+        await database
+          .update(tents)
+          .set({ category: "VEGA" })
+          .where(eq(tents.id, input.targetTentId));
+        
+        // Limpar campos de clonagem do ciclo atual (volta para MAINTENANCE)
+        await database
+          .update(cycles)
+          .set({
+            cloningStartDate: null,
+            motherPlantId: null,
+            clonesProduced: null,
+          })
+          .where(eq(cycles.id, input.cycleId));
+        
+        // Atualizar categoria da estufa atual para MAINTENANCE
+        await database
+          .update(tents)
+          .set({ category: "MAINTENANCE" })
+          .where(eq(tents.id, cycle.tentId));
+        
+        return {
+          success: true,
+          seedlingsCreated: cycle.clonesProduced,
+          targetTentName: targetTent.name,
+        };
+      }),
+    
+    // Promover fase (VEGA→FLORA ou FLORA→DRYING)
+    promotePhase: publicProcedure
+      .input(
+        z.object({
+          cycleId: z.number(),
+          targetPhase: z.enum(["FLORA", "DRYING"]),
+          moveToTent: z.boolean(),
+          targetTentId: z.number().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) {
+          throw new Error("Banco de dados não inicializado.");
+        }
+        
+        // Buscar ciclo atual
+        const [cycle] = await database
+          .select()
+          .from(cycles)
+          .where(eq(cycles.id, input.cycleId));
+        
+        if (!cycle) {
+          throw new Error("Ciclo não encontrado");
+        }
+        
+        // Se mover para outra estufa
+        if (input.moveToTent && input.targetTentId) {
+          // Buscar estufa destino
+          const [targetTent] = await database
+            .select()
+            .from(tents)
+            .where(eq(tents.id, input.targetTentId));
+          
+          if (!targetTent) {
+            throw new Error("Estufa destino não encontrada");
+          }
+          
+          // Verificar se estufa destino está vazia
+          const [existingCycle] = await database
+            .select()
+            .from(cycles)
+            .where(and(
+              eq(cycles.tentId, input.targetTentId),
+              eq(cycles.status, "ACTIVE")
+            ));
+          
+          if (existingCycle) {
+            throw new Error(`Estufa ${targetTent.name} já possui um ciclo ativo. Finalize o ciclo atual antes de mover plantas.`);
+          }
+          
+          // Buscar todas as plantas do ciclo atual
+          const cyclePlants = await database
+            .select()
+            .from(plants)
+            .where(and(
+              eq(plants.currentTentId, cycle.tentId),
+              eq(plants.status, "ACTIVE")
+            ));
+          
+          // Mover plantas para nova estufa
+          for (const plant of cyclePlants) {
+            await database
+              .update(plants)
+              .set({ currentTentId: input.targetTentId })
+              .where(eq(plants.id, plant.id));
+            
+            // Registrar histórico de movimentação
+            await database
+              .insert(plantTentHistory)
+              .values({
+                plantId: plant.id,
+                fromTentId: cycle.tentId,
+                toTentId: input.targetTentId,
+                reason: `Promoção para ${input.targetPhase}`,
+              });
+          }
+          
+          // Criar novo ciclo na estufa destino
+          const newCycleData: any = {
+            tentId: input.targetTentId,
+            strainId: cycle.strainId,
+            startDate: cycle.startDate, // Mantém data original
+            status: "ACTIVE",
+          };
+          
+          if (input.targetPhase === "FLORA") {
+            newCycleData.floraStartDate = new Date();
+          }
+          
+          await database.insert(cycles).values(newCycleData);
+          
+          // Atualizar categoria da estufa destino
+          const targetCategory = input.targetPhase === "FLORA" ? "FLORA" : "DRYING";
+          await database
+            .update(tents)
+            .set({ category: targetCategory })
+            .where(eq(tents.id, input.targetTentId));
+          
+          // Finalizar ciclo antigo
+          await database
+            .update(cycles)
+            .set({ status: "FINISHED" })
+            .where(eq(cycles.id, input.cycleId));
+          
+          return {
+            success: true,
+            message: `Plantas movidas para ${targetTent.name} e ciclo promovido para ${input.targetPhase}`,
+            movedPlants: cyclePlants.length,
+          };
+        } else {
+          // Promover fase na mesma estufa
+          const updates: any = {};
+          
+          if (input.targetPhase === "FLORA") {
+            updates.floraStartDate = new Date();
+          }
+          
+          await database
+            .update(cycles)
+            .set(updates)
+            .where(eq(cycles.id, input.cycleId));
+          
+          // Atualizar categoria da estufa
+          const targetCategory = input.targetPhase === "FLORA" ? "FLORA" : "DRYING";
+          await database
+            .update(tents)
+            .set({ category: targetCategory })
+            .where(eq(tents.id, cycle.tentId));
+          
+          return {
+            success: true,
+            message: `Ciclo promovido para ${input.targetPhase} na mesma estufa`,
+          };
+        }
+      }),
+    
     getReportData: publicProcedure
       .input(z.object({ cycleId: z.number() }))
       .query(async ({ input }) => {

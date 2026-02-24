@@ -10,6 +10,8 @@ import { EditCycleModal } from "@/components/EditCycleModal";
 import { CreateTentModal } from "@/components/CreateTentModal";
 import { EditTentDialog } from "@/components/EditTentDialog";
 import { PhaseTransitionDialog } from "@/components/PhaseTransitionDialog";
+import { FinishCloningDialog } from "@/components/FinishCloningDialog";
+import { PromotePhaseDialog } from "@/components/PromotePhaseDialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -641,6 +643,8 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
   const [hideCompleted, setHideCompleted] = useState(false);
   const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set());
   const [phaseTransitionOpen, setPhaseTransitionOpen] = useState(false);
+  const [finishCloningOpen, setFinishCloningOpen] = useState(false);
+  const [promotePhaseOpen, setPromotePhaseOpen] = useState(false);
   
   const { data: tasks, isLoading: tasksLoading } = trpc.tasks.getTasksByTent.useQuery(
     { tentId: tent.id },
@@ -1076,6 +1080,43 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                     Editar Ciclo
                   </Button>
                 </div>
+                
+                {/* Botões de ação baseados na fase */}
+                {cycle.cloningStartDate && cycle.motherPlantId && cycle.clonesProduced && (
+                  <Button
+                    onClick={() => setFinishCloningOpen(true)}
+                    variant="default"
+                    size="sm"
+                    className="w-full bg-green-600 hover:bg-green-700"
+                  >
+                    <Scissors className="w-4 h-4 mr-2" />
+                    Finalizar Clonagem
+                  </Button>
+                )}
+                
+                {!cycle.floraStartDate && !cycle.cloningStartDate && tent.category === "VEGA" && (
+                  <Button
+                    onClick={() => setPromotePhaseOpen(true)}
+                    variant="default"
+                    size="sm"
+                    className="w-full bg-purple-600 hover:bg-purple-700"
+                  >
+                    <Flower2 className="w-4 h-4 mr-2" />
+                    Promover para Floração
+                  </Button>
+                )}
+                
+                {cycle.floraStartDate && tent.category === "FLORA" && (
+                  <Button
+                    onClick={() => setPromotePhaseOpen(true)}
+                    variant="default"
+                    size="sm"
+                    className="w-full bg-amber-600 hover:bg-amber-700"
+                  >
+                    <Sun className="w-4 h-4 mr-2" />
+                    Promover para Secagem
+                  </Button>
+                )}
                 <Button
                   onClick={() => onFinalizeCycle(cycle.id, tent.name)}
                   variant="ghost"
@@ -1121,6 +1162,28 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
           currentPhase={cycle.floraStartDate ? "FLORA" : (cycle.cloningStartDate ? "CLONING" : (tent.category === "MAINTENANCE" ? "MAINTENANCE" : "VEGA"))}
           tentId={tent.id}
           tentName={tent.name}
+        />
+      )}
+      
+      {/* Finish Cloning Dialog */}
+      {cycle && cycle.motherPlantId && cycle.clonesProduced && (
+        <FinishCloningDialog
+          open={finishCloningOpen}
+          onOpenChange={setFinishCloningOpen}
+          cycleId={cycle.id}
+          motherPlantName={"Planta Mãe"}
+          clonesCount={cycle.clonesProduced}
+        />
+      )}
+      
+      {/* Promote Phase Dialog */}
+      {cycle && (
+        <PromotePhaseDialog
+          open={promotePhaseOpen}
+          onOpenChange={setPromotePhaseOpen}
+          cycleId={cycle.id}
+          currentPhase={cycle.floraStartDate ? "FLORA" : "VEGA"}
+          currentTentName={tent.name}
         />
       )}
     </Card>

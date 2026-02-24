@@ -2765,3 +2765,78 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] Testar com múltiplas plantas-mãe de strains diferentes - FUNCIONANDO!
 - [x] Validar que erro não ocorre mais ao mudar para CLONING - RESOLVIDO!
 - [x] Corrigir bug: usar selectedClonesCount ao invés de clonesCount no handleMotherSelected
+
+## Fluxo Completo de Promoção de Fases e Criação de Mudas (24/02/2026)
+
+### Análise de Arquitetura
+- [ ] Mapear tabelas e campos envolvidos (plants, cycles, tents, plantTentHistory)
+- [ ] Identificar procedures backend que precisam ser criadas/modificadas
+- [ ] Definir estrutura de dados para mudas (status, fase inicial, estufa destino)
+
+### Criação Automática de Mudas (MANUTENÇÃO → CLONAGEM)
+- [ ] Criar procedure `cycles.finishCloning` que:
+  - [ ] Recebe cycleId, motherPlantId, clonesProduced, targetTentId
+  - [ ] Cria N mudas (plants) com status SEEDLING
+  - [ ] Associa mudas à estufa destino (targetTentId)
+  - [ ] Herda strain da planta-mãe
+  - [ ] Registra em plantTentHistory a movimentação
+  - [ ] Volta ciclo da Estufa A para MAINTENANCE
+- [ ] Criar modal "Finalizar Clonagem" com:
+  - [ ] Seletor de estufa destino (Estufa B ou C)
+  - [ ] Confirmação de quantidade de mudas
+  - [ ] Botão "Gerar Mudas"
+- [ ] Integrar modal no EditCycleModal ou criar botão separado
+
+### Promoção de Fase (VEGETATIVA → FLORAÇÃO)
+- [ ] Criar procedure `cycles.promoteToFlora` que:
+  - [ ] Recebe cycleId, targetTentId (opcional)
+  - [ ] Atualiza fase do ciclo para FLORA
+  - [ ] Define floraStartDate = hoje
+  - [ ] Se targetTentId diferente: move plantas para nova estufa
+  - [ ] Registra movimentação em plantTentHistory
+  - [ ] Atualiza currentTentId das plantas
+- [ ] Criar modal "Promover para Floração" com:
+  - [ ] Opção "Manter na estufa atual" vs "Mover para outra estufa"
+  - [ ] Seletor de estufa destino (se mover)
+  - [ ] Botão "Promover"
+- [ ] Adicionar botão "Promover para Floração" no card da estufa quando fase = VEGA
+
+### Atualização de UI
+- [ ] Adicionar botão "Finalizar Clonagem" no card da Estufa A quando fase = CLONING
+- [ ] Adicionar botão "Promover para Floração" no card das estufas quando fase = VEGA
+- [ ] Atualizar listagem de plantas para mostrar mudas (SEEDLING) diferente de plantas (VEGETATIVE/FLOWER)
+- [ ] Adicionar badge visual para mudas (ex: 🌱 Muda)
+
+### Testes
+- [ ] Testar criação de mudas: MANUTENÇÃO → CLONAGEM → gerar 10 mudas na Estufa B
+- [ ] Testar promoção mantendo estufa: VEGA (Estufa B) → FLORA (Estufa B)
+- [ ] Testar promoção mudando estufa: VEGA (Estufa B) → FLORA (Estufa C)
+- [ ] Verificar plantTentHistory registra todas as movimentações
+- [ ] Verificar que mudas herdam strain da mãe corretamente
+
+## Implementação de Promoção de Fases e Criação de Mudas (24/02/2026)
+
+### Backend Implementado
+- [x] Procedure `cycles.finishCloning` - gera mudas em estufa destino e volta ciclo para MAINTENANCE
+- [x] Procedure `cycles.promotePhase` - promove VEGA→FLORA ou FLORA→DRYING com opção de mover estufa
+- [x] Lógica de criação de mudas (N plantas + novo ciclo VEGA na estufa destino)
+- [x] Lógica de promoção com validação de estufa vazia (quando move)
+- [x] Finalização de ciclo anterior quando move plantas entre estufas
+
+### Frontend Implementado
+- [x] Modal FinishCloningDialog - seletor de estufa destino + resumo de ações
+- [x] Modal PromotePhaseDialog - opções de manter/mover estufa + seletor de estufa destino
+- [x] Botão "Finalizar Clonagem" (verde) no card quando fase = CLONING
+- [x] Botão "Promover para Floração" (roxo) no card quando fase = VEGA
+- [x] Botão "Promover para Secagem" (laranja) no card quando fase = FLORA
+
+### Testes Realizados
+- [x] Modal FinishCloningDialog abre corretamente
+- [x] Modal PromotePhaseDialog abre com opções de manter/mover
+- [ ] Validar execução completa das mutations (logs não mostraram chamada)
+- [ ] Testar fluxo completo com estufa vazia disponível
+
+### Pendências
+- [ ] Debugar por que mutation não está sendo chamada (toast não aparece)
+- [ ] Adicionar logs de debug no backend para rastrear execução
+- [ ] Testar com dados reais (criar estufa vazia para receber mudas)
