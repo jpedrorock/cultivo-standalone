@@ -37,7 +37,9 @@ export async function storagePut(
   data: Buffer | Uint8Array | string,
   contentType = "application/octet-stream"
 ): Promise<{ key: string; url: string }> {
+  console.log('[storagePut] Starting upload:', { relKey, dataSize: data.length, contentType });
   await ensureUploadsDir();
+  console.log('[storagePut] Uploads dir ensured');
   
   // Normalize key and generate unique filename
   const normalizedKey = relKey.replace(/^\/+/, '');
@@ -52,12 +54,15 @@ export async function storagePut(
   
   // Write file
   const filePath = join(fullDir, fileName);
+  console.log('[storagePut] Writing to:', filePath);
   const buffer = typeof data === 'string' ? Buffer.from(data) : Buffer.from(data);
   await writeFile(filePath, buffer);
+  console.log('[storagePut] File written successfully');
   
   // Return key and public URL (relative path)
   const key = join(subDir, fileName).replace(/\\/g, '/');
   const url = `/uploads/${key}`;
+  console.log('[storagePut] Upload complete:', { key, url });
   
   return { key, url };
 }

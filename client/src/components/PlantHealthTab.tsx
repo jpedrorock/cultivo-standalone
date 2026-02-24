@@ -171,15 +171,13 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
       toast.info("Processando imagem...");
 
       const processedBlob = await processImage(file, {
-        maxWidth: 1080,
-        maxHeight: 1440,
-        quality: 0.85,
-        aspectRatio: 3 / 4,
-        format: "image/jpeg",
+        maxWidth: 1920,
+        maxHeight: 1920,
+        quality: 0.9
       });
 
       const processedFile = new File([processedBlob], file.name, {
-        type: "image/jpeg",
+        type: "image/png",
       });
       console.log('[PlantHealthTab] Photo processed:', {
         name: processedFile.name,

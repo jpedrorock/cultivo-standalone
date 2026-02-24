@@ -2938,3 +2938,16 @@ Remover fase CLONING e adicionar botão "Tirar Clones" direto na MANUTENÇÃO
 - [ ] Testar upload pelo celular novamente
 
 **Problema**: Usuário tentou adicionar 2 fotos de saúde pelo celular mas nenhuma foi salva. Fotos não aparecem nos registros.
+
+## Upload de Fotos Corrigido (24/02/2026) - RESOLVIDO
+
+- [x] Reescrever imageUtils.ts simplificado (removido crop/aspect ratio/HEIC)
+- [x] Mudar para PNG ao invés de JPEG (mais confiável no canvas.toBlob)
+- [x] Adicionar logs detalhados em storage.ts e routers.ts
+- [x] Testar upload via script Node.js - SUCESSO
+- [x] Verificar foto no banco de dados - SUCESSO (photoUrl salva corretamente)
+- [x] Verificar foto na UI (modal de edição) - SUCESSO (foto aparece)
+- [x] Verificar foto no card da planta - SUCESSO (foto aparece no card)
+- [x] Sistema end-to-end testado e funcionando 100%
+
+**Solução**: Simplificado processamento de imagem removendo complexidade desnecessária. Upload funcionando perfeitamente com armazenamento local.

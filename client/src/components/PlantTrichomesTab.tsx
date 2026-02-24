@@ -134,8 +134,8 @@ export default function PlantTrichomesTab({
         maxWidth: 1080,
         maxHeight: 1440,
         quality: 0.85,
-        aspectRatio: 3 / 4,
-        format: "image/jpeg",
+        
+        
       });
 
       const processedFile = new File([processedBlob], file.name, {

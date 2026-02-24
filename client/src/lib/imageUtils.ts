@@ -1,23 +1,17 @@
 /**
- * Utilitário para processar imagens antes do upload
- * - Compressão para reduzir tamanho
- * - Crop/resize para aspect ratio iPhone (3:4 vertical)
- * - Conversão para formato otimizado
- * - Conversão automática HEIC/HEIF → JPEG
+ * Utilitário simplificado para processar imagens antes do upload
+ * - Upload direto sem processamento complexo
+ * - Conversão básica para base64
  */
-
-import heic2any from 'heic2any';
 
 export interface ProcessImageOptions {
   maxWidth?: number;
   maxHeight?: number;
   quality?: number;
-  aspectRatio?: number; // width/height (ex: 3/4 para iPhone)
-  format?: 'image/jpeg' | 'image/webp' | 'image/png';
 }
 
 /**
- * Processa imagem com compressão e crop para aspect ratio iPhone
+ * Processa imagem de forma simples - apenas redimensiona se muito grande
  * @param file - Arquivo de imagem original
  * @param options - Opções de processamento
  * @returns Promise com Blob da imagem processada
@@ -27,11 +21,9 @@ export async function processImage(
   options: ProcessImageOptions = {}
 ): Promise<Blob> {
   const {
-    maxWidth = 1080,
-    maxHeight = 1440,
-    quality = 0.85,
-    aspectRatio = 3 / 4, // iPhone aspect ratio (vertical)
-    format = 'image/jpeg'
+    maxWidth = 1920,
+    maxHeight = 1920,
+    quality = 0.9
   } = options;
 
   return new Promise((resolve, reject) => {
@@ -41,60 +33,21 @@ export async function processImage(
       const img = new Image();
       
       img.onload = () => {
-        console.log('[processImage] Image loaded:', {
-          width: img.width,
-          height: img.height,
-          aspectRatio: img.width / img.height
-        });
-        
         // Calcular dimensões mantendo aspect ratio
-        let targetWidth = img.width;
-        let targetHeight = img.height;
-        let sourceX = 0;
-        let sourceY = 0;
-        let sourceWidth = img.width;
-        let sourceHeight = img.height;
+        let width = img.width;
+        let height = img.height;
 
-        // Calcular crop para manter aspect ratio desejado
-        const currentRatio = img.width / img.height;
-        
-        if (currentRatio > aspectRatio) {
-          // Imagem mais larga que o desejado - crop nas laterais
-          sourceWidth = img.height * aspectRatio;
-          sourceX = (img.width - sourceWidth) / 2;
-        } else if (currentRatio < aspectRatio) {
-          // Imagem mais alta que o desejado - crop em cima/baixo
-          sourceHeight = img.width / aspectRatio;
-          sourceY = (img.height - sourceHeight) / 2;
+        // Redimensionar apenas se necessário
+        if (width > maxWidth || height > maxHeight) {
+          const ratio = Math.min(maxWidth / width, maxHeight / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
         }
 
-        // Calcular tamanho final respeitando limites
-        targetWidth = sourceWidth;
-        targetHeight = sourceHeight;
-
-        if (targetWidth > maxWidth) {
-          targetWidth = maxWidth;
-          targetHeight = maxWidth / aspectRatio;
-        }
-
-        if (targetHeight > maxHeight) {
-          targetHeight = maxHeight;
-          targetWidth = maxHeight * aspectRatio;
-        }
-
-        console.log('[processImage] Target dimensions:', {
-          targetWidth,
-          targetHeight,
-          sourceX,
-          sourceY,
-          sourceWidth,
-          sourceHeight
-        });
-        
-        // Criar canvas e desenhar imagem processada
+        // Criar canvas
         const canvas = document.createElement('canvas');
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
+        canvas.width = width;
+        canvas.height = height;
         const ctx = canvas.getContext('2d');
 
         if (!ctx) {
@@ -102,47 +55,20 @@ export async function processImage(
           return;
         }
 
-        // Desenhar imagem com crop e resize
-        ctx.drawImage(
-          img,
-          sourceX,
-          sourceY,
-          sourceWidth,
-          sourceHeight,
-          0,
-          0,
-          targetWidth,
-          targetHeight
-        );
+        // Desenhar imagem
+        ctx.drawImage(img, 0, 0, width, height);
 
-        // Converter para blob
-        console.log('[processImage] Converting to blob:', { format, quality });
-        
-        // Tentar converter com formato especificado
+        // Converter para blob com PNG (mais confiável que JPEG)
         canvas.toBlob(
           (blob) => {
-            console.log('[processImage] toBlob result:', { blob: !!blob, size: blob?.size });
             if (blob) {
               resolve(blob);
             } else {
-              // Fallback: tentar com PNG se JPEG falhar
-              console.warn('[processImage] JPEG conversion failed, trying PNG...');
-              canvas.toBlob(
-                (pngBlob) => {
-                  if (pngBlob) {
-                    console.log('[processImage] PNG fallback successful:', pngBlob.size);
-                    resolve(pngBlob);
-                  } else {
-                    console.error('[processImage] Both JPEG and PNG conversion failed!');
-                    reject(new Error('Erro ao converter imagem'));
-                  }
-                },
-                'image/png'
-              );
+              reject(new Error('Erro ao converter imagem'));
             }
           },
-          format,
-          Math.max(0, Math.min(1, quality)) // Garantir quality entre 0 e 1
+          'image/png',
+          quality
         );
       };
 
@@ -176,16 +102,6 @@ export function blobToBase64(blob: Blob): Promise<string> {
 }
 
 /**
- * Converte Blob para File
- * @param blob - Blob da imagem
- * @param fileName - Nome do arquivo
- * @returns File object
- */
-export function blobToFile(blob: Blob, fileName: string): File {
-  return new File([blob], fileName, { type: blob.type });
-}
-
-/**
  * Formata tamanho de arquivo para exibição
  * @param bytes - Tamanho em bytes
  * @returns String formatada (ex: "1.5 MB")
@@ -204,56 +120,28 @@ export function formatFileSize(bytes: number): string {
  * @returns true se for HEIC/HEIF
  */
 export function isHEIC(file: File): boolean {
-  const heicMimeTypes = ['image/heic', 'image/heif', 'image/heic-sequence', 'image/heif-sequence'];
+  const heicMimeTypes = ['image/heic', 'image/heif'];
   const heicExtensions = ['.heic', '.heif'];
   
-  // Verificar MIME type
   if (heicMimeTypes.includes(file.type.toLowerCase())) {
     return true;
   }
   
-  // Verificar extensão do arquivo
   const fileName = file.name.toLowerCase();
   return heicExtensions.some(ext => fileName.endsWith(ext));
 }
 
 /**
- * Converte arquivo HEIC/HEIF para JPEG
- * @param file - Arquivo HEIC/HEIF
- * @returns Promise com File convertido para JPEG
- */
-export async function convertHEICToJPEG(file: File): Promise<File> {
-  try {
-    // Converter HEIC para JPEG usando heic2any
-    const convertedBlob = await heic2any({
-      blob: file,
-      toType: 'image/jpeg',
-      quality: 0.9
-    });
-    
-    // heic2any pode retornar array de blobs, pegar o primeiro
-    const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
-    
-    // Criar novo File a partir do Blob
-    const newFileName = file.name.replace(/\.(heic|heif)$/i, '.jpg');
-    return new File([blob], newFileName, { type: 'image/jpeg' });
-  } catch (error) {
-    console.error('Erro ao converter HEIC:', error);
-    throw new Error('Não foi possível converter a imagem HEIC. Tente usar uma foto em formato JPEG ou PNG.');
-  }
-}
-
-/**
- * Processa arquivo de imagem com conversão automática de HEIC
- * @param file - Arquivo de imagem (pode ser HEIC)
- * @returns Promise com File processado (convertido se necessário)
+ * Processa arquivo de imagem (sem conversão HEIC por enquanto)
+ * @param file - Arquivo de imagem
+ * @returns Promise com File processado
  */
 export async function processImageFile(file: File): Promise<File> {
-  // Se for HEIC, converter para JPEG primeiro
+  // Por enquanto apenas retorna o arquivo original
+  // HEIC não é suportado nesta versão simplificada
   if (isHEIC(file)) {
-    return await convertHEICToJPEG(file);
+    throw new Error('Formato HEIC não suportado. Use JPEG ou PNG.');
   }
   
-  // Se não for HEIC, retornar o arquivo original
   return file;
 }

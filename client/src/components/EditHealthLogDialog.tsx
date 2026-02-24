@@ -90,8 +90,8 @@ export default function EditHealthLogDialog({
         maxWidth: 1080,
         maxHeight: 1440,
         quality: 0.85,
-        aspectRatio: 3 / 4,
-        format: "image/jpeg",
+        
+        
       });
 
       // Converter para base64 para preview
