@@ -109,9 +109,8 @@ export function EditCycleModal({
     });
   };
   
-  const handleMotherSelected = (selectedMotherId: number, selectedMotherName: string, selectedClonesCount: number) => {
+  const handleMotherSelected = (selectedMotherId: number, selectedMotherName: string) => {
     setMotherPlantId(selectedMotherId);
-    setClonesCount(selectedClonesCount);
     setShowMotherSelector(false);
     
     // Submeter automaticamente após seleção
@@ -122,7 +121,7 @@ export function EditCycleModal({
       phase,
       weekNumber,
       motherPlantId: selectedMotherId,
-      clonesProduced: selectedClonesCount, // Usar o parâmetro, não o estado
+      clonesProduced: clonesCount, // Usar o estado (valor padrão 10)
     });
   };
 

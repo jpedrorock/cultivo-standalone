@@ -1167,11 +1167,10 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
         open={selectMotherOpen}
         onOpenChange={setSelectMotherOpen}
         tentId={tent.id}
-        onMotherSelected={(plantId: number, plantName: string, clonesCount: number) => {
+        onMotherSelected={(plantId: number, plantName: string) => {
           // Salvar dados temporários
           setSelectedMotherId(plantId);
           setSelectedMotherName(plantName);
-          setSelectedClonesCount(clonesCount);
           setSelectMotherOpen(false);
           // Abrir FinishCloningDialog
           setFinishCloningOpen(true);

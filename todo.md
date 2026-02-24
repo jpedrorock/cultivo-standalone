@@ -2894,3 +2894,11 @@ Remover fase CLONING e adicionar botão "Tirar Clones" direto na MANUTENÇÃO
 - [x] Testar fluxo completo: Tirar Clones → Selecionar Mãe → Finalizar Clonagem - FUNCIONANDO!
 - [x] Modal abre corretamente com dados da planta-mãe selecionada
 - [x] Campo de quantidade de mudas editável (1-50)
+
+## Remover Campo Duplicado de Quantidade de Clones (24/02/2026) - RESOLVIDO
+
+- [x] Remover campo "Número de Clones a Produzir" do SelectMotherPlantDialog
+- [x] Ajustar callback onMotherSelected para não receber selectedClonesCount
+- [x] Atualizar Home.tsx para não passar clonesCount inicial ao FinishCloningDialog
+- [x] Testar fluxo: Tirar Clones → Selecionar Mãe → Definir Quantidade (apenas no 2º modal)
+- [x] Fluxo simplificado funcionando 100%: Modal 1 apenas seleciona planta-mãe, Modal 2 define quantidade + estufa destino

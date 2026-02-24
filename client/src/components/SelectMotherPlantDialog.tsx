@@ -18,7 +18,7 @@ interface SelectMotherPlantDialogProps {
   onOpenChange: (open: boolean) => void;
   tentId: number;
   cycleId?: number; // Optional agora, pois pode ser chamado de MAINTENANCE
-  onMotherSelected: (motherPlantId: number, motherPlantName: string, clonesCount: number) => void;
+  onMotherSelected: (motherPlantId: number, motherPlantName: string) => void;
 }
 
 export function SelectMotherPlantDialog({
@@ -30,7 +30,6 @@ export function SelectMotherPlantDialog({
 }: SelectMotherPlantDialogProps) {
   const [selectedMotherId, setSelectedMotherId] = useState<number | null>(null);
   const [selectedMotherName, setSelectedMotherName] = useState<string>("");
-  const [clonesCount, setClonesCount] = useState<number>(10);
 
   // Buscar plantas-mãe disponíveis na estufa (status ACTIVE)
   const { data: motherPlants, isLoading } = trpc.plants.list.useQuery(
@@ -43,11 +42,7 @@ export function SelectMotherPlantDialog({
       toast.error("Selecione uma planta-mãe");
       return;
     }
-    if (clonesCount < 1) {
-      toast.error("Número de clones deve ser maior que zero");
-      return;
-    }
-    onMotherSelected(selectedMotherId, selectedMotherName, clonesCount);
+    onMotherSelected(selectedMotherId, selectedMotherName);
     onOpenChange(false);
   };
 
@@ -57,7 +52,7 @@ export function SelectMotherPlantDialog({
         <DialogHeader>
           <DialogTitle>Selecionar Planta-Mãe para Clonagem</DialogTitle>
           <DialogDescription>
-            Escolha qual planta-mãe você vai clonar e quantos clones vai produzir
+            Escolha qual planta-mãe você vai clonar
           </DialogDescription>
         </DialogHeader>
 
@@ -155,19 +150,6 @@ export function SelectMotherPlantDialog({
                   )}
                 </button>
               ))}
-            </div>
-
-            {/* Campo de número de clones */}
-            <div className="space-y-2">
-              <Label htmlFor="clonesCount">Número de Clones a Produzir</Label>
-              <Input
-                id="clonesCount"
-                type="number"
-                min={1}
-                value={clonesCount}
-                onChange={(e) => setClonesCount(parseInt(e.target.value) || 1)}
-                className="max-w-xs"
-              />
             </div>
 
             {/* Botões */}
