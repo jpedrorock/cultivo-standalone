@@ -2968,3 +2968,32 @@ Remover fase CLONING e adicionar botão "Tirar Clones" direto na MANUTENÇÃO
 - Dimensões finais: 1920x1280 (manteve aspect ratio)
 - Tempo de processamento: 174ms
 - Qualidade visual: Excelente (sem perda visível)
+
+## Bug: Upload de Fotos pelo Celular Falhando (24/02/2026) - RESOLVIDO
+
+- [x] Verificar logs do servidor para erros de upload
+- [x] Verificar banco de dados para registros de tentativas falhadas
+- [x] Identificar erro específico (processImage falhando em uploads anteriores)
+- [x] Verificar uploads mais recentes - FUNCIONANDO!
+- [x] Confirmar fotos aparecem na interface
+
+**Contexto**: Usuário tentou adicionar fotos pelo celular. Uploads antigos (15:31-15:45) falharam devido ao bug do processImage que já foi corrigido. Uploads mais recentes (16:42 e 16:45) funcionaram perfeitamente!
+
+**Uploads bem-sucedidos:**
+- 16:45:52 - Foto salva: /uploads/health/90001/1771951552677-7ed2ee966202716e.jpg
+- 16:42:05 - Foto salva: /uploads/health/90001/1771951325880-4f43b4ff42bca530.jpg
+
+**Conclusão**: Sistema funcionando corretamente após correção do processImage.
+
+## Migrar Upload de Fotos para Manus CDN (24/02/2026) - CONCLUÍDO
+
+- [x] Atualizar storage.ts para usar manus-upload-file CLI
+- [x] Testar upload de foto real via script - SUCESSO
+- [x] Verificar se foto carrega externamente - SUCESSO
+- [ ] Testar upload pelo app e verificar se funciona
+- [ ] Publicar site e verificar se foto aparece no site publicado
+- [ ] Testar upload pelo celular no site publicado
+
+**Resultado**: Sistema migrado com sucesso! Upload via manus-upload-file CLI funcionando. Foto de teste (239KB) enviada para CDN e acessível publicamente em https://files.manuscdn.com/
+
+**Próximos passos**: Testar upload pelo app, publicar e verificar no site publicado.

@@ -1,21 +1,14 @@
-// Local filesystem storage for standalone deployment
-// Stores files in uploads/ directory and serves via /uploads route
+// Manus CDN storage using manus-upload-file CLI
+// Uploads files to Manus CDN and returns public URLs
 
-import { writeFile, mkdir } from 'fs/promises';
-import { existsSync } from 'fs';
-import { join, dirname } from 'path';
+import { writeFile, unlink } from 'fs/promises';
+import { join } from 'path';
 import { randomBytes } from 'crypto';
+import { execFile } from 'child_process';
+import { promisify } from 'util';
 
-const UPLOADS_DIR = join(process.cwd(), 'uploads');
-// Use relative URLs to work with any domain
-const BASE_URL = '';
-
-// Ensure uploads directory exists
-async function ensureUploadsDir() {
-  if (!existsSync(UPLOADS_DIR)) {
-    await mkdir(UPLOADS_DIR, { recursive: true });
-  }
-}
+const execFileAsync = promisify(execFile);
+const TMP_DIR = '/tmp';
 
 // Generate unique filename with random suffix
 function generateFileName(originalName: string): string {
@@ -26,58 +19,71 @@ function generateFileName(originalName: string): string {
 }
 
 /**
- * Upload file to local filesystem
+ * Upload file to Manus CDN
  * @param relKey - Relative path/key for the file (e.g., "plants/photo.jpg")
  * @param data - File data as Buffer, Uint8Array, or string
- * @param contentType - MIME type (optional, not used in local storage)
- * @returns Object with key and public URL
+ * @param contentType - MIME type (optional, not used by manus-upload-file)
+ * @returns Object with key and public CDN URL
  */
 export async function storagePut(
   relKey: string,
   data: Buffer | Uint8Array | string,
   contentType = "application/octet-stream"
 ): Promise<{ key: string; url: string }> {
-  console.log('[storagePut] Starting upload:', { relKey, dataSize: data.length, contentType });
-  await ensureUploadsDir();
-  console.log('[storagePut] Uploads dir ensured');
+  console.log('[storagePut] Starting CDN upload:', { relKey, dataSize: data.length, contentType });
   
-  // Normalize key and generate unique filename
+  // Generate unique filename
   const normalizedKey = relKey.replace(/^\/+/, '');
   const fileName = generateFileName(normalizedKey.split('/').pop() || 'file');
+  const tmpFilePath = join(TMP_DIR, fileName);
   
-  // Create subdirectories if needed
-  const subDir = dirname(normalizedKey);
-  const fullDir = join(UPLOADS_DIR, subDir);
-  if (!existsSync(fullDir)) {
-    await mkdir(fullDir, { recursive: true });
+  try {
+    // Write to temporary file
+    console.log('[storagePut] Writing to temp file:', tmpFilePath);
+    const buffer = typeof data === 'string' ? Buffer.from(data) : Buffer.from(data);
+    await writeFile(tmpFilePath, buffer);
+    
+    // Upload to Manus CDN using CLI
+    console.log('[storagePut] Uploading to Manus CDN...');
+    const { stdout, stderr } = await execFileAsync('manus-upload-file', [tmpFilePath]);
+    
+    if (stderr) {
+      console.error('[storagePut] CLI stderr:', stderr);
+    }
+    
+    // Parse CDN URL from output (format: "CDN URL: https://...")
+    const cdnUrlMatch = stdout.match(/CDN URL:\s*(https:\/\/[^\s]+)/);
+    if (!cdnUrlMatch) {
+      throw new Error(`Failed to parse CDN URL from output: ${stdout}`);
+    }
+    
+    const url = cdnUrlMatch[1].trim();
+    console.log('[storagePut] Upload complete:', { key: normalizedKey, url });
+    
+    // Clean up temp file
+    await unlink(tmpFilePath);
+    
+    return { key: normalizedKey, url };
+  } catch (error) {
+    // Clean up temp file on error
+    try {
+      await unlink(tmpFilePath);
+    } catch {}
+    
+    console.error('[storagePut] Upload failed:', error);
+    throw error;
   }
-  
-  // Write file
-  const filePath = join(fullDir, fileName);
-  console.log('[storagePut] Writing to:', filePath);
-  const buffer = typeof data === 'string' ? Buffer.from(data) : Buffer.from(data);
-  await writeFile(filePath, buffer);
-  console.log('[storagePut] File written successfully');
-  
-  // Return key and public URL (relative path)
-  const key = join(subDir, fileName).replace(/\\/g, '/');
-  const url = `/uploads/${key}`;
-  console.log('[storagePut] Upload complete:', { key, url });
-  
-  return { key, url };
 }
 
 /**
- * Get public URL for a file
+ * Get public URL for a file (not applicable for CDN storage)
  * @param relKey - Relative path/key for the file
- * @returns Object with key and public URL
+ * @returns Object with key and empty URL (CDN URLs are generated at upload time)
  */
 export async function storageGet(relKey: string): Promise<{ key: string; url: string }> {
-  const normalizedKey = relKey.replace(/^\/+/, '');
-  const url = `/uploads/${normalizedKey}`;
-  
+  console.warn('[storageGet] Not supported for CDN storage - URLs are generated at upload time');
   return {
-    key: normalizedKey,
-    url,
+    key: relKey,
+    url: '', // CDN URLs are generated at upload time, not retrievable later
   };
 }
