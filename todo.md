@@ -2738,3 +2738,15 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] Verificar se está usando a fase atual do ciclo para determinar fotoperíodo
 - [x] Corrigido: agora verifica `cycle?.floraStartDate` ao invés de `currentPhase` inexistente
 - [ ] Testar transição de vegetativa → floração e verificar se fotoperíodo atualiza
+
+## Reorganização de Tarefas por Fase (24/02/2026)
+
+- [ ## Reorganização de Tarefas por Fase e Semana
+- [x] Pesquisar melhores práticas de cultivo por fase
+- [x] Criar estrutura de tarefas para MANUTENÇÃO (7 tarefas)
+- [x] Criar estrutura de tarefas para CLONAGEM (7 tarefas)
+- [x] Criar estrutura de tarefas para VEGETATIVA (30 tarefas - 6 semanas)
+- [x] Criar estrutura de tarefas para FLORAÇÃO (40 tarefas - 8 semanas)
+- [x] Limpar tarefas antigas do banco
+- [x] Inserir novo conjunto de 84 tarefas
+- [x] Testar exibição de tarefas no app - FUNCIONANDO!
