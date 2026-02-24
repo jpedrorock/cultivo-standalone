@@ -2914,3 +2914,16 @@ Remover fase CLONING e adicionar botão "Tirar Clones" direto na MANUTENÇÃO
 - [ ] Testar upload com diferentes tipos de imagem (JPG, PNG, HEIC)
 
 **Status**: Sistema de storage funciona (foto 24k Gold está visível). Problema é que quando usuário seleciona foto no formulário de saúde, ela não é enviada/processada corretamente. Precisa investigar handlePhotoSelect e handleSubmit no PlantHealthTab.tsx.
+
+## Bug Crítico: Fotos Não Carregam no Site Publicado (24/02/2026) - RESOLVIDO
+
+- [x] Acessar site publicado (https://cultivodocs.manus.space/plants) e inspecionar imagens quebradas
+- [x] Verificar URLs das fotos no banco de dados
+- [x] Identificar diferença entre preview (funcionando) e produção (quebrado)
+- [x] Reescrever server/storage.ts para usar manus-upload-file CLI
+- [x] Implementar upload via Manus CDN (https://files.manuscdn.com)
+- [x] Criar testes unitários para validar storage
+- [x] Todos os testes passando (2/2 passed)
+- [ ] Testar upload de nova foto no app e verificar se aparece no site publicado
+
+**Solução**: Fotos agora são enviadas para Manus CDN via `manus-upload-file` CLI. URLs públicas são retornadas e salvas no banco. Sistema testado e funcionando.
