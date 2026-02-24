@@ -9,7 +9,7 @@ import { InitiateCycleModal } from "@/components/InitiateCycleModal";
 import { EditCycleModal } from "@/components/EditCycleModal";
 import { CreateTentModal } from "@/components/CreateTentModal";
 import { EditTentDialog } from "@/components/EditTentDialog";
-import { PhaseTransitionDialog } from "@/components/PhaseTransitionDialog";
+
 import { FinishCloningDialog } from "@/components/FinishCloningDialog";
 import { PromotePhaseDialog } from "@/components/PromotePhaseDialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,7 +27,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell, Trash2, EyeOff, Eye, Wrench, Scissors, Flower2, Check, AlertTriangle, X, Zap, Clock } from "lucide-react";
+import { Loader2, Sprout, Droplets, Sun, ThermometerSun, Wind, BookOpen, CheckCircle2, Calculator, Bell, Trash2, EyeOff, Eye, Wrench, Scissors, Flower2, Check, AlertTriangle, X, Zap, Clock, ArrowRight } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
@@ -642,7 +642,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
   const [tasksExpanded, setTasksExpanded] = useState(false);
   const [hideCompleted, setHideCompleted] = useState(false);
   const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set());
-  const [phaseTransitionOpen, setPhaseTransitionOpen] = useState(false);
+
   const [finishCloningOpen, setFinishCloningOpen] = useState(false);
   const [promotePhaseOpen, setPromotePhaseOpen] = useState(false);
   
@@ -858,8 +858,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
           {/* Cycle Info */}
           {cycle ? (
             <div 
-              className="bg-primary/10 rounded-lg p-4 space-y-2 cursor-pointer hover:bg-primary/15 transition-colors"
-              onClick={() => setPhaseTransitionOpen(true)}
+              className="bg-primary/10 rounded-lg p-4 space-y-2"
             >
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium text-foreground">Ciclo Ativo</span>
@@ -1082,39 +1081,29 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
                 </div>
                 
                 {/* Botões de ação baseados na fase */}
-                {cycle.cloningStartDate && cycle.motherPlantId && cycle.clonesProduced && (
+                         {/* Botão único "Avançar Fase" - apenas para fases lineares */}
+                {cycle && tent.category !== "MAINTENANCE" && (
                   <Button
-                    onClick={() => setFinishCloningOpen(true)}
+                    onClick={() => {
+                      // CLONING → FinishCloningDialog
+                      if (cycle.cloningStartDate) {
+                        setFinishCloningOpen(true);
+                      }
+                      // VEGA → PromotePhaseDialog (Flora)
+                      else if (!cycle.floraStartDate && tent.category === "VEGA") {
+                        setPromotePhaseOpen(true);
+                      }
+                      // FLORA → PromotePhaseDialog (Secagem)
+                      else if (cycle.floraStartDate) {
+                        setPromotePhaseOpen(true);
+                      }
+                    }}
                     variant="default"
                     size="sm"
-                    className="w-full bg-green-600 hover:bg-green-700"
+                    className="w-full bg-blue-600 hover:bg-blue-700"
                   >
-                    <Scissors className="w-4 h-4 mr-2" />
-                    Finalizar Clonagem
-                  </Button>
-                )}
-                
-                {!cycle.floraStartDate && !cycle.cloningStartDate && tent.category === "VEGA" && (
-                  <Button
-                    onClick={() => setPromotePhaseOpen(true)}
-                    variant="default"
-                    size="sm"
-                    className="w-full bg-purple-600 hover:bg-purple-700"
-                  >
-                    <Flower2 className="w-4 h-4 mr-2" />
-                    Promover para Floração
-                  </Button>
-                )}
-                
-                {cycle.floraStartDate && tent.category === "FLORA" && (
-                  <Button
-                    onClick={() => setPromotePhaseOpen(true)}
-                    variant="default"
-                    size="sm"
-                    className="w-full bg-amber-600 hover:bg-amber-700"
-                  >
-                    <Sun className="w-4 h-4 mr-2" />
-                    Promover para Secagem
+                    <ArrowRight className="w-4 h-4 mr-2" />
+                    Avançar Fase
                   </Button>
                 )}
                 <Button
@@ -1153,18 +1142,7 @@ function TentCard({ tent, cycle, phaseInfo, PhaseIcon, onStartCycle, onStartFlor
         </div>
       </CardContent>
       
-      {/* Phase Transition Dialog */}
-      {cycle && (
-        <PhaseTransitionDialog
-          open={phaseTransitionOpen}
-          onOpenChange={setPhaseTransitionOpen}
-          cycleId={cycle.id}
-          currentPhase={cycle.floraStartDate ? "FLORA" : (cycle.cloningStartDate ? "CLONING" : (tent.category === "MAINTENANCE" ? "MAINTENANCE" : "VEGA"))}
-          tentId={tent.id}
-          tentName={tent.name}
-        />
-      )}
-      
+
       {/* Finish Cloning Dialog */}
       {cycle && cycle.motherPlantId && cycle.clonesProduced && (
         <FinishCloningDialog

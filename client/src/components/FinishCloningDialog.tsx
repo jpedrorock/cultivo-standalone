@@ -36,6 +36,8 @@ export function FinishCloningDialog({
 }: FinishCloningDialogProps) {
 
   const [selectedTentId, setSelectedTentId] = useState<string>("");
+  const [seedlingCount, setSeedlingCount] = useState<number>(clonesCount);
+  const utils = trpc.useUtils();
 
   // Buscar estufas disponíveis (sem ciclo ativo)
   const { data: allTents } = trpc.tents.list.useQuery();
@@ -51,9 +53,9 @@ export function FinishCloningDialog({
       toast.success(`Clonagem finalizada! ${data.seedlingsCreated} mudas criadas em ${data.targetTentName}`);
       onOpenChange(false);
       // Refetch cycles to update UI
-      trpc.useUtils().cycles.getActiveCyclesWithProgress.refetch();
-      trpc.useUtils().cycles.listActive.refetch();
-      trpc.useUtils().plants.list.refetch();
+      utils.cycles.getActiveCyclesWithProgress.refetch();
+      utils.cycles.listActive.refetch();
+      utils.plants.list.refetch();
     },
     onError: (error) => {
       toast.error(`Erro ao finalizar clonagem: ${error.message}`);
@@ -69,6 +71,7 @@ export function FinishCloningDialog({
     finishCloningMutation.mutate({
       cycleId,
       targetTentId: parseInt(selectedTentId),
+      seedlingCount,
     });
   };
 
@@ -86,6 +89,21 @@ export function FinishCloningDialog({
         </DialogHeader>
 
         <div className="space-y-4 py-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Número de Mudas</label>
+            <input
+              type="number"
+              min="1"
+              max="50"
+              value={seedlingCount}
+              onChange={(e) => setSeedlingCount(parseInt(e.target.value) || 1)}
+              className="w-full px-3 py-2 border rounded-md"
+            />
+            <p className="text-xs text-muted-foreground">
+              Quantas mudas você deseja gerar (1-50)
+            </p>
+          </div>
+
           <div className="space-y-2">
             <label className="text-sm font-medium">Estufa Destino</label>
             <Select value={selectedTentId} onValueChange={setSelectedTentId}>
@@ -114,7 +132,7 @@ export function FinishCloningDialog({
           <div className="rounded-lg bg-muted p-4 space-y-2">
             <p className="text-sm font-medium">Resumo:</p>
             <ul className="text-sm text-muted-foreground space-y-1">
-              <li>• {clonesCount} mudas serão criadas</li>
+              <li>• {seedlingCount} mudas serão criadas</li>
               <li>• Mudas herdarão a genética de {motherPlantName}</li>
               <li>• Ciclo da estufa atual voltará para MANUTENÇÃO</li>
               <li>• Novo ciclo VEGETATIVO será criado na estufa destino</li>

@@ -38,6 +38,7 @@ export function PromotePhaseDialog({
 }: PromotePhaseDialogProps) {
   const [moveToTent, setMoveToTent] = useState<boolean>(false);
   const [selectedTentId, setSelectedTentId] = useState<string>("");
+  const utils = trpc.useUtils();
 
   // Determinar fase destino
   const targetPhase = currentPhase === "VEGA" ? "FLORA" : "DRYING";
@@ -56,10 +57,10 @@ export function PromotePhaseDialog({
       toast.success(data.message);
       onOpenChange(false);
       // Refetch cycles to update UI
-      trpc.useUtils().cycles.getActiveCyclesWithProgress.refetch();
-      trpc.useUtils().cycles.listActive.refetch();
+      utils.cycles.getActiveCyclesWithProgress.refetch();
+      utils.cycles.listActive.refetch();
       if (data.movedPlants) {
-        trpc.useUtils().plants.list.refetch();
+        utils.plants.list.refetch();
       }
     },
     onError: (error) => {

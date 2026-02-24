@@ -964,6 +964,7 @@ export const appRouter = router({
         z.object({
           cycleId: z.number(),
           targetTentId: z.number(), // Estufa destino para as mudas
+          seedlingCount: z.number().min(1).max(50).optional(), // Quantidade de mudas a gerar
         })
       )
       .mutation(async ({ input }) => {
@@ -1021,7 +1022,8 @@ export const appRouter = router({
         
         // Criar mudas
         const seedlings = [];
-        for (let i = 1; i <= cycle.clonesProduced; i++) {
+        const count = input.seedlingCount || cycle.clonesProduced || 3;
+        for (let i = 1; i <= count; i++) {
           const [newSeedling] = await database
             .insert(plants)
             .values({
@@ -1080,7 +1082,7 @@ export const appRouter = router({
         
         return {
           success: true,
-          seedlingsCreated: cycle.clonesProduced,
+          seedlingsCreated: count,
           targetTentName: targetTent.name,
         };
       }),

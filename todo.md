@@ -2840,3 +2840,25 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [ ] Debugar por que mutation não está sendo chamada (toast não aparece)
 - [ ] Adicionar logs de debug no backend para rastrear execução
 - [ ] Testar com dados reais (criar estufa vazia para receber mudas)
+
+## Correção de Erro "Invalid Hook Call" nos Modais (24/02/2026)
+
+- [ ] Corrigir FinishCloningDialog: mover trpc.useUtils() para fora do callback onSuccess
+- [ ] Corrigir PromotePhaseDialog: mover trpc.useUtils() para fora do callback onSuccess
+- [ ] Testar modais após correção
+
+## Simplificação UI - Botão Único "Avançar Fase" (24/02/2026)
+
+### Correções de Bugs
+- [x] Corrigir erro "Invalid hook call" em FinishCloningDialog (mover useUtils para fora do callback)
+- [x] Corrigir erro "Invalid hook call" em PromotePhaseDialog (mover useUtils para fora do callback)
+- [x] Adicionar campo para escolher número de mudas em FinishCloningDialog (input 1-50)
+- [x] Atualizar backend para aceitar seedlingCount (linha 967 em routers.ts)
+
+### Simplificação de UI
+- [x] Remover 3 botões específicos (Finalizar Clonagem, Promover para Floração, Promover para Secagem)
+- [x] Adicionar botão único "Avançar Fase" (azul) que detecta fase atual
+- [x] Implementar lógica: CLONING → FinishCloningDialog, VEGA → PromotePhaseDialog (Flora), FLORA → PromotePhaseDialog (Secagem)
+- [x] Remover PhaseTransitionDialog antigo e seus imports
+- [x] Esconder botão "Avançar Fase" para MAINTENANCE (usa Editar Ciclo ao invés)
+- [x] Testar UI simplificada - botão aparece apenas em VEGA, FLORA e CLONING
