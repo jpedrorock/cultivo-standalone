@@ -42,7 +42,7 @@ export function EditCycleModal({
   currentStrainId,
 }: EditCycleModalProps) {
   const [startDate, setStartDate] = useState(
-    new Date().toISOString().split("T")[0]
+    currentStartDate.toISOString().split("T")[0]
   );
   const [phase, setPhase] = useState<"CLONING" | "MAINTENANCE" | "VEGA" | "FLORA" | "DRYING">("VEGA");
   const [weekNumber, setWeekNumber] = useState(1);
@@ -51,12 +51,15 @@ export function EditCycleModal({
   const utils = trpc.useUtils();
   const { data: strains } = trpc.strains.list.useQuery();
   const edit = trpc.cycles.edit.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("Ciclo atualizado com sucesso!");
-      utils.cycles.listActive.invalidate();
-      utils.cycles.getActiveCyclesWithProgress.invalidate();
-      utils.cycles.getByTent.invalidate();
-      utils.tents.list.invalidate();
+      // Força refetch imediato ao invés de apenas invalidar
+      await Promise.all([
+        utils.cycles.listActive.refetch(),
+        utils.cycles.getActiveCyclesWithProgress.refetch(),
+        utils.cycles.getByTent.refetch(),
+        utils.tents.list.refetch(),
+      ]);
       onOpenChange(false);
     },
     onError: (error) => {
@@ -66,7 +69,7 @@ export function EditCycleModal({
 
   useEffect(() => {
     if (open) {
-      setStartDate(new Date().toISOString().split("T")[0]);
+      setStartDate(currentStartDate.toISOString().split("T")[0]);
       setStrainId(currentStrainId ?? null);
       // Determinar fase atual baseada em floraStartDate
       if (currentFloraStartDate) {

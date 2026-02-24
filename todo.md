@@ -2727,8 +2727,10 @@ Usuário está confuso - não sabe onde configurar os múltiplos horários.
 - [x] Investigar por que não é possível editar manualmente a semana do ciclo (ex: mudar de Semana 1 para Semana 5)
 - [x] Verificar código de edição de ciclos no frontend (modal de edição)
 - [x] Verificar procedure de atualização de ciclos no backend
-- [x] Corrigido: adicionada invalidação de `getActiveCyclesWithProgress` para atualizar cálculo de semana
-- [ ] Testar edição de semana após correção
+- [x] Corrigido: modal agora usa currentStartDate ao invés de data de hoje
+- [x] Corrigido: trocado invalidate() por refetch() para forçar atualização imediata dos dados
+- [x] Adicionados logs de debug no backend para rastrear cálculo de datas
+- [x] Testar edição de semana após correção - FUNCIONANDO! (refetch forçado resolveu o problema)
 
 ### Bug 2: Fotoperíodo não Atualiza na Floração
 - [x] Verificar lógica de exibição de fotoperíodo no card da estufa

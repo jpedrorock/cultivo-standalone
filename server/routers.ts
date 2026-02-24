@@ -876,13 +876,18 @@ export const appRouter = router({
           throw new Error("Banco de dados não inicializado. Execute 'pnpm db:push' para criar as tabelas.");
         }
         
+        console.log('[cycles.edit] Input received:', input);
+        
         const updates: any = {};
         
         if (input.startDate && input.phase && input.weekNumber) {
           // Recalcular startDate baseado na fase e semana
           const startDate = new Date(input.startDate);
+          console.log('[cycles.edit] Original startDate:', startDate.toISOString());
           const weeksToSubtract = input.weekNumber - 1;
+          console.log('[cycles.edit] Weeks to subtract:', weeksToSubtract);
           startDate.setDate(startDate.getDate() - (weeksToSubtract * 7));
+          console.log('[cycles.edit] Calculated new startDate:', startDate.toISOString());
           updates.startDate = startDate;
           
           // Se fase for FLORA, definir floraStartDate
