@@ -2997,3 +2997,22 @@ Remover fase CLONING e adicionar botão "Tirar Clones" direto na MANUTENÇÃO
 **Resultado**: Sistema migrado com sucesso! Upload via manus-upload-file CLI funcionando. Foto de teste (239KB) enviada para CDN e acessível publicamente em https://files.manuscdn.com/
 
 **Próximos passos**: Testar upload pelo app, publicar e verificar no site publicado.
+
+## Indicador de Progresso para Upload de Fotos (24/02/2026)
+
+- [ ] Criar componente de barra de progresso (ProgressBar.tsx)
+- [ ] Adicionar estados de progresso: "Processando imagem" → "Enviando" → "Concluído"
+- [ ] Integrar com PlantHealthTab.tsx no fluxo de upload
+- [ ] Mostrar porcentagem ou spinner durante processamento
+- [ ] Adicionar animação de sucesso ao concluir
+- [ ] Testar com fotos de diferentes tamanhos
+
+**Objetivo**: Melhorar feedback visual durante upload de fotos para que usuário saiba que o processo está em andamento.
+
+## Conversão HEIC para PNG (iPhone Camera Support)
+
+- [x] Instalar biblioteca heic2any
+- [x] Implementar função convertHEICToPNG() em imageUtils.ts
+- [x] Integrar conversão automática no fluxo de upload (processImageFile)
+- [x] Testar servidor após implementação
+- [ ] Testar upload de foto HEIC real do iPhone em dispositivo físico

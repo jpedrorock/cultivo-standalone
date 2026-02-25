@@ -38,6 +38,7 @@ import {
   processImageFile,
 } from "@/lib/imageUtils";
 import EditHealthLogDialog from "@/components/EditHealthLogDialog";
+import UploadProgress from "@/components/UploadProgress";
 
 interface PlantHealthTabProps {
   plantId: number;
@@ -88,6 +89,8 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
   const [editingLog, setEditingLog] = useState<any | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<"idle" | "processing" | "uploading" | "success" | "error">("idle");
+  const [uploadMessage, setUploadMessage] = useState<string>("");
   
   // Swipe gesture states
   const [touchStart, setTouchStart] = useState<number>(0);
@@ -168,6 +171,8 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
         toast.success("✅ Imagem convertida!");
       }
 
+      setUploadStatus("processing");
+      setUploadMessage("Otimizando imagem...");
       toast.info("Processando imagem...");
 
       const processedBlob = await processImage(file, {
@@ -191,10 +196,17 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
 
       const originalSize = formatFileSize(file.size);
       const newSize = formatFileSize(processedFile.size);
+      setUploadStatus("success");
+      setUploadMessage(`Imagem otimizada: ${originalSize} → ${newSize}`);
       toast.success(`Imagem otimizada: ${originalSize} → ${newSize}`);
+      // Reset status after 2 seconds
+      setTimeout(() => setUploadStatus("idle"), 2000);
     } catch (error) {
       console.error("Erro ao processar imagem:", error);
+      setUploadStatus("error");
+      setUploadMessage("Erro ao processar imagem");
       toast.error("Erro ao processar imagem");
+      setTimeout(() => setUploadStatus("idle"), 3000);
     }
   };
 
@@ -215,6 +227,8 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
 
     if (photoFile) {
       console.log('[PlantHealthTab] Reading photo file...');
+      setUploadStatus("uploading");
+      setUploadMessage("Enviando foto para CDN...");
       const reader = new FileReader();
       reader.onloadend = () => {
         createHealthLog.mutate({
@@ -332,6 +346,12 @@ export default function PlantHealthTab({ plantId }: PlantHealthTabProps) {
                   </div>
                 )}
               </div>
+
+              {/* Upload Progress Indicator */}
+              <UploadProgress
+                status={uploadStatus}
+                message={uploadMessage}
+              />
 
               {/* Text Fields - More Compact */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

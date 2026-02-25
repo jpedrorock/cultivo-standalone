@@ -2,7 +2,10 @@
  * Utilitário simplificado para processar imagens antes do upload
  * - Upload direto sem processamento complexo
  * - Conversão básica para base64
+ * - Conversão automática de HEIC para PNG
  */
+
+import heic2any from 'heic2any';
 
 export interface ProcessImageOptions {
   maxWidth?: number;
@@ -135,15 +138,41 @@ export function isHEIC(file: File): boolean {
 }
 
 /**
- * Processa arquivo de imagem (sem conversão HEIC por enquanto)
+ * Converte arquivo HEIC para PNG
+ * @param file - Arquivo HEIC
+ * @returns Promise com File PNG convertido
+ */
+export async function convertHEICToPNG(file: File): Promise<File> {
+  try {
+    // Converte HEIC para blob PNG usando heic2any
+    const convertedBlob = await heic2any({
+      blob: file,
+      toType: 'image/png',
+      quality: 1 // Qualidade máxima na conversão, compressão vem depois
+    });
+
+    // heic2any pode retornar array de blobs, pega o primeiro
+    const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+
+    // Cria novo File a partir do blob
+    const fileName = file.name.replace(/\.(heic|heif)$/i, '.png');
+    return new File([blob], fileName, { type: 'image/png' });
+  } catch (error) {
+    console.error('Erro ao converter HEIC:', error);
+    throw new Error('Não foi possível converter a imagem HEIC. Tente usar JPEG ou PNG.');
+  }
+}
+
+/**
+ * Processa arquivo de imagem com conversão automática de HEIC
  * @param file - Arquivo de imagem
  * @returns Promise com File processado
  */
 export async function processImageFile(file: File): Promise<File> {
-  // Por enquanto apenas retorna o arquivo original
-  // HEIC não é suportado nesta versão simplificada
+  // Se for HEIC, converte para PNG
   if (isHEIC(file)) {
-    throw new Error('Formato HEIC não suportado. Use JPEG ou PNG.');
+    console.log('Arquivo HEIC detectado, convertendo para PNG...');
+    return await convertHEICToPNG(file);
   }
   
   return file;
