@@ -1,12 +1,28 @@
-// Simplified auth hook for standalone deployment (no authentication)
+import { trpc } from "@/lib/trpc";
+import { useEffect } from "react";
+import { useLocation } from "wouter";
+
 export function useAuth() {
-  // Always return authenticated state without actual authentication
+  const [, navigate] = useLocation();
+  const { data: user, isLoading, error } = trpc.auth.me.useQuery(undefined, {
+    retry: false,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      navigate("/login");
+    }
+  }, [isLoading, user, navigate]);
+
   return {
-    user: { id: 1, name: "Local User", email: "user@local" },
-    loading: false,
-    error: null,
-    isAuthenticated: true,
+    user: user ?? null,
+    loading: isLoading,
+    error: error ?? null,
+    isAuthenticated: !!user,
     refresh: () => Promise.resolve(),
-    logout: () => Promise.resolve(),
+    logout: () => {
+      window.location.href = "/api/auth/logout";
+    },
   };
 }

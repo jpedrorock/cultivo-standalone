@@ -40,8 +40,17 @@ export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
   auth: router({
-    // Simplified auth for standalone deployment
-    me: publicProcedure.query(() => ({ id: 1, name: "Local User", email: "user@local" })),
+    // Returns current authenticated user from JWT session cookie
+    me: publicProcedure.query(({ ctx }) => {
+      if (!ctx.user) return null;
+      return {
+        id: ctx.user.id,
+        name: ctx.user.name,
+        email: ctx.user.email,
+        openId: ctx.user.openId,
+        role: ctx.user.role,
+      };
+    }),
     logout: publicProcedure.mutation(() => ({ success: true })),
   }),
 
