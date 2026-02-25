@@ -4,7 +4,7 @@ import express from "express";
 import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import { registerOAuthRoutes } from "./oauth";
+import { registerLocalAuthRoutes } from "./localAuth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -41,8 +41,8 @@ async function startServer() {
   // Serve static files from uploads directory
   const uploadsPath = path.join(process.cwd(), 'uploads');
   app.use('/uploads', express.static(uploadsPath));
-  // OAuth callback under /api/oauth/callback
-  registerOAuthRoutes(app);
+  // Rotas de autenticação local (login, registro, logout)
+  registerLocalAuthRoutes(app);
   // tRPC API
   app.use(
     "/api/trpc",

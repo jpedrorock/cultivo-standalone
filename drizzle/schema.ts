@@ -22,8 +22,10 @@ export const users = mysqlTable("users", {
    * Use this for relations between tables.
    */
   id: int("id").autoincrement().primaryKey(),
-  /** Manus OAuth identifier (openId) returned from the OAuth callback. Unique per user. */
+  /** Username used for local authentication (replaces Manus OAuth openId). */
   openId: varchar("openId", { length: 64 }).notNull().unique(),
+  /** Hashed password for local authentication (argon2). */
+  password: varchar("password", { length: 255 }),
   name: text("name"),
   email: varchar("email", { length: 320 }),
   loginMethod: varchar("loginMethod", { length: 64 }),

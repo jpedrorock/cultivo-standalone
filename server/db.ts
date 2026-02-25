@@ -93,6 +93,12 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     };
     const updateSet: Record<string, unknown> = {};
 
+    // Suporte ao campo password para autenticação local
+    if (user.password !== undefined) {
+      values.password = user.password;
+      updateSet.password = user.password;
+    }
+
     const textFields = ["name", "email", "loginMethod"] as const;
     type TextField = (typeof textFields)[number];
 
